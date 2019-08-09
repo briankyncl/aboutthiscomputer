@@ -113,9 +113,7 @@ SoftExit()    ;;Exit app gracefully if code should ever find itself here.
 
 
 
-
-
-
+;;Code below is being used as reference
     ;;DECLARE GLOBALS
       ;;Declare main global variables.
       MainDeclareGlobals()
@@ -181,6 +179,7 @@ SoftExit()    ;;Exit app gracefully if code should ever find itself here.
     ;;GRACEFUL EXIT
       ;;Exit app gracefully if code should ever find itself here.
       SoftExit()
+;;End reference code
   EndFunc
 #EndRegion -- MAIN
 
@@ -298,14 +297,8 @@ SoftExit()    ;;Exit app gracefully if code should ever find itself here.
 
 
 
-
-
-
-
-
-
-
-
+;;All code above here is considered new.
+;;All remaining code is considered old and is being re-written.
 
 #Region -- ENVIRONMENT
 

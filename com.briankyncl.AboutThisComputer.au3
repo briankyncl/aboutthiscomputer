@@ -76,16 +76,16 @@
   FileInstall('Images\BeOS_info.ico', @TempDir & '\ATC-BeOS_info.ico', $FC_OVERWRITE)
 #EndRegion
 
-Main()        ;;Main application
-SoftExit()    ;;Exit app gracefully if code should ever find itself here.
+Main()      ;;Main application
+SoftExit()  ;;Exit app gracefully if code should ever find itself here.
 
 #Region -- MAIN
   Func Main()
     ;;Everything controlled from here.
 
-    ;;DECLARE EARLY GLOBALS
-      ;;Declare early globals needed for application startup.
-      StartupEarlyGlobals()
+    ;;DECLARE CORE GLOBALS
+      ;;Declare core globals needed for application startup.
+      StartupCoreGlobals()
 
     ;;PROCESS EXE PARAMETERS
       ;;Parse provided command line parameters, if any.
@@ -95,15 +95,17 @@ SoftExit()    ;;Exit app gracefully if code should ever find itself here.
       ;;Copy to and relaunch application from user's temp directory.
       StartupRunFromTemp()
 
+    ;;display a startup gui
+      ;function to either stage tray icon with "loading..." tooltip
+      ;or no tray icon and show "Refreshing..." window
+
     ;;DECLARE GLOBALS
       ;;Declare global variables not declared anywhere else.
       StartupGlobals()
 
-    ;;START TRAY
-
-    ;;
-
-    ;;Sample edit for Sublime Merge
+    ;;display a main gui
+      ;function to either show final tray icon and enter main loop
+      ;or show main window and enter window open loop
 
 
 
@@ -113,7 +115,7 @@ SoftExit()    ;;Exit app gracefully if code should ever find itself here.
 
 
 
-;;Code below is being used as reference
+    ;;Code below is being used as reference
     ;;DECLARE GLOBALS
       ;;Declare main global variables.
       MainDeclareGlobals()
@@ -179,19 +181,37 @@ SoftExit()    ;;Exit app gracefully if code should ever find itself here.
     ;;GRACEFUL EXIT
       ;;Exit app gracefully if code should ever find itself here.
       SoftExit()
-;;End reference code
+    ;;End reference code
   EndFunc
 #EndRegion -- MAIN
 
 #Region -- STARTUP
-  Func StartupEarlyGlobals()
-    ;;DECLARE EARLY GLOBALS
+  Func StartupCoreGlobals()
+    ;;DECLARE CORE GLOBALS
 
-    Global $sMainAppName = 'About This Computer'
-    Global $sMainAppShortName = 'ATC'
-    Global $sMainAppDocsHost = 'GitHub'
-    Global $sMainAppDocsFormat = 'website'
-    Global $sMainAppDocsURL = 'https://github.com/briankyncl/aboutthiscomputer'
+    ;;APP INFO
+    Global $sAppOrg = 'com.briankyncl'
+    Global $sAppName = 'About This Computer'
+    Global $sAppShortName = 'ATC'
+    Global $sAppDocsHost = 'GitHub'
+    Global $sAppDocsFormat = 'website'
+    Global $sAppDocsURL = 'https://github.com/briankyncl/aboutthiscomputer'
+
+    ;;APP VERSION
+    Local  $aFileVersion = StringSplit(FileGetVersion(@AutoItExe), '.')
+    Global $sAppBuild = $aFileVersion[4]
+    Global $sAppVersion = $aFileVersion[1] & '.' & $aFileVersion[2] & '.' & $aFileVersion[3]
+    Global $sAppRelease = '2019-xx-xx'
+
+    ;;APP PATHS
+    Global $sAppInstallPath = @ProgramFilesDir & '\' & $sAppOrg & '\' & $sAppName
+    Global $sAppTempPath = @TempDir & '\' & $sAppOrg & '\' & $sAppName
+    Global $sAppStartMenuPath = @ProgramsCommonDir
+    Global $sAppRegistryPath = 'HKEY_LOCAL_MACHINE\Software\' & $sAppOrg & '\' & $sAppName
+    Global $sAppLogo = $sAppTempPath & '\BeOS_info.ico'
+
+    ;;APP ASSETS
+    FileInstall('Images\BeOS_info.ico', $sAppLogo, $FC_OVERWRITE)
   EndFunc
 
   Func StartupExeMode()
@@ -210,7 +230,7 @@ SoftExit()    ;;Exit app gracefully if code should ever find itself here.
               $sMainAppExeMode = 'tray'
           EndSwitch
         Case Else
-          MsgBox(BitOR($MB_OK, $MB_ICONERROR), $sMainAppName & ' Startup', 'Unsupported parameter provided. See documentation at ' & $sMainAppDocsURL)
+          MsgBox(BitOR($MB_OK, $MB_ICONERROR), $sAppName & ' Startup', 'Unsupported parameter provided. See documentation at ' & $sAppDocsURL)
           SoftExit()
       EndSwitch
     Else
@@ -232,13 +252,13 @@ SoftExit()    ;;Exit app gracefully if code should ever find itself here.
     ;EndIf
 
     ;;relaunch application from temp
-    If StringInStr(@ScriptFullPath, @TempDir, $STR_NOCASESENSEBASIC) <> 0 Then
+    If StringInStr(@ScriptFullPath, $sAppTempPath, $STR_NOCASESENSEBASIC) <> 0 Then
       ;;exe launched from non-temp location
-      If FileExists(@TempDir & '\' & @ScriptName) = 1 Then
+      If FileExists($sAppTempPath & '\' & @ScriptName) = 1 Then
         ;;exe already in temp dir, attempt to delete
-        If FileDelete(@TempDir & '\' & @ScriptName) <> 1 Then
+        If FileDelete($sAppTempPath & '\' & @ScriptName) <> 1 Then
           ;;unable to delete, notify and exit
-          MsgBox(BitOR($MB_OK, $MB_ICONERROR), $sMainAppName & ' Startup', 'Unable to start ' $sMainAppName & '. (Unable to delete existing executable from temp. Is ' & @ScriptName & ' already running?)')
+          MsgBox(BitOR($MB_OK, $MB_ICONERROR), $sAppName & ' Startup', 'Unable to start ' $sAppName & '. (Unable to delete existing executable from temp. Is ' & @ScriptName & ' already running?)')
           SoftExit()
         Else
           ;;successful file delete
@@ -246,19 +266,19 @@ SoftExit()    ;;Exit app gracefully if code should ever find itself here.
         EndIf
       EndIf
       ;;attempt to copy exe to temp dir
-      If FileCopy(@ScriptFullPath, @TempDir, $FC_CREATEPATH) = 1 Then
+      If FileCopy(@ScriptFullPath, $sAppTempPath, $FC_CREATEPATH) = 1 Then
         ;;successful file copy, attempt to launch
-        If ShellExecute(@TempDir & '\' & @ScriptName, $sStartupParam, @SystemDir) <> 0 Then
+        If ShellExecute($sAppTempPath & '\' & @ScriptName, $sStartupParam, @SystemDir) <> 0 Then
           ;;successful launch, exit
           SoftExit()
         Else
           ;;unsuccessful launch, notify and exit
-          MsgBox(BitOR($MB_OK, $MB_ICONERROR), $sMainAppName & ' Startup', 'Unable to start ' $sMainAppName & '. (Unable to run executable from temp.)')
+          MsgBox(BitOR($MB_OK, $MB_ICONERROR), $sAppName & ' Startup', 'Unable to start ' $sAppName & '. (Unable to run executable from temp.)')
           SoftExit()
         EndIf
       Else
         ;;unsuccessful file copy, notify and exit
-        MsgBox(BitOR($MB_OK, $MB_ICONERROR), $sMainAppName & ' Startup', 'Unable to start ' $sMainAppName & '. (Unable to copy executable to temp.)')
+        MsgBox(BitOR($MB_OK, $MB_ICONERROR), $sAppName & ' Startup', 'Unable to start ' $sAppName & '. (Unable to copy executable to temp.)')
         SoftExit()
       EndIf
     Else
@@ -296,22 +316,24 @@ SoftExit()    ;;Exit app gracefully if code should ever find itself here.
 
 
 
+;;=====================================================================================================================================================================
+;;================================================================== LINE OF CODE REWRITE SEPARATION ==================================================================
+;;=====================================================================================================================================================================
 
-;;All code above here is considered new.
-;;All remaining code is considered old and is being re-written.
+
+
+
+
+
+
+
+
 
 #Region -- ENVIRONMENT
-
-
 ;; ENVIRONMENT
   ;Global $fToggle         = True
 
-  Global $sDirScript      = @scriptDir
-
-  Global $aVerBuildNum    = StringSplit(FileGetVersion(@AutoItExe), '.')
-  Global $sBuildNum       = $aVerBuildNum[4]
-  Global $sVersionNum     = $aVerBuildNum[1] & '.' & $aVerBuildNum[2] & '.' & $aVerBuildNum[3]
-  Global $sReleaseName    = '2018.xx.xx'
+  Global $sDirScript      = @scriptDir  ;;probably replace with $sAppInstallPath?
 
   Global $systemDrive     = EnvGet("systemdrive")
   Global $sTimeZone       = _Date_Time_GetTimeZoneInformation()
@@ -2417,7 +2439,7 @@ EndSwitch
 
 ;; UPDATE SUMMARY FILE
   Func UpdateSummaryFile()
-    Global $sSummaryFilePath = @TempDir & '\AboutThisComputerSummary.txt'
+    Global $sSummaryFilePath = $sAppTempPath & '\AboutThisComputerSummary.txt'
     If FileExists($sSummaryFilePath) Then FileDelete($sSummaryFilePath)
     FileWrite($sSummaryFilePath, $sSummaryString)
   EndFunc
@@ -2510,7 +2532,7 @@ EndSwitch
       ' • Website: ' & $sHelpdeskAddress & @CRLF & _
       ' • LMIr URL: ' & $sHelpdeskLMIrAddress & @CRLF & _
       @CRLF & _
-      'About This Computer  •  ' & $sVersionNum & '  •  ' & @YEAR & '-' & @MON & '-' & @MDAY & ' ' & @HOUR & ':' & @MIN & ':' & @SEC & '  •  [mB7a78-' & $sBuildNum & ']'
+      'About This Computer  •  ' & $sAppVersion & '  •  ' & @YEAR & '-' & @MON & '-' & @MDAY & ' ' & @HOUR & ':' & @MIN & ':' & @SEC & '  •  [mB7a78-' & $sAppBuild & ']'
   EndFunc
 #EndRegion
 
@@ -2715,7 +2737,7 @@ EndSwitch
     $sGraphic = $sDirScript & '\Support\BeOS_info.ico'
     $sTitle = 'About This Computer'
     $sSubtitle = 'A workstation information utility.'
-    $sVersion = 'Version ' & $sVersionNum
+    $sVersion = 'Version ' & $sAppVersion
     $sCredits = 'Created by Brian Kyncl (me@briankyncl.com)' & @CRLF & 'BeOS icons by StudioTwentyEight' & @CRLF & '(http://www.studiotwentyeight.net)'
 
     ;GUI SIZING
@@ -3247,7 +3269,7 @@ EndSwitch
           $aDesktopSize = WinGetPos("Program Manager")  ;get full size of desktop
 
           $sTempFileName = 'Screenshot-' & @YEAR & '-' & @MON & '-' & @MDAY & '--' & @HOUR & '-' & @MIN & '-' & @SEC & '.png'
-          $sTempFilePath = @TempDir & '\' & $sTempFileName
+          $sTempFilePath = $sAppTempPath & '\' & $sTempFileName
           If FileExists($sTempFilePath) = True Then FileDelete($sTempFilePath)  ;delete screeenshot if somehow it already exists
 
           Sleep(300)  ;wait for MsgBox to go away

@@ -95,13 +95,37 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
       ;;Copy to and relaunch application from user's temp directory.
       StartupRunFromTemp()
 
-    ;;display a startup gui
-      ;function to either stage tray icon with "loading..." tooltip
-      ;or no tray icon and show "Refreshing..." window
-
     ;;DECLARE GLOBALS
-      ;;Declare global variables not declared anywhere else.
-      StartupGlobals()
+      ;;Declare globals not declared anywhere else.
+      --StartupGloblas()
+
+    ;;READ CONFIG
+      ;;Read config and customization.
+      --ReadConfig()
+
+    ;;STAGE GUIs
+      ;;Define tray and display normal tray or window-mode tray.
+      ;;Define main GUI and display Loading... GUI or main GUI.
+      --StartupBuildTray()
+      --StartupBuildGUI()
+
+    ;;REFRESH COMPUTER INFO
+      ;;Read details about computer.
+      --ReadComputer()
+      --ReadComputerSchedule()  ;;AdLibRegister ReadComputer()
+
+    ;;DISPLAY GUI
+      ;;Display either the main GUI or or the final tray and show.
+
+    ;;MAIN WAIT
+      ;;Enter main loop and wait
+
+
+
+
+
+
+
 
     ;;display a main gui
       ;function to either show final tray icon and enter main loop
@@ -304,6 +328,50 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     Global $sOrgHelpdeskURL = 'helpdesk.' & $sOrgDomain
     Global $sOrgHelpdeskRemoteSupportURL = 'remotesupport.' & $sOrgDomain
   EndFunc
+
+  Func StartupBuildTray()
+    ;;BUILD TRAY
+
+    ;;tray options
+    Opt('TrayAutoPause', 0)  ;;don't PAUSE script, if systray icon is clicked
+    Opt('TrayMenuMode', 3) ;;the default tray menu items will not be shown and items are not checked when selected. These are options 1 and 2 for TrayMenuMode.
+
+    ;;tray icon
+    TraySetIcon('Shell32.dll',322) ;;24 (question mark) or 44 (thin star) or 263 (question mark) or 322 (thin star) or 16783 ('i' icon)
+
+    ;;stage tray menu
+    Global $idTrayMainNetConnect = TrayCreateItem('Network Connections')
+    Global $idTrayMainInetCpl    = TrayCreateItem('Internet Options')
+      TrayCreateItem('') ;;create a separator line.
+    Global $idTrayMainAppCatalog = TrayCreateItem('Application Catalog')
+    Global $idTrayMainAppWiz     = TrayCreateItem('Programs and Features')
+    Global $idTrayMainServices   = TrayCreateItem('Services')
+    Global $idTrayMainWinUpdate  = TrayCreateItem('Windows Update')
+      TrayCreateItem('') ;;create a separator line.
+    Global $idTrayMainPrintMMC   = TrayCreateItem('Print Management')
+    Global $idTrayMainDevNPrint  = TrayCreateItem('Devices and Printers')
+    Global $idTrayMainDevMan     = TrayCreateItem('Device Manager')
+      TrayCreateItem('') ;;create a separator line.
+    Global $idTrayMainCredMan    = TrayCreateItem('Credential Manager')
+    Global $idTrayMainMailAcct   = TrayCreateItem('Mail Accounts')
+      TrayCreateItem('') ;;create a separator line.
+    Global $idTrayMainSearchAD   = TrayCreateItem('Search Active Directory')
+    Global $idTrayMainSysProp    = TrayCreateItem('System Properties')
+      TrayCreateItem('') ;;create a separator line.
+    Global $idTrayMainShowInfo   = TrayCreateItem('About This Computer')
+      TrayCreateItem('') ;;create a separator line.
+    Global $idTrayMainExit       = TrayCreateItem("Exit")
+
+    ;;stage tray
+    Switch $sMainAppExeMode
+      Case 'window'
+        TraySetState(2) ;;hide tray icon
+      Case Else
+        TraySetState(1) ;;show the tray icon.
+        TraySetToolTip('Loading...')
+        TraySetClick(8) ;;pressing secondary mouse button will show the tray menu.
+    EndSwitch
+  EndFunc
 #EndRegion
 
 
@@ -391,7 +459,7 @@ Switch $sMainAppExeMode
   Case 'Tray'
     Main()
   Case 'Window'
-    RefreshInfoWait(0)
+    ReadComputerWait(0)
     AboutThisComputer()
 EndSwitch
 #EndRegion
@@ -399,41 +467,41 @@ EndSwitch
 #Region -- MAIN
 ;; MAIN LOOP
   Func Main()
-    ;; BUILD TRAY
-    Opt("TrayAutoPause", 0)  ; don't PAUSE script, if systray icon is clicked
-    Opt("TrayMenuMode", 3) ; The default tray menu items will not be shown and items are not checked when selected. These are options 1 and 2 for TrayMenuMode.
-    TraySetIcon("Shell32.dll",322) ;24 (question mark) or 44 (thin star) or 263 (question mark) or 322 (thin star) or 16783 ('i' icon)
+    ;;; BUILD TRAY
+    ;Opt("TrayAutoPause", 0)  ; don't PAUSE script, if systray icon is clicked
+    ;Opt("TrayMenuMode", 3) ; The default tray menu items will not be shown and items are not checked when selected. These are options 1 and 2 for TrayMenuMode.
+    ;TraySetIcon("Shell32.dll",322) ;24 (question mark) or 44 (thin star) or 263 (question mark) or 322 (thin star) or 16783 ('i' icon)
 
-    Global $idTrayMainNetConnect = TrayCreateItem('Network Connections')
-    Global $idTrayMainInetCpl    = TrayCreateItem('Internet Options')
-    TrayCreateItem('') ; Create a separator line.
-    Global $idTrayMainAppCatalog = TrayCreateItem('Application Catalog')
-    Global $idTrayMainAppWiz     = TrayCreateItem('Programs and Features')
-    Global $idTrayMainServices   = TrayCreateItem('Services')
-    Global $idTrayMainWinUpdate  = TrayCreateItem('Windows Update')
-    TrayCreateItem('') ; Create a separator line.
-    Global $idTrayMainPrintMMC   = TrayCreateItem('Print Management')
-    Global $idTrayMainDevNPrint  = TrayCreateItem('Devices and Printers')
-    Global $idTrayMainDevMan     = TrayCreateItem('Device Manager')
-    TrayCreateItem('') ; Create a separator line.
-    Global $idTrayMainCredMan    = TrayCreateItem('Credential Manager')
-    Global $idTrayMainMailAcct   = TrayCreateItem('Mail Accounts')
-    TrayCreateItem('') ; Create a separator line.
-    Global $idTrayMainSearchAD   = TrayCreateItem('Search Active Directory')
-    Global $idTrayMainSysProp    = TrayCreateItem('System Properties')
-    TrayCreateItem('') ; Create a separator line.
-    Global $idTrayMainShowInfo   = TrayCreateItem('About This Computer')
-    TrayCreateItem('') ; Create a separator line.
-    Global $idTrayMainExit       = TrayCreateItem("Exit")
+    ;Global $idTrayMainNetConnect = TrayCreateItem('Network Connections')
+    ;Global $idTrayMainInetCpl    = TrayCreateItem('Internet Options')
+    ;TrayCreateItem('') ; Create a separator line.
+    ;Global $idTrayMainAppCatalog = TrayCreateItem('Application Catalog')
+    ;Global $idTrayMainAppWiz     = TrayCreateItem('Programs and Features')
+    ;Global $idTrayMainServices   = TrayCreateItem('Services')
+    ;Global $idTrayMainWinUpdate  = TrayCreateItem('Windows Update')
+    ;TrayCreateItem('') ; Create a separator line.
+    ;Global $idTrayMainPrintMMC   = TrayCreateItem('Print Management')
+    ;Global $idTrayMainDevNPrint  = TrayCreateItem('Devices and Printers')
+    ;Global $idTrayMainDevMan     = TrayCreateItem('Device Manager')
+    ;TrayCreateItem('') ; Create a separator line.
+    ;Global $idTrayMainCredMan    = TrayCreateItem('Credential Manager')
+    ;Global $idTrayMainMailAcct   = TrayCreateItem('Mail Accounts')
+    ;TrayCreateItem('') ; Create a separator line.
+    ;Global $idTrayMainSearchAD   = TrayCreateItem('Search Active Directory')
+    ;Global $idTrayMainSysProp    = TrayCreateItem('System Properties')
+    ;TrayCreateItem('') ; Create a separator line.
+    ;Global $idTrayMainShowInfo   = TrayCreateItem('About This Computer')
+    ;TrayCreateItem('') ; Create a separator line.
+    ;Global $idTrayMainExit       = TrayCreateItem("Exit")
 
-    ;; DISPLAY TRAY
-    TraySetState(1) ; Show the tray icon.
-    TraySetToolTip('Loading...')
-    TraySetClick(8) ; Pressing secondary mouse button will show the tray menu.
+    ;;; DISPLAY TRAY
+    ;TraySetState(1) ; Show the tray icon.
+    ;TraySetToolTip('Loading...')
+    ;TraySetClick(8) ; Pressing secondary mouse button will show the tray menu.
 
     ;; REFRESH INFO AND SCHEDULE
-    RefreshInfo()
-    AdlibRegister("RefreshInfo", 180000)
+    ReadComputer()
+    AdlibRegister('ReadComputer', 180000)
 
     Switch $bExitEnabled
       Case True
@@ -447,11 +515,11 @@ EndSwitch
       Sleep(10)
       Switch TrayGetMsg()
         Case $TRAY_EVENT_PRIMARYUP
-          ;left-click on tray icon
-          TraySetState(2) ;hide tray icon
-          AdlibUnRegister("RefreshInfo")
+          ;;left-click on tray icon
+          TraySetState(2) ;;hide tray icon
+          AdlibUnRegister('ReadComputer')
           AboutThisComputer()
-          AdlibRegister("RefreshInfo", 180000)
+          AdlibRegister('ReadComputer', 180000)
         Case $idTrayMainNetConnect
           LaunchNetConnect()
         Case $idTrayMainInetCpl
@@ -481,9 +549,9 @@ EndSwitch
 
         Case $idTrayMainShowInfo
           TraySetState(2) ;hide tray icon
-          AdlibUnRegister("RefreshInfo")
+          AdlibUnRegister("ReadComputer")
           AboutThisComputer()
-          AdlibRegister("RefreshInfo", 180000)
+          AdlibRegister("ReadComputer", 180000)
         Case $idTrayMainExit
           End()
       EndSwitch
@@ -492,7 +560,7 @@ EndSwitch
 #EndRegion
 
 #Region -- READ ENVIRONMENT
-;; READ DETAILS ABOUT PC
+  ;; READ DETAILS ABOUT PC
 
   #Region - OPERATING SYSTEM
   ;Generated variables:
@@ -1503,9 +1571,9 @@ EndSwitch
         Global $bLCMInfoExists = False
     EndSwitch
   EndFunc
-  #EndRegion
+#EndRegion
 
-  #Region -- OPTIONS
+#Region -- OPTIONS
   ;; READ CUSTOM OPTIONS
   Func ReadContactHelpdeskEnable()
   ;Generated variables:
@@ -1530,7 +1598,6 @@ EndSwitch
       $bExitEnabled = False
     EndIf
   EndFunc
-  #EndRegion
 
   ;; TOOLS
   Func _elementExists($array, $element)
@@ -1706,7 +1773,7 @@ EndSwitch
 
 #Region -- REFRESH INFO
   ;; Standard Refresh
-  Func RefreshInfo()
+  Func ReadComputer()
     ReadOS()
     ReadArch()
     ReadUser()
@@ -1730,7 +1797,7 @@ EndSwitch
     _ReduceMemory()
   EndFunc
 
-  Func RefreshInfoWait($idGUIParent)
+  Func ReadComputerWait($idGUIParent)
   ; create busy GUI and refresh info
     ;$idGUIWorking = GUICreate('', 100, 40, -1, -1, BitOR($WS_POPUP, $WS_CAPTION), BitOR($WS_EX_TOPMOST, $WS_EX_TOOLWINDOW), $idGUIParent)
     $idGUIWorking = GUICreate('Refreshing...', 200, 50, -1, -1, BitOR($WS_DLGFRAME, $WS_POPUP), BitOR($WS_EX_TOPMOST, $WS_EX_TOOLWINDOW), $idGUIParent)
@@ -1739,7 +1806,7 @@ EndSwitch
 
     GUISetState(@SW_SHOWNORMAL, $idGUIWorking)
 
-    RefreshInfo()
+    ReadComputer()
 
     GUIDelete($idGUIWorking)
   EndFunc
@@ -1755,7 +1822,7 @@ EndSwitch
 #EndRegion
 
 #Region - GUIs
-;; ABOUT THIS COMPUTER
+  ;; ABOUT THIS COMPUTER
   Func AboutThisComputer()
   ;; DEFINE MAIN WINDOW
     ;; COLUMNS
@@ -2389,7 +2456,7 @@ EndSwitch
               GUIMainSetDefaults()
             Case $idButtonMainLeftRefresh
               GUIMainSetBusyDefaults()
-              RefreshInfoWait($idGUIMain)
+              ReadComputerWait($idGUIMain)
               GUIMainSetDefaults()
             Case $idButtonMainLeftClose
               CloseMain()
@@ -2407,8 +2474,8 @@ EndSwitch
 ;; UPDATE TOOLTIP
   Func UpdateToolTip()
     $sTrayToolTip = 'Computer Name: ' & $sComputerName & @CRLF & _
-            'IP Address: ' & $sNetAdapter01Address & @CRLF & _
-            'Uptime: ' & $sOSUptime
+                    'IP Address: ' & $sNetAdapter01Address & @CRLF & _
+                    'Uptime: ' & $sOSUptime
     TraySetToolTip($sTrayToolTip)
   EndFunc
 
@@ -3848,7 +3915,7 @@ EndSwitch
 
 ;; SOFT EXIT
   Func SoftExit()
-    AdlibUnRegister("RefreshInfo")
+    AdlibUnRegister("ReadComputer")
     Exit
   EndFunc
 

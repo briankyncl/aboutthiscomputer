@@ -8,7 +8,7 @@
 #AutoIt3Wrapper_Res_Description=About This Computer
 #AutoIt3Wrapper_Res_Fileversion=0.1.0.1
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=y
-#AutoIt3Wrapper_Res_LegalCopyright=Copyright (c) 2019 Brian Kyncl (www.briankyncl.com). All rights reserved.
+#AutoIt3Wrapper_Res_LegalCopyright=Copyright (c) 2019 Brian Kyncl (briankyncl.com). All rights reserved.
 #AutoIt3Wrapper_Res_SaveSource=y
 #AutoIt3Wrapper_Res_Language=1033
 #AutoIt3Wrapper_Add_Constants=n
@@ -48,9 +48,9 @@
   ;;none
 
   ;;INCLUDES
-  #include "UDF-ThirdParty\UDF-ADFunctions\AD.au3"
-  #include "UDF-ThirdParty\UDF-Services\Services.au3"
-  #include "UDF-ThirdParty\UDF-SMTPMailer\SmtpMailer.au3"
+  #include 'UDF-ThirdParty\UDF-ADFunctions\AD.au3'
+  #include 'UDF-ThirdParty\UDF-Services\Services.au3'
+  #include 'UDF-ThirdParty\UDF-SMTPMailer\SmtpMailer.au3'
   #include <Array.au3>
   #include <AutoItConstants.au3>
   #include <ButtonConstants.au3>
@@ -316,16 +316,16 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     ;;Declare global variables not declared anywhere else.
 
     ;;default organization information
-    Global $sOrgName = 'Contoso'
-    Global $sOrgDomain = 'contoso.com'
-    Global $sOrgIntranetName = 'Intranet'
-    Global $sOrgIntranetURL = 'intranet.' & $sOrgDomain
-    Global $sOrgHelpdeskName = 'IT Helpdesk'
-    Global $sOrgHelpdeskPhone = '1-800-555-5555'
-    Global $sOrgHelpdeskRegionalPhone = $sOrgHelpdeskPhone
-    Global $sOrgHelpdeskCorporatePhone = $sOrgHelpdeskPhone
-    Global $sOrgHelpdeskEmail = 'helpdesk@' & $sOrgDomain
-    Global $sOrgHelpdeskURL = 'helpdesk.' & $sOrgDomain
+    Global $sOrgName                     = 'Contoso'
+    Global $sOrgDomain                   = 'contoso.com'
+    Global $sOrgIntranetName             = 'Intranet'
+    Global $sOrgIntranetURL              = 'intranet.' & $sOrgDomain
+    Global $sOrgHelpdeskName             = 'IT Helpdesk'
+    Global $sOrgHelpdeskPhone            = '1-800-555-5555'
+    Global $sOrgHelpdeskRegionalPhone    = $sOrgHelpdeskPhone
+    Global $sOrgHelpdeskCorporatePhone   = $sOrgHelpdeskPhone
+    Global $sOrgHelpdeskEmail            = 'helpdesk@' & $sOrgDomain
+    Global $sOrgHelpdeskURL              = 'helpdesk.' & $sOrgDomain
     Global $sOrgHelpdeskRemoteSupportURL = 'remotesupport.' & $sOrgDomain
   EndFunc
 
@@ -342,25 +342,25 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     ;;stage tray menu
     Global $idTrayMainNetConnect = TrayCreateItem('Network Connections')
     Global $idTrayMainInetCpl    = TrayCreateItem('Internet Options')
-      TrayCreateItem('') ;;create a separator line.
+      TrayCreateItem('')
     Global $idTrayMainAppCatalog = TrayCreateItem('Application Catalog')
     Global $idTrayMainAppWiz     = TrayCreateItem('Programs and Features')
     Global $idTrayMainServices   = TrayCreateItem('Services')
     Global $idTrayMainWinUpdate  = TrayCreateItem('Windows Update')
-      TrayCreateItem('') ;;create a separator line.
+      TrayCreateItem('')
     Global $idTrayMainPrintMMC   = TrayCreateItem('Print Management')
     Global $idTrayMainDevNPrint  = TrayCreateItem('Devices and Printers')
     Global $idTrayMainDevMan     = TrayCreateItem('Device Manager')
-      TrayCreateItem('') ;;create a separator line.
+      TrayCreateItem('')
     Global $idTrayMainCredMan    = TrayCreateItem('Credential Manager')
     Global $idTrayMainMailAcct   = TrayCreateItem('Mail Accounts')
-      TrayCreateItem('') ;;create a separator line.
+      TrayCreateItem('')
     Global $idTrayMainSearchAD   = TrayCreateItem('Search Active Directory')
     Global $idTrayMainSysProp    = TrayCreateItem('System Properties')
-      TrayCreateItem('') ;;create a separator line.
+      TrayCreateItem('')
     Global $idTrayMainShowInfo   = TrayCreateItem('About This Computer')
-      TrayCreateItem('') ;;create a separator line.
-    Global $idTrayMainExit       = TrayCreateItem("Exit")
+      TrayCreateItem('')
+    Global $idTrayMainExit       = TrayCreateItem('Exit')
 
     ;;stage tray
     Switch $sMainAppExeMode
@@ -1757,7 +1757,7 @@ EndSwitch
         $sStatus = 'Continuing'
       Case 6
         $sStatus = 'Pausing'
-      Case 1
+      Case 7
         $sStatus = 'Paused'
     EndSwitch
     Return $sStatus

@@ -84,41 +84,41 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     ;;Everything controlled from here.
 
     ;;DECLARE CORE GLOBALS
-      ;;Declare core globals needed for application startup.
-      StartupCoreGlobals()
+    ;;Declare core globals needed for application startup.
+    StartupCoreGlobals()
 
     ;;PROCESS EXE PARAMETERS
-      ;;Parse provided command line parameters, if any.
-      StartupExeMode()
+    ;;Parse provided command line parameters, if any.
+    StartupExeMode()
 
     ;;RELAUNCH FROM TEMP
-      ;;Copy to and relaunch application from user's temp directory.
-      StartupRunFromTemp()
+    ;;Copy to and relaunch application from user's temp directory.
+    StartupRunFromTemp()
 
     ;;DECLARE GLOBALS
-      ;;Declare globals not declared anywhere else.
-      --StartupGloblas()
+    ;;Declare globals not declared anywhere else.
+    StartupGlobals()
 
     ;;READ CONFIG
-      ;;Read config and customization.
-      --ReadConfig()
+    ;;Read config and customization.
+    ReadConfig()
 
     ;;STAGE GUIs
-      ;;Define tray and display normal tray or window-mode tray.
-      ;;Define main GUI and display Loading... GUI or main GUI.
-      --StartupBuildTray()
-      --StartupBuildGUI()
+    ;;Define tray and display normal tray or window-mode tray.
+    ;;Define main GUI and display Loading... GUI or main GUI.
+    StartupBuildTray()
+    --StartupBuildGUI()
 
     ;;REFRESH COMPUTER INFO
-      ;;Read details about computer.
-      --ReadComputer()
-      --ReadComputerSchedule()  ;;AdLibRegister ReadComputer()
+    ;;Read details about computer.
+    --ReadComputer()
+    --ReadComputerSchedule()  ;;AdLibRegister ReadComputer()
 
     ;;DISPLAY GUI
-      ;;Display either the main GUI or or the final tray and show.
+    ;;Display either the main GUI or or the final tray and show.
 
     ;;MAIN WAIT
-      ;;Enter main loop and wait
+    ;;Enter main loop and wait
 
 
 
@@ -164,7 +164,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     ;;READ OS AND ARCHITECTURE
       ;;Find the current operating system and operating system architecture.
       ProgressSetStatusBar('Reading OS and architecture...')
-      ReadOS()
+      ReadOSVersion()
       ReadArch()
 
     ;;START LOGGING
@@ -229,6 +229,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
 
     ;;APP PATHS
     Global $sAppInstallPath = @ProgramFilesDir & '\' & $sAppOrg & '\' & $sAppName
+    Global $sAppInstallPathLegacy = = @ProgramFilesDir & '\com.briankyncl\About This Computer'
     Global $sAppTempPath = @TempDir & '\' & $sAppOrg & '\' & $sAppName
     Global $sAppStartMenuPath = @ProgramsCommonDir
     Global $sAppRegistryPath = 'HKEY_LOCAL_MACHINE\Software\' & $sAppOrg & '\' & $sAppName
@@ -327,6 +328,53 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     Global $sOrgHelpdeskEmail            = 'helpdesk@' & $sOrgDomain
     Global $sOrgHelpdeskURL              = 'helpdesk.' & $sOrgDomain
     Global $sOrgHelpdeskRemoteSupportURL = 'remotesupport.' & $sOrgDomain
+
+    ;;generic globals
+    ;Global $idGUIMain
+    ;Global $idGUIContact
+    ;Global $GUI_CHECKENABLE
+    ;Global $GUI_UNCHECKENABLE
+    ;Global $GUI_CHECKDISABLE
+    ;Global $GUI_UNCHECKDISABLE
+    ;Global $sSummaryString
+    ;Global $bExitEnabled
+    ;Global $lTemplates
+    ;Global $sTemplateFromAddress
+    ;Global $sTemplateToAddress
+    ;Global $sTemplateCCAddress
+    ;Global $sTemplateBCCAddress
+    ;Global $sTemplateAttachmentPath
+    ;Global $idLabelMainRight01a
+    ;Global $idLabelMainRight02a
+    ;Global $idLabelMainRight02c
+    ;Global $idLabelMainRight03a
+    ;Global $idLabelMainRight04a
+    ;Global $idLabelMainRight05a
+    ;Global $idLabelMainRight06a
+    ;Global $idLabelMainRight07a
+    ;Global $idLabelMainRight08a
+    ;Global $idLabelMainRight09a
+    ;Global $idLabelMainRight10a
+    ;Global $idLabelMainRight11a
+    ;Global $idLabelMainRight12a
+    ;Global $idLabelMainRight13a
+    ;Global $idLabelMainRight14a
+    ;Global $idLabelMainRight15a
+    ;Global $idLabelMainRight16a
+    ;Global $idLabelMainRight17a
+    ;Global $idLabelMainRight18a
+    ;Global $idLabelMainRight19a
+    ;Global $idLabelMainRight20a
+    ;Global $idLabelMainRight21a
+    ;Global $idLabelMainRight22a
+    ;Global $idLabelMainRight23a
+    ;Global $idLabelMainRight24a
+    ;Global $idLabelMainRight25a
+    ;Global $idLabelMainRight26a
+    ;Global $idLabelMainRight27a
+    ;Global $idLabelMainRight28a
+    ;Global $idLabelMainRight29a
+    ;Global $idLabelMainRight30a
   EndFunc
 
   Func StartupBuildTray()
@@ -372,7 +420,68 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
         TraySetClick(8) ;;pressing secondary mouse button will show the tray menu.
     EndSwitch
   EndFunc
+
+  ReadConfig()
+    ;;READ APP CONFIGURATION
+    ;;Read application configuration and customization.
+
+    ;;organization
+      $sOrgName = RegRead($sAppRegistryPath, 'sOrgName')
+      $sOrgDomain = RegRead($sAppRegistryPath, 'sOrgDomain')
+      $sOrgIntranetName = RegRead($sAppRegistryPath, 'sOrgIntranetName')
+      $sOrgIntranetURL = RegRead($sAppRegistryPath, 'sOrgIntranetURL')
+
+    ;;helpdesk details
+      $sOrgHelpdeskName = RegRead($sAppRegistryPath, 'sOrgHelpdeskName')
+      $sOrgHelpdeskPhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskPhone')
+      $sOrgHelpdeskRegionalPhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskRegionalPhone')
+      $sOrgHelpdeskCorporatePhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskCorporatePhone')
+      $sOrgHelpdeskEmail = RegRead($sAppRegistryPath, 'sOrgHelpdeskEmail')
+      $sOrgHelpdeskURL = RegRead($sAppRegistryPath, 'sOrgHelpdeskURL')
+      $sOrgHelpdeskRemoteSupportURL = RegRead($sAppRegistryPath, 'sOrgHelpdeskRemoteSupportURL')
+
+    ;;APP OPTIONS
+      ;;contact form enable/disable
+      Global $bContactHelpdeskEnabled = RegRead($sAppRegistryPath, 'bConfigContactHelpdeskEnabled')
+      If @error Then
+        $bContactHelpdeskEnabled = False
+      Else
+        If $bContactHelpdeskEnabled = 1
+          $bContactHelpdeskEnabled = True
+        Else
+          $bContactHelpdeskEnabled = False
+        EndIf
+      EndIf
+
+      ;;exit enable/disable
+      Global $bExitEnabled = RegRead($sAppRegistryPath, 'bConfigExitEnabled')
+      If @error Then
+        $bExitEnabled = False
+      Else
+        If $bExitEnabled = 1
+          $bExitEnabled = True
+        Else
+          $bExitEnabled = False
+        EndIf
+      EndIf
+  EndFunc
 #EndRegion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -397,62 +506,13 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
 
 
 
-#Region -- ENVIRONMENT
-;; ENVIRONMENT
-  ;Global $fToggle         = True
 
-  Global $sDirScript      = @scriptDir  ;;probably replace with $sAppInstallPath?
 
-  Global $systemDrive     = EnvGet("systemdrive")
-  Global $sTimeZone       = _Date_Time_GetTimeZoneInformation()
 
-;; GLOBAL DECLARATIONS
-  Global $idGUIMain
-  Global $idGUIContact
-  Global $GUI_CHECKENABLE
-  Global $GUI_UNCHECKENABLE
-  Global $GUI_CHECKDISABLE
-  Global $GUI_UNCHECKDISABLE
-  Global $sSummaryString
-  Global $bExitEnabled
-  Global $lTemplates
-  Global $sTemplateFromAddress
-  Global $sTemplateToAddress
-  Global $sTemplateCCAddress
-  Global $sTemplateBCCAddress
-  Global $sTemplateAttachmentPath
-  Global $idLabelMainRight01a
-  Global $idLabelMainRight02a
-  Global $idLabelMainRight02c
-  Global $idLabelMainRight03a
-  Global $idLabelMainRight04a
-  Global $idLabelMainRight05a
-  Global $idLabelMainRight06a
-  Global $idLabelMainRight07a
-  Global $idLabelMainRight08a
-  Global $idLabelMainRight09a
-  Global $idLabelMainRight10a
-  Global $idLabelMainRight11a
-  Global $idLabelMainRight12a
-  Global $idLabelMainRight13a
-  Global $idLabelMainRight14a
-  Global $idLabelMainRight15a
-  Global $idLabelMainRight16a
-  Global $idLabelMainRight17a
-  Global $idLabelMainRight18a
-  Global $idLabelMainRight19a
-  Global $idLabelMainRight20a
-  Global $idLabelMainRight21a
-  Global $idLabelMainRight22a
-  Global $idLabelMainRight23a
-  Global $idLabelMainRight24a
-  Global $idLabelMainRight25a
-  Global $idLabelMainRight26a
-  Global $idLabelMainRight27a
-  Global $idLabelMainRight28a
-  Global $idLabelMainRight29a
-  Global $idLabelMainRight30a
-#EndRegion
+
+
+
+
 
 #Region -- START
 Switch $sMainAppExeMode
@@ -463,6 +523,11 @@ Switch $sMainAppExeMode
     AboutThisComputer()
 EndSwitch
 #EndRegion
+
+
+
+
+
 
 #Region -- MAIN
 ;; MAIN LOOP
@@ -560,26 +625,26 @@ EndSwitch
 #EndRegion
 
 #Region -- READ ENVIRONMENT
-  ;; READ DETAILS ABOUT PC
+  ;;READ DETAILS ABOUT PC
 
   #Region - OPERATING SYSTEM
-  ;Generated variables:
-  ;
-  ; $sOSBuild             ; Example output:
-  ; $sOSServicePack       ; Example output:
-  ; $sOSProductName       ; Example output: Microsoft Windows 10 Enterprise Insider Preview
-  ; $sOSVersion           ; Example output: WIN_7
-  ; $sOSVersionName       ; Example output: Windows 7
-  ; $sOSVersionValue      ; Example output: 08
-  ; $sOSVersionType       ; Example output: Client
-  ; $sOSEdition           ; Example output: Enterprise
-  ; $sOSBranch            ; Example output: LTSB
-  ;
-  ; https://www.microsoft.com/en-us/itpro/windows-10/release-information
-  ; https://docs.microsoft.com/en-us/windows/deployment/update/waas-overview
-  ; https://www.autoitscript.com/autoit3/docs/macros/SystemInfo.htm
+  ;;Generated variables:
+  ;;
+  ;; $sOSBuild             ; Example output:
+  ;; $sOSServicePack       ; Example output:
+  ;; $sOSProductName       ; Example output: Microsoft Windows 10 Enterprise Insider Preview
+  ;; $sOSVersion           ; Example output: WIN_7
+  ;; $sOSVersionName       ; Example output: Windows 7
+  ;; $sOSVersionValue      ; Example output: 08
+  ;; $sOSVersionType       ; Example output: Client
+  ;; $sOSEdition           ; Example output: Enterprise
+  ;; $sOSBranch            ; Example output: LTSB
+  ;;
+  ;; https://www.microsoft.com/en-us/itpro/windows-10/release-information
+  ;; https://docs.microsoft.com/en-us/windows/deployment/update/waas-overview
+  ;; https://www.autoitscript.com/autoit3/docs/macros/SystemInfo.htm
 
-  Func ReadOS()
+  Func ReadOSVersion()
     Global $sOSType         = @OSType  ;Returns WIN_NT. Not useful.
     Global $sOSBuild        = @OSBuild
     Global $sOSServicePack  = @OSServicePack
@@ -591,24 +656,24 @@ EndSwitch
     Global $sOSEdition      = ''
     Global $sOSBranch       = ''
 
-    ;; READ OS FROM REGISTRY
+    ;;READ OS FROM REGISTRY
     $sOSProductName       = RegRead('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion', 'ProductName')
     $sOSReleaseID         = RegRead('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion', 'ReleaseId')
     $sOSInstallationType  = RegRead('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion', 'InstallationType')
     $sOSEditionID         = RegRead('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion', 'EditionID')
 
-    ;; DEFINE WINDOWS 10 VERSIONS
+    ;;DEFINE WINDOWS 10 VERSIONS
     If $sOSVersion = 'WIN_10' Then $sOSVersion = $sOSVersion & '-' & $sOSReleaseID  ;define release based on registry key
     If $sOSVersion = 'WIN_10-' Then $sOSVersion = 'WIN_10-1507' ;define initial release; missing registry key
     If StringInStr($sOSProductName, 'Insider') Then $sOSVersion = 'WIN_10-INSIDER'  ;define insider preview
     If $sOSVersion = 'WIN_2016' AND $sOSReleaseID = '1809' Then $sOSVersion = 'WIN_2019'  ;manually define Windows Server 2019 until AutoIt macro supports it
 
-    ;; DEFINE OS BRANCH
+    ;;DEFINE OS BRANCH
     If StringInStr($sOSProductName, 'LTSB') Then $sOSBranch = 'LTSB'
     If StringInStr($sOSProductName, 'LTSC') Then $sOSBranch = 'LTSB'  ;Long-Term Servicing Branch renamed to Long-Term Servicing Channel, LTSB used in code for compatibility, LTSC set in friendly name
     If StringIsSpace($sOSBranch) = False Then $sOSVersion = $sOSVersion & '-' & $sOSBranch
 
-    ;; DEFINE OS FRIENDLY NAME
+    ;;DEFINE OS FRIENDLY NAME
     If $sOSVersion = 'WIN_XP'           Then $sOSVersionName = 'Windows XP'
     If $sOSVersion = 'WIN_XPe'          Then $sOSVersionName = 'Windows XP Embedded'
     If $sOSVersion = 'WIN_2003'         Then $sOSVersionName = 'Windows Server 2003'
@@ -638,7 +703,7 @@ EndSwitch
     If $sOSVersion = 'WIN_10-1903'      Then $sOSVersionName = 'Windows 10, Release 1903'
     If $sOSVersion = 'WIN_10-INSIDER'   Then $sOSVersionName = 'Windows 10, Insider Preview'
 
-    ;; DEFINE OS VERSION VALUE
+    ;;DEFINE OS VERSION VALUE
     If $sOSVersion = 'WIN_XP'           Then $sOSVersionValue = '01'  ;Windows XP
     If $sOSVersion = 'WIN_XPe'          Then $sOSVersionValue = '02'  ;Windows XP Embedded
     If $sOSVersion = 'WIN_2003'         Then $sOSVersionValue = '03'  ;Windows Server 2003
@@ -668,7 +733,7 @@ EndSwitch
     If $sOSVersion = 'WIN_10-1903'      Then $sOSVersionValue = '27'  ;Windows 10, Release 1903
     If $sOSVersion = 'WIN_10-INSIDER'   Then $sOSVersionValue = '99'  ;Windows 10, Insider Preview
 
-    ;; DEFINE OS VERSION TYPE
+    ;;DEFINE OS VERSION TYPE
     If $sOSVersionValue < '08' Then ;older than Windows 7, manually set OS type
       If $sOSVersion = 'WIN_XP'         Then $sOSVersionType = 'Client'  ;Windows XP
       If $sOSVersion = 'WIN_XPe'        Then $sOSVersionType = 'Client'  ;Windows XP Embedded
@@ -681,7 +746,7 @@ EndSwitch
       $sOSVersionType = $sOSInstallationType
     EndIf
 
-    ;; DEFINE OS EDITION
+    ;;DEFINE OS EDITION
     Switch $sOSEditionID
       Case 'Enterprise', 'EnterpriseS'
         $sOSEdition = 'Enterprise'
@@ -701,7 +766,7 @@ EndSwitch
   ; $sOSArchShortname     ; Example output: 32-bit
 
   Func ReadArch()
-  ;; DEFINE OS ARCHITECTURE
+  ;;DEFINE OS ARCHITECTURE
     Global $sOSArch            = @OSArch
     Global $sOSArchName        = ''
     Global $sOSArchShortname   = ''
@@ -718,12 +783,12 @@ EndSwitch
   #EndRegion
 
   #Region - USER DETAILS
-  ;Generated variables:
+  ;;Generated variables:
   ;
   ; $sCurrentUsername
 
   Func ReadUser()
-  ;; DEFINE CURRENT USER
+  ;;DEFINE CURRENT USER
     Global $sCurrentUsername = ''
     $sCurrentUsername = @UserName
   EndFunc
@@ -811,64 +876,64 @@ EndSwitch
 
     If IsObj($colItems) then
       For $objItem In $colItems
-        ;Global $sWMIAdminPasswordStatus       = $objItem.AdminPasswordStatus
-        ;Global $sWMIAutomaticResetBootOption  = $objItem.AutomaticResetBootOption
-        ;Global $sWMIAutomaticResetCapability  = $objItem.AutomaticResetCapability
-        ;Global $sWMIBootOptionOnLimit         = $objItem.BootOptionOnLimit
-        ;Global $sWMIBootOptionOnWatchDog      = $objItem.BootOptionOnWatchDog
-        ;Global $sWMIBootROMSupported          = $objItem.BootROMSupported
-        ;Global $sWMIBootupState               = $objItem.BootupState
-        ;Global $sWMICaption                   = $objItem.Caption
-        ;Global $sWMIChassisBootupState        = $objItem.ChassisBootupState
-        ;Global $sWMICreationClassName         = $objItem.CreationClassName
-        ;Global $sWMICurrentTimeZone           = $objItem.CurrentTimeZone
-        ;Global $sWMIDaylightInEffect          = $objItem.DaylightInEffect
-        ;Global $sWMIDescription               = $objItem.Description
+        Global $sWMIAdminPasswordStatus       = $objItem.AdminPasswordStatus
+        Global $sWMIAutomaticResetBootOption  = $objItem.AutomaticResetBootOption
+        Global $sWMIAutomaticResetCapability  = $objItem.AutomaticResetCapability
+        Global $sWMIBootOptionOnLimit         = $objItem.BootOptionOnLimit
+        Global $sWMIBootOptionOnWatchDog      = $objItem.BootOptionOnWatchDog
+        Global $sWMIBootROMSupported          = $objItem.BootROMSupported
+        Global $sWMIBootupState               = $objItem.BootupState
+        Global $sWMICaption                   = $objItem.Caption
+        Global $sWMIChassisBootupState        = $objItem.ChassisBootupState
+        Global $sWMICreationClassName         = $objItem.CreationClassName
+        Global $sWMICurrentTimeZone           = $objItem.CurrentTimeZone
+        Global $sWMIDaylightInEffect          = $objItem.DaylightInEffect
+        Global $sWMIDescription               = $objItem.Description
         Global $sWMIDomain                    = $objItem.Domain
-        ;Global $sWMIDomainRole                = $objItem.DomainRole
-        ;Global $sWMIEnableDaylightSavingsTime = $objItem.EnableDaylightSavingsTime
-        ;Global $sWMIFrontPanelResetStatus     = $objItem.FrontPanelResetStatus
-        ;Global $sWMIInfraredSupported         = $objItem.InfraredSupported
-        ;Local  $strInitialLoadInfo            = $objItem.InitialLoadInfo(0)
-        ;Global $sWMIInitialLoadInfo           = $strInitialLoadInfo
-        ;Global $sWMIKeyboardPasswordStatus    = $objItem.KeyboardPasswordStatus
-        ;Global $sWMILastLoadInfo              = $objItem.LastLoadInfo
+        Global $sWMIDomainRole                = $objItem.DomainRole
+        Global $sWMIEnableDaylightSavingsTime = $objItem.EnableDaylightSavingsTime
+        Global $sWMIFrontPanelResetStatus     = $objItem.FrontPanelResetStatus
+        Global $sWMIInfraredSupported         = $objItem.InfraredSupported
+        Local  $strInitialLoadInfo            = $objItem.InitialLoadInfo(0)
+        Global $sWMIInitialLoadInfo           = $strInitialLoadInfo
+        Global $sWMIKeyboardPasswordStatus    = $objItem.KeyboardPasswordStatus
+        Global $sWMILastLoadInfo              = $objItem.LastLoadInfo
         Global $sWMIManufacturer              = $objItem.Manufacturer
         Global $sWMIModel                     = $objItem.Model
-        ;Global $sWMIName                      = $objItem.Name
-        ;Global $sWMINameFormat                = $objItem.NameFormat
-        ;Global $sWMINetworkServerModeEnabled  = $objItem.NetworkServerModeEnabled
-        ;Global $sWMIPartOfDomain              = $objItem.PartOfDomain
-        ;Global $sWMIPauseAfterReset           = $objItem.PauseAfterReset
-        ;Global $sWMIPowerManagementSupported  = $objItem.PowerManagementSupported
-        ;Global $sWMIPowerOnPasswordStatus     = $objItem.PowerOnPasswordStatus
-        ;Global $sWMIPowerState                = $objItem.PowerState
-        ;Global $sWMIPowerSupplyState          = $objItem.PowerSupplyState
-        ;Global $sWMIPrimaryOwnerContact       = $objItem.PrimaryOwnerContact
-        ;Global $sWMIPrimaryOwnerName          = $objItem.PrimaryOwnerName
-        ;Global $sWMIResetCapability           = $objItem.ResetCapability
-        ;Global $sWMIResetCount                = $objItem.ResetCount
-        ;Global $sWMIResetLimit                = $objItem.ResetLimit
-        ;Local  $strRoles                      = $objItem.Roles(0)
-        ;Global $sWMIRoles                     = $strRoles
-        ;Global $sWMIStatus                    = $objItem.Status
-        ;Global $sWMISystemStartupDelay        = $objItem.SystemStartupDelay
-        ;Global $sWMISystemStartupSetting      = $objItem.SystemStartupSetting
-        ;Global $sWMISystemType                = $objItem.SystemType
-        ;Global $sWMIThermalState              = $objItem.ThermalState
-        ;Global $sWMITotalPhysicalMemory       = $objItem.TotalPhysicalMemory
+        Global $sWMIName                      = $objItem.Name
+        Global $sWMINameFormat                = $objItem.NameFormat
+        Global $sWMINetworkServerModeEnabled  = $objItem.NetworkServerModeEnabled
+        Global $sWMIPartOfDomain              = $objItem.PartOfDomain
+        Global $sWMIPauseAfterReset           = $objItem.PauseAfterReset
+        Global $sWMIPowerManagementSupported  = $objItem.PowerManagementSupported
+        Global $sWMIPowerOnPasswordStatus     = $objItem.PowerOnPasswordStatus
+        Global $sWMIPowerState                = $objItem.PowerState
+        Global $sWMIPowerSupplyState          = $objItem.PowerSupplyState
+        Global $sWMIPrimaryOwnerContact       = $objItem.PrimaryOwnerContact
+        Global $sWMIPrimaryOwnerName          = $objItem.PrimaryOwnerName
+        Global $sWMIResetCapability           = $objItem.ResetCapability
+        Global $sWMIResetCount                = $objItem.ResetCount
+        Global $sWMIResetLimit                = $objItem.ResetLimit
+        Local  $strRoles                      = $objItem.Roles(0)
+        Global $sWMIRoles                     = $strRoles
+        Global $sWMIStatus                    = $objItem.Status
+        Global $sWMISystemStartupDelay        = $objItem.SystemStartupDelay
+        Global $sWMISystemStartupSetting      = $objItem.SystemStartupSetting
+        Global $sWMISystemType                = $objItem.SystemType
+        Global $sWMIThermalState              = $objItem.ThermalState
+        Global $sWMITotalPhysicalMemory       = $objItem.TotalPhysicalMemory
         Global $sWMIUserName                  = $objItem.UserName
-        ;Global $sWMIWakeUpType                = $objItem.WakeUpType
-        ;Global $sWMIWorkgroup                 = $objItem.Workgroup
+        Global $sWMIWakeUpType                = $objItem.WakeUpType
+        Global $sWMIWorkgroup                 = $objItem.Workgroup
       Next
     EndIf
 
-    ;; VALIDATE $sWMIUserName
+    ;;VALIDATE $sWMIUserName
       If (StringIsSpace($sWMIUserName) = 1) Then
         $sWMIUserName = $sCurrentUsername
       EndIf
 
-    ;; GATHER AND PROCESS WMI BIOS DETAILS
+    ;;GATHER AND PROCESS WMI BIOS DETAILS
     $wbemFlagReturnImmediately = 0x10
     $wbemFlagForwardOnly = 0x20
     $colItems = ""
@@ -1234,71 +1299,7 @@ EndSwitch
   #EndRegion
 
   #Region -- LOCALIZATION
-  ;; READ LOCALIZATION DETAILS
-  Func ReadRegionalInfo()
-  ;Generated variables:
-  ;
-  ; $sHelpdeskEmail
-  ; $sHelpdeskPhone
-  ; $sHelpdeskPasswordResets
-  ; $sHelpdeskAddress
-  ; $sHelpdeskLMIrAddress
 
-    ;read custom helpdesk email, set corporate standard if not found
-    Global $sHelpdeskEmail = $sOrgHelpdeskEmail
-    $sCustomHelpdeskEmailFilePath = $sDirScript & '\Support\CustomHelpdeskEmail.txt'
-    If FileExists($sCustomHelpdeskEmailFilePath) Then
-      Local $hFileOpen = FileOpen($sCustomHelpdeskEmailFilePath,  $FO_READ)
-      If (StringIsSpace(FileReadLine($hFileOpen, 1)) = 0) Then
-        $sHelpdeskEmail = FileReadLine($hFileOpen, 1)
-      EndIf
-      FileClose($hFileOpen)
-    EndIf
-
-    ;read custom helpdesk phone, set corporate standard if not found
-    Global $sHelpdeskPhone = $sOrgHelpdeskPhone
-    $sCustomHelpdeskPhoneFilePath = $sDirScript & '\Support\CustomHelpdeskPhone.txt'
-    If FileExists($sCustomHelpdeskPhoneFilePath) Then
-      Local $hFileOpen = FileOpen($sCustomHelpdeskPhoneFilePath,  $FO_READ)
-      If (StringIsSpace(FileReadLine($hFileOpen, 1)) = 0) Then
-        $sHelpdeskPhone = FileReadLine($hFileOpen, 1)
-        FileClose($hFileOpen)
-      EndIf
-    EndIf
-
-    ;read custom helpdesk password resets info, set corporate standard if not found
-    Global $sHelpdeskPasswordResets = $sOrgHelpdeskCorporatePhone
-    $sCustomHelpdeskPasswordResetsFilePath = $sDirScript & '\Support\CustomHelpdeskPasswordResets.txt'
-    If FileExists($sCustomHelpdeskPasswordResetsFilePath) Then
-      Local $hFileOpen = FileOpen($sCustomHelpdeskPasswordResetsFilePath,  $FO_READ)
-      If (StringIsSpace(FileReadLine($hFileOpen, 1)) = 0) Then
-        $sHelpdeskPasswordResets = FileReadLine($hFileOpen, 1)
-        FileClose($hFileOpen)
-      EndIf
-    EndIf
-
-    ;read custom helpdesk address, set corporate standard if not found
-    Global $sHelpdeskAddress = $sOrgHelpdeskURL
-    $sCustomHelpdeskAddressFilePath = $sDirScript & '\Support\CustomHelpdeskAddress.txt'
-    If FileExists($sCustomHelpdeskAddressFilePath) Then
-      Local $hFileOpen = FileOpen($sCustomHelpdeskAddressFilePath,  $FO_READ)
-      If (StringIsSpace(FileReadLine($hFileOpen, 1)) = 0) Then
-        $sHelpdeskEmail = FileReadLine($hFileOpen, 1)
-        FileClose($hFileOpen)
-      EndIf
-    EndIf
-
-    ;read custom helpdesk address, set corporate standard if not found
-    Global $sHelpdeskLMIrAddress = $sOrgHelpdeskRemoteSupportURL
-    $sCustomHelpdeskLMIrAddressFilePath = $sDirScript & '\Support\CustomHelpdeskLMIrAddress.txt'
-    If FileExists($sCustomHelpdeskLMIrAddressFilePath) Then
-      Local $hFileOpen = FileOpen($sCustomHelpdeskLMIrAddressFilePath,  $FO_READ)
-      If (StringIsSpace(FileReadLine($hFileOpen, 1)) = 0) Then
-        Global $sHelpdeskEmail = FileReadLine($hFileOpen, 1)
-        FileClose($hFileOpen)
-      EndIf
-    EndIf
-  EndFunc
 
   ;; READ CUSTOM INFO
   Func ReadAdditionalInfo()
@@ -1308,7 +1309,7 @@ EndSwitch
 
     ;read custom information file, set to blank if not found
     Global $sCustomInformation = ' '
-    $sCustomInformationFilePath = $sDirScript & '\Support\CustomInformation.txt'
+    $sCustomInformationFilePath = $sAppInstallPath & '\Support\CustomInformation.txt'
     If FileExists($sCustomInformationFilePath) Then
       Local $hFileOpen = FileOpen($sCustomInformationFilePath,  $FO_READ)
       $sCustomInformation = FileRead($hFileOpen)
@@ -1352,9 +1353,9 @@ EndSwitch
     Local $sLCMCRCode5
 
     ;; LOCATION 0 - USER OVERRIDE / CUSTOMIZATION
-    $sCustomLCMXJCodeFilePath  = $sDirScript & '\Support\CustomLCMXJCode.txt'
-    $sCustomLCMCRCodeFilePath  = $sDirScript & '\Support\CustomLCMCRCode.txt'
-    $sCustomLCMEditionFilePath = $sDirScript & '\Support\CustomLCMEdition.txt'
+    $sCustomLCMXJCodeFilePath  = $sAppInstallPath & '\Support\CustomLCMXJCode.txt'
+    $sCustomLCMCRCodeFilePath  = $sAppInstallPath & '\Support\CustomLCMCRCode.txt'
+    $sCustomLCMEditionFilePath = $sAppInstallPath & '\Support\CustomLCMEdition.txt'
 
     If FileExists($sCustomLCMXJCodeFilePath) Then
       Local $hFileOpen = FileOpen($sCustomLCMXJCodeFilePath,  $FO_READ)
@@ -1574,30 +1575,7 @@ EndSwitch
 #EndRegion
 
 #Region -- OPTIONS
-  ;; READ CUSTOM OPTIONS
-  Func ReadContactHelpdeskEnable()
-  ;Generated variables:
-  ;
-  ; $bContactHelpdeskEnabled
 
-    Global $bContactHelpdeskEnabled = True
-    $sContactHelpdeskEnabledFilePath = $sDirScript & '\Support\ContactHelpdeskDisabled.txt'
-    If FileExists($sContactHelpdeskEnabledFilePath) Then    ;do if file exists
-      $bContactHelpdeskEnabled = False
-    EndIf
-  EndFunc
-
-  Func ReadExitEnable()
-  ;Generated variables:
-  ;
-  ; $bExitEnabled
-
-    Global $bExitEnabled = True
-    $sExitEnabledFilePath = $sDirScript & '\Support\ExitDisabled.txt'
-    If FileExists($sExitEnabledFilePath) Then    ;do if file exists
-      $bExitEnabled = False
-    EndIf
-  EndFunc
 
   ;; TOOLS
   Func _elementExists($array, $element)
@@ -1774,7 +1752,7 @@ EndSwitch
 #Region -- REFRESH INFO
   ;; Standard Refresh
   Func ReadComputer()
-    ReadOS()
+    ReadOSVersion()
     ReadArch()
     ReadUser()
     ReadPC()
@@ -1782,8 +1760,8 @@ EndSwitch
     ReadRegionalInfo()  ;look for location flags and set regional info accordingly (helpdesk phone/email, etc.)
     ReadAdditionalInfo()  ;read contents of custom info file
     ReadLCMInfo()
-    ReadContactHelpdeskEnable()
-    ReadExitEnable()
+    ReadConfig()
+    ReadConfig()
     ReadDisks()
     ReadPrinters()
     ReadAD()
@@ -2148,7 +2126,7 @@ EndSwitch
       Global $idMenuItemMainHelpAbout         = GUICtrlCreateMenuItem('About', $idMenuMainHelp, -1)
 
   ;; MAIN WINDOW - LEFT COLUMN
-    $idGraphicMainAboutPC = GUICtrlCreateIcon($sDirScript & '\Support\BeOS_info.ico', -1, $columnMainLeft01, $rowMainLeft01, 128, 128, -1, $GUI_WS_EX_PARENTDRAG)
+    $idGraphicMainAboutPC = GUICtrlCreateIcon($sAppInstallPath & '\Support\BeOS_info.ico', -1, $columnMainLeft01, $rowMainLeft01, 128, 128, -1, $GUI_WS_EX_PARENTDRAG)
 
     Global $idButtonMainLeftClose             = GUICtrlCreateButton($sCloseButtonText,            $columnMainLeft_01, $rowMainLeft_01, $columnMainLeft_01Width, $rowMainLeft_01Height)
     Global $idButtonMainLeftRefresh           = GUICtrlCreateButton('Refresh',                    $columnMainLeft_01, $rowMainLeft_02, $columnMainLeft_01Width, $rowMainLeft_02Height)
@@ -2165,9 +2143,9 @@ EndSwitch
     $idLabelMainRight02             = GUICtrlCreateLabel('Phone: ',                     $columnMainRight02, $rowMainRight03, $columnMainRight02Width, $rowMainRight03Height, $SS_RIGHT)
     $idLabelMainRight02b            = GUICtrlCreateLabel('Password Reset: ',           $columnMainRight02, $rowMainRight03a, $columnMainRight02Width, $rowMainRight03aHeight, $SS_RIGHT)
 
-    $idLabelMainRight01a            = GUICtrlCreateEdit($sHelpdeskEmail,                $columnMainRight03, $rowMainRight02, $columnMainRight03Width - 1, $rowMainRight02Height, $ES_READONLY, 0)
-    $idLabelMainRight02a            = GUICtrlCreateEdit($sHelpdeskPhone,                $columnMainRight03, $rowMainRight03, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
-    $idLabelMainRight02c            = GUICtrlCreateEdit($sHelpdeskPasswordResets,       $columnMainRight03, $rowMainRight03a, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
+    $idLabelMainRight01a            = GUICtrlCreateEdit($sOrgHelpdeskEmail,                $columnMainRight03, $rowMainRight02, $columnMainRight03Width - 1, $rowMainRight02Height, $ES_READONLY, 0)
+    $idLabelMainRight02a            = GUICtrlCreateEdit($sOrgHelpdeskPhone,                $columnMainRight03, $rowMainRight03, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
+    $idLabelMainRight02c            = GUICtrlCreateEdit($$sOrgHelpdeskCorporatePhone,       $columnMainRight03, $rowMainRight03a, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
 
     ; session information
     $idGroupMainRightSession        = GUICtrlCreateGroup('Session',                     $columnMainRight01, $rowMainRight05, $columnMainRight00Width + 1, ($rowMainRight13 - $rowMainRight05) + 4)
@@ -2481,9 +2459,9 @@ EndSwitch
 
 ;; UPDATE MAIN GUI
   Func UpdateMainGUI()
-    GUICtrlSetData($idLabelMainRight01a, $sHelpdeskEmail)
-    GUICtrlSetData($idLabelMainRight02a, $sHelpdeskPhone)
-    GUICtrlSetData($idLabelMainRight02c, $sHelpdeskPasswordResets)
+    GUICtrlSetData($idLabelMainRight01a, $sOrgHelpdeskEmail)
+    GUICtrlSetData($idLabelMainRight02a, $sOrgHelpdeskPhone)
+    GUICtrlSetData($idLabelMainRight02c, $$sOrgHelpdeskCorporatePhone)
     GUICtrlSetData($idLabelMainRight03a, $sWMIUserName)
     GUICtrlSetData($idLabelMainRight04a, $sComputerName)
     GUICtrlSetData($idLabelMainRight05a, $sNetAdapter01Address)
@@ -2593,11 +2571,11 @@ EndSwitch
       'Custom:' & @CRLF & _
       $sCustomInformation & @CRLF & _
       'Helpdesk:' & @CRLF & _
-      ' • Email: ' & $sHelpdeskEmail & @CRLF & _
-      ' • Phone: ' & $sHelpdeskPhone & @CRLF & _
-      ' • Password Reset: ' & $sHelpdeskPasswordResets & @CRLF & _
-      ' • Website: ' & $sHelpdeskAddress & @CRLF & _
-      ' • LMIr URL: ' & $sHelpdeskLMIrAddress & @CRLF & _
+      ' • Email: ' & $sOrgHelpdeskEmail & @CRLF & _
+      ' • Phone: ' & $sOrgHelpdeskPhone & @CRLF & _
+      ' • Password Reset: ' & $$sOrgHelpdeskCorporatePhone & @CRLF & _
+      ' • Website: ' & $sOrgHelpdeskURL & @CRLF & _
+      ' • LMIr URL: ' & $sOrgHelpdeskRemoteSupportURL & @CRLF & _
       @CRLF & _
       'About This Computer  •  ' & $sAppVersion & '  •  ' & @YEAR & '-' & @MON & '-' & @MDAY & ' ' & @HOUR & ':' & @MIN & ':' & @SEC & '  •  [mB7a78-' & $sAppBuild & ']'
   EndFunc
@@ -2773,7 +2751,7 @@ EndSwitch
 
   ;; LogMeIn Rescue
   Func LaunchLMIRescue()
-    ShellExecute('iexplore.exe', $sHelpdeskLMIrAddress, 'C:\Windows\System32')
+    ShellExecute('iexplore.exe', $sOrgHelpdeskRemoteSupportURL, 'C:\Windows\System32')
   EndFunc
 
   ;; Intranet
@@ -2783,7 +2761,7 @@ EndSwitch
 
   ;; IT Helpdesk
   Func LaunchITHelpdesk()
-    ShellExecute('iexplore.exe', $sHelpdeskAddress, 'C:\Windows\System32')
+    ShellExecute('iexplore.exe', $sOrgHelpdeskURL, 'C:\Windows\System32')
   EndFunc
 
   ;; Password Management / Self-Service
@@ -2801,7 +2779,7 @@ EndSwitch
     ;Variables
     $sWindowTitle = 'About'
     $idParentGUI = $idGUIMain
-    $sGraphic = $sDirScript & '\Support\BeOS_info.ico'
+    $sGraphic = $sAppInstallPath & '\Support\BeOS_info.ico'
     $sTitle = 'About This Computer'
     $sSubtitle = 'A workstation information utility.'
     $sVersion = 'Version ' & $sAppVersion
@@ -3128,7 +3106,7 @@ EndSwitch
     Global $idGUIContact = GUICreate('Create an ' & $sOrgHelpdeskName & ' Request', $columnContactBounds, $rowContactBounds, -1, -1, -1, $WS_EX_TOPMOST)   ;$idGUIMain
 
     ;; LEFT COLUMN, TOP
-    $idGraphicContact = GUICtrlCreateIcon($sDirScript & '\Support\BeOS_Customize_wrench.ico', -1, $columnContactLeft01, $rowContactLeft01, 96, 96, -1, $GUI_WS_EX_PARENTDRAG)
+    $idGraphicContact = GUICtrlCreateIcon($sAppInstallPath & '\Support\BeOS_Customize_wrench.ico', -1, $columnContactLeft01, $rowContactLeft01, 96, 96, -1, $GUI_WS_EX_PARENTDRAG)
 
     ;; LEFT COLUMN, BOTTOM
     Global $idButtonContactLeftSend = GUICtrlCreateButton('Submit Request', $columnContactLeft_01, $rowContactLeft_01, $columnContactLeft_01Width, $rowContactLeft_01Height, BitOR($BS_MULTILINE, $BS_CENTER, $BS_VCENTER))
@@ -3390,7 +3368,7 @@ EndSwitch
     $lTemplates = ''
 
     ;location of templates
-    Global $sContactTemplatesDir = $sDirScript & '\Support\Templates'
+    Global $sContactTemplatesDir = $sAppInstallPath & '\Support\Templates'
 
     ;read dir of templates into array
     Global $aContactTemplates = ''
@@ -3512,7 +3490,7 @@ EndSwitch
       If StringIsSpace($sTemplateToAddress) = False Then
         $sContactFormTo = $sTemplateToAddress
       Else
-        $sContactFormTo = $sHelpdeskEmail
+        $sContactFormTo = $sOrgHelpdeskEmail
       EndIf
       If StringIsSpace($sTemplateCCAddress) = False Then
         $sContactFormCC = $sTemplateCCAddress
@@ -3539,15 +3517,15 @@ EndSwitch
       ;test From email format
       If (_IsValidEmail($sContactFormFrom) = False) Then $bContactFormValid = False
       If $bContactFormValid = False Then
-        MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Error', 'Please contact the ' & $sOrgName & ' ' & $sOrgHelpdeskName & ' by phone at ' & $sHelpdeskPhone & '.' & @CRLF & @CRLF & '(About This Computer ''From'' address is misconfigured.)', 0, $idGUIContact)
-        ;MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Failure', '''From'' email address is invalid. Please contact the ' & $sOrgName & ' ' & $sOrgHelpdeskName & ' by phone at ' & $sHelpdeskPhone & '.', 0, $idGUIContact)
+        MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Error', 'Please contact the ' & $sOrgName & ' ' & $sOrgHelpdeskName & ' by phone at ' & $sOrgHelpdeskPhone & '.' & @CRLF & @CRLF & '(About This Computer ''From'' address is misconfigured.)', 0, $idGUIContact)
+        ;MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Failure', '''From'' email address is invalid. Please contact the ' & $sOrgName & ' ' & $sOrgHelpdeskName & ' by phone at ' & $sOrgHelpdeskPhone & '.', 0, $idGUIContact)
         Return
       EndIf
 
       ;test To email format
       If (_IsValidEmail($sContactFormTo) = False) Then $bContactFormValid = False
       If $bContactFormValid = False Then
-        MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Error', 'Please contact the ' & $sOrgName & ' ' & $sOrgHelpdeskName & ' by phone at ' & $sHelpdeskPhone & '.' & @CRLF & @CRLF & '(About This Computer ''To'' address is misconfigured.)', 0, $idGUIContact)
+        MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Error', 'Please contact the ' & $sOrgName & ' ' & $sOrgHelpdeskName & ' by phone at ' & $sOrgHelpdeskPhone & '.' & @CRLF & @CRLF & '(About This Computer ''To'' address is misconfigured.)', 0, $idGUIContact)
         Return
       EndIf
 
@@ -3681,10 +3659,10 @@ EndSwitch
       Switch $sErrorCode
         Case '0'
           $bContactFormSubmitSuccess = True
-          MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION, $MB_TOPMOST, $MB_SETFOREGROUND), 'Request Submitted', 'Your ' & $sOrgHelpdeskName & ' request has been submitted.' & @CRLF & @CRLF & 'Check the inbox of ' & $sContactFormFrom & ' for a confirmation email.' & @CRLF & @CRLF & 'If you do not receive a confirmation email, contact the ' & $sOrgName & ' ' & $sOrgHelpdeskName & ' by phone at ' & $sHelpdeskPhone & '.', 0, $idGUIContact)
+          MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION, $MB_TOPMOST, $MB_SETFOREGROUND), 'Request Submitted', 'Your ' & $sOrgHelpdeskName & ' request has been submitted.' & @CRLF & @CRLF & 'Check the inbox of ' & $sContactFormFrom & ' for a confirmation email.' & @CRLF & @CRLF & 'If you do not receive a confirmation email, contact the ' & $sOrgName & ' ' & $sOrgHelpdeskName & ' by phone at ' & $sOrgHelpdeskPhone & '.', 0, $idGUIContact)
         Case Else
           $bContactFormSubmitSuccess = False
-          MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Error', 'Unable to submit request. Please contact the ' & $sOrgName & ' ' & $sOrgHelpdeskName & ' by phone at ' & $sHelpdeskPhone & '.' & @CRLF & @CRLF & '(' & $sErrorCode & ')', 0, $idGUIContact)
+          MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Error', 'Unable to submit request. Please contact the ' & $sOrgName & ' ' & $sOrgHelpdeskName & ' by phone at ' & $sOrgHelpdeskPhone & '.' & @CRLF & @CRLF & '(' & $sErrorCode & ')', 0, $idGUIContact)
       EndSwitch
     EndFunc
   #EndRegion
@@ -3847,7 +3825,7 @@ EndSwitch
   EndFunc
 
   Func MailSummary()
-    $sEmailTo = $sHelpdeskEmail
+    $sEmailTo = $sOrgHelpdeskEmail
     $sEmailSubject = 'Details about ' & $sComputerName & ' from ' & $sCurrentUsername
     $sEmailBody = StringReplace($sSummaryString, @CRLF, '%0D%0A')
     $sMailTo = 'mailto:' & $sEmailTo & '?subject=' & $sEmailSubject & '&body=%0D%0A%0D%0A' & $sEmailBody

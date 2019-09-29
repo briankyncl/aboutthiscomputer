@@ -107,15 +107,17 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     ;; Define tray and display normal tray or window-mode tray.
     ;; Define main GUI and display Loading... GUI or main GUI.
     StartupBuildTray()
-    --StartupBuildGUI()
+    StartupBuildMainGUI()
 
     ;;REFRESH COMPUTER INFO
     ;; Read details about computer.
-    --ReadComputer()
+    ReadComputer()
     --ReadComputerSchedule()  ;;AdLibRegister ReadComputer()
 
     ;;DISPLAY GUI
     ;; Display either the main GUI or or the final tray and show.
+    --MainGUI()
+    --MainGUIWait()
 
     ;;MAIN WAIT
     ;; Enter main loop and wait
@@ -449,6 +451,496 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
         TraySetClick(8) ;;pressing secondary mouse button will show the tray menu.
     EndSwitch
   EndFunc
+
+  Func StartupBuildMainGUI()
+    ;;CREATE MAIN GUI
+
+    ;Func AboutThisComputer() -- replace instances of this with main GUI wait function??
+
+    ;;DEFINE GUI GRID
+      ;;COLUMNS
+        ;;columns, left
+        $columnMainLeft00 = 0
+        $columnMainLeft01 = 20  ;image
+
+        ;;columns, left, widths
+        $columnMainLeft00Width = 140
+        $columnMainLeft01Width = $columnMainLeft00Width - 36    ;total width of column minus spacing left and right
+
+        ;;columns, right
+        $columnMainRight00 = $columnMainLeft00Width
+        $columnMainRight01 = $columnMainRight00    ;group line
+        $columnMainRight02 = $columnMainRight01 + 10    ;label title
+        $columnMainRight03 = $columnMainRight02 + 90    ;label info
+        $columnMainRight04 = $columnMainRight03 + 200
+
+        ;;columns, right, widths
+        $columnMainRight00Width = 300
+        $columnMainRight01Width = 10
+        $columnMainRight02Width = 90
+        $columnMainRight03Width = 200
+        $columnMainRight04Width = 0
+
+        ;;window boundary
+        $columnMainBounds = $columnMainLeft00Width + $columnMainRight00Width + 12   ;right edge of window
+
+      ;;ROWS
+        ;;rows, left
+        $rowMainLeft00 = 0
+        $rowMainLeft01 = 10
+
+        ;;rows, left, heights
+        $rowMainLeft00Height = 400
+        $rowMainLeft01Height = 128
+
+        ;;rows, right
+        $rowMainRightSpacing = 16   ;height of columns of text
+        $rowMainRightSpacers = 6    ;lower number means more space between groups
+        $rowMainRight00 = 0 - $rowMainRightSpacers                                        ;spacer
+        $rowMainRight01 = $rowMainRight00 + $rowMainRightSpacing
+        $rowMainRight02 = $rowMainRight01 + $rowMainRightSpacing
+        $rowMainRight03 = $rowMainRight02 + $rowMainRightSpacing
+        $rowMainRight03a = $rowMainRight03 + $rowMainRightSpacing
+        $rowMainRight04 = $rowMainRight03a + $rowMainRightSpacing
+        $rowMainRight05 = $rowMainRight04 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
+        $rowMainRight06 = $rowMainRight05 + $rowMainRightSpacing
+        $rowMainRight07 = $rowMainRight06 + $rowMainRightSpacing
+        If $bNetAdapter01Exists = True Then
+          $rowMainRight08 = $rowMainRight07 + $rowMainRightSpacing    ; IP address 1
+        Else
+          $rowMainRight08 = $rowMainRight07
+        EndIf
+        If $bNetAdapter02Exists = True Then
+          $rowMainRight09 = $rowMainRight08 + $rowMainRightSpacing    ; IP address 2
+        Else
+          $rowMainRight09 = $rowMainRight08
+        EndIf
+        If $bNetAdapter03Exists = True Then
+          $rowMainRight10 = $rowMainRight09 + $rowMainRightSpacing    ; IP address 3
+        Else
+          $rowMainRight10 = $rowMainRight09
+        EndIf
+        If $bNetAdapter04Exists = True Then
+          $rowMainRight11 = $rowMainRight10 + $rowMainRightSpacing    ; IP address 4
+        Else
+          $rowMainRight11 = $rowMainRight10
+        EndIf
+        If $bNetAdapter05Exists = True Then
+          $rowMainRight12 = $rowMainRight11 + $rowMainRightSpacing    ; IP address 5
+        Else
+          $rowMainRight12 = $rowMainRight11
+        EndIf
+        $rowMainRight13 = $rowMainRight12 + $rowMainRightSpacing
+        $rowMainRight14 = $rowMainRight13 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
+        $rowMainRight15 = $rowMainRight14 + $rowMainRightSpacing
+        $rowMainRight16 = $rowMainRight15 + $rowMainRightSpacing
+        $rowMainRight17 = $rowMainRight16 + $rowMainRightSpacing
+        $rowMainRight18 = $rowMainRight17 + $rowMainRightSpacing
+        $rowMainRight19 = $rowMainRight18 + $rowMainRightSpacing
+        $rowMainRight20 = $rowMainRight19 + $rowMainRightSpacing
+        $rowMainRight21 = $rowMainRight20 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
+        $rowMainRight22 = $rowMainRight21 + $rowMainRightSpacing
+        $rowMainRight23 = $rowMainRight22 + $rowMainRightSpacing
+        $rowMainRight24 = $rowMainRight23 + $rowMainRightSpacing
+        If $bAssetTagExists = True Then
+          $rowMainRight25 = $rowMainRight24 + $rowMainRightSpacing
+        Else
+          $rowMainRight25 = $rowMainRight24
+        EndIf
+        If $bLCMInfoExists = True Then
+          $rowMainRight26 = $rowMainRight25 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
+          $rowMainRight27 = $rowMainRight26 + $rowMainRightSpacing
+          $rowMainRight28 = $rowMainRight27 + $rowMainRightSpacing
+          $rowMainRight29 = $rowMainRight28 + $rowMainRightSpacing
+        Else
+          ;; set these rows to increase by 0 if no LCM info section exists
+          $rowMainRight26 = $rowMainRight25   ;spacer
+          $rowMainRight27 = $rowMainRight26
+          $rowMainRight28 = $rowMainRight27
+          $rowMainRight29 = $rowMainRight28
+        EndIf
+        If $bFreeTextDetailsExists = True Then
+          $rowMainRight30 = $rowMainRight29 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
+          $rowMainRight31 = $rowMainRight30 + $rowMainRightSpacing
+          $rowMainRight32 = $rowMainRight31 + $rowMainRightSpacing + (($rowMainRightSpacing * 3) - 7) ;height of multiline custom info box, duplicate changes in rowMainRight below
+        Else
+          ;; set these rows to increase by 0 if no custom info section exists
+          $rowMainRight30 = $rowMainRight29   ;spacer
+          $rowMainRight31 = $rowMainRight30
+          $rowMainRight32 = $rowMainRight31
+        EndIf
+        $rowMainRight33 = $rowMainRight32 + $rowMainRightSpacing
+        $rowMainRight34 = $rowMainRight33 + $rowMainRightSpacing
+        $rowMainRight35 = $rowMainRight34 + $rowMainRightSpacing
+        $rowMainRight36 = $rowMainRight35 + $rowMainRightSpacing
+        $rowMainRight37 = $rowMainRight36 + $rowMainRightSpacing
+        $rowMainRight38 = $rowMainRight37 + $rowMainRightSpacing
+        $rowMainRight39 = $rowMainRight38 + $rowMainRightSpacing
+        $rowMainRight40 = $rowMainRight39 + $rowMainRightSpacing
+        $rowMainRight41 = $rowMainRight40 + $rowMainRightSpacing
+        $rowMainRight42 = $rowMainRight41 + $rowMainRightSpacing
+        $rowMainRight43 = $rowMainRight42 + $rowMainRightSpacing
+        $rowMainRight44 = $rowMainRight43 + $rowMainRightSpacing
+        $rowMainRight45 = $rowMainRight44 + $rowMainRightSpacing
+        $rowMainRight46 = $rowMainRight45 + $rowMainRightSpacing
+        $rowMainRight47 = $rowMainRight46 + $rowMainRightSpacing
+        $rowMainRight48 = $rowMainRight47 + $rowMainRightSpacing
+        $rowMainRight49 = $rowMainRight48 + $rowMainRightSpacing
+        $rowMainRight50 = $rowMainRight49 + $rowMainRightSpacing
+
+        ;;rows, right, heights
+        $rowMainRightHeights  = $rowMainRightSpacing
+        $rowMainRight00Height = $rowMainRightHeights
+        $rowMainRight01Height = $rowMainRightHeights
+        $rowMainRight02Height = $rowMainRightHeights
+        $rowMainRight03Height = $rowMainRightHeights
+        $rowMainRight03aHeight = $rowMainRightHeights
+        $rowMainRight04Height = $rowMainRightHeights
+        $rowMainRight05Height = $rowMainRightHeights
+        $rowMainRight06Height = $rowMainRightHeights
+        $rowMainRight07Height = $rowMainRightHeights
+        If $bNetAdapter01Exists = True Then
+          $rowMainRight08Height = $rowMainRightHeights    ;IP address 1
+        Else
+          $rowMainRight08Height = 0
+        EndIf
+        If $bNetAdapter02Exists = True Then
+          $rowMainRight09Height = $rowMainRightHeights    ;IP address 2
+        Else
+          $rowMainRight09Height = 0
+        EndIf
+        If $bNetAdapter03Exists = True Then
+          $rowMainRight10Height = $rowMainRightHeights    ;IP address 3
+        Else
+          $rowMainRight10Height = 0
+        EndIf
+        If $bNetAdapter04Exists = True Then
+          $rowMainRight11Height = $rowMainRightHeights    ;IP address 4
+        Else
+          $rowMainRight11Height = 0
+        EndIf
+        If $bNetAdapter05Exists = True Then
+          $rowMainRight12Height = $rowMainRightHeights    ;IP address 5
+        Else
+          $rowMainRight12Height = 0
+        EndIf
+        $rowMainRight13Height = $rowMainRightHeights
+        $rowMainRight14Height = $rowMainRightHeights
+        $rowMainRight15Height = $rowMainRightHeights
+        $rowMainRight16Height = $rowMainRightHeights
+        $rowMainRight17Height = $rowMainRightHeights
+        $rowMainRight18Height = $rowMainRightHeights
+        $rowMainRight19Height = $rowMainRightHeights
+        $rowMainRight20Height = $rowMainRightHeights
+        $rowMainRight21Height = $rowMainRightHeights
+        $rowMainRight22Height = $rowMainRightHeights
+        $rowMainRight23Height = $rowMainRightHeights
+        $rowMainRight24Height = $rowMainRightHeights
+        If $bAssetTagExists = True Then
+          $rowMainRight25Height = $rowMainRightHeights
+        Else
+          $rowMainRight25Height = 0
+        EndIf
+        If $bLCMInfoExists = True Then
+          $rowMainRight26Height = $rowMainRightHeights
+          $rowMainRight27Height = $rowMainRightHeights
+          $rowMainRight28Height = $rowMainRightHeights
+          $rowMainRight29Height = $rowMainRightHeights
+        Else
+          ;; set these rows to 0 height if no LCM info section exists
+          $rowMainRight26Height = 0
+          $rowMainRight27Height = 0
+          $rowMainRight28Height = 0
+          $rowMainRight29Height = 0
+        EndIf
+        If $bFreeTextDetailsExists = True Then
+          $rowMainRight30Height = $rowMainRightHeights
+          $rowMainRight31Height = $rowMainRightHeights + (($rowMainRightSpacing * 3) - 7) ;height of multiline custom info box, duplicate changes in rowMainRightHeight above
+          $rowMainRight32Height = $rowMainRightHeights
+        Else
+          ;; set these rows to 0 height if no custom info section exists
+          $rowMainRight30Height = 0
+          $rowMainRight31Height = 0
+          $rowMainRight32Height = 0
+          ;; end
+        EndIf
+        $rowMainRight33Height = $rowMainRightHeights
+        $rowMainRight34Height = $rowMainRightHeights
+        $rowMainRight35Height = $rowMainRightHeights
+        $rowMainRight36Height = $rowMainRightHeights
+        $rowMainRight37Height = $rowMainRightHeights
+        $rowMainRight38Height = $rowMainRightHeights
+        $rowMainRight39Height = $rowMainRightHeights
+        $rowMainRight40Height = $rowMainRightHeights
+        $rowMainRight41Height = $rowMainRightHeights
+        $rowMainRight42Height = $rowMainRightHeights
+        $rowMainRight43Height = $rowMainRightHeights
+        $rowMainRight44Height = $rowMainRightHeights
+        $rowMainRight45Height = $rowMainRightHeights
+        $rowMainRight46Height = $rowMainRightHeights
+        $rowMainRight47Height = $rowMainRightHeights
+        $rowMainRight48Height = $rowMainRightHeights
+        $rowMainRight49Height = $rowMainRightHeights
+        $rowMainRight50Height = $rowMainRightHeights
+
+        ;;window boundary
+        $rowMainBounds = $rowMainRight33 + 17  ;;bottom edge of window, last used row in right column plus adjustment.
+
+      ;;COLUMNS, FROM BOTTOM
+        ;;columns, left, from bottom
+        $columnMainLeft_00 = 0
+        $columnMainLeft_01 = 10
+
+        ;;columns, left, widths
+        $columnMainLeft_00Width = 10
+        $columnMainLeft_01Width = $columnMainLeft00Width - 20
+
+      ;;ROWS, FROM BOTTOM
+        ;;rows, left, from bottom
+        $rowMainLeftSpacing = 35
+        $rowMainLeftSpacer = 25 ;high number means less space between, up to $rowMainLeftSpacing
+        $rowMainLeft_00 = $rowMainBounds - 24
+        $rowMainLeft_01 = $rowMainLeft_00 - $rowMainLeftSpacing
+        $rowMainLeft_02 = $rowMainLeft_01 - $rowMainLeftSpacing
+        $rowMainLeft_03 = $rowMainLeft_02 - $rowMainLeftSpacing + $rowMainLeftSpacer
+        $rowMainLeft_04 = $rowMainLeft_03 - $rowMainLeftSpacing - 10
+        $rowMainLeft_05 = $rowMainLeft_04 - $rowMainLeftSpacing
+        $rowMainLeft_06 = $rowMainLeft_05 - $rowMainLeftSpacing
+        $rowMainLeft_07 = $rowMainLeft_06 - $rowMainLeftSpacing
+        $rowMainLeft_08 = $rowMainLeft_07 - $rowMainLeftSpacing
+        $rowMainLeft_09 = $rowMainLeft_08 - $rowMainLeftSpacing
+        $rowMainLeft_10 = $rowMainLeft_09 - $rowMainLeftSpacing
+
+        ;;rows, left, from bottom heights
+        $rowMainLeftHeights = $rowMainLeftSpacing - 5
+        $rowMainLeft_00Height = 0
+        $rowMainLeft_01Height = $rowMainLeftHeights
+        $rowMainLeft_02Height = $rowMainLeftHeights
+        $rowMainLeft_03Height = $rowMainLeftHeights
+        $rowMainLeft_04Height = $rowMainLeftHeights + 10
+        $rowMainLeft_05Height = $rowMainLeftHeights
+        $rowMainLeft_06Height = $rowMainLeftHeights
+        $rowMainLeft_07Height = $rowMainLeftHeights
+        $rowMainLeft_08Height = $rowMainLeftHeights
+        $rowMainLeft_09Height = $rowMainLeftHeights
+        $rowMainLeft_10Height = $rowMainLeftHeights
+
+    ;;DECLARE MAIN WINDOW
+      Global $idGUIMain = GUICreate('About This Computer', $columnMainBounds, $rowMainBounds, -1, -1, -1, $WS_EX_TOPMOST)
+
+      $sCloseButtonText = 'Close'
+      If $sMainAppExeMode = 'Window' Then $sCloseButtonText = 'Exit'
+
+    ;;MENU BAR
+      ;;File
+        Global $idMenuMainFile = GUICtrlCreateMenu("&File")
+
+        Global $idMenuItemMainFileEmail = GUICtrlCreateMenuItem('Email Summary', $idMenuMainFile, -1)
+        Global $idMenuItemMainFileShow = GUICtrlCreateMenuItem('Show Summary', $idMenuMainFile, -1)
+          GUICtrlCreateMenuItem('', $idMenuMainFile, -1) ; create a separator line
+        Global $idMenuItemMainFilePrint = GUICtrlCreateMenuItem('Print Summary...', $idMenuMainFile, -1)
+          GUICtrlCreateMenuItem('', $idMenuMainFile, -1) ; create a separator line
+        Global $idMenuItemMainFileClose = GUICtrlCreateMenuItem($sCloseButtonText, $idMenuMainFile, -1)
+
+      ;;Edit
+        Global $idMenuMainEdit = GUICtrlCreateMenu('Edit')
+
+        Global $idMenuItemMainEditCut = GUICtrlCreateMenuItem('Cut', $idMenuMainEdit, -1)
+        Global $idMenuItemMainEditCopy = GUICtrlCreateMenuItem('Copy', $idMenuMainEdit, -1)
+        Global $idMenuItemMainEditPaste = GUICtrlCreateMenuItem('Paste', $idMenuMainEdit, -1)
+          GUICtrlCreateMenuItem('', $idMenuMainEdit, -1) ; create a separator line
+        Global $idMenuItemMainEditCopySum = GUICtrlCreateMenuItem('Copy Summary', $idMenuMainEdit, -1)
+
+      ;;Tools
+        Global $idMenuMainTools = GUICtrlCreateMenu('Tools')
+
+        Global $idMenuItemMainToolsNetConnect = GUICtrlCreateMenuItem('Network Connections', $idMenuMainTools, -1)
+        Global $idMenuItemMainToolsInetCpl = GUICtrlCreateMenuItem('Internet Options', $idMenuMainTools, -1)
+          GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
+        Global $idMenuItemMainToolsAppCatalog = GUICtrlCreateMenuItem('Application Catalog', $idMenuMainTools, -1)
+        Global $idMenuItemMainToolsAppWiz = GUICtrlCreateMenuItem('Programs and Features', $idMenuMainTools, -1)
+        Global $idMenuItemMainToolsServices = GUICtrlCreateMenuItem('Services', $idMenuMainTools, -1)
+        Global $idMenuItemMainToolsWinUpdate = GUICtrlCreateMenuItem('Windows Update', $idMenuMainTools, -1)
+          GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
+        Global $idMenuItemMainToolsPrintMMC = GUICtrlCreateMenuItem('Print Management', $idMenuMainTools, -1)
+        Global $idMenuItemMainToolsDevNPrint = GUICtrlCreateMenuItem('Devices and Printers', $idMenuMainTools, -1)
+        Global $idMenuItemMainToolsDevMan = GUICtrlCreateMenuItem('Device Manager', $idMenuMainTools, -1)
+          GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
+        Global $idMenuItemMainToolsCredMan = GUICtrlCreateMenuItem('Credential Manager', $idMenuMainTools, -1)
+        Global $idMenuItemMainToolsMailAcct = GUICtrlCreateMenuItem('Mail Accounts', $idMenuMainTools, -1)
+          GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
+        Global $idMenuItemMainToolsSearchAD = GUICtrlCreateMenuItem('Search Active Directory', $idMenuMainTools, -1)
+        Global $idMenuItemMainToolsSysProp = GUICtrlCreateMenuItem('System Properties', $idMenuMainTools, -1)
+        ;Global $idMenuItemMainToolsSysInfo = GUICtrlCreateMenuItem('System Information', $idMenuMainTools, -1)
+
+      ;;Help
+        Global $idMenuMainHelp = GUICtrlCreateMenu('Help')
+
+        Global $idMenuItemMainHelpLaunchLMIr = GUICtrlCreateMenuItem('LogMeIn Rescue', $idMenuMainHelp, -1)  ;↗
+          GUICtrlCreateMenuItem('', $idMenuMainHelp, -1) ; create a separator line
+        Global $idMenuItemMainHelpLaunchIntranet = GUICtrlCreateMenuItem($sOrgIntranetName, $idMenuMainHelp, -1)  ;↗
+        Global $idMenuItemMainHelpLaunchHDesk = GUICtrlCreateMenuItem($sOrgHelpdeskName, $idMenuMainHelp, -1) ;↗
+        Global $idMenuItemMainHelpLaunchPWM = GUICtrlCreateMenuItem('Password Self-Service', $idMenuMainHelp, -1) ;↗
+          GUICtrlCreateMenuItem('', $idMenuMainHelp, -1) ; create a separator line
+        Global $idMenuItemMainHelpDocumentation = GUICtrlCreateMenuItem('Documentation (PDF)', $idMenuMainHelp, -1)
+          GUICtrlCreateMenuItem('', $idMenuMainHelp, -1) ; create a separator line
+        Global $idMenuItemMainHelpAbout = GUICtrlCreateMenuItem('About', $idMenuMainHelp, -1)
+
+    ;;MAIN WINDOW ELEMENTS - LEFT COLUMN
+      $idGraphicMainAboutPC = GUICtrlCreateIcon($sAppInstallPath & '\Support\BeOS_info.ico', -1, $columnMainLeft01, $rowMainLeft01, 128, 128, -1, $GUI_WS_EX_PARENTDRAG)
+
+      Global $idButtonMainLeftClose = GUICtrlCreateButton($sCloseButtonText, $columnMainLeft_01, $rowMainLeft_01, $columnMainLeft_01Width, $rowMainLeft_01Height)
+      Global $idButtonMainLeftRefresh = GUICtrlCreateButton('Refresh', $columnMainLeft_01, $rowMainLeft_02, $columnMainLeft_01Width, $rowMainLeft_02Height)
+      If $bContactHelpdeskEnabled = True Then
+        Global $idButtonMainLeftContactHDesk = GUICtrlCreateButton('Create an IT' & @CRLF & 'Helpdesk Request', $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height, BitOR($BS_MULTILINE, $BS_CENTER, $BS_VCENTER))
+      Else
+        Global $idButtonMainLeftContactHDesk = GUICtrlCreateButton('Copy Summary', $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height)
+      EndIf
+
+    ;;MAIN WINDOW ELEMENTS - RIGHT COLUMN
+      ;;Contact information
+        $idGroupMainRightContact = GUICtrlCreateGroup($sOrgName & ' ' & $sOrgHelpdeskName, $columnMainRight01, $rowMainRight01, $columnMainRight00Width + 1, ($rowMainRight04 - $rowMainRight01) + 4)
+        $idLabelMainRight01 = GUICtrlCreateLabel('Email: ', $columnMainRight02, $rowMainRight02, $columnMainRight02Width, $rowMainRight02Height, $SS_RIGHT)
+        $idLabelMainRight02 = GUICtrlCreateLabel('Phone: ', $columnMainRight02, $rowMainRight03, $columnMainRight02Width, $rowMainRight03Height, $SS_RIGHT)
+        $idLabelMainRight02b = GUICtrlCreateLabel('Password Reset: ', $columnMainRight02, $rowMainRight03a, $columnMainRight02Width, $rowMainRight03aHeight, $SS_RIGHT)
+
+        $idLabelMainRight01a = GUICtrlCreateEdit($sOrgHelpdeskEmail, $columnMainRight03, $rowMainRight02, $columnMainRight03Width - 1, $rowMainRight02Height, $ES_READONLY, 0)
+        $idLabelMainRight02a = GUICtrlCreateEdit($sOrgHelpdeskPhone, $columnMainRight03, $rowMainRight03, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
+        $idLabelMainRight02c = GUICtrlCreateEdit($$sOrgHelpdeskCorporatePhone, $columnMainRight03, $rowMainRight03a, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
+
+      ;;Session information
+        $idGroupMainRightSession = GUICtrlCreateGroup('Session', $columnMainRight01, $rowMainRight05, $columnMainRight00Width + 1, ($rowMainRight13 - $rowMainRight05) + 4)
+        $idLabelMainRight03 = GUICtrlCreateLabel('Current User: ', $columnMainRight02, $rowMainRight06, $columnMainRight02Width, $rowMainRight06Height, $SS_RIGHT)
+        $idLabelMainRight04 = GUICtrlCreateLabel('Computer Name: ', $columnMainRight02, $rowMainRight07, $columnMainRight02Width, $rowMainRight07Height, $SS_RIGHT)
+
+        If $bNetAdapter01Exists = True Then
+          $idLabelMainRight05 = GUICtrlCreateLabel('IP Address: ', $columnMainRight02, $rowMainRight08, $columnMainRight02Width, $rowMainRight08Height, $SS_RIGHT)
+          $idLabelMainRight05a = GUICtrlCreateEdit($sNetAdapter01Address, $columnMainRight03-4, $rowMainRight08-2, $columnMainRight03Width - 1, $rowMainRight08Height, $ES_READONLY, 0)
+
+          GUICtrlSetFont($idLabelMainRight05a, 10, $FW_BOLD)
+        Else
+          Local $idLabelMainRight05
+        EndIf
+        If $bNetAdapter02Exists = True Then
+          $idLabelMainRight06 = GUICtrlCreateLabel('IP Address: ', $columnMainRight02, $rowMainRight09, $columnMainRight02Width, $rowMainRight09Height, $SS_RIGHT)
+          $idLabelMainRight06a = GUICtrlCreateEdit($sNetAdapter02Address, $columnMainRight03, $rowMainRight09, $columnMainRight03Width - 1, $rowMainRight09Height, $ES_READONLY, 0)
+        Else
+          Local $idLabelMainRight06
+        EndIf
+        If $bNetAdapter03Exists = True Then
+          $idLabelMainRight07 = GUICtrlCreateLabel('IP Address: ', $columnMainRight02, $rowMainRight10, $columnMainRight02Width, $rowMainRight10Height, $SS_RIGHT)
+          $idLabelMainRight07a = GUICtrlCreateEdit($sNetAdapter03Address, $columnMainRight03, $rowMainRight10, $columnMainRight03Width - 1, $rowMainRight10Height, $ES_READONLY, 0)
+        Else
+          Local $idLabelMainRight07
+        EndIf
+        If $bNetAdapter04Exists = True Then
+          $idLabelMainRight08 = GUICtrlCreateLabel('IP Address: ', $columnMainRight02, $rowMainRight11, $columnMainRight02Width, $rowMainRight11Height, $SS_RIGHT)
+          $idLabelMainRight08a = GUICtrlCreateEdit($sNetAdapter04Address, $columnMainRight03, $rowMainRight11, $columnMainRight03Width - 1, $rowMainRight11Height, $ES_READONLY, 0)
+        Else
+          Local $idLabelMainRight08
+        EndIf
+        If $bNetAdapter05Exists = True Then
+          $idLabelMainRight09 = GUICtrlCreateLabel('IP Address: ', $columnMainRight02, $rowMainRight12, $columnMainRight02Width, $rowMainRight12Height, $SS_RIGHT)
+          $idLabelMainRight09a = GUICtrlCreateEdit($sNetAdapter05Address, $columnMainRight03, $rowMainRight12, $columnMainRight03Width - 1, $rowMainRight12Height, $ES_READONLY, 0)
+        Else
+          Local $idLabelMainRight09
+        EndIf
+
+        $idLabelMainRight03a = GUICtrlCreateEdit($sWMIUserName, $columnMainRight03, $rowMainRight06, $columnMainRight03Width - 1, $rowMainRight06Height, $ES_READONLY, 0)
+        $idLabelMainRight04a = GUICtrlCreateEdit($sComputerName, $columnMainRight03, $rowMainRight07, $columnMainRight03Width - 1, $rowMainRight07Height, $ES_READONLY, 0)
+
+      ;;Operating system information
+        $idGroupMainRightOS = GUICtrlCreateGroup('Operating System', $columnMainRight01, $rowMainRight14, $columnMainRight00Width + 1, ($rowMainRight20 - $rowMainRight14) + 4)
+        $idLabelMainRight10 = GUICtrlCreateLabel('Version: ', $columnMainRight02, $rowMainRight15, $columnMainRight02Width, $rowMainRight15Height, $SS_RIGHT)
+        $idLabelMainRight11 = GUICtrlCreateLabel('Architecture: ', $columnMainRight02, $rowMainRight16, $columnMainRight02Width, $rowMainRight16Height, $SS_RIGHT)
+        $idLabelMainRight12 = GUICtrlCreateLabel('Uptime: ', $columnMainRight02, $rowMainRight17, $columnMainRight02Width, $rowMainRight17Height, $SS_RIGHT)
+        $idLabelMainRight13 = GUICtrlCreateLabel('Install Age: ', $columnMainRight02, $rowMainRight18, $columnMainRight02Width, $rowMainRight18Height, $SS_RIGHT)
+        $idLabelMainRight14 = GUICtrlCreateLabel('Domain: ', $columnMainRight02, $rowMainRight19, $columnMainRight02Width, $rowMainRight19Height, $SS_RIGHT)
+
+        $idLabelMainRight10a = GUICtrlCreateEdit($sOSVersionName, $columnMainRight03, $rowMainRight15, $columnMainRight03Width - 1, $rowMainRight15Height, $ES_READONLY, 0)
+        $idLabelMainRight11a = GUICtrlCreateEdit($sOSArchShortname, $columnMainRight03, $rowMainRight16, $columnMainRight03Width - 1, $rowMainRight16Height, $ES_READONLY, 0)
+        $idLabelMainRight12a = GUICtrlCreateEdit($sOSUptime, $columnMainRight03, $rowMainRight17, $columnMainRight03Width - 1, $rowMainRight17Height, $ES_READONLY, 0)
+        $idLabelMainRight13a = GUICtrlCreateEdit($sOSAgeAndDate, $columnMainRight03, $rowMainRight18, $columnMainRight03Width - 1, $rowMainRight18Height, $ES_READONLY, 0)
+        $idLabelMainRight14a = GUICtrlCreateEdit($sWMIDomain, $columnMainRight03, $rowMainRight19, $columnMainRight03Width - 1, $rowMainRight19Height, $ES_READONLY, 0)
+
+      ;;Hardware information
+        $idGroupMainRightHardware = GUICtrlCreateGroup('Hardware', $columnMainRight01, $rowMainRight21, $columnMainRight00Width + 1, ($rowMainRight25 - $rowMainRight21) + 4)
+        $idLabelMainRight15 = GUICtrlCreateLabel('Model: ', $columnMainRight02, $rowMainRight22, $columnMainRight02Width, $rowMainRight22Height, $SS_RIGHT)
+        $idLabelMainRight16 = GUICtrlCreateLabel('Serial: ', $columnMainRight02, $rowMainRight23, $columnMainRight02Width, $rowMainRight23Height, $SS_RIGHT)
+        If $bAssetTagExists = True Then
+          $idLabelMainRight17 = GUICtrlCreateLabel('Asset Tag: ', $columnMainRight02, $rowMainRight24, $columnMainRight02Width, $rowMainRight24Height, $SS_RIGHT)
+          $idLabelMainRight17a = GUICtrlCreateEdit($sWMISMBIOSAssetTag, $columnMainRight03, $rowMainRight24, $columnMainRight03Width - 1 - 1, $rowMainRight24Height, $ES_READONLY, 0)
+        Else
+          Local $idLabelMainRight17
+          Local $idLabelMainRight17a
+        EndIf
+        $idLabelMainRight15a = GUICtrlCreateEdit($sWMIManufacturer & ' ' & $sWMIModel, $columnMainRight03, $rowMainRight22, $columnMainRight03Width - 1 - 1, $rowMainRight22Height, $ES_READONLY, 0)
+        $idLabelMainRight16a = GUICtrlCreateEdit($sWMISerialNumber, $columnMainRight03, $rowMainRight23, $columnMainRight03Width - 1 - 1, $rowMainRight23Height, $ES_READONLY, 0)
+
+
+      ;;LCM details
+        If $bLCMInfoExists = True Then
+          $idGroupMainRightLCM = GUICtrlCreateGroup('PSC/IOP Details', $columnMainRight01, $rowMainRight26, $columnMainRight00Width + 1, ($rowMainRight29 - $rowMainRight26) + 4)
+          $idLabelMainRight18 = GUICtrlCreateLabel('Site Code: ', $columnMainRight02, $rowMainRight27, $columnMainRight02Width, $rowMainRight27Height, $SS_RIGHT)
+          $idLabelMainRight19 = GUICtrlCreateLabel('CRA: ', $columnMainRight02, $rowMainRight28, $columnMainRight02Width, $rowMainRight28Height, $SS_RIGHT)
+
+          $idLabelMainRight18a = GUICtrlCreateEdit($sLCMXJCode, $columnMainRight03, $rowMainRight27, $columnMainRight03Width - 1, $rowMainRight27Height, $ES_READONLY, 0)
+          $idLabelMainRight19a = GUICtrlCreateEdit($sLCMCRCode, $columnMainRight03, $rowMainRight28, $columnMainRight03Width - 1, $rowMainRight28Height, $ES_READONLY, 0)
+        Else
+          Local $idGroupMainRightLCM
+          Local $idLabelMainRight18
+          Local $idLabelMainRight19
+        EndIf
+
+      ;;Free-text details
+        If $bFreeTextDetailsExists = True Then
+          $idGroupMainRightCustom  GUICtrlCreateGroup('More Details', $columnMainRight01, $rowMainRight30, $columnMainRight00Width + 1, ($rowMainRight32 - $rowMainRight30) + 4)
+
+          $idLabelMainRight20a = GUICtrlCreateEdit($sFreeTextDetails, $columnMainRight01+8, $rowMainRight31, $columnMainRight00Width-9, $rowMainRight31Height-4, BitOR($ES_AUTOVSCROLL,$ES_READONLY,$ES_WANTRETURN,$WS_VSCROLL), 0)
+        Else
+          Local $idGroupMainRightCustom
+        EndIf
+
+    ;;GATHER GUI ELEMENTS INTO ARRAYS
+      Global $aMainMenus[4]
+        $aMainMenus[00] = $idMenuMainFile
+        $aMainMenus[01] = $idMenuMainEdit
+        $aMainMenus[02] = $idMenuMainTools
+        $aMainMenus[03] = $idMenuMainHelp
+
+      Global $aMainMenuItems[26]
+        $aMainMenuItems[00] = $idMenuItemMainFileEmail
+        $aMainMenuItems[01] = $idMenuItemMainFileShow
+        $aMainMenuItems[02] = $idMenuItemMainFilePrint
+        $aMainMenuItems[03] = $idMenuItemMainFileClose
+        $aMainMenuItems[04] = $idMenuItemMainEditCut
+        $aMainMenuItems[05] = $idMenuItemMainEditCopy
+        $aMainMenuItems[06] = $idMenuItemMainEditCopySum
+        $aMainMenuItems[07] = $idMenuItemMainEditPaste
+        $aMainMenuItems[08] = $idMenuItemMainToolsNetConnect
+        $aMainMenuItems[09] = $idMenuItemMainToolsInetCpl
+        $aMainMenuItems[10] = $idMenuItemMainToolsAppCatalog
+        $aMainMenuItems[11] = $idMenuItemMainToolsAppWiz
+        $aMainMenuItems[12] = $idMenuItemMainToolsServices
+        $aMainMenuItems[13] = $idMenuItemMainToolsPrintMMC
+        $aMainMenuItems[14] = $idMenuItemMainToolsDevNPrint
+        $aMainMenuItems[15] = $idMenuItemMainToolsDevMan
+        $aMainMenuItems[16] = $idMenuItemMainToolsCredMan
+        $aMainMenuItems[17] = $idMenuItemMainToolsMailAcct
+        $aMainMenuItems[18] = $idMenuItemMainToolsSearchAD
+        $aMainMenuItems[19] = $idMenuItemMainToolsSysProp
+        $aMainMenuItems[20] = $idMenuItemMainHelpLaunchLMIr
+        $aMainMenuItems[21] = $idMenuItemMainHelpLaunchIntranet
+        $aMainMenuItems[22] = $idMenuItemMainHelpLaunchHDesk
+        $aMainMenuItems[23] = $idMenuItemMainHelpLaunchPWM
+        $aMainMenuItems[24] = $idMenuItemMainHelpDocumentation
+        $aMainMenuItems[25] = $idMenuItemMainHelpAbout
+
+      Global $aMainButtons[3]
+        $aMainButtons[00] = $idButtonMainLeftClose
+        $aMainButtons[01] = $idButtonMainLeftRefresh
+        $aMainButtons[02] = $idButtonMainLeftContactHDesk
+  EndFunc
 #EndRegion
 
 #Region -- READ COMPUTER
@@ -471,7 +963,6 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
       ReadConfig()
       ReadCustomization()
       ReadRegistry()
-
 
       ;;;;;; move to branch ;;;;;;
       ReadLCMInfo()
@@ -1371,7 +1862,180 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     EndFunc
 #EndRegion
 
+#Region -- OPERATIONS
 
+;;RESUME HERE
+    ;;DISPLAY THE GUI
+      GUIMainSetDefaults()
+      GUISetState(@SW_SHOWNORMAL, $idGUIMain) ;show GUI
+
+    ;;WAIT FOR INPUT
+      $sGUIBusyWait = 300
+
+      Local $aMsg
+      While 1
+        $aMsg = GUIGetMsg(1)  ;use advanced parameter
+        Switch $aMsg[1] ;check which GUI sent the message
+          Case $idGUIMain
+            Switch $aMsg[0]
+              ;; MENUS
+              ;File
+              Case $idMenuItemMainFileEmail
+                GUIMainSetBusyDefaults()
+                MailSummary()
+                CloseMain()
+                ExitLoop
+              Case $idMenuItemMainFileShow
+                GUIMainSetBusyDefaults()
+                LaunchShowSummary()
+                GUIMainSetDefaults()
+              Case $idMenuItemMainFilePrint
+                GUIMainSetBusyDefaults()
+                PrintSummary()
+                GUIMainSetDefaults()
+              Case $idMenuItemMainFileClose
+                CloseMain()
+                ExitLoop
+
+              ;Edit
+              Case $idMenuItemMainEditCopy
+                Send("^c")  ;press ctrl + c
+              Case $idMenuItemMainEditCopySum
+                CopySummaryToClipboard()
+
+              ;Tools
+              Case $idMenuItemMainToolsNetConnect
+                GUIMainSetBusyDefaults()
+                LaunchNetConnect()
+                CloseMain()
+                ExitLoop
+              Case $idMenuItemMainToolsInetCpl
+                GUIMainSetBusyDefaults()
+                LaunchInetCpl()
+                CloseMain()
+                ExitLoop
+              Case $idMenuItemMainToolsAppCatalog
+                GUIMainSetBusyDefaults()
+                LaunchAppCatalog()
+                CloseMain()
+                ExitLoop
+              Case $idMenuItemMainToolsAppWiz
+                GUIMainSetBusyDefaults()
+                LaunchAppWiz()
+                CloseMain()
+                ExitLoop
+              Case $idMenuItemMainToolsServices
+                GUIMainSetBusyDefaults()
+                LaunchServices()
+                CloseMain()
+                ExitLoop
+              Case $idMenuItemMainToolsWinUpdate
+                GUIMainSetBusyDefaults()
+                LaunchWindowsUpdate()
+                CloseMain()
+                ExitLoop
+              Case $idMenuItemMainToolsPrintMMC
+                GUIMainSetBusyDefaults()
+                LaunchPrintMMC()
+                CloseMain()
+                ExitLoop
+              Case $idMenuItemMainToolsDevNPrint
+                GUIMainSetBusyDefaults()
+                LaunchDevNPrint()
+                CloseMain()
+                ExitLoop
+              Case $idMenuItemMainToolsDevMan
+                GUIMainSetBusyDefaults()
+                LaunchDevMan()
+                CloseMain()
+                ExitLoop
+              Case $idMenuItemMainToolsCredMan
+                GUIMainSetBusyDefaults()
+                LaunchCredMan()
+                CloseMain()
+                ExitLoop
+              Case $idMenuItemMainToolsMailAcct
+                GUIMainSetBusyDefaults()
+                LaunchMailAcct()
+                CloseMain()
+                ExitLoop
+              Case $idMenuItemMainToolsSearchAD
+                GUIMainSetBusyDefaults()
+                LaunchSearchAD()
+                CloseMain()
+                ExitLoop
+              Case $idMenuItemMainToolsSysProp
+                GUIMainSetBusyDefaults()
+                LaunchSysProp()
+                CloseMain()
+                ExitLoop
+
+              ;Help
+              Case $idMenuItemMainHelpLaunchLMIr
+                GUIMainSetBusyDefaults()
+                LaunchLMIRescue()
+                CloseMain()
+                ExitLoop
+              Case $idMenuItemMainHelpLaunchIntranet
+                GUIMainSetBusyDefaults()
+                LaunchIntranet()
+                CloseMain()
+                ExitLoop
+              Case $idMenuItemMainHelpLaunchHDesk
+                GUIMainSetBusyDefaults()
+                LaunchITHelpdesk()
+                CloseMain()
+                ExitLoop
+              Case $idMenuItemMainHelpLaunchPWM
+                GUIMainSetBusyDefaults()
+                LaunchPaswordManagement()
+                CloseMain()
+                ExitLoop
+              Case $idMenuItemMainHelpDocumentation
+                GUIMainSetBusyDefaults()
+                LaunchDocumentation()
+                CloseMain()
+                ExitLoop
+              Case $idMenuItemMainHelpAbout
+                GUIMainSetBusyDefaults()
+                LaunchAbout()
+                GUIMainSetDefaults()
+
+              ;; TEXT
+
+              ;; BUTTONS
+              Case $idButtonMainLeftContactHDesk
+                GUIMainSetBusyDefaults()
+                If $bContactHelpdeskEnabled = True Then
+                  GUISetState(@SW_MINIMIZE, $idGUIMain) ;hide GUI
+                  Sleep(100)
+                  ContactHelpdesk()
+                  Sleep(100)
+                  GUISetState(@SW_RESTORE, $idGUIMain) ;restore GUI
+                Else
+                  CopySummaryToClipboard()
+                  Sleep($sGUIBusyWait)
+                EndIf
+                GUIMainSetDefaults()
+              Case $idButtonMainLeftRefresh
+                GUIMainSetBusyDefaults()
+                ReadComputerWait($idGUIMain)
+                GUIMainSetDefaults()
+              Case $idButtonMainLeftClose
+                CloseMain()
+                ExitLoop
+
+              ;; CLOSE
+              Case $GUI_EVENT_CLOSE
+                CloseMain()
+                ExitLoop
+            EndSwitch
+        EndSwitch
+      WEnd
+
+
+
+#EndRegion
 
 
 
@@ -1790,653 +2454,7 @@ EndSwitch
 
 #Region - GUIs
   ;; ABOUT THIS COMPUTER
-  Func AboutThisComputer()
-  ;; DEFINE MAIN WINDOW
-    ;; COLUMNS
-    ;columns, left
-    $columnMainLeft00 = 0
-    $columnMainLeft01 = 20  ;image
 
-    ;columns, left, widths
-    $columnMainLeft00Width = 140
-    $columnMainLeft01Width = $columnMainLeft00Width - 36    ;total width of column minus spacing left and right
-
-    ;columns, right
-    $columnMainRight00 = $columnMainLeft00Width
-    $columnMainRight01 = $columnMainRight00    ;group line
-    $columnMainRight02 = $columnMainRight01 + 10    ;label title
-    $columnMainRight03 = $columnMainRight02 + 90    ;label info
-    $columnMainRight04 = $columnMainRight03 + 200
-
-    ;columns, right, widths
-    $columnMainRight00Width = 300
-    $columnMainRight01Width = 10
-    $columnMainRight02Width = 90
-    $columnMainRight03Width = 200
-    $columnMainRight04Width = 0
-
-    ;window boundary
-    $columnMainBounds = $columnMainLeft00Width + $columnMainRight00Width + 12   ;right edge of window
-
-    ;; ROWS
-    ;rows, left
-    $rowMainLeft00 = 0
-    $rowMainLeft01 = 10
-
-    ;rows, left, heights
-    $rowMainLeft00Height = 400
-    $rowMainLeft01Height = 128
-
-    ;rows, right
-    $rowMainRightSpacing = 16   ;height of columns of text
-    $rowMainRightSpacers = 6    ;lower number means more space between groups
-    $rowMainRight00 = 0 - $rowMainRightSpacers                                        ;spacer
-    $rowMainRight01 = $rowMainRight00 + $rowMainRightSpacing
-    $rowMainRight02 = $rowMainRight01 + $rowMainRightSpacing
-    $rowMainRight03 = $rowMainRight02 + $rowMainRightSpacing
-    $rowMainRight03a = $rowMainRight03 + $rowMainRightSpacing
-    $rowMainRight04 = $rowMainRight03a + $rowMainRightSpacing
-    $rowMainRight05 = $rowMainRight04 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
-    $rowMainRight06 = $rowMainRight05 + $rowMainRightSpacing
-    $rowMainRight07 = $rowMainRight06 + $rowMainRightSpacing
-    If $bNetAdapter01Exists = True Then
-      $rowMainRight08 = $rowMainRight07 + $rowMainRightSpacing    ; IP address 1
-    Else
-      $rowMainRight08 = $rowMainRight07
-    EndIf
-    If $bNetAdapter02Exists = True Then
-      $rowMainRight09 = $rowMainRight08 + $rowMainRightSpacing    ; IP address 2
-    Else
-      $rowMainRight09 = $rowMainRight08
-    EndIf
-    If $bNetAdapter03Exists = True Then
-      $rowMainRight10 = $rowMainRight09 + $rowMainRightSpacing    ; IP address 3
-    Else
-      $rowMainRight10 = $rowMainRight09
-    EndIf
-    If $bNetAdapter04Exists = True Then
-      $rowMainRight11 = $rowMainRight10 + $rowMainRightSpacing    ; IP address 4
-    Else
-      $rowMainRight11 = $rowMainRight10
-    EndIf
-    If $bNetAdapter05Exists = True Then
-      $rowMainRight12 = $rowMainRight11 + $rowMainRightSpacing    ; IP address 5
-    Else
-      $rowMainRight12 = $rowMainRight11
-    EndIf
-    $rowMainRight13 = $rowMainRight12 + $rowMainRightSpacing
-    $rowMainRight14 = $rowMainRight13 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
-    $rowMainRight15 = $rowMainRight14 + $rowMainRightSpacing
-    $rowMainRight16 = $rowMainRight15 + $rowMainRightSpacing
-    $rowMainRight17 = $rowMainRight16 + $rowMainRightSpacing
-    $rowMainRight18 = $rowMainRight17 + $rowMainRightSpacing
-    $rowMainRight19 = $rowMainRight18 + $rowMainRightSpacing
-    $rowMainRight20 = $rowMainRight19 + $rowMainRightSpacing
-    $rowMainRight21 = $rowMainRight20 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
-    $rowMainRight22 = $rowMainRight21 + $rowMainRightSpacing
-    $rowMainRight23 = $rowMainRight22 + $rowMainRightSpacing
-    $rowMainRight24 = $rowMainRight23 + $rowMainRightSpacing
-    If $bAssetTagExists = True Then
-      $rowMainRight25 = $rowMainRight24 + $rowMainRightSpacing
-    Else
-      $rowMainRight25 = $rowMainRight24
-    EndIf
-    If $bLCMInfoExists = True Then
-      $rowMainRight26 = $rowMainRight25 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
-      $rowMainRight27 = $rowMainRight26 + $rowMainRightSpacing
-      $rowMainRight28 = $rowMainRight27 + $rowMainRightSpacing
-      $rowMainRight29 = $rowMainRight28 + $rowMainRightSpacing
-    Else
-      ;; set these rows to increase by 0 if no LCM info section exists
-      $rowMainRight26 = $rowMainRight25   ;spacer
-      $rowMainRight27 = $rowMainRight26
-      $rowMainRight28 = $rowMainRight27
-      $rowMainRight29 = $rowMainRight28
-    EndIf
-    If $bFreeTextDetailsExists = True Then
-      $rowMainRight30 = $rowMainRight29 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
-      $rowMainRight31 = $rowMainRight30 + $rowMainRightSpacing
-      $rowMainRight32 = $rowMainRight31 + $rowMainRightSpacing + (($rowMainRightSpacing * 3) - 7) ;height of multiline custom info box, duplicate changes in rowMainRight below
-    Else
-      ;; set these rows to increase by 0 if no custom info section exists
-      $rowMainRight30 = $rowMainRight29   ;spacer
-      $rowMainRight31 = $rowMainRight30
-      $rowMainRight32 = $rowMainRight31
-    EndIf
-    $rowMainRight33 = $rowMainRight32 + $rowMainRightSpacing
-    $rowMainRight34 = $rowMainRight33 + $rowMainRightSpacing
-    $rowMainRight35 = $rowMainRight34 + $rowMainRightSpacing
-    $rowMainRight36 = $rowMainRight35 + $rowMainRightSpacing
-    $rowMainRight37 = $rowMainRight36 + $rowMainRightSpacing
-    $rowMainRight38 = $rowMainRight37 + $rowMainRightSpacing
-    $rowMainRight39 = $rowMainRight38 + $rowMainRightSpacing
-    $rowMainRight40 = $rowMainRight39 + $rowMainRightSpacing
-    $rowMainRight41 = $rowMainRight40 + $rowMainRightSpacing
-    $rowMainRight42 = $rowMainRight41 + $rowMainRightSpacing
-    $rowMainRight43 = $rowMainRight42 + $rowMainRightSpacing
-    $rowMainRight44 = $rowMainRight43 + $rowMainRightSpacing
-    $rowMainRight45 = $rowMainRight44 + $rowMainRightSpacing
-    $rowMainRight46 = $rowMainRight45 + $rowMainRightSpacing
-    $rowMainRight47 = $rowMainRight46 + $rowMainRightSpacing
-    $rowMainRight48 = $rowMainRight47 + $rowMainRightSpacing
-    $rowMainRight49 = $rowMainRight48 + $rowMainRightSpacing
-    $rowMainRight50 = $rowMainRight49 + $rowMainRightSpacing
-
-    ;rows, right, heights
-    $rowMainRightHeights  = $rowMainRightSpacing
-    $rowMainRight00Height = $rowMainRightHeights
-    $rowMainRight01Height = $rowMainRightHeights
-    $rowMainRight02Height = $rowMainRightHeights
-    $rowMainRight03Height = $rowMainRightHeights
-    $rowMainRight03aHeight = $rowMainRightHeights
-    $rowMainRight04Height = $rowMainRightHeights
-    $rowMainRight05Height = $rowMainRightHeights
-    $rowMainRight06Height = $rowMainRightHeights
-    $rowMainRight07Height = $rowMainRightHeights
-    If $bNetAdapter01Exists = True Then
-      $rowMainRight08Height = $rowMainRightHeights    ;IP address 1
-    Else
-      $rowMainRight08Height = 0
-    EndIf
-    If $bNetAdapter02Exists = True Then
-      $rowMainRight09Height = $rowMainRightHeights    ;IP address 2
-    Else
-      $rowMainRight09Height = 0
-    EndIf
-    If $bNetAdapter03Exists = True Then
-      $rowMainRight10Height = $rowMainRightHeights    ;IP address 3
-    Else
-      $rowMainRight10Height = 0
-    EndIf
-    If $bNetAdapter04Exists = True Then
-      $rowMainRight11Height = $rowMainRightHeights    ;IP address 4
-    Else
-      $rowMainRight11Height = 0
-    EndIf
-    If $bNetAdapter05Exists = True Then
-      $rowMainRight12Height = $rowMainRightHeights    ;IP address 5
-    Else
-      $rowMainRight12Height = 0
-    EndIf
-    $rowMainRight13Height = $rowMainRightHeights
-    $rowMainRight14Height = $rowMainRightHeights
-    $rowMainRight15Height = $rowMainRightHeights
-    $rowMainRight16Height = $rowMainRightHeights
-    $rowMainRight17Height = $rowMainRightHeights
-    $rowMainRight18Height = $rowMainRightHeights
-    $rowMainRight19Height = $rowMainRightHeights
-    $rowMainRight20Height = $rowMainRightHeights
-    $rowMainRight21Height = $rowMainRightHeights
-    $rowMainRight22Height = $rowMainRightHeights
-    $rowMainRight23Height = $rowMainRightHeights
-    $rowMainRight24Height = $rowMainRightHeights
-    If $bAssetTagExists = True Then
-      $rowMainRight25Height = $rowMainRightHeights
-    Else
-      $rowMainRight25Height = 0
-    EndIf
-    If $bLCMInfoExists = True Then
-      $rowMainRight26Height = $rowMainRightHeights
-      $rowMainRight27Height = $rowMainRightHeights
-      $rowMainRight28Height = $rowMainRightHeights
-      $rowMainRight29Height = $rowMainRightHeights
-    Else
-      ;; set these rows to 0 height if no LCM info section exists
-      $rowMainRight26Height = 0
-      $rowMainRight27Height = 0
-      $rowMainRight28Height = 0
-      $rowMainRight29Height = 0
-    EndIf
-    If $bFreeTextDetailsExists = True Then
-      $rowMainRight30Height = $rowMainRightHeights
-      $rowMainRight31Height = $rowMainRightHeights + (($rowMainRightSpacing * 3) - 7) ;height of multiline custom info box, duplicate changes in rowMainRightHeight above
-      $rowMainRight32Height = $rowMainRightHeights
-    Else
-      ;; set these rows to 0 height if no custom info section exists
-      $rowMainRight30Height = 0
-      $rowMainRight31Height = 0
-      $rowMainRight32Height = 0
-      ;; end
-    EndIf
-    $rowMainRight33Height = $rowMainRightHeights
-    $rowMainRight34Height = $rowMainRightHeights
-    $rowMainRight35Height = $rowMainRightHeights
-    $rowMainRight36Height = $rowMainRightHeights
-    $rowMainRight37Height = $rowMainRightHeights
-    $rowMainRight38Height = $rowMainRightHeights
-    $rowMainRight39Height = $rowMainRightHeights
-    $rowMainRight40Height = $rowMainRightHeights
-    $rowMainRight41Height = $rowMainRightHeights
-    $rowMainRight42Height = $rowMainRightHeights
-    $rowMainRight43Height = $rowMainRightHeights
-    $rowMainRight44Height = $rowMainRightHeights
-    $rowMainRight45Height = $rowMainRightHeights
-    $rowMainRight46Height = $rowMainRightHeights
-    $rowMainRight47Height = $rowMainRightHeights
-    $rowMainRight48Height = $rowMainRightHeights
-    $rowMainRight49Height = $rowMainRightHeights
-    $rowMainRight50Height = $rowMainRightHeights
-
-    ;window boundary
-    $rowMainBounds = $rowMainRight33 + 17    ;bottom edge of window, last used row in right column plus adjustment.
-
-    ;columns, left, from bottom
-    $columnMainLeft_00 = 0
-    $columnMainLeft_01 = 10
-
-    ;columns, left, widths
-    $columnMainLeft_00Width = 10
-    $columnMainLeft_01Width = $columnMainLeft00Width - 20
-
-    ;rows, left, from bottom
-    $rowMainLeftSpacing = 35
-    $rowMainLeftSpacer = 25 ;high number means less space between, up to $rowMainLeftSpacing
-    $rowMainLeft_00 = $rowMainBounds - 24
-    $rowMainLeft_01 = $rowMainLeft_00 - $rowMainLeftSpacing
-    $rowMainLeft_02 = $rowMainLeft_01 - $rowMainLeftSpacing
-    $rowMainLeft_03 = $rowMainLeft_02 - $rowMainLeftSpacing + $rowMainLeftSpacer
-    $rowMainLeft_04 = $rowMainLeft_03 - $rowMainLeftSpacing - 10
-    $rowMainLeft_05 = $rowMainLeft_04 - $rowMainLeftSpacing
-    $rowMainLeft_06 = $rowMainLeft_05 - $rowMainLeftSpacing
-    $rowMainLeft_07 = $rowMainLeft_06 - $rowMainLeftSpacing
-    $rowMainLeft_08 = $rowMainLeft_07 - $rowMainLeftSpacing
-    $rowMainLeft_09 = $rowMainLeft_08 - $rowMainLeftSpacing
-    $rowMainLeft_10 = $rowMainLeft_09 - $rowMainLeftSpacing
-
-    ;rows, left, from bottom heights
-    $rowMainLeftHeights = $rowMainLeftSpacing - 5
-    $rowMainLeft_00Height = 0
-    $rowMainLeft_01Height = $rowMainLeftHeights
-    $rowMainLeft_02Height = $rowMainLeftHeights
-    $rowMainLeft_03Height = $rowMainLeftHeights
-    $rowMainLeft_04Height = $rowMainLeftHeights + 10
-    $rowMainLeft_05Height = $rowMainLeftHeights
-    $rowMainLeft_06Height = $rowMainLeftHeights
-    $rowMainLeft_07Height = $rowMainLeftHeights
-    $rowMainLeft_08Height = $rowMainLeftHeights
-    $rowMainLeft_09Height = $rowMainLeftHeights
-    $rowMainLeft_10Height = $rowMainLeftHeights
-
-  ;; BUILD MAIN WINDOW
-    $idGUIMain = GUICreate('About This Computer', $columnMainBounds, $rowMainBounds, -1, -1, -1, $WS_EX_TOPMOST)
-
-    $sCloseButtonText = 'Close'
-    If $sMainAppExeMode = 'Window' Then $sCloseButtonText = 'Exit'
-
-  ;; MENU BAR
-    ;; FILE
-    Global $idMenuMainFile = GUICtrlCreateMenu("&File")
-      Global $idMenuItemMainFileEmail         = GUICtrlCreateMenuItem('Email Summary', $idMenuMainFile, -1)
-      Global $idMenuItemMainFileShow          = GUICtrlCreateMenuItem('Show Summary', $idMenuMainFile, -1)
-        GUICtrlCreateMenuItem('', $idMenuMainFile, -1) ; create a separator line
-      Global $idMenuItemMainFilePrint         = GUICtrlCreateMenuItem('Print Summary...', $idMenuMainFile, -1)
-        GUICtrlCreateMenuItem('', $idMenuMainFile, -1) ; create a separator line
-      Global $idMenuItemMainFileClose         = GUICtrlCreateMenuItem($sCloseButtonText, $idMenuMainFile, -1)
-
-    ;; EDIT
-    Global $idMenuMainEdit = GUICtrlCreateMenu('Edit')
-      Global $idMenuItemMainEditCut           = GUICtrlCreateMenuItem('Cut', $idMenuMainEdit, -1)
-      Global $idMenuItemMainEditCopy          = GUICtrlCreateMenuItem('Copy', $idMenuMainEdit, -1)
-      Global $idMenuItemMainEditPaste         = GUICtrlCreateMenuItem('Paste', $idMenuMainEdit, -1)
-        GUICtrlCreateMenuItem('', $idMenuMainEdit, -1) ; create a separator line
-      Global $idMenuItemMainEditCopySum       = GUICtrlCreateMenuItem('Copy Summary', $idMenuMainEdit, -1)
-
-    ;; TOOLS
-    Global $idMenuMainTools = GUICtrlCreateMenu('Tools')
-      Global $idMenuItemMainToolsNetConnect   = GUICtrlCreateMenuItem('Network Connections', $idMenuMainTools, -1)
-      Global $idMenuItemMainToolsInetCpl      = GUICtrlCreateMenuItem('Internet Options', $idMenuMainTools, -1)
-        GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
-      Global $idMenuItemMainToolsAppCatalog   = GUICtrlCreateMenuItem('Application Catalog', $idMenuMainTools, -1)
-      Global $idMenuItemMainToolsAppWiz       = GUICtrlCreateMenuItem('Programs and Features', $idMenuMainTools, -1)
-      Global $idMenuItemMainToolsServices     = GUICtrlCreateMenuItem('Services', $idMenuMainTools, -1)
-      Global $idMenuItemMainToolsWinUpdate    = GUICtrlCreateMenuItem('Windows Update', $idMenuMainTools, -1)
-        GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
-      Global $idMenuItemMainToolsPrintMMC     = GUICtrlCreateMenuItem('Print Management', $idMenuMainTools, -1)
-      Global $idMenuItemMainToolsDevNPrint    = GUICtrlCreateMenuItem('Devices and Printers', $idMenuMainTools, -1)
-      Global $idMenuItemMainToolsDevMan       = GUICtrlCreateMenuItem('Device Manager', $idMenuMainTools, -1)
-        GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
-      Global $idMenuItemMainToolsCredMan      = GUICtrlCreateMenuItem('Credential Manager', $idMenuMainTools, -1)
-      Global $idMenuItemMainToolsMailAcct     = GUICtrlCreateMenuItem('Mail Accounts', $idMenuMainTools, -1)
-        GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
-      Global $idMenuItemMainToolsSearchAD     = GUICtrlCreateMenuItem('Search Active Directory', $idMenuMainTools, -1)
-      Global $idMenuItemMainToolsSysProp      = GUICtrlCreateMenuItem('System Properties', $idMenuMainTools, -1)
-      ;Global $idMenuItemMainToolsSysInfo      = GUICtrlCreateMenuItem('System Information', $idMenuMainTools, -1)
-
-    ;; HELP
-    Global $idMenuMainHelp = GUICtrlCreateMenu('Help')
-      Global $idMenuItemMainHelpLaunchLMIr    = GUICtrlCreateMenuItem('LogMeIn Rescue', $idMenuMainHelp, -1)  ;↗
-        GUICtrlCreateMenuItem('', $idMenuMainHelp, -1) ; create a separator line
-      Global $idMenuItemMainHelpLaunchIntranet    = GUICtrlCreateMenuItem($sOrgIntranetName, $idMenuMainHelp, -1)  ;↗
-      Global $idMenuItemMainHelpLaunchHDesk   = GUICtrlCreateMenuItem($sOrgHelpdeskName, $idMenuMainHelp, -1) ;↗
-      Global $idMenuItemMainHelpLaunchPWM     = GUICtrlCreateMenuItem('Password Self-Service', $idMenuMainHelp, -1) ;↗
-        GUICtrlCreateMenuItem('', $idMenuMainHelp, -1) ; create a separator line
-      Global $idMenuItemMainHelpDocumentation = GUICtrlCreateMenuItem('Documentation (PDF)', $idMenuMainHelp, -1)
-        GUICtrlCreateMenuItem('', $idMenuMainHelp, -1) ; create a separator line
-      Global $idMenuItemMainHelpAbout         = GUICtrlCreateMenuItem('About', $idMenuMainHelp, -1)
-
-  ;; MAIN WINDOW - LEFT COLUMN
-    $idGraphicMainAboutPC = GUICtrlCreateIcon($sAppInstallPath & '\Support\BeOS_info.ico', -1, $columnMainLeft01, $rowMainLeft01, 128, 128, -1, $GUI_WS_EX_PARENTDRAG)
-
-    Global $idButtonMainLeftClose             = GUICtrlCreateButton($sCloseButtonText,            $columnMainLeft_01, $rowMainLeft_01, $columnMainLeft_01Width, $rowMainLeft_01Height)
-    Global $idButtonMainLeftRefresh           = GUICtrlCreateButton('Refresh',                    $columnMainLeft_01, $rowMainLeft_02, $columnMainLeft_01Width, $rowMainLeft_02Height)
-    If $bContactHelpdeskEnabled = True Then
-      Global $idButtonMainLeftContactHDesk    = GUICtrlCreateButton('Create an IT' & @CRLF & 'Helpdesk Request', $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height, BitOR($BS_MULTILINE, $BS_CENTER, $BS_VCENTER))
-    Else
-      Global $idButtonMainLeftContactHDesk    = GUICtrlCreateButton('Copy Summary',               $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height)
-    EndIf
-
-  ;; MAIN WINDOW - RIGHT COLUMN
-    ; contact information
-    $idGroupMainRightContact        = GUICtrlCreateGroup($sOrgName & ' ' & $sOrgHelpdeskName,         $columnMainRight01, $rowMainRight01, $columnMainRight00Width + 1, ($rowMainRight04 - $rowMainRight01) + 4)
-    $idLabelMainRight01             = GUICtrlCreateLabel('Email: ',                     $columnMainRight02, $rowMainRight02, $columnMainRight02Width, $rowMainRight02Height, $SS_RIGHT)
-    $idLabelMainRight02             = GUICtrlCreateLabel('Phone: ',                     $columnMainRight02, $rowMainRight03, $columnMainRight02Width, $rowMainRight03Height, $SS_RIGHT)
-    $idLabelMainRight02b            = GUICtrlCreateLabel('Password Reset: ',           $columnMainRight02, $rowMainRight03a, $columnMainRight02Width, $rowMainRight03aHeight, $SS_RIGHT)
-
-    $idLabelMainRight01a            = GUICtrlCreateEdit($sOrgHelpdeskEmail,                $columnMainRight03, $rowMainRight02, $columnMainRight03Width - 1, $rowMainRight02Height, $ES_READONLY, 0)
-    $idLabelMainRight02a            = GUICtrlCreateEdit($sOrgHelpdeskPhone,                $columnMainRight03, $rowMainRight03, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
-    $idLabelMainRight02c            = GUICtrlCreateEdit($$sOrgHelpdeskCorporatePhone,       $columnMainRight03, $rowMainRight03a, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
-
-    ; session information
-    $idGroupMainRightSession        = GUICtrlCreateGroup('Session',                     $columnMainRight01, $rowMainRight05, $columnMainRight00Width + 1, ($rowMainRight13 - $rowMainRight05) + 4)
-    $idLabelMainRight03             = GUICtrlCreateLabel('Current User: ',              $columnMainRight02, $rowMainRight06, $columnMainRight02Width, $rowMainRight06Height, $SS_RIGHT)
-    $idLabelMainRight04             = GUICtrlCreateLabel('Computer Name: ',             $columnMainRight02, $rowMainRight07, $columnMainRight02Width, $rowMainRight07Height, $SS_RIGHT)
-
-    If $bNetAdapter01Exists = True Then
-      $idLabelMainRight05         = GUICtrlCreateLabel('IP Address: ',              $columnMainRight02, $rowMainRight08, $columnMainRight02Width, $rowMainRight08Height, $SS_RIGHT)
-      $idLabelMainRight05a        = GUICtrlCreateEdit($sNetAdapter01Address, $columnMainRight03-4, $rowMainRight08-2, $columnMainRight03Width - 1, $rowMainRight08Height, $ES_READONLY, 0)
-
-      GUICtrlSetFont($idLabelMainRight05a, 10, $FW_BOLD)
-    Else
-      Local $idLabelMainRight05
-    EndIf
-    If $bNetAdapter02Exists = True Then
-      $idLabelMainRight06         = GUICtrlCreateLabel('IP Address: ',              $columnMainRight02, $rowMainRight09, $columnMainRight02Width, $rowMainRight09Height, $SS_RIGHT)
-      $idLabelMainRight06a        = GUICtrlCreateEdit($sNetAdapter02Address, $columnMainRight03, $rowMainRight09, $columnMainRight03Width - 1, $rowMainRight09Height, $ES_READONLY, 0)
-    Else
-      Local $idLabelMainRight06
-    EndIf
-    If $bNetAdapter03Exists = True Then
-      $idLabelMainRight07         = GUICtrlCreateLabel('IP Address: ',              $columnMainRight02, $rowMainRight10, $columnMainRight02Width, $rowMainRight10Height, $SS_RIGHT)
-      $idLabelMainRight07a        = GUICtrlCreateEdit($sNetAdapter03Address, $columnMainRight03, $rowMainRight10, $columnMainRight03Width - 1, $rowMainRight10Height, $ES_READONLY, 0)
-    Else
-      Local $idLabelMainRight07
-    EndIf
-    If $bNetAdapter04Exists = True Then
-      $idLabelMainRight08         = GUICtrlCreateLabel('IP Address: ',              $columnMainRight02, $rowMainRight11, $columnMainRight02Width, $rowMainRight11Height, $SS_RIGHT)
-      $idLabelMainRight08a        = GUICtrlCreateEdit($sNetAdapter04Address, $columnMainRight03, $rowMainRight11, $columnMainRight03Width - 1, $rowMainRight11Height, $ES_READONLY, 0)
-    Else
-      Local $idLabelMainRight08
-    EndIf
-    If $bNetAdapter05Exists = True Then
-      $idLabelMainRight09         = GUICtrlCreateLabel('IP Address: ',              $columnMainRight02, $rowMainRight12, $columnMainRight02Width, $rowMainRight12Height, $SS_RIGHT)
-      $idLabelMainRight09a        = GUICtrlCreateEdit($sNetAdapter05Address, $columnMainRight03, $rowMainRight12, $columnMainRight03Width - 1, $rowMainRight12Height, $ES_READONLY, 0)
-    Else
-      Local $idLabelMainRight09
-    EndIf
-
-    $idLabelMainRight03a            = GUICtrlCreateEdit($sWMIUserName,                  $columnMainRight03, $rowMainRight06, $columnMainRight03Width - 1, $rowMainRight06Height, $ES_READONLY, 0)
-    $idLabelMainRight04a            = GUICtrlCreateEdit($sComputerName,                 $columnMainRight03, $rowMainRight07, $columnMainRight03Width - 1, $rowMainRight07Height, $ES_READONLY, 0)
-
-    ; operating system information
-    $idGroupMainRightOS             = GUICtrlCreateGroup('Operating System',            $columnMainRight01, $rowMainRight14, $columnMainRight00Width + 1, ($rowMainRight20 - $rowMainRight14) + 4)
-    $idLabelMainRight10             = GUICtrlCreateLabel('Version: ',                   $columnMainRight02, $rowMainRight15, $columnMainRight02Width, $rowMainRight15Height, $SS_RIGHT)
-    $idLabelMainRight11             = GUICtrlCreateLabel('Architecture: ',              $columnMainRight02, $rowMainRight16, $columnMainRight02Width, $rowMainRight16Height, $SS_RIGHT)
-    $idLabelMainRight12             = GUICtrlCreateLabel('Uptime: ',                    $columnMainRight02, $rowMainRight17, $columnMainRight02Width, $rowMainRight17Height, $SS_RIGHT)
-    $idLabelMainRight13             = GUICtrlCreateLabel('Install Age: ',               $columnMainRight02, $rowMainRight18, $columnMainRight02Width, $rowMainRight18Height, $SS_RIGHT)
-    $idLabelMainRight14             = GUICtrlCreateLabel('Domain: ',                    $columnMainRight02, $rowMainRight19, $columnMainRight02Width, $rowMainRight19Height, $SS_RIGHT)
-
-    $idLabelMainRight10a            = GUICtrlCreateEdit($sOSVersionName,                $columnMainRight03, $rowMainRight15, $columnMainRight03Width - 1, $rowMainRight15Height, $ES_READONLY, 0)
-    $idLabelMainRight11a            = GUICtrlCreateEdit($sOSArchShortname,              $columnMainRight03, $rowMainRight16, $columnMainRight03Width - 1, $rowMainRight16Height, $ES_READONLY, 0)
-    $idLabelMainRight12a            = GUICtrlCreateEdit($sOSUptime,                     $columnMainRight03, $rowMainRight17, $columnMainRight03Width - 1, $rowMainRight17Height, $ES_READONLY, 0)
-    $idLabelMainRight13a            = GUICtrlCreateEdit($sOSAgeAndDate,                 $columnMainRight03, $rowMainRight18, $columnMainRight03Width - 1, $rowMainRight18Height, $ES_READONLY, 0)
-    $idLabelMainRight14a            = GUICtrlCreateEdit($sWMIDomain,                    $columnMainRight03, $rowMainRight19, $columnMainRight03Width - 1, $rowMainRight19Height, $ES_READONLY, 0)
-
-    ; hardware information
-    $idGroupMainRightHardware       = GUICtrlCreateGroup('Hardware',                    $columnMainRight01, $rowMainRight21, $columnMainRight00Width + 1, ($rowMainRight25 - $rowMainRight21) + 4)
-    $idLabelMainRight15             = GUICtrlCreateLabel('Model: ',                     $columnMainRight02, $rowMainRight22, $columnMainRight02Width, $rowMainRight22Height, $SS_RIGHT)
-    $idLabelMainRight16             = GUICtrlCreateLabel('Serial: ',                    $columnMainRight02, $rowMainRight23, $columnMainRight02Width, $rowMainRight23Height, $SS_RIGHT)
-    If $bAssetTagExists = True Then
-      $idLabelMainRight17           = GUICtrlCreateLabel('Asset Tag: ',                 $columnMainRight02, $rowMainRight24, $columnMainRight02Width, $rowMainRight24Height, $SS_RIGHT)
-      $idLabelMainRight17a          = GUICtrlCreateEdit($sWMISMBIOSAssetTag,            $columnMainRight03, $rowMainRight24, $columnMainRight03Width - 1 - 1, $rowMainRight24Height, $ES_READONLY, 0)
-    Else
-      Local $idLabelMainRight17
-      Local $idLabelMainRight17a
-    EndIf
-    $idLabelMainRight15a            = GUICtrlCreateEdit($sWMIManufacturer & ' ' & $sWMIModel, $columnMainRight03, $rowMainRight22, $columnMainRight03Width - 1 - 1, $rowMainRight22Height, $ES_READONLY, 0)
-    $idLabelMainRight16a            = GUICtrlCreateEdit($sWMISerialNumber,              $columnMainRight03, $rowMainRight23, $columnMainRight03Width - 1 - 1, $rowMainRight23Height, $ES_READONLY, 0)
-
-
-    ; LCM details
-    If $bLCMInfoExists = True Then
-      $idGroupMainRightLCM          = GUICtrlCreateGroup('PSC/IOP Details',               $columnMainRight01, $rowMainRight26, $columnMainRight00Width + 1, ($rowMainRight29 - $rowMainRight26) + 4)
-      $idLabelMainRight18           = GUICtrlCreateLabel('Site Code: ',                   $columnMainRight02, $rowMainRight27, $columnMainRight02Width, $rowMainRight27Height, $SS_RIGHT)
-      $idLabelMainRight19           = GUICtrlCreateLabel('CRA: ',                         $columnMainRight02, $rowMainRight28, $columnMainRight02Width, $rowMainRight28Height, $SS_RIGHT)
-
-      $idLabelMainRight18a          = GUICtrlCreateEdit($sLCMXJCode,                      $columnMainRight03, $rowMainRight27, $columnMainRight03Width - 1, $rowMainRight27Height, $ES_READONLY, 0)
-      $idLabelMainRight19a          = GUICtrlCreateEdit($sLCMCRCode,                      $columnMainRight03, $rowMainRight28, $columnMainRight03Width - 1, $rowMainRight28Height, $ES_READONLY, 0)
-    Else
-      Local $idGroupMainRightLCM
-      Local $idLabelMainRight18
-      Local $idLabelMainRight19
-    EndIf
-
-    ; custom details
-    If $bFreeTextDetailsExists = True Then
-      $idGroupMainRightCustom     = GUICtrlCreateGroup('More Details',                $columnMainRight01, $rowMainRight30, $columnMainRight00Width + 1, ($rowMainRight32 - $rowMainRight30) + 4)
-
-      $idLabelMainRight20a        = GUICtrlCreateEdit($sFreeTextDetails,            $columnMainRight01+8, $rowMainRight31, $columnMainRight00Width-9, $rowMainRight31Height-4, BitOR($ES_AUTOVSCROLL,$ES_READONLY,$ES_WANTRETURN,$WS_VSCROLL), 0)
-    Else
-      Local $idGroupMainRightCustom
-    EndIf
-
-  ;; GATHER GUI ELEMENTS INTO ARRAYS
-    Global $aMainMenus[4]
-      $aMainMenus[00] = $idMenuMainFile
-      $aMainMenus[01] = $idMenuMainEdit
-      $aMainMenus[02] = $idMenuMainTools
-      $aMainMenus[03] = $idMenuMainHelp
-
-    Global $aMainMenuItems[26]
-      $aMainMenuItems[00] = $idMenuItemMainFileEmail
-      $aMainMenuItems[01] = $idMenuItemMainFileShow
-      $aMainMenuItems[02] = $idMenuItemMainFilePrint
-      $aMainMenuItems[03] = $idMenuItemMainFileClose
-      $aMainMenuItems[04] = $idMenuItemMainEditCut
-      $aMainMenuItems[05] = $idMenuItemMainEditCopy
-      $aMainMenuItems[06] = $idMenuItemMainEditCopySum
-      $aMainMenuItems[07] = $idMenuItemMainEditPaste
-      $aMainMenuItems[08] = $idMenuItemMainToolsNetConnect
-      $aMainMenuItems[09] = $idMenuItemMainToolsInetCpl
-      $aMainMenuItems[10] = $idMenuItemMainToolsAppCatalog
-      $aMainMenuItems[11] = $idMenuItemMainToolsAppWiz
-      $aMainMenuItems[12] = $idMenuItemMainToolsServices
-      $aMainMenuItems[13] = $idMenuItemMainToolsPrintMMC
-      $aMainMenuItems[14] = $idMenuItemMainToolsDevNPrint
-      $aMainMenuItems[15] = $idMenuItemMainToolsDevMan
-      $aMainMenuItems[16] = $idMenuItemMainToolsCredMan
-      $aMainMenuItems[17] = $idMenuItemMainToolsMailAcct
-      $aMainMenuItems[18] = $idMenuItemMainToolsSearchAD
-      $aMainMenuItems[19] = $idMenuItemMainToolsSysProp
-      $aMainMenuItems[20] = $idMenuItemMainHelpLaunchLMIr
-      $aMainMenuItems[21] = $idMenuItemMainHelpLaunchIntranet
-      $aMainMenuItems[22] = $idMenuItemMainHelpLaunchHDesk
-      $aMainMenuItems[23] = $idMenuItemMainHelpLaunchPWM
-      $aMainMenuItems[24] = $idMenuItemMainHelpDocumentation
-      $aMainMenuItems[25] = $idMenuItemMainHelpAbout
-
-    Global $aMainButtons[3]
-      $aMainButtons[00] = $idButtonMainLeftClose
-      $aMainButtons[01] = $idButtonMainLeftRefresh
-      $aMainButtons[02] = $idButtonMainLeftContactHDesk
-
-  ;; DISPLAY THE GUI
-    GUIMainSetDefaults()
-    GUISetState(@SW_SHOWNORMAL, $idGUIMain) ;show GUI
-
-  ;; WAIT FOR INPUT
-    $sGUIBusyWait = 300
-
-    Local $aMsg
-    While 1
-      $aMsg = GUIGetMsg(1)  ;use advanced parameter
-      Switch $aMsg[1] ;check which GUI sent the message
-        Case $idGUIMain
-          Switch $aMsg[0]
-            ;; MENUS
-            ;File
-            Case $idMenuItemMainFileEmail
-              GUIMainSetBusyDefaults()
-              MailSummary()
-              CloseMain()
-              ExitLoop
-            Case $idMenuItemMainFileShow
-              GUIMainSetBusyDefaults()
-              LaunchShowSummary()
-              GUIMainSetDefaults()
-            Case $idMenuItemMainFilePrint
-              GUIMainSetBusyDefaults()
-              PrintSummary()
-              GUIMainSetDefaults()
-            Case $idMenuItemMainFileClose
-              CloseMain()
-              ExitLoop
-
-            ;Edit
-            Case $idMenuItemMainEditCopy
-              Send("^c")  ;press ctrl + c
-            Case $idMenuItemMainEditCopySum
-              CopySummaryToClipboard()
-
-            ;Tools
-            Case $idMenuItemMainToolsNetConnect
-              GUIMainSetBusyDefaults()
-              LaunchNetConnect()
-              CloseMain()
-              ExitLoop
-            Case $idMenuItemMainToolsInetCpl
-              GUIMainSetBusyDefaults()
-              LaunchInetCpl()
-              CloseMain()
-              ExitLoop
-            Case $idMenuItemMainToolsAppCatalog
-              GUIMainSetBusyDefaults()
-              LaunchAppCatalog()
-              CloseMain()
-              ExitLoop
-            Case $idMenuItemMainToolsAppWiz
-              GUIMainSetBusyDefaults()
-              LaunchAppWiz()
-              CloseMain()
-              ExitLoop
-            Case $idMenuItemMainToolsServices
-              GUIMainSetBusyDefaults()
-              LaunchServices()
-              CloseMain()
-              ExitLoop
-            Case $idMenuItemMainToolsWinUpdate
-              GUIMainSetBusyDefaults()
-              LaunchWindowsUpdate()
-              CloseMain()
-              ExitLoop
-            Case $idMenuItemMainToolsPrintMMC
-              GUIMainSetBusyDefaults()
-              LaunchPrintMMC()
-              CloseMain()
-              ExitLoop
-            Case $idMenuItemMainToolsDevNPrint
-              GUIMainSetBusyDefaults()
-              LaunchDevNPrint()
-              CloseMain()
-              ExitLoop
-            Case $idMenuItemMainToolsDevMan
-              GUIMainSetBusyDefaults()
-              LaunchDevMan()
-              CloseMain()
-              ExitLoop
-            Case $idMenuItemMainToolsCredMan
-              GUIMainSetBusyDefaults()
-              LaunchCredMan()
-              CloseMain()
-              ExitLoop
-            Case $idMenuItemMainToolsMailAcct
-              GUIMainSetBusyDefaults()
-              LaunchMailAcct()
-              CloseMain()
-              ExitLoop
-            Case $idMenuItemMainToolsSearchAD
-              GUIMainSetBusyDefaults()
-              LaunchSearchAD()
-              CloseMain()
-              ExitLoop
-            Case $idMenuItemMainToolsSysProp
-              GUIMainSetBusyDefaults()
-              LaunchSysProp()
-              CloseMain()
-              ExitLoop
-
-            ;Help
-            Case $idMenuItemMainHelpLaunchLMIr
-              GUIMainSetBusyDefaults()
-              LaunchLMIRescue()
-              CloseMain()
-              ExitLoop
-            Case $idMenuItemMainHelpLaunchIntranet
-              GUIMainSetBusyDefaults()
-              LaunchIntranet()
-              CloseMain()
-              ExitLoop
-            Case $idMenuItemMainHelpLaunchHDesk
-              GUIMainSetBusyDefaults()
-              LaunchITHelpdesk()
-              CloseMain()
-              ExitLoop
-            Case $idMenuItemMainHelpLaunchPWM
-              GUIMainSetBusyDefaults()
-              LaunchPaswordManagement()
-              CloseMain()
-              ExitLoop
-            Case $idMenuItemMainHelpDocumentation
-              GUIMainSetBusyDefaults()
-              LaunchDocumentation()
-              CloseMain()
-              ExitLoop
-            Case $idMenuItemMainHelpAbout
-              GUIMainSetBusyDefaults()
-              LaunchAbout()
-              GUIMainSetDefaults()
-
-            ;; TEXT
-
-            ;; BUTTONS
-            Case $idButtonMainLeftContactHDesk
-              GUIMainSetBusyDefaults()
-              If $bContactHelpdeskEnabled = True Then
-                GUISetState(@SW_MINIMIZE, $idGUIMain) ;hide GUI
-                Sleep(100)
-                ContactHelpdesk()
-                Sleep(100)
-                GUISetState(@SW_RESTORE, $idGUIMain) ;restore GUI
-              Else
-                CopySummaryToClipboard()
-                Sleep($sGUIBusyWait)
-              EndIf
-              GUIMainSetDefaults()
-            Case $idButtonMainLeftRefresh
-              GUIMainSetBusyDefaults()
-              ReadComputerWait($idGUIMain)
-              GUIMainSetDefaults()
-            Case $idButtonMainLeftClose
-              CloseMain()
-              ExitLoop
-
-            ;; CLOSE
-            Case $GUI_EVENT_CLOSE
-              CloseMain()
-              ExitLoop
-          EndSwitch
-      EndSwitch
-    WEnd
-  EndFunc
 
 ;; UPDATE TOOLTIP
   Func UpdateToolTip()

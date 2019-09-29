@@ -84,41 +84,41 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     ;;Everything controlled from here.
 
     ;;DECLARE CORE GLOBALS
-    ;;Declare core globals needed for application startup.
+    ;; Declare core globals needed for application startup.
     StartupCoreGlobals()
 
     ;;PROCESS EXE PARAMETERS
-    ;;Parse provided command line parameters, if any.
+    ;; Parse provided command line parameters, if any.
     StartupExeMode()
 
     ;;RELAUNCH FROM TEMP
-    ;;Copy to and relaunch application from user's temp directory.
+    ;; Copy to and relaunch application from user's temp directory.
     StartupRunFromTemp()
 
     ;;DECLARE GLOBALS
-    ;;Declare globals not declared anywhere else.
+    ;; Declare globals not declared anywhere else.
     StartupGlobals()
 
     ;;READ CONFIG
-    ;;Read config and customization.
+    ;; Read application configuration and customization.
     ReadConfig()
 
     ;;STAGE GUIs
-    ;;Define tray and display normal tray or window-mode tray.
-    ;;Define main GUI and display Loading... GUI or main GUI.
+    ;; Define tray and display normal tray or window-mode tray.
+    ;; Define main GUI and display Loading... GUI or main GUI.
     StartupBuildTray()
     --StartupBuildGUI()
 
     ;;REFRESH COMPUTER INFO
-    ;;Read details about computer.
+    ;; Read details about computer.
     --ReadComputer()
     --ReadComputerSchedule()  ;;AdLibRegister ReadComputer()
 
     ;;DISPLAY GUI
-    ;;Display either the main GUI or or the final tray and show.
+    ;; Display either the main GUI or or the final tray and show.
 
     ;;MAIN WAIT
-    ;;Enter main loop and wait
+    ;; Enter main loop and wait
 
 
 
@@ -164,8 +164,8 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     ;;READ OS AND ARCHITECTURE
       ;;Find the current operating system and operating system architecture.
       ProgressSetStatusBar('Reading OS and architecture...')
-      ReadOSVersion()
-      ReadArch()
+      ReadOS()
+      ReadOSArch()
 
     ;;START LOGGING
       ;;Define start logging.
@@ -377,12 +377,41 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     ;Global $idLabelMainRight30a
   EndFunc
 
+  Func ReadConfig()
+    ;;READ APP CONFIGURATION
+    ;;Read application configuration.
+
+    ;;contact form enable/disable
+    Global $bContactHelpdeskEnabled = RegRead($sAppRegistryPath, 'bConfigContactHelpdeskEnabled')
+    If @error Then
+      $bContactHelpdeskEnabled = False
+    Else
+      If $bContactHelpdeskEnabled = 1
+        $bContactHelpdeskEnabled = True
+      Else
+        $bContactHelpdeskEnabled = False
+      EndIf
+    EndIf
+
+    ;;exit enable/disable
+    Global $bExitEnabled = RegRead($sAppRegistryPath, 'bConfigExitEnabled')
+    If @error Then
+      $bExitEnabled = False
+    Else
+      If $bExitEnabled = 1
+        $bExitEnabled = True
+      Else
+        $bExitEnabled = False
+      EndIf
+    EndIf
+  EndFunc
+
   Func StartupBuildTray()
     ;;BUILD TRAY
 
     ;;tray options
     Opt('TrayAutoPause', 0)  ;;don't PAUSE script, if systray icon is clicked
-    Opt('TrayMenuMode', 3) ;;the default tray menu items will not be shown and items are not checked when selected. These are options 1 and 2 for TrayMenuMode.
+    Opt('TrayMenuMode', 3)  ;;the default tray menu items will not be shown and items are not checked when selected. These are options 1 and 2 for TrayMenuMode.
 
     ;;tray icon
     TraySetIcon('Shell32.dll',322) ;;24 (question mark) or 44 (thin star) or 263 (question mark) or 322 (thin star) or 16783 ('i' icon)
@@ -420,52 +449,931 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
         TraySetClick(8) ;;pressing secondary mouse button will show the tray menu.
     EndSwitch
   EndFunc
-
-  ReadConfig()
-    ;;READ APP CONFIGURATION
-    ;;Read application configuration and customization.
-
-    ;;organization
-      $sOrgName = RegRead($sAppRegistryPath, 'sOrgName')
-      $sOrgDomain = RegRead($sAppRegistryPath, 'sOrgDomain')
-      $sOrgIntranetName = RegRead($sAppRegistryPath, 'sOrgIntranetName')
-      $sOrgIntranetURL = RegRead($sAppRegistryPath, 'sOrgIntranetURL')
-
-    ;;helpdesk details
-      $sOrgHelpdeskName = RegRead($sAppRegistryPath, 'sOrgHelpdeskName')
-      $sOrgHelpdeskPhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskPhone')
-      $sOrgHelpdeskRegionalPhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskRegionalPhone')
-      $sOrgHelpdeskCorporatePhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskCorporatePhone')
-      $sOrgHelpdeskEmail = RegRead($sAppRegistryPath, 'sOrgHelpdeskEmail')
-      $sOrgHelpdeskURL = RegRead($sAppRegistryPath, 'sOrgHelpdeskURL')
-      $sOrgHelpdeskRemoteSupportURL = RegRead($sAppRegistryPath, 'sOrgHelpdeskRemoteSupportURL')
-
-    ;;APP OPTIONS
-      ;;contact form enable/disable
-      Global $bContactHelpdeskEnabled = RegRead($sAppRegistryPath, 'bConfigContactHelpdeskEnabled')
-      If @error Then
-        $bContactHelpdeskEnabled = False
-      Else
-        If $bContactHelpdeskEnabled = 1
-          $bContactHelpdeskEnabled = True
-        Else
-          $bContactHelpdeskEnabled = False
-        EndIf
-      EndIf
-
-      ;;exit enable/disable
-      Global $bExitEnabled = RegRead($sAppRegistryPath, 'bConfigExitEnabled')
-      If @error Then
-        $bExitEnabled = False
-      Else
-        If $bExitEnabled = 1
-          $bExitEnabled = True
-        Else
-          $bExitEnabled = False
-        EndIf
-      EndIf
-  EndFunc
 #EndRegion
+
+#Region -- READ COMPUTER
+  ;;Fuctions for reading details about the computer.
+
+  ;;CONTROLLERS
+    Func ReadComputer()
+      ;;Controller for reading details about the computer.
+      ;; Potentially used for refreshing a subset of details.
+
+      ReadOS()
+      ReadOSArch()
+      ReadUser()
+      ReadHardware()
+      ReadNetworkAdapters()
+      ReadDisks()
+      ReadPrinters()
+      ReadAD()
+      ReadServices()
+      ReadConfig()
+      ReadCustomization()
+      ReadRegistry()
+
+
+      ;;;;;; move to branch ;;;;;;
+      ReadLCMInfo()
+      ;;;;;; move to branch ;;;;;;
+
+      UpdateToolTip()
+      UpdateMainGUI()
+      UpdateSummaryString()
+
+      _ReduceMemory()
+    EndFunc
+
+    Func ReadComputerWait($idGUIParent)
+      ;;Create busy GUI and refresh info
+      $idGUIWorking = GUICreate('Refreshing...', 200, 50, -1, -1, BitOR($WS_DLGFRAME, $WS_POPUP), BitOR($WS_EX_TOPMOST, $WS_EX_TOOLWINDOW), $idGUIParent)
+      $sLabel = GUICtrlCreateLabel('Refreshing...', 0, 17, 200, 20, $SS_CENTER)
+      GUICtrlSetFont($sLabel, 11, $FW_BOLD)
+      GUISetState(@SW_SHOWNORMAL, $idGUIWorking)
+
+      ReadComputer()
+
+      GUIDelete($idGUIWorking)
+    EndFunc
+
+  ;;READERS
+    Func ReadOS()
+      ;;Read operating system version.
+      ;; Generated variables:
+      ;;
+      ;; $sOSBuild             ; Example output:
+      ;; $sOSServicePack       ; Example output:
+      ;; $sOSProductName       ; Example output: Microsoft Windows 10 Enterprise Insider Preview
+      ;; $sOSVersion           ; Example output: WIN_7
+      ;; $sOSVersionName       ; Example output: Windows 7
+      ;; $iOSVersionValue      ; Example output: 08
+      ;; $sOSVersionType       ; Example output: Client
+      ;; $sOSEdition           ; Example output: Enterprise
+      ;; $sOSBranch            ; Example output: LTSB
+      ;;
+      ;; https://www.microsoft.com/en-us/itpro/windows-10/release-information
+      ;; https://docs.microsoft.com/en-us/windows/deployment/update/waas-overview
+      ;; https://www.autoitscript.com/autoit3/docs/macros/SystemInfo.htm
+      
+      Global $sOSType         = @OSType  ;Returns WIN_NT
+      Global $sOSBuild        = @OSBuild
+      Global $sOSServicePack  = @OSServicePack
+      Global $sOSProductName  = ''
+      Global $sOSVersion      = @OSVersion
+      Global $sOSVersionName  = ''
+      Global $iOSVersionValue = ''
+      Global $sOSVersionType  = ''
+      Global $sOSEdition      = ''
+      Global $sOSBranch       = ''
+
+      ;;READ OS FROM REGISTRY
+      $sOSProductName       = RegRead('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion', 'ProductName')
+      $sOSReleaseID         = RegRead('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion', 'ReleaseId')
+      $sOSInstallationType  = RegRead('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion', 'InstallationType')
+      $sOSEditionID         = RegRead('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion', 'EditionID')
+
+      ;;DEFINE WINDOWS 10 VERSIONS
+      If $sOSVersion = 'WIN_10' Then $sOSVersion = $sOSVersion & '-' & $sOSReleaseID  ;define release based on registry key
+      If $sOSVersion = 'WIN_10-' Then $sOSVersion = 'WIN_10-1507' ;define initial release; missing registry key
+      If StringInStr($sOSProductName, 'Insider') Then $sOSVersion = 'WIN_10-INSIDER'  ;define insider preview
+      If $sOSVersion = 'WIN_2016' AND $sOSReleaseID = '1809' Then $sOSVersion = 'WIN_2019'  ;manually define Windows Server 2019 until AutoIt macro supports it
+
+      ;;DEFINE OS BRANCH
+      If StringInStr($sOSProductName, 'LTSB') Then $sOSBranch = 'LTSB'
+      If StringInStr($sOSProductName, 'LTSC') Then $sOSBranch = 'LTSB'  ;Long-Term Servicing Branch renamed to Long-Term Servicing Channel, LTSB used in code for compatibility, LTSC set in friendly name
+      If StringIsSpace($sOSBranch) = False Then $sOSVersion = $sOSVersion & '-' & $sOSBranch
+
+      ;;DEFINE OS FRIENDLY NAME
+      If $sOSVersion = 'WIN_XP'           Then $sOSVersionName = 'Windows XP'
+      If $sOSVersion = 'WIN_XPe'          Then $sOSVersionName = 'Windows XP Embedded'
+      If $sOSVersion = 'WIN_2003'         Then $sOSVersionName = 'Windows Server 2003'
+      If $sOSVersion = 'WIN_XP64'         Then $sOSVersionName = 'Windows XP 64-bit'  ;doesn't work
+      If $sOSVersion = 'WIN_2003R2'       Then $sOSVersionName = 'Windows Server 2003 R2'  ;doesn't work
+      If $sOSVersion = 'WIN_VISTA'        Then $sOSVersionName = 'Windows Vista'
+      If $sOSVersion = 'WIN_2008'         Then $sOSVersionName = 'Windows Server 2008'
+      If $sOSVersion = 'WIN_7'            Then $sOSVersionName = 'Windows 7'
+      If $sOSVersion = 'WIN_2008R2'       Then $sOSVersionName = 'Windows Server 2008 R2'
+      If $sOSVersion = 'WIN_8'            Then $sOSVersionName = 'Windows 8'
+      If $sOSVersion = 'WIN_2012'         Then $sOSVersionName = 'Windows Server 2012'
+      If $sOSVersion = 'WIN_81'           Then $sOSVersionName = 'Windows 8.1'
+      If $sOSVersion = 'WIN_2012R2'       Then $sOSVersionName = 'Windows Server 2012 R2'
+      If $sOSVersion = 'WIN_10'           Then $sOSVersionName = 'Windows 10'
+      If $sOSVersion = 'WIN_10-1507'      Then $sOSVersionName = 'Windows 10, Release 1507'
+      If $sOSVersion = 'WIN_10-1507-LTSB' Then $sOSVersionName = 'Windows 10 LTSB 2015 (1507)'
+      If $sOSVersion = 'WIN_10-1511'      Then $sOSVersionName = 'Windows 10, Release 1511'
+      If $sOSVersion = 'WIN_10-1607'      Then $sOSVersionName = 'Windows 10, Release 1607'
+      If $sOSVersion = 'WIN_10-1607-LTSB' Then $sOSVersionName = 'Windows 10 LTSB 2016 (1607)'
+      If $sOSVersion = 'WIN_2016'         Then $sOSVersionName = 'Windows Server 2016'
+      If $sOSVersion = 'WIN_10-1703'      Then $sOSVersionName = 'Windows 10, Release 1703'
+      If $sOSVersion = 'WIN_10-1709'      Then $sOSVersionName = 'Windows 10, Release 1709'
+      If $sOSVersion = 'WIN_10-1803'      Then $sOSVersionName = 'Windows 10, Release 1803'
+      If $sOSVersion = 'WIN_10-1809'      Then $sOSVersionName = 'Windows 10, Release 1809'
+      If $sOSVersion = 'WIN_10-1809-LTSB' Then $sOSVersionName = 'Windows 10 LTSC 2019 (1809)'
+      If $sOSVersion = 'WIN_2019'         Then $sOSVersionName = 'Windows Server 2019'
+      If $sOSVersion = 'WIN_10-1903'      Then $sOSVersionName = 'Windows 10, Release 1903'
+      If $sOSVersion = 'WIN_10-INSIDER'   Then $sOSVersionName = 'Windows 10, Insider Preview'
+
+      ;;DEFINE OS VERSION VALUE
+      If $sOSVersion = 'WIN_XP'           Then $iOSVersionValue = 01  ;;Windows XP
+      If $sOSVersion = 'WIN_XPe'          Then $iOSVersionValue = 02  ;;Windows XP Embedded
+      If $sOSVersion = 'WIN_2003'         Then $iOSVersionValue = 03  ;;Windows Server 2003
+      If $sOSVersion = 'WIN_XP64'         Then $iOSVersionValue = 04  ;;Windows XP 64-bit
+      If $sOSVersion = 'WIN_2003R2'       Then $iOSVersionValue = 05  ;;Windows Server 2003 R2
+      If $sOSVersion = 'WIN_VISTA'        Then $iOSVersionValue = 06  ;;Windows Vista
+      If $sOSVersion = 'WIN_2008'         Then $iOSVersionValue = 07  ;;Windows Server 2008
+      If $sOSVersion = 'WIN_7'            Then $iOSVersionValue = 08  ;;Windows 7
+      If $sOSVersion = 'WIN_2008R2'       Then $iOSVersionValue = 09  ;;Windows Server 2008 R2
+      If $sOSVersion = 'WIN_8'            Then $iOSVersionValue = 10  ;;Windows 8
+      If $sOSVersion = 'WIN_2012'         Then $iOSVersionValue = 11  ;;Windows Server 2012
+      If $sOSVersion = 'WIN_81'           Then $iOSVersionValue = 12  ;;Windows 8.1
+      If $sOSVersion = 'WIN_2012R2'       Then $iOSVersionValue = 13  ;;Windows Server 2012 R2
+      If $sOSVersion = 'WIN_10'           Then $iOSVersionValue = 14  ;;Windows 10
+      If $sOSVersion = 'WIN_10-1507'      Then $iOSVersionValue = 15  ;;Windows 10, Release 1507
+      If $sOSVersion = 'WIN_10-1507-LTSB' Then $iOSVersionValue = 16  ;;Windows 10 LTSB 2015 (1507)
+      If $sOSVersion = 'WIN_10-1511'      Then $iOSVersionValue = 17  ;;Windows 10, Release 1511
+      If $sOSVersion = 'WIN_10-1607'      Then $iOSVersionValue = 18  ;;Windows 10, Release 1607
+      If $sOSVersion = 'WIN_10-1607-LTSB' Then $iOSVersionValue = 19  ;;Windows 10 LTSB 2016 (1607)
+      If $sOSVersion = 'WIN_2016'         Then $iOSVersionValue = 20  ;;Windows Server 2016
+      If $sOSVersion = 'WIN_10-1703'      Then $iOSVersionValue = 21  ;;Windows 10, Release 1703
+      If $sOSVersion = 'WIN_10-1709'      Then $iOSVersionValue = 22  ;;Windows 10, Release 1709
+      If $sOSVersion = 'WIN_10-1803'      Then $iOSVersionValue = 23  ;;Windows 10, Release 1803
+      If $sOSVersion = 'WIN_10-1809'      Then $iOSVersionValue = 24  ;;Windows 10, Release 1809
+      If $sOSVersion = 'WIN_10-1809-LTSB' Then $iOSVersionValue = 25  ;;Windows 10 LTSC 2019 (1809)
+      If $sOSVersion = 'WIN_2019'         Then $iOSVersionValue = 26  ;;Windows Server 2019
+      If $sOSVersion = 'WIN_10-1903'      Then $iOSVersionValue = 27  ;;Windows 10, Release 1903
+      If $sOSVersion = 'WIN_10-INSIDER'   Then $iOSVersionValue = 99  ;;Windows 10, Insider Preview
+
+      ;;DEFINE OS VERSION TYPE
+      If $iOSVersionValue < '08' Then ;older than Windows 7, manually set OS type
+        If $sOSVersion = 'WIN_XP'         Then $sOSVersionType = 'Client'  ;Windows XP
+        If $sOSVersion = 'WIN_XPe'        Then $sOSVersionType = 'Client'  ;Windows XP Embedded
+        If $sOSVersion = 'WIN_2003'       Then $sOSVersionType = 'Server'  ;Windows Server 2003
+        If $sOSVersion = 'WIN_XP64'       Then $sOSVersionType = 'Client'  ;Windows XP 64-bit
+        If $sOSVersion = 'WIN_2003R2'     Then $sOSVersionType = 'Server'  ;Windows Server 2003 R2
+        If $sOSVersion = 'WIN_VISTA'      Then $sOSVersionType = 'Client'  ;Windows Vista
+        If $sOSVersion = 'WIN_2008'       Then $sOSVersionType = 'Server'  ;Windows Server 2008
+      ElseIf $iOSVersionValue >= '08' Then  ;Windows 7 or newer, read OS type from registry
+        $sOSVersionType = $sOSInstallationType
+      EndIf
+
+      ;;DEFINE OS EDITION
+      Switch $sOSEditionID
+        Case 'Enterprise', 'EnterpriseS'
+          $sOSEdition = 'Enterprise'
+        Case 'Pro', 'Professional'
+          $sOSEdition = 'Pro'
+        Case 'Home'
+          $sOSEdition = 'Home'
+      EndSwitch
+    EndFunc
+
+    Func ReadOSArch()
+      ;;READ OS ARCHITECTURE
+      ; Generated variables:
+      ;
+      ; $sOSArch              ; Example output: X64
+      ; $sOSArchName          ; Example output: 64-bit Operating System
+      ; $sOSArchShortname     ; Example output: 32-bit
+      Global $sOSArch            = @OSArch
+      Global $sOSArchName        = ''
+      Global $sOSArchShortname   = ''
+
+      If $sOSArch = 'X86' Then
+        $sOSArchName             = '32-bit Operating System'
+        $sOSArchShortname        = '32-bit'
+      EndIf
+      If $sOSArch = 'X64' Then
+        $sOSArchName             = '64-bit Operating System'
+        $sOSArchShortname        = '64-bit'
+      EndIf
+    EndFunc
+
+    Func ReadUser()
+      ;;READ CURRENT USER
+      Global $sCurrentUsername = ''
+      $sCurrentUsername = @UserName
+    EndFunc
+
+    Func ReadHardware()
+      ;;DEFINE COMPUTER DETAILS
+      ; Generated variables:
+      ;
+      ; $sComputerName
+      ; $sOSAge
+      ; $sOSAgeAndDate
+      ; $sOSBootTime
+      ; $sOSInstallDate
+      ; $sOSUptime
+      ; $sWMIAdminPasswordStatus
+      ; $sWMIAutomaticResetBootOption
+      ; $sWMIAutomaticResetCapability
+      ; $sWMIBootOptionOnLimit
+      ; $sWMIBootOptionOnWatchDog
+      ; $sWMIBootROMSupported
+      ; $sWMIBootupState
+      ; $sWMICaption
+      ; $sWMIChassisBootupState
+      ; $sWMICreationClassName
+      ; $sWMICurrentTimeZone
+      ; $sWMIDaylightInEffect
+      ; $sWMIDescription
+      ; $sWMIDomain
+      ; $sWMIDomainRole
+      ; $sWMIEnableDaylightSavingsTime
+      ; $sWMIFrontPanelResetStatus
+      ; $sWMIInfraredSupported
+      ; $sWMIInitialLoadInfo
+      ; $sWMIInstallDate    ;use $sOSInstallDate instead
+      ; $sWMIKeyboardPasswordStatus
+      ; $sWMILastBootupTime    ;use $sOSBootTime instead
+      ; $sWMILastLoadInfo
+      ; $sWMIManufacturer
+      ; $sWMIModel
+      ; $sWMIName
+      ; $sWMINameFormat
+      ; $sWMINetworkServerModeEnabled
+      ; $sWMIPartOfDomain
+      ; $sWMIPauseAfterReset
+      ; $sWMIPowerManagementSupported
+      ; $sWMIPowerOnPasswordStatus
+      ; $sWMIPowerState
+      ; $sWMIPowerSupplyState
+      ; $sWMIPrimaryOwnerContact
+      ; $sWMIPrimaryOwnerName
+      ; $sWMIResetCapability
+      ; $sWMIResetCount
+      ; $sWMIResetLimit
+      ; $sWMIRoles
+      ; $sWMISerialNumber
+      ; $sWMISMBIOSAssetTag
+      ; $sWMIStatus
+      ; $sWMISystemStartupDelay
+      ; $sWMISystemStartupSetting
+      ; $sWMISystemType
+      ; $sWMIThermalState
+      ; $sWMITotalPhysicalMemory
+      ; $sWMIUserName
+      ; $sWMIWakeUpType
+      ; $sWMIWorkgroup
+      ;
+      ; https://www.autoitscript.com/forum/topic/122994-get-computer-make-model-help/?do=findComment&comment=854055
+      ; https://www.autoitscript.com/forum/topic/81269-detect-bios-manufacture-using-wmi/?do=findComment&comment=584628
+      ; https://www.autoitscript.com/forum/topic/110300-system-uptime/?do=findComment&comment=774837
+
+      Global $sComputerName = @ComputerName
+
+      ;;gather and process wmi computer system details
+      $wbemFlagReturnImmediately = 0x10
+      $wbemFlagForwardOnly = 0x20
+      $colItems = ""
+      $strComputer = "localhost"
+
+      $objWMIService = ObjGet("winmgmts:\\" & $strComputer & "\root\CIMV2")
+      $colItems = $objWMIService.ExecQuery("SELECT * FROM Win32_ComputerSystem", "WQL", _
+                          $wbemFlagReturnImmediately + $wbemFlagForwardOnly)
+
+      If IsObj($colItems) then
+        For $objItem In $colItems
+          Global $sWMIAdminPasswordStatus       = $objItem.AdminPasswordStatus
+          Global $sWMIAutomaticResetBootOption  = $objItem.AutomaticResetBootOption
+          Global $sWMIAutomaticResetCapability  = $objItem.AutomaticResetCapability
+          Global $sWMIBootOptionOnLimit         = $objItem.BootOptionOnLimit
+          Global $sWMIBootOptionOnWatchDog      = $objItem.BootOptionOnWatchDog
+          Global $sWMIBootROMSupported          = $objItem.BootROMSupported
+          Global $sWMIBootupState               = $objItem.BootupState
+          Global $sWMICaption                   = $objItem.Caption
+          Global $sWMIChassisBootupState        = $objItem.ChassisBootupState
+          Global $sWMICreationClassName         = $objItem.CreationClassName
+          Global $sWMICurrentTimeZone           = $objItem.CurrentTimeZone
+          Global $sWMIDaylightInEffect          = $objItem.DaylightInEffect
+          Global $sWMIDescription               = $objItem.Description
+          Global $sWMIDomain                    = $objItem.Domain
+          Global $sWMIDomainRole                = $objItem.DomainRole
+          Global $sWMIEnableDaylightSavingsTime = $objItem.EnableDaylightSavingsTime
+          Global $sWMIFrontPanelResetStatus     = $objItem.FrontPanelResetStatus
+          Global $sWMIInfraredSupported         = $objItem.InfraredSupported
+          Local  $strInitialLoadInfo            = $objItem.InitialLoadInfo(0)
+          Global $sWMIInitialLoadInfo           = $strInitialLoadInfo
+          Global $sWMIKeyboardPasswordStatus    = $objItem.KeyboardPasswordStatus
+          Global $sWMILastLoadInfo              = $objItem.LastLoadInfo
+          Global $sWMIManufacturer              = $objItem.Manufacturer
+          Global $sWMIModel                     = $objItem.Model
+          Global $sWMIName                      = $objItem.Name
+          Global $sWMINameFormat                = $objItem.NameFormat
+          Global $sWMINetworkServerModeEnabled  = $objItem.NetworkServerModeEnabled
+          Global $sWMIPartOfDomain              = $objItem.PartOfDomain
+          Global $sWMIPauseAfterReset           = $objItem.PauseAfterReset
+          Global $sWMIPowerManagementSupported  = $objItem.PowerManagementSupported
+          Global $sWMIPowerOnPasswordStatus     = $objItem.PowerOnPasswordStatus
+          Global $sWMIPowerState                = $objItem.PowerState
+          Global $sWMIPowerSupplyState          = $objItem.PowerSupplyState
+          Global $sWMIPrimaryOwnerContact       = $objItem.PrimaryOwnerContact
+          Global $sWMIPrimaryOwnerName          = $objItem.PrimaryOwnerName
+          Global $sWMIResetCapability           = $objItem.ResetCapability
+          Global $sWMIResetCount                = $objItem.ResetCount
+          Global $sWMIResetLimit                = $objItem.ResetLimit
+          Local  $strRoles                      = $objItem.Roles(0)
+          Global $sWMIRoles                     = $strRoles
+          Global $sWMIStatus                    = $objItem.Status
+          Global $sWMISystemStartupDelay        = $objItem.SystemStartupDelay
+          Global $sWMISystemStartupSetting      = $objItem.SystemStartupSetting
+          Global $sWMISystemType                = $objItem.SystemType
+          Global $sWMIThermalState              = $objItem.ThermalState
+          Global $sWMITotalPhysicalMemory       = $objItem.TotalPhysicalMemory
+          Global $sWMIUserName                  = $objItem.UserName
+          Global $sWMIWakeUpType                = $objItem.WakeUpType
+          Global $sWMIWorkgroup                 = $objItem.Workgroup
+        Next
+      EndIf
+
+      ;;validate $sWMIUserName
+        If (StringIsSpace($sWMIUserName) = 1) Then
+          $sWMIUserName = $sCurrentUsername
+        EndIf
+
+      ;;gather and process wmi bios details
+      $wbemFlagReturnImmediately = 0x10
+      $wbemFlagForwardOnly = 0x20
+      $colItems = ""
+      $strComputer = "localhost"
+
+      $objWMIService = ObjGet("winmgmts:\\" & $strComputer & "\root\CIMV2")
+      $colItems = $objWMIService.ExecQuery("SELECT * FROM Win32_SystemEnclosure", "WQL", _
+                          $wbemFlagReturnImmediately + $wbemFlagForwardOnly)
+
+      ;;process WMI serial and asset tag
+      If IsObj($colItems) then
+        For $objItem In $colItems
+          Global $sWMISerialNumber = $objItem.SerialNumber
+          Global $sWMISMBIOSAssetTag = $objItem.SMBIOSAssetTag
+        Next
+      EndIf
+
+      Global $bAssetTagExists = True
+      Switch $sWMISMBIOSAssetTag
+        Case $sWMISerialNumber, 'No Asset Tag'
+          $bAssetTagExists = False
+        Case Else
+          $bAssetTagExists = True
+      EndSwitch
+
+      ;;gather and process wmi os details
+      $wbemFlagReturnImmediately = 0x10
+      $wbemFlagForwardOnly = 0x20
+      $colItems = ""
+      $strComputer = "localhost"
+
+      $objWMIService = ObjGet("winmgmts:\\" & $strComputer & "\root\CIMV2")
+      $colItems = $objWMIService.ExecQuery("SELECT * FROM Win32_OperatingSystem", "WQL", _
+                          $wbemFlagReturnImmediately + $wbemFlagForwardOnly)
+
+      If IsObj($colItems) then
+        For $objItem In $colItems
+          Global $sWMILastBootupTime = $objItem.LastBootUpTime
+          Global $sWMIInstallDate = $objItem.InstallDate
+        Next
+      EndIf
+
+      ;;calculate uptime
+      Global $sOSBootTime     = __WMIDateStringToDate($sWMILastBootupTime)
+      Global $sOSUptime       = __CalcTimeChange($sOSBootTime)
+
+      ;;convert install date
+      Global $sOSInstallDate  = __WMIDateStringToDateShort($sWMIInstallDate)
+      Global $sOSAge          = StringTrimRight(__CalcTimeChange($sOSInstallDate), 2)
+      Global $sOSAgeAndDate   = $sOSAge & ' (' & $sOSInstallDate & ')'
+
+      ;;remove make from model
+      $sWMIModel = StringReplace($sWMIModel, $sWMIManufacturer & ' ', '', 1)
+    EndFunc
+
+    Func ReadNetworkAdapters()
+      ;;Process IP address information for use by application.
+      ;;
+      ;; Generated variables:
+      ;;
+      ;; $aIPDetails[$i][0]    ;   Example output: (connection name)
+      ;; $aIPDetails[$i][1]    ;   Example output: (adapter IP address)
+      ;; $aIPDetails[$i][2]    ;   Example output: (MAC address)
+      ;; $aIPDetails[$i][3]    ;   Example output: (gateway)
+      ;; $aIPDetails[$i][4]    ;   Example output: (DNS servers, ie address - address - address) ;not working correctly?
+      ;; $aIPDetails[$i][5]    ;   Example output: (DHCP enabled, true or false)
+      ;; $aIPDetails[$i][6]    ;   Example output: (subnet mask)
+      ;;
+      ;; $sNetAdapter01Address         ;   Example output: adapter IP address
+      ;; $sNetAdapter02Address         ;   Example output: adapter IP address
+      ;; $sNetAdapter03Address         ;   Example output: adapter IP address
+      ;;
+      ;; https://www.autoitscript.com/forum/topic/128276-display-ip-address-default-gateway-dns-servers/?do=findComment&comment=890228
+
+      Global $aIPDetails = _IPDetails()
+      ;if statement just for reference
+      If @error = 0 Then
+        Local $sData = ''
+        For $i = 1 To $aIPDetails[0][0]
+          $sData &= 'Description: ' & $aIPDetails[$i][0] & @CRLF & 'IP Address: ' & $aIPDetails[$i][1] & @CRLF & 'MAC: ' & _
+              $aIPDetails[$i][2] & @CRLF & 'Default Gateway: ' & $aIPDetails[$i][3] & @CRLF & 'DNS Servers: ' & $aIPDetails[$i][4] & @CRLF & @CRLF
+        Next
+        $sData = StringTrimRight($sData, StringLen(@CRLF & @CRLF))
+        ;MsgBox($MB_SYSTEMMODAL, '', $sData)
+      EndIf
+
+      Global $bNetAdapter01Exists = False
+      Global $bNetAdapter02Exists = False
+      Global $bNetAdapter03Exists = False
+      Global $bNetAdapter04Exists = False
+      Global $bNetAdapter05Exists = False
+
+      Global $sNetAdapter01Name = ''
+      Global $sNetAdapter02Name = ''
+      Global $sNetAdapter03Name = ''
+      Global $sNetAdapter04Name = ''
+      Global $sNetAdapter05Name = ''
+
+      Global $sNetAdapter01Address = ''
+      Global $sNetAdapter02Address = ''
+      Global $sNetAdapter03Address = ''
+      Global $sNetAdapter04Address = ''
+      Global $sNetAdapter05Address = ''
+
+      Global $sNetAdapter01DHCP = ''
+      Global $sNetAdapter02DHCP = ''
+      Global $sNetAdapter03DHCP = ''
+      Global $sNetAdapter04DHCP = ''
+      Global $sNetAdapter05DHCP = ''
+
+      Global $sNetAdapter01Gateway = ''
+      Global $sNetAdapter02Gateway = ''
+      Global $sNetAdapter03Gateway = ''
+      Global $sNetAdapter04Gateway = ''
+      Global $sNetAdapter05Gateway = ''
+
+      Global $sNetAdapter01SubnetMask = ''
+      Global $sNetAdapter02SubnetMask = ''
+      Global $sNetAdapter03SubnetMask = ''
+      Global $sNetAdapter04SubnetMask = ''
+      Global $sNetAdapter05SubnetMask = ''
+
+      If _elementExists($aIPDetails, 1) Then
+        $bNetAdapter01Exists = True
+        $sNetAdapter01Name = $aIPDetails[1][0]
+        $sNetAdapter01Address = $aIPDetails[1][1]
+        If $aIPDetails[1][5] = True Then $sNetAdapter01DHCP = 'Dynamic'
+        If $aIPDetails[1][5] = False Then $sNetAdapter01DHCP = 'Static'
+        $sNetAdapter01Gateway = $aIPDetails[1][3]
+        $sNetAdapter01SubnetMask = $aIPDetails[1][6]
+      EndIf
+
+      If _elementExists($aIPDetails, 2) Then
+        $bNetAdapter02Exists = True
+        $sNetAdapter02Name = $aIPDetails[2][0]
+        $sNetAdapter02Address = $aIPDetails[2][1]
+        If $aIPDetails[2][5] = True Then $sNetAdapter02DHCP = 'Dynamic'
+        If $aIPDetails[2][5] = False Then $sNetAdapter02DHCP = 'Static'
+        $sNetAdapter02Gateway = $aIPDetails[2][3]
+        $sNetAdapter02SubnetMask = $aIPDetails[2][6]
+      EndIf
+
+      If _elementExists($aIPDetails, 3) Then
+        $bNetAdapter03Exists = True
+        $sNetAdapter03Name = $aIPDetails[3][0]
+        $sNetAdapter03Address = $aIPDetails[3][1]
+        If $aIPDetails[3][5] = True Then $sNetAdapter03DHCP = 'Dynamic'
+        If $aIPDetails[3][5] = False Then $sNetAdapter03DHCP = 'Static'
+        $sNetAdapter03Gateway = $aIPDetails[3][3]
+        $sNetAdapter03SubnetMask = $aIPDetails[3][6]
+      EndIf
+
+      If _elementExists($aIPDetails, 4) Then
+        $bNetAdapter04Exists = True
+        $sNetAdapter04Name = $aIPDetails[4][0]
+        $sNetAdapter04Address = $aIPDetails[4][1]
+        If $aIPDetails[4][5] = True Then $sNetAdapter04DHCP = 'Dynamic'
+        If $aIPDetails[4][5] = False Then $sNetAdapter04DHCP = 'Static'
+        $sNetAdapter04Gateway = $aIPDetails[4][3]
+        $sNetAdapter04SubnetMask = $aIPDetails[4][6]
+      EndIf
+
+      If _elementExists($aIPDetails, 5) Then
+        $bNetAdapter05Exists = True
+        $sNetAdapter05Name = $aIPDetails[5][0]
+        $sNetAdapter05Address = $aIPDetails[5][1]
+        If $aIPDetails[5][5] = True Then $sNetAdapter05DHCP = 'Dynamic'
+        If $aIPDetails[5][5] = False Then $sNetAdapter05DHCP = 'Static'
+        $sNetAdapter05Gateway = $aIPDetails[5][3]
+        $sNetAdapter05SubnetMask = $aIPDetails[5][6]
+      EndIf
+    EndFunc
+
+    Func _IPDetails()
+      ;;WMI call for IP address information
+      Local $aReturn[1][7] = [[0, 7]], $iCount = 0
+      Local $oWMIService = ObjGet('winmgmts:{impersonationLevel = impersonate}!\\' & '.' & '\root\cimv2')
+      Local $oColItems = $oWMIService.ExecQuery('Select * From Win32_NetworkAdapterConfiguration Where IPEnabled = True', 'WQL', 0x30)
+      If IsObj($oColItems) Then
+        For $oObjectItem In $oColItems
+          $aReturn[0][0] += 1
+          $iCount += 1
+
+          If $aReturn[0][0] <= $iCount + 1 Then
+            ReDim $aReturn[$aReturn[0][0] * 2][$aReturn[0][1]]
+          EndIf
+
+          $aReturn[$iCount][0] = _IsString($oObjectItem.Description)
+          $aReturn[$iCount][1] = _IsString($oObjectItem.IPAddress(0))
+          $aReturn[$iCount][2] = _IsString($oObjectItem.MACAddress)
+          $aReturn[$iCount][3] = _IsString($oObjectItem.DefaultIPGateway(0))
+          $aReturn[$iCount][4] = _IsString(_WMIArrayToString($oObjectItem.DNSServerSearchOrder(), ' - ')) ; You could use _ArrayToString() but I like creating my own Functions especially when I don't need alot of error checking.
+          $aReturn[$iCount][5] = _IsString($oObjectItem.DHCPEnabled)
+          $aReturn[$iCount][6] = _IsString($oObjectItem.IPSubnet(0))
+        Next
+        ReDim $aReturn[$aReturn[0][0] + 1][$aReturn[0][1]]
+      EndIf
+      Return SetError($aReturn[0][0] = 0, 0, $aReturn)
+    EndFunc
+
+    Func ReadDisks()
+      ;;Process disk details.
+      ;; Generated variables:
+      ;;
+      ;; $sDiskDetails       ;Example output: formatted string of disk details array
+      ;; $aDiskDetails[i][0] ;Example output: drive letter
+      ;; $aDiskDetails[i][1] ;Example output: 0 or null. Null means disk is not accessible, like a CD drive with no disc.
+      ;; $aDiskDetails[i][2] ;Example output: "Local Fixed Disk", "CD-ROM Disc", "Network Connection", others
+      ;; $aDiskDetails[i][3] ;Example output: path if mapped drive, blank if local disk
+
+      Global $sDiskDetails = ''
+      Global $aDiskDetails = ''
+
+      $aDiskDetails = _DiskDetails()
+      If @error = 0 Then
+        Global $sDiskDetails = ''
+        For $i = 1 To $aDiskDetails[0][0]
+          $sDiskDetails &= ' • ' & $aDiskDetails[$i][2] & ' (' & $aDiskDetails[$i][0] & ') ' & $aDiskDetails[$i][3] & @CRLF
+        Next
+        $sDiskDetails = StringTrimRight($sDiskDetails, StringLen(@CRLF))
+        ;MsgBox($MB_SYSTEMMODAL, '', $sDiskDetails)
+      EndIf
+    EndFunc
+
+    Func _DiskDetails()
+      ;;WMI call to gather disk information.
+      Local $aReturn[1][4] = [[0, 4]], $iCount = 0
+      Local $oWMIService = ObjGet('winmgmts:{impersonationLevel = impersonate}!\\' & '.' & '\root\cimv2')
+      Local $oColItems = $oWMIService.ExecQuery('SELECT * FROM Win32_LogicalDisk', 'WQL', 0x30)
+      If IsObj($oColItems) Then
+        For $oObjectItem In $oColItems
+          $aReturn[0][0] += 1
+          $iCount += 1
+
+          If $aReturn[0][0] <= $iCount + 1 Then
+            ReDim $aReturn[$aReturn[0][0] * 2][$aReturn[0][1]]
+          EndIf
+
+          $aReturn[$iCount][0] = _IsStringReturnNull($oObjectItem.Name)
+          $aReturn[$iCount][1] = _IsStringReturnNull($oObjectItem.Access)
+          $aReturn[$iCount][2] = _IsStringReturnNull($oObjectItem.Description)
+          $aReturn[$iCount][3] = _IsStringReturnNull($oObjectItem.ProviderName)
+        Next
+        ReDim $aReturn[$aReturn[0][0] + 1][$aReturn[0][1]]
+      EndIf
+      Return SetError($aReturn[0][0] = 0, 0, $aReturn)
+    EndFunc
+
+    Func ReadPrinters()
+      ;;Process printer details.
+      ;;
+      ;;Generated variables:
+      ;;
+      ;; $sPrinterDetails       ;Example output: formatted string of printer details array
+      ;; $aPrinterDetails[i][0] ;Example output: PDFCreator or //sewprnt1/CHLIT01
+      ;; $aPrinterDetails[i][1] ;Example output: 10.164.10.56
+      ;; $aPrinterDetails[i][2] ;Example output: CHL - IT Copier
+      ;; $aPrinterDetails[i][3] ;Example output: Ricoh Aficio MP 2550
+
+      Global $sPrinterDetails = ''
+      Global $aPrinterDetails = ''
+
+      $aPrinterDetails = _PrinterDetails()
+      If @error = 0 Then
+        Global $sPrinterDetails = ''
+        For $i = 1 To $aPrinterDetails[0][0]
+          $sPrinterDetails &= ' • ' & $aPrinterDetails[$i][0] & @CRLF & _
+                              '    - Port: ' & $aPrinterDetails[$i][1] & @CRLF & _
+                              '    - Location: ' & $aPrinterDetails[$i][2] & @CRLF & _
+                              '    - Comments: ' & $aPrinterDetails[$i][3] & @CRLF
+        Next
+        $sPrinterDetails = StringTrimRight($sPrinterDetails, StringLen(@CRLF))
+        ;MsgBox($MB_SYSTEMMODAL, '', $sPrinterDetails)
+      EndIf
+    EndFunc
+
+    Func _PrinterDetails()
+      ;;WMI call for printer information.
+      Local $aReturn[1][4] = [[0, 4]], $iCount = 0
+      Local $oWMIService = ObjGet('winmgmts:{impersonationLevel = impersonate}!\\' & '.' & '\root\cimv2')
+      Local $oColItems = $oWMIService.ExecQuery('SELECT * FROM Win32_Printer', 'WQL', 0x30)
+      If IsObj($oColItems) Then
+        For $oObjectItem In $oColItems
+          $aReturn[0][0] += 1
+          $iCount += 1
+
+          If $aReturn[0][0] <= $iCount + 1 Then
+            ReDim $aReturn[$aReturn[0][0] * 2][$aReturn[0][1]]
+          EndIf
+
+          $aReturn[$iCount][0] = _IsStringReturnNull($oObjectItem.Name)
+          $aReturn[$iCount][1] = _IsStringReturnNull($oObjectItem.PortName)
+          $aReturn[$iCount][2] = _IsStringReturnNull($oObjectItem.Location)
+          $aReturn[$iCount][3] = _IsStringReturnNull($oObjectItem.Comment)
+        Next
+        ReDim $aReturn[$aReturn[0][0] + 1][$aReturn[0][1]]
+      EndIf
+      Return SetError($aReturn[0][0] = 0, 0, $aReturn)
+    EndFunc
+
+    Func ReadAD()
+      ;;READ DETAILS FROM ACTIVE DIRECTORY
+      Global $sADDescription
+      Global $sADDistinguishedName
+      Global $sADLocalAdminPassword
+      Global $sADLocalAdminPasswordExp
+      Global $sADOUPath
+
+      ;Local $aADProperties[5][2]
+
+      ;;Open Connection to Active Directory
+      _AD_Open()
+
+      If @error = 0 Then
+        ;If @error Then Exit MsgBox(16, "Active Directory Connection", "Function _AD_Open encountered a problem. @error = " & @error & ", @extended = " & @extended)
+
+        ;;ATTEMPT 1
+        ;$aADProperties = _AD_GetObjectProperties(@ComputerName & '$', 'description,distinguishedName,ms-Mcs-AdmPwd,ms-Mcs-AdmPwdExpirationTime')
+        ;If @error Then ReDim $aADProperties[5][2]
+        ;ReDim $aADProperties[5][2]
+
+        ;_ArrayDisplay($aADProperties, 'Debug')
+
+        ;$sADDescription           = $aADProperties[1][1]
+        ;$sADDistinguishedName     = $aADProperties[2][1]
+        ;$sADLocalAdminPassword    = $aADProperties[3][1]
+        ;$sADLocalAdminPasswordExp = $aADProperties[4][1]
+
+        ;MsgBox(0, 'Debug', 'Description: ' & $sADDescription & '. OU: ' & $sADDistinguishedName & '. Admin Pass: ' & $sADLocalAdminPassword & '. Admin Pass Exp: ' & $sADLocalAdminPasswordExp & '.')
+
+        ;$aProperties = _AD_GetObjectProperties(@ComputerName & "$")
+        ;_ArrayDisplay($aProperties, "Active Directory Functions - Example 3 - Properties for computer '" & @ComputerName & "'")
+
+        ;;ATTEMPT 2
+        $sADDescription           = ADQuery('description')
+        $sADDistinguishedName     = ADQuery('distinguishedName')
+        $sADLocalAdminPassword    = ADQuery('ms-Mcs-AdmPwd')
+        $sADLocalAdminPasswordExp = ADQuery('ms-Mcs-AdmPwdExpirationTime')
+
+        ;;Close Connection to Active Directory
+        _AD_Close()
+
+        ;;Parse AD OU path
+        If StringIsSpace($sADDistinguishedName) = False Then
+          $aADDistinguishedName = StringSplit($sADDistinguishedName, ',', $STR_NOCOUNT)
+          $sADOUPath = ''
+          _ArrayReverse($aADDistinguishedName)
+          For $i = 3 to UBound($aADDistinguishedName) - 2
+            $sADOUPath = $sADOUPath & ' > ' & $aADDistinguishedName[$i]
+          Next
+          $sADOUPath = StringTrimLeft($sADOUPath, 3)
+          $sADOUPath = StringReplace($sADOUPath, 'OU=', '')
+        EndIf
+      EndIf
+    EndFunc
+
+    Func ADQuery($sADParameter)
+      ;;Wrapper for _AD_GetObjectProperties to safely return single string.
+      ;; Open AD connection before calling this.
+
+      $aADProperties = _AD_GetObjectProperties(@ComputerName & '$', $sADParameter)
+
+      If IsArray($aADProperties) Then
+        ReDim $aADProperties[2][2]
+        Return $aADProperties[1][1]
+      Else
+        Return
+      EndIf
+    EndFunc
+
+    Func ReadServices()
+      ;;READ DETAILS ABOUT LOCAL SERVICES
+      Global $sServCrowdStrikeStatus
+      Global $sServWindowsUpdateStatus
+      Global $sServBeyondTrustStatus
+      Global $sServBeyondTrustMonitorStatus
+      Global $sServSplunkForwarderStatus
+      Global $sServSMSAgentStatus
+
+      Local $sErrorText = 'Not Installed'
+      Local $aServCrowdStrikeStatus
+      Local $aServWindowsUpdateStatus
+      Local $aServBeyondTrustStatus
+      Local $aServBeyondTrustMonitorStatus
+      Local $aServSplunkForwarderStatus
+      Local $aServSMSAgentStatus
+
+      ;;CrowdStrike
+      $aServCrowdStrikeStatus = _Service_QueryStatus('CSFalconService')
+      If @error Then
+        $sServCrowdStrikeStatus = $sErrorText
+      Else
+        $sServCrowdStrikeStatus = TranslateServiceStatusCode($aServCrowdStrikeStatus[1])
+      EndIf
+
+      ;;Windows Update
+      $aServWindowsUpdateStatus = _Service_QueryStatus('wuauserv')
+      If @error Then
+        $sServWindowsUpdateStatus = $sErrorText
+      Else
+        $sServWindowsUpdateStatus = TranslateServiceStatusCode($aServWindowsUpdateStatus[1])
+      EndIf
+
+      ;;BeyondTrust
+      $aServBeyondTrustStatus = _Service_QueryStatus('BTService')
+      If @error Then
+        $sServBeyondTrustStatus = $sErrorText
+      Else
+        $sServBeyondTrustStatus = TranslateServiceStatusCode($aServBeyondTrustStatus[1])
+      EndIf
+
+      ;;BeyondTrust Monitor
+      $aServBeyondTrustMonitorStatus = _Service_QueryStatus('BTMonitor')
+      If @error Then
+        $sServBeyondTrustMonitorStatus = $sErrorText
+      Else
+        $sServBeyondTrustMonitorStatus = TranslateServiceStatusCode($aServBeyondTrustMonitorStatus[1])
+      EndIf
+
+      ;;Splunk Forwarder
+      $aServSplunkForwarderStatus = _Service_QueryStatus('SplunkForwarder')
+      If @error Then
+        $sServSplunkForwarderStatus = $sErrorText
+      Else
+        $sServSplunkForwarderStatus = TranslateServiceStatusCode($aServSplunkForwarderStatus[1])
+      EndIf
+
+      ;;SCCM Client
+      $aServSMSAgentStatus = _Service_QueryStatus('CcmExec')
+      If @error Then
+        $sServSMSAgentStatus = $sErrorText
+      Else
+        $sServSMSAgentStatus = TranslateServiceStatusCode($aServSMSAgentStatus[1])
+      EndIf
+    EndFunc
+
+    Func TranslateServiceStatusCode($iStatusValue)
+      ;;Translates the code returned by the _Service_QueryStatus function.
+      Local $sStatus
+
+      Switch $iStatusValue
+        Case 1
+          $sStatus = 'Stopped'
+        Case 2
+          $sStatus = 'Starting'
+        Case 3
+          $sStatus = 'Stopping'
+        Case 4
+          $sStatus = 'Running'
+        Case 5
+          $sStatus = 'Continuing'
+        Case 6
+          $sStatus = 'Pausing'
+        Case 7
+          $sStatus = 'Paused'
+      EndSwitch
+      Return $sStatus
+    EndFunc
+
+    Func ReadCustomization()
+      ;;READ APP CUSTOMIZATION
+      ;;Read application customization.
+
+      ;;organization
+        $sOrgName = RegRead($sAppRegistryPath, 'sOrgName')
+        $sOrgDomain = RegRead($sAppRegistryPath, 'sOrgDomain')
+        $sOrgIntranetName = RegRead($sAppRegistryPath, 'sOrgIntranetName')
+        $sOrgIntranetURL = RegRead($sAppRegistryPath, 'sOrgIntranetURL')
+
+      ;;helpdesk details
+        $sOrgHelpdeskName = RegRead($sAppRegistryPath, 'sOrgHelpdeskName')
+        $sOrgHelpdeskPhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskPhone')
+        $sOrgHelpdeskRegionalPhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskRegionalPhone')
+        $sOrgHelpdeskCorporatePhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskCorporatePhone')
+        $sOrgHelpdeskEmail = RegRead($sAppRegistryPath, 'sOrgHelpdeskEmail')
+        $sOrgHelpdeskURL = RegRead($sAppRegistryPath, 'sOrgHelpdeskURL')
+        $sOrgHelpdeskRemoteSupportURL = RegRead($sAppRegistryPath, 'sOrgHelpdeskRemoteSupportURL')
+
+      ;;free-text field
+        Global $sFreeTextDetails = ''
+
+        $sFreeTextDetails = RegRead($sAppRegistryPath, 'sFreeTextDetails')
+
+        Switch (StringIsSpace($sFreeTextDetails))
+          Case 0
+            Global $bFreeTextDetailsExists = True
+          Case 1
+            Global $bFreeTextDetailsExists = False
+        EndSwitch
+    EndFunc
+
+    Func ReadRegistry()
+      ;;READ REGISTRY DETAILS
+      Global $sPCDescription
+
+      $sPCDescription = RegRead('HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters','srvcomment')
+    EndFunc
+
+  ;;TOOLS
+    Func __CalcTimeChange($sWMIDateTime)
+      ;;Calculate difference in time values.
+      Local $aDateDiffs=[[0,24," day"],[0,60," hour"],[0,60," minute"]]  ;Local $aDateDiffs=[[0,24," day"],[0,60," hour"],[0,60," minute"],[0,1," second"]]
+      Local $aDateDiff = StringSplit("D|h|n","|")
+      Local $sNow = _NowCalc()
+      For $sDiff = 1 to $aDateDiff[0]
+        $aDateDiffs[$sDiff-1][0] = _DateDiff($aDateDiff[$sDiff], $sWMIDateTime, $sNow)
+      Next
+      Local $iUbound = UBound($aDateDiffs)-1
+      For $iX = $iUbound To 0 Step -1
+        If $iX > 0 Then
+          If $aDateDiffs[$iX-1][0] > 0 Then $aDateDiffs[$iX][0] = ($aDateDiffs[$iX][0]-($aDateDiffs[$iX-1][0]*$aDateDiffs[$iX-1][1]))
+        EndIf
+      Next
+      Local $sTimeDiff = ""
+      For $iX = 0 To $iUbound
+        If $aDateDiffs[$iX][0] > 0 Then
+          $sTimeDiff &= $aDateDiffs[$iX][0] & $aDateDiffs[$iX][2]
+          If $aDateDiffs[$iX][0] > 1 Then $sTimeDiff &= "s"
+          If $iX < $iUbound Then $sTimeDiff &= ", "
+        EndIf
+      Next
+      Return $sTimeDiff
+    EndFunc
+
+    Func __WMIDateStringToDate($dtmDate)
+      ;;Convert WMI date string to readable date.
+      Return StringLeft($dtmDate,4) & "-" & StringMid($dtmDate, 5, 2) & "-" & StringMid($dtmDate, 7, 2) & " " & StringMid($dtmDate, 9, 2) & ":" & StringMid($dtmDate, 11, 2) & ":" & StringMid($dtmDate, 13, 2)
+    EndFunc
+
+    Func __WMIDateStringToDateShort($dtmDate)
+      ;;Convert WMI date string to shorter readable date.
+      Return StringLeft($dtmDate,4) & "-" & StringMid($dtmDate, 5, 2) & "-" & StringMid($dtmDate, 7, 2)
+    EndFunc
+
+    Func _IsString($sString)
+      If IsString($sString) = 0 Then
+        $sString = 'Not Available'
+      EndIf
+      Return $sString
+    EndFunc
+
+    Func _WMIArrayToString($aIPDetails, $sDelimeter = '|')
+      Local $sString = 'Not Available'
+      If UBound($aIPDetails) Then
+        For $i = 0 To UBound($aIPDetails) - 1
+          $sString &= $aIPDetails[$i] & $sDelimeter
+        Next
+        $sString = StringTrimRight($sString, StringLen($sDelimeter))
+      EndIf
+      Return $sString
+    EndFunc
+
+    Func _IsStringReturnNull($sString)
+      If IsString($sString) = 0 Then
+        $sString = ''
+      EndIf
+      If $sString = 'Network Connection' Then
+        $sString = 'Mapped Drive'
+      EndIf
+      Return $sString
+    EndFunc
+
+    Func _elementExists($array, $element)
+      If $element > UBound($array)-1 Then Return False ; element is out of the array bounds
+      Return True ; element is in array bounds
+    EndFunc
+
+    Func _ReduceMemory()
+      ;;Reduce application RAM usage.
+      ;;
+      ;;https://www.autoitscript.com/forum/topic/131315-accumulating-memory-usage/
+      Local $aReturn = DllCall('psapi.dll','int','EmptyWorkingSet','long', -1)
+      If @error = 1 Then
+        Return SetError(1, 0, 0)
+      EndIf
+      Return $aReturn[0]
+    EndFunc
+#EndRegion
+
+
+
+
 
 
 
@@ -496,6 +1404,12 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
 ;;=====================================================================================================================================================================
 ;;================================================================== LINE OF CODE REWRITE SEPARATION ==================================================================
 ;;=====================================================================================================================================================================
+
+
+
+
+
+
 
 
 
@@ -625,713 +1539,13 @@ EndSwitch
 #EndRegion
 
 #Region -- READ ENVIRONMENT
-  ;;READ DETAILS ABOUT PC
-
-  #Region - OPERATING SYSTEM
-  ;;Generated variables:
-  ;;
-  ;; $sOSBuild             ; Example output:
-  ;; $sOSServicePack       ; Example output:
-  ;; $sOSProductName       ; Example output: Microsoft Windows 10 Enterprise Insider Preview
-  ;; $sOSVersion           ; Example output: WIN_7
-  ;; $sOSVersionName       ; Example output: Windows 7
-  ;; $sOSVersionValue      ; Example output: 08
-  ;; $sOSVersionType       ; Example output: Client
-  ;; $sOSEdition           ; Example output: Enterprise
-  ;; $sOSBranch            ; Example output: LTSB
-  ;;
-  ;; https://www.microsoft.com/en-us/itpro/windows-10/release-information
-  ;; https://docs.microsoft.com/en-us/windows/deployment/update/waas-overview
-  ;; https://www.autoitscript.com/autoit3/docs/macros/SystemInfo.htm
-
-  Func ReadOSVersion()
-    Global $sOSType         = @OSType  ;Returns WIN_NT. Not useful.
-    Global $sOSBuild        = @OSBuild
-    Global $sOSServicePack  = @OSServicePack
-    Global $sOSProductName  = ''
-    Global $sOSVersion      = @OSVersion
-    Global $sOSVersionName  = ''
-    Global $sOSVersionValue = ''
-    Global $sOSVersionType  = ''
-    Global $sOSEdition      = ''
-    Global $sOSBranch       = ''
-
-    ;;READ OS FROM REGISTRY
-    $sOSProductName       = RegRead('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion', 'ProductName')
-    $sOSReleaseID         = RegRead('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion', 'ReleaseId')
-    $sOSInstallationType  = RegRead('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion', 'InstallationType')
-    $sOSEditionID         = RegRead('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion', 'EditionID')
-
-    ;;DEFINE WINDOWS 10 VERSIONS
-    If $sOSVersion = 'WIN_10' Then $sOSVersion = $sOSVersion & '-' & $sOSReleaseID  ;define release based on registry key
-    If $sOSVersion = 'WIN_10-' Then $sOSVersion = 'WIN_10-1507' ;define initial release; missing registry key
-    If StringInStr($sOSProductName, 'Insider') Then $sOSVersion = 'WIN_10-INSIDER'  ;define insider preview
-    If $sOSVersion = 'WIN_2016' AND $sOSReleaseID = '1809' Then $sOSVersion = 'WIN_2019'  ;manually define Windows Server 2019 until AutoIt macro supports it
-
-    ;;DEFINE OS BRANCH
-    If StringInStr($sOSProductName, 'LTSB') Then $sOSBranch = 'LTSB'
-    If StringInStr($sOSProductName, 'LTSC') Then $sOSBranch = 'LTSB'  ;Long-Term Servicing Branch renamed to Long-Term Servicing Channel, LTSB used in code for compatibility, LTSC set in friendly name
-    If StringIsSpace($sOSBranch) = False Then $sOSVersion = $sOSVersion & '-' & $sOSBranch
-
-    ;;DEFINE OS FRIENDLY NAME
-    If $sOSVersion = 'WIN_XP'           Then $sOSVersionName = 'Windows XP'
-    If $sOSVersion = 'WIN_XPe'          Then $sOSVersionName = 'Windows XP Embedded'
-    If $sOSVersion = 'WIN_2003'         Then $sOSVersionName = 'Windows Server 2003'
-    If $sOSVersion = 'WIN_XP64'         Then $sOSVersionName = 'Windows XP 64-bit'  ;doesn't work
-    If $sOSVersion = 'WIN_2003R2'       Then $sOSVersionName = 'Windows Server 2003 R2'  ;doesn't work
-    If $sOSVersion = 'WIN_VISTA'        Then $sOSVersionName = 'Windows Vista'
-    If $sOSVersion = 'WIN_2008'         Then $sOSVersionName = 'Windows Server 2008'
-    If $sOSVersion = 'WIN_7'            Then $sOSVersionName = 'Windows 7'
-    If $sOSVersion = 'WIN_2008R2'       Then $sOSVersionName = 'Windows Server 2008 R2'
-    If $sOSVersion = 'WIN_8'            Then $sOSVersionName = 'Windows 8'
-    If $sOSVersion = 'WIN_2012'         Then $sOSVersionName = 'Windows Server 2012'
-    If $sOSVersion = 'WIN_81'           Then $sOSVersionName = 'Windows 8.1'
-    If $sOSVersion = 'WIN_2012R2'       Then $sOSVersionName = 'Windows Server 2012 R2'
-    If $sOSVersion = 'WIN_10'           Then $sOSVersionName = 'Windows 10'
-    If $sOSVersion = 'WIN_10-1507'      Then $sOSVersionName = 'Windows 10, Release 1507'
-    If $sOSVersion = 'WIN_10-1507-LTSB' Then $sOSVersionName = 'Windows 10 LTSB 2015 (1507)'
-    If $sOSVersion = 'WIN_10-1511'      Then $sOSVersionName = 'Windows 10, Release 1511'
-    If $sOSVersion = 'WIN_10-1607'      Then $sOSVersionName = 'Windows 10, Release 1607'
-    If $sOSVersion = 'WIN_10-1607-LTSB' Then $sOSVersionName = 'Windows 10 LTSB 2016 (1607)'
-    If $sOSVersion = 'WIN_2016'         Then $sOSVersionName = 'Windows Server 2016'
-    If $sOSVersion = 'WIN_10-1703'      Then $sOSVersionName = 'Windows 10, Release 1703'
-    If $sOSVersion = 'WIN_10-1709'      Then $sOSVersionName = 'Windows 10, Release 1709'
-    If $sOSVersion = 'WIN_10-1803'      Then $sOSVersionName = 'Windows 10, Release 1803'
-    If $sOSVersion = 'WIN_10-1809'      Then $sOSVersionName = 'Windows 10, Release 1809'
-    If $sOSVersion = 'WIN_10-1809-LTSB' Then $sOSVersionName = 'Windows 10 LTSC 2019 (1809)'
-    If $sOSVersion = 'WIN_2019'         Then $sOSVersionName = 'Windows Server 2019'
-    If $sOSVersion = 'WIN_10-1903'      Then $sOSVersionName = 'Windows 10, Release 1903'
-    If $sOSVersion = 'WIN_10-INSIDER'   Then $sOSVersionName = 'Windows 10, Insider Preview'
-
-    ;;DEFINE OS VERSION VALUE
-    If $sOSVersion = 'WIN_XP'           Then $sOSVersionValue = '01'  ;Windows XP
-    If $sOSVersion = 'WIN_XPe'          Then $sOSVersionValue = '02'  ;Windows XP Embedded
-    If $sOSVersion = 'WIN_2003'         Then $sOSVersionValue = '03'  ;Windows Server 2003
-    If $sOSVersion = 'WIN_XP64'         Then $sOSVersionValue = '04'  ;Windows XP 64-bit
-    If $sOSVersion = 'WIN_2003R2'       Then $sOSVersionValue = '05'  ;Windows Server 2003 R2
-    If $sOSVersion = 'WIN_VISTA'        Then $sOSVersionValue = '06'  ;Windows Vista
-    If $sOSVersion = 'WIN_2008'         Then $sOSVersionValue = '07'  ;Windows Server 2008
-    If $sOSVersion = 'WIN_7'            Then $sOSVersionValue = '08'  ;Windows 7
-    If $sOSVersion = 'WIN_2008R2'       Then $sOSVersionValue = '09'  ;Windows Server 2008 R2
-    If $sOSVersion = 'WIN_8'            Then $sOSVersionValue = '10'  ;Windows 8
-    If $sOSVersion = 'WIN_2012'         Then $sOSVersionValue = '11'  ;Windows Server 2012
-    If $sOSVersion = 'WIN_81'           Then $sOSVersionValue = '12'  ;Windows 8.1
-    If $sOSVersion = 'WIN_2012R2'       Then $sOSVersionValue = '13'  ;Windows Server 2012 R2
-    If $sOSVersion = 'WIN_10'           Then $sOSVersionValue = '14'  ;Windows 10
-    If $sOSVersion = 'WIN_10-1507'      Then $sOSVersionValue = '15'  ;Windows 10, Release 1507
-    If $sOSVersion = 'WIN_10-1507-LTSB' Then $sOSVersionValue = '16'  ;Windows 10 LTSB 2015 (1507)
-    If $sOSVersion = 'WIN_10-1511'      Then $sOSVersionValue = '17'  ;Windows 10, Release 1511
-    If $sOSVersion = 'WIN_10-1607'      Then $sOSVersionValue = '18'  ;Windows 10, Release 1607
-    If $sOSVersion = 'WIN_10-1607-LTSB' Then $sOSVersionValue = '19'  ;Windows 10 LTSB 2016 (1607)
-    If $sOSVersion = 'WIN_2016'         Then $sOSVersionValue = '20'  ;Windows Server 2016
-    If $sOSVersion = 'WIN_10-1703'      Then $sOSVersionValue = '21'  ;Windows 10, Release 1703
-    If $sOSVersion = 'WIN_10-1709'      Then $sOSVersionValue = '22'  ;Windows 10, Release 1709
-    If $sOSVersion = 'WIN_10-1803'      Then $sOSVersionValue = '23'  ;Windows 10, Release 1803
-    If $sOSVersion = 'WIN_10-1809'      Then $sOSVersionValue = '24'  ;Windows 10, Release 1809
-    If $sOSVersion = 'WIN_10-1809-LTSB' Then $sOSVersionValue = '25'  ;Windows 10 LTSC 2019 (1809)
-    If $sOSVersion = 'WIN_2019'         Then $sOSVersionValue = '26'  ;Windows Server 2019
-    If $sOSVersion = 'WIN_10-1903'      Then $sOSVersionValue = '27'  ;Windows 10, Release 1903
-    If $sOSVersion = 'WIN_10-INSIDER'   Then $sOSVersionValue = '99'  ;Windows 10, Insider Preview
-
-    ;;DEFINE OS VERSION TYPE
-    If $sOSVersionValue < '08' Then ;older than Windows 7, manually set OS type
-      If $sOSVersion = 'WIN_XP'         Then $sOSVersionType = 'Client'  ;Windows XP
-      If $sOSVersion = 'WIN_XPe'        Then $sOSVersionType = 'Client'  ;Windows XP Embedded
-      If $sOSVersion = 'WIN_2003'       Then $sOSVersionType = 'Server'  ;Windows Server 2003
-      If $sOSVersion = 'WIN_XP64'       Then $sOSVersionType = 'Client'  ;Windows XP 64-bit
-      If $sOSVersion = 'WIN_2003R2'     Then $sOSVersionType = 'Server'  ;Windows Server 2003 R2
-      If $sOSVersion = 'WIN_VISTA'      Then $sOSVersionType = 'Client'  ;Windows Vista
-      If $sOSVersion = 'WIN_2008'       Then $sOSVersionType = 'Server'  ;Windows Server 2008
-    ElseIf $sOSVersionValue >= '08' Then  ;Windows 7 or newer, read OS type from registry
-      $sOSVersionType = $sOSInstallationType
-    EndIf
-
-    ;;DEFINE OS EDITION
-    Switch $sOSEditionID
-      Case 'Enterprise', 'EnterpriseS'
-        $sOSEdition = 'Enterprise'
-      Case 'Pro', 'Professional'
-        $sOSEdition = 'Pro'
-      Case 'Home'
-        $sOSEdition = 'Home'
-    EndSwitch
-  EndFunc
-  #EndRegion
-
-  #Region - OS ARCHITECTURE
-  ;Generated variables:
-  ;
-  ; $sOSArch              ; Example output: X64
-  ; $sOSArchName          ; Example output: 64-bit Operating System
-  ; $sOSArchShortname     ; Example output: 32-bit
-
-  Func ReadArch()
-  ;;DEFINE OS ARCHITECTURE
-    Global $sOSArch            = @OSArch
-    Global $sOSArchName        = ''
-    Global $sOSArchShortname   = ''
-
-    If $sOSArch = 'X86' Then
-      $sOSArchName             = '32-bit Operating System'
-      $sOSArchShortname        = '32-bit'
-    EndIf
-    If $sOSArch = 'X64' Then
-      $sOSArchName             = '64-bit Operating System'
-      $sOSArchShortname        = '64-bit'
-    EndIf
-  EndFunc
-  #EndRegion
-
-  #Region - USER DETAILS
-  ;;Generated variables:
-  ;
-  ; $sCurrentUsername
-
-  Func ReadUser()
-  ;;DEFINE CURRENT USER
-    Global $sCurrentUsername = ''
-    $sCurrentUsername = @UserName
-  EndFunc
-  #EndRegion
-
-  #Region - PC DETAILS
-  ;Generated variables:
-  ;
-  ; $sComputerName
-  ; $sOSAge
-  ; $sOSAgeAndDate
-  ; $sOSBootTime
-  ; $sOSInstallDate
-  ; $sOSUptime
-  ; $sWMIAdminPasswordStatus
-  ; $sWMIAutomaticResetBootOption
-  ; $sWMIAutomaticResetCapability
-  ; $sWMIBootOptionOnLimit
-  ; $sWMIBootOptionOnWatchDog
-  ; $sWMIBootROMSupported
-  ; $sWMIBootupState
-  ; $sWMICaption
-  ; $sWMIChassisBootupState
-  ; $sWMICreationClassName
-  ; $sWMICurrentTimeZone
-  ; $sWMIDaylightInEffect
-  ; $sWMIDescription
-  ; $sWMIDomain
-  ; $sWMIDomainRole
-  ; $sWMIEnableDaylightSavingsTime
-  ; $sWMIFrontPanelResetStatus
-  ; $sWMIInfraredSupported
-  ; $sWMIInitialLoadInfo
-  ; $sWMIInstallDate    ;use $sOSInstallDate instead
-  ; $sWMIKeyboardPasswordStatus
-  ; $sWMILastBootupTime    ;use $sOSBootTime instead
-  ; $sWMILastLoadInfo
-  ; $sWMIManufacturer
-  ; $sWMIModel
-  ; $sWMIName
-  ; $sWMINameFormat
-  ; $sWMINetworkServerModeEnabled
-  ; $sWMIPartOfDomain
-  ; $sWMIPauseAfterReset
-  ; $sWMIPowerManagementSupported
-  ; $sWMIPowerOnPasswordStatus
-  ; $sWMIPowerState
-  ; $sWMIPowerSupplyState
-  ; $sWMIPrimaryOwnerContact
-  ; $sWMIPrimaryOwnerName
-  ; $sWMIResetCapability
-  ; $sWMIResetCount
-  ; $sWMIResetLimit
-  ; $sWMIRoles
-  ; $sWMISerialNumber
-  ; $sWMISMBIOSAssetTag
-  ; $sWMIStatus
-  ; $sWMISystemStartupDelay
-  ; $sWMISystemStartupSetting
-  ; $sWMISystemType
-  ; $sWMIThermalState
-  ; $sWMITotalPhysicalMemory
-  ; $sWMIUserName
-  ; $sWMIWakeUpType
-  ; $sWMIWorkgroup
-
-  Func ReadPC()
-  ;; DEFINE COMPUTER DETAILS
-  ; Copied from AutoIt user forum by user "water", "GoogleDude", "spudw2k"
-  ; https://www.autoitscript.com/forum/topic/122994-get-computer-make-model-help/?do=findComment&comment=854055
-  ; https://www.autoitscript.com/forum/topic/81269-detect-bios-manufacture-using-wmi/?do=findComment&comment=584628
-  ; https://www.autoitscript.com/forum/topic/110300-system-uptime/?do=findComment&comment=774837
-
-    Global $sComputerName = @ComputerName
-
-    ;; GATHER AND PROCESS WMI COMPUTER SYSTEM DETAILS
-    $wbemFlagReturnImmediately = 0x10
-    $wbemFlagForwardOnly = 0x20
-    $colItems = ""
-    $strComputer = "localhost"
-
-    $objWMIService = ObjGet("winmgmts:\\" & $strComputer & "\root\CIMV2")
-    $colItems = $objWMIService.ExecQuery("SELECT * FROM Win32_ComputerSystem", "WQL", _
-                        $wbemFlagReturnImmediately + $wbemFlagForwardOnly)
-
-    If IsObj($colItems) then
-      For $objItem In $colItems
-        Global $sWMIAdminPasswordStatus       = $objItem.AdminPasswordStatus
-        Global $sWMIAutomaticResetBootOption  = $objItem.AutomaticResetBootOption
-        Global $sWMIAutomaticResetCapability  = $objItem.AutomaticResetCapability
-        Global $sWMIBootOptionOnLimit         = $objItem.BootOptionOnLimit
-        Global $sWMIBootOptionOnWatchDog      = $objItem.BootOptionOnWatchDog
-        Global $sWMIBootROMSupported          = $objItem.BootROMSupported
-        Global $sWMIBootupState               = $objItem.BootupState
-        Global $sWMICaption                   = $objItem.Caption
-        Global $sWMIChassisBootupState        = $objItem.ChassisBootupState
-        Global $sWMICreationClassName         = $objItem.CreationClassName
-        Global $sWMICurrentTimeZone           = $objItem.CurrentTimeZone
-        Global $sWMIDaylightInEffect          = $objItem.DaylightInEffect
-        Global $sWMIDescription               = $objItem.Description
-        Global $sWMIDomain                    = $objItem.Domain
-        Global $sWMIDomainRole                = $objItem.DomainRole
-        Global $sWMIEnableDaylightSavingsTime = $objItem.EnableDaylightSavingsTime
-        Global $sWMIFrontPanelResetStatus     = $objItem.FrontPanelResetStatus
-        Global $sWMIInfraredSupported         = $objItem.InfraredSupported
-        Local  $strInitialLoadInfo            = $objItem.InitialLoadInfo(0)
-        Global $sWMIInitialLoadInfo           = $strInitialLoadInfo
-        Global $sWMIKeyboardPasswordStatus    = $objItem.KeyboardPasswordStatus
-        Global $sWMILastLoadInfo              = $objItem.LastLoadInfo
-        Global $sWMIManufacturer              = $objItem.Manufacturer
-        Global $sWMIModel                     = $objItem.Model
-        Global $sWMIName                      = $objItem.Name
-        Global $sWMINameFormat                = $objItem.NameFormat
-        Global $sWMINetworkServerModeEnabled  = $objItem.NetworkServerModeEnabled
-        Global $sWMIPartOfDomain              = $objItem.PartOfDomain
-        Global $sWMIPauseAfterReset           = $objItem.PauseAfterReset
-        Global $sWMIPowerManagementSupported  = $objItem.PowerManagementSupported
-        Global $sWMIPowerOnPasswordStatus     = $objItem.PowerOnPasswordStatus
-        Global $sWMIPowerState                = $objItem.PowerState
-        Global $sWMIPowerSupplyState          = $objItem.PowerSupplyState
-        Global $sWMIPrimaryOwnerContact       = $objItem.PrimaryOwnerContact
-        Global $sWMIPrimaryOwnerName          = $objItem.PrimaryOwnerName
-        Global $sWMIResetCapability           = $objItem.ResetCapability
-        Global $sWMIResetCount                = $objItem.ResetCount
-        Global $sWMIResetLimit                = $objItem.ResetLimit
-        Local  $strRoles                      = $objItem.Roles(0)
-        Global $sWMIRoles                     = $strRoles
-        Global $sWMIStatus                    = $objItem.Status
-        Global $sWMISystemStartupDelay        = $objItem.SystemStartupDelay
-        Global $sWMISystemStartupSetting      = $objItem.SystemStartupSetting
-        Global $sWMISystemType                = $objItem.SystemType
-        Global $sWMIThermalState              = $objItem.ThermalState
-        Global $sWMITotalPhysicalMemory       = $objItem.TotalPhysicalMemory
-        Global $sWMIUserName                  = $objItem.UserName
-        Global $sWMIWakeUpType                = $objItem.WakeUpType
-        Global $sWMIWorkgroup                 = $objItem.Workgroup
-      Next
-    EndIf
-
-    ;;VALIDATE $sWMIUserName
-      If (StringIsSpace($sWMIUserName) = 1) Then
-        $sWMIUserName = $sCurrentUsername
-      EndIf
-
-    ;;GATHER AND PROCESS WMI BIOS DETAILS
-    $wbemFlagReturnImmediately = 0x10
-    $wbemFlagForwardOnly = 0x20
-    $colItems = ""
-    $strComputer = "localhost"
-
-    $objWMIService = ObjGet("winmgmts:\\" & $strComputer & "\root\CIMV2")
-    $colItems = $objWMIService.ExecQuery("SELECT * FROM Win32_SystemEnclosure", "WQL", _
-                        $wbemFlagReturnImmediately + $wbemFlagForwardOnly)
-
-    If IsObj($colItems) then
-      For $objItem In $colItems
-        Global $sWMISerialNumber = $objItem.SerialNumber
-        Global $sWMISMBIOSAssetTag = $objItem.SMBIOSAssetTag
-      Next
-    EndIf
-
-    Global $bAssetTagExists = True
-    Switch $sWMISMBIOSAssetTag
-      Case $sWMISerialNumber, 'No Asset Tag'
-        $bAssetTagExists = False
-      Case Else
-        $bAssetTagExists = True
-    EndSwitch
-
-    ;; GATHER AND PROCESS WMI OS DETAILS
-    $wbemFlagReturnImmediately = 0x10
-    $wbemFlagForwardOnly = 0x20
-    $colItems = ""
-    $strComputer = "localhost"
-
-    $objWMIService = ObjGet("winmgmts:\\" & $strComputer & "\root\CIMV2")
-    $colItems = $objWMIService.ExecQuery("SELECT * FROM Win32_OperatingSystem", "WQL", _
-                        $wbemFlagReturnImmediately + $wbemFlagForwardOnly)
-
-    If IsObj($colItems) then
-      For $objItem In $colItems
-        Global $sWMILastBootupTime = $objItem.LastBootUpTime
-        Global $sWMIInstallDate = $objItem.InstallDate
-      Next
-    EndIf
-
-    ;; calculate uptime
-    Global $sOSBootTime     = __WMIDateStringToDate($sWMILastBootupTime)
-    Global $sOSUptime       = __CalcTimeChange($sOSBootTime)
-
-    ; convert install date
-    Global $sOSInstallDate  = __WMIDateStringToDateShort($sWMIInstallDate)
-    Global $sOSAge          = StringTrimRight(__CalcTimeChange($sOSInstallDate), 2)
-    Global $sOSAgeAndDate   = $sOSAge & ' (' & $sOSInstallDate & ')'
-
-    ; remove make from model
-    $sWMIModel = StringReplace($sWMIModel, $sWMIManufacturer & ' ', '', 1)
-
-  EndFunc
-
-  ;; TOOLS
-  Func __CalcTimeChange($sWMIDateTime)
-    Local $aDateDiffs=[[0,24," day"],[0,60," hour"],[0,60," minute"]]  ;Local $aDateDiffs=[[0,24," day"],[0,60," hour"],[0,60," minute"],[0,1," second"]]
-    Local $aDateDiff = StringSplit("D|h|n","|")
-    Local $sNow = _NowCalc()
-    For $sDiff = 1 to $aDateDiff[0]
-      $aDateDiffs[$sDiff-1][0] = _DateDiff($aDateDiff[$sDiff], $sWMIDateTime, $sNow)
-    Next
-    Local $iUbound = UBound($aDateDiffs)-1
-    For $iX = $iUbound To 0 Step -1
-      If $iX > 0 Then
-        If $aDateDiffs[$iX-1][0] > 0 Then $aDateDiffs[$iX][0] = ($aDateDiffs[$iX][0]-($aDateDiffs[$iX-1][0]*$aDateDiffs[$iX-1][1]))
-      EndIf
-    Next
-    Local $sTimeDiff = ""
-    For $iX = 0 To $iUbound
-      If $aDateDiffs[$iX][0] > 0 Then
-        $sTimeDiff &= $aDateDiffs[$iX][0] & $aDateDiffs[$iX][2]
-        If $aDateDiffs[$iX][0] > 1 Then $sTimeDiff &= "s"
-        If $iX < $iUbound Then $sTimeDiff &= ", "
-      EndIf
-    Next
-    Return $sTimeDiff
-  EndFunc
-
-  Func __WMIDateStringToDate($dtmDate)
-    Return StringLeft($dtmDate,4) & "-" & StringMid($dtmDate, 5, 2) & "-" & StringMid($dtmDate, 7, 2) & " " & StringMid($dtmDate, 9, 2) & ":" & StringMid($dtmDate, 11, 2) & ":" & StringMid($dtmDate, 13, 2)
-  EndFunc
-
-  Func __WMIDateStringToDateShort($dtmDate)
-    Return StringLeft($dtmDate,4) & "-" & StringMid($dtmDate, 5, 2) & "-" & StringMid($dtmDate, 7, 2)
-  EndFunc
-
-  #EndRegion
-
-  #Region - IP ADDRESSES
-  ;Generated variables:
-  ;
-  ; $aIPDetails[$i][0]    ;   Example output: (connection name)
-  ; $aIPDetails[$i][1]    ;   Example output: (adapter IP address)
-  ; $aIPDetails[$i][2]    ;   Example output: (MAC address)
-  ; $aIPDetails[$i][3]    ;   Example output: (gateway)
-  ; $aIPDetails[$i][4]    ;   Example output: (DNS servers, ie address - address - address) ;not working correctly?
-  ; $aIPDetails[$i][5]    ;   Example output: (DHCP enabled, true or false)
-  ; $aIPDetails[$i][6]    ;   Example output: (subnet mask)
-  ;
-  ; $sNetAdapter01Address         ;   Example output: adapter IP address
-  ; $sNetAdapter02Address         ;   Example output: adapter IP address
-  ; $sNetAdapter03Address         ;   Example output: adapter IP address
-
-  Func ReadIPAddress()
-  ; copied from AutoIt user forums by user "guiness"
-  ; https://www.autoitscript.com/forum/topic/128276-display-ip-address-default-gateway-dns-servers/?do=findComment&comment=890228
-    Global $aIPDetails = _IPDetails()
-    ;if statement just for reference
-    If @error = 0 Then
-      Local $sData = ''
-      For $i = 1 To $aIPDetails[0][0]
-        $sData &= 'Description: ' & $aIPDetails[$i][0] & @CRLF & 'IP Address: ' & $aIPDetails[$i][1] & @CRLF & 'MAC: ' & _
-            $aIPDetails[$i][2] & @CRLF & 'Default Gateway: ' & $aIPDetails[$i][3] & @CRLF & 'DNS Servers: ' & $aIPDetails[$i][4] & @CRLF & @CRLF
-      Next
-      $sData = StringTrimRight($sData, StringLen(@CRLF & @CRLF))
-      ;MsgBox($MB_SYSTEMMODAL, '', $sData)
-    EndIf
-
-    Global $bNetAdapter01Exists = False
-    Global $bNetAdapter02Exists = False
-    Global $bNetAdapter03Exists = False
-    Global $bNetAdapter04Exists = False
-    Global $bNetAdapter05Exists = False
-
-    Global $sNetAdapter01Name = ''
-    Global $sNetAdapter02Name = ''
-    Global $sNetAdapter03Name = ''
-    Global $sNetAdapter04Name = ''
-    Global $sNetAdapter05Name = ''
-
-    Global $sNetAdapter01Address = ''
-    Global $sNetAdapter02Address = ''
-    Global $sNetAdapter03Address = ''
-    Global $sNetAdapter04Address = ''
-    Global $sNetAdapter05Address = ''
-
-    Global $sNetAdapter01DHCP = ''
-    Global $sNetAdapter02DHCP = ''
-    Global $sNetAdapter03DHCP = ''
-    Global $sNetAdapter04DHCP = ''
-    Global $sNetAdapter05DHCP = ''
-
-    Global $sNetAdapter01Gateway = ''
-    Global $sNetAdapter02Gateway = ''
-    Global $sNetAdapter03Gateway = ''
-    Global $sNetAdapter04Gateway = ''
-    Global $sNetAdapter05Gateway = ''
-
-    Global $sNetAdapter01SubnetMask = ''
-    Global $sNetAdapter02SubnetMask = ''
-    Global $sNetAdapter03SubnetMask = ''
-    Global $sNetAdapter04SubnetMask = ''
-    Global $sNetAdapter05SubnetMask = ''
-
-    If _elementExists($aIPDetails, 1) Then
-      $bNetAdapter01Exists = True
-      $sNetAdapter01Name = $aIPDetails[1][0]
-      $sNetAdapter01Address = $aIPDetails[1][1]
-      If $aIPDetails[1][5] = True Then $sNetAdapter01DHCP = 'Dynamic'
-      If $aIPDetails[1][5] = False Then $sNetAdapter01DHCP = 'Static'
-      $sNetAdapter01Gateway = $aIPDetails[1][3]
-      $sNetAdapter01SubnetMask = $aIPDetails[1][6]
-    EndIf
-
-    If _elementExists($aIPDetails, 2) Then
-      $bNetAdapter02Exists = True
-      $sNetAdapter02Name = $aIPDetails[2][0]
-      $sNetAdapter02Address = $aIPDetails[2][1]
-      If $aIPDetails[2][5] = True Then $sNetAdapter02DHCP = 'Dynamic'
-      If $aIPDetails[2][5] = False Then $sNetAdapter02DHCP = 'Static'
-      $sNetAdapter02Gateway = $aIPDetails[2][3]
-      $sNetAdapter02SubnetMask = $aIPDetails[2][6]
-    EndIf
-
-    If _elementExists($aIPDetails, 3) Then
-      $bNetAdapter03Exists = True
-      $sNetAdapter03Name = $aIPDetails[3][0]
-      $sNetAdapter03Address = $aIPDetails[3][1]
-      If $aIPDetails[3][5] = True Then $sNetAdapter03DHCP = 'Dynamic'
-      If $aIPDetails[3][5] = False Then $sNetAdapter03DHCP = 'Static'
-      $sNetAdapter03Gateway = $aIPDetails[3][3]
-      $sNetAdapter03SubnetMask = $aIPDetails[3][6]
-    EndIf
-
-    If _elementExists($aIPDetails, 4) Then
-      $bNetAdapter04Exists = True
-      $sNetAdapter04Name = $aIPDetails[4][0]
-      $sNetAdapter04Address = $aIPDetails[4][1]
-      If $aIPDetails[4][5] = True Then $sNetAdapter04DHCP = 'Dynamic'
-      If $aIPDetails[4][5] = False Then $sNetAdapter04DHCP = 'Static'
-      $sNetAdapter04Gateway = $aIPDetails[4][3]
-      $sNetAdapter04SubnetMask = $aIPDetails[4][6]
-    EndIf
-
-    If _elementExists($aIPDetails, 5) Then
-      $bNetAdapter05Exists = True
-      $sNetAdapter05Name = $aIPDetails[5][0]
-      $sNetAdapter05Address = $aIPDetails[5][1]
-      If $aIPDetails[5][5] = True Then $sNetAdapter05DHCP = 'Dynamic'
-      If $aIPDetails[5][5] = False Then $sNetAdapter05DHCP = 'Static'
-      $sNetAdapter05Gateway = $aIPDetails[5][3]
-      $sNetAdapter05SubnetMask = $aIPDetails[5][6]
-    EndIf
-
-  EndFunc
-
-  Func _IPDetails()
-    Local $aReturn[1][7] = [[0, 7]], $iCount = 0
-    Local $oWMIService = ObjGet('winmgmts:{impersonationLevel = impersonate}!\\' & '.' & '\root\cimv2')
-    Local $oColItems = $oWMIService.ExecQuery('Select * From Win32_NetworkAdapterConfiguration Where IPEnabled = True', 'WQL', 0x30)
-    If IsObj($oColItems) Then
-      For $oObjectItem In $oColItems
-        $aReturn[0][0] += 1
-        $iCount += 1
-
-        If $aReturn[0][0] <= $iCount + 1 Then
-          ReDim $aReturn[$aReturn[0][0] * 2][$aReturn[0][1]]
-        EndIf
-
-        $aReturn[$iCount][0] = _IsString($oObjectItem.Description)
-        $aReturn[$iCount][1] = _IsString($oObjectItem.IPAddress(0))
-        $aReturn[$iCount][2] = _IsString($oObjectItem.MACAddress)
-        $aReturn[$iCount][3] = _IsString($oObjectItem.DefaultIPGateway(0))
-        $aReturn[$iCount][4] = _IsString(_WMIArrayToString($oObjectItem.DNSServerSearchOrder(), ' - ')) ; You could use _ArrayToString() but I like creating my own Functions especially when I don't need alot of error checking.
-        $aReturn[$iCount][5] = _IsString($oObjectItem.DHCPEnabled)
-        $aReturn[$iCount][6] = _IsString($oObjectItem.IPSubnet(0))
-      Next
-      ReDim $aReturn[$aReturn[0][0] + 1][$aReturn[0][1]]
-    EndIf
-    Return SetError($aReturn[0][0] = 0, 0, $aReturn)
-  EndFunc   ;==>_IPDetails
-
-  Func _IsString($sString)
-    If IsString($sString) = 0 Then
-      $sString = 'Not Available'
-    EndIf
-    Return $sString
-  EndFunc   ;==>_IsString
-
-  Func _WMIArrayToString($aIPDetails, $sDelimeter = '|')
-    Local $sString = 'Not Available'
-    If UBound($aIPDetails) Then
-      For $i = 0 To UBound($aIPDetails) - 1
-        $sString &= $aIPDetails[$i] & $sDelimeter
-      Next
-      $sString = StringTrimRight($sString, StringLen($sDelimeter))
-    EndIf
-    Return $sString
-  EndFunc   ;==>_WMIArrayToString
-  #EndRegion
-
-  #Region -- DRIVES
-  ;Generated variables:
-  ;
-  ; $sDiskDetails       ;Example output: formatted string of disk details array
-  ; $aDiskDetails[i][0] ;Example output: drive letter
-  ; $aDiskDetails[i][1] ;Example output: 0 or null. Null means disk is not accessible, like a CD drive with no disc.
-  ; $aDiskDetails[i][2] ;Example output: "Local Fixed Disk", "CD-ROM Disc", "Network Connection", others
-  ; $aDiskDetails[i][3] ;Example output: path if mapped drive, blank if local disk
-
-  Func ReadDisks()
-    Global $sDiskDetails = ''
-    Global $aDiskDetails = ''
-
-    $aDiskDetails = _DiskDetails()
-    If @error = 0 Then
-      Global $sDiskDetails = ''
-      For $i = 1 To $aDiskDetails[0][0]
-        $sDiskDetails &= ' • ' & $aDiskDetails[$i][2] & ' (' & $aDiskDetails[$i][0] & ') ' & $aDiskDetails[$i][3] & @CRLF
-      Next
-      $sDiskDetails = StringTrimRight($sDiskDetails, StringLen(@CRLF))
-      ;MsgBox($MB_SYSTEMMODAL, '', $sDiskDetails)
-    EndIf
-  EndFunc
-
-  Func _DiskDetails()
-    Local $aReturn[1][4] = [[0, 4]], $iCount = 0
-    Local $oWMIService = ObjGet('winmgmts:{impersonationLevel = impersonate}!\\' & '.' & '\root\cimv2')
-    Local $oColItems = $oWMIService.ExecQuery('SELECT * FROM Win32_LogicalDisk', 'WQL', 0x30)
-    If IsObj($oColItems) Then
-      For $oObjectItem In $oColItems
-        $aReturn[0][0] += 1
-        $iCount += 1
-
-        If $aReturn[0][0] <= $iCount + 1 Then
-          ReDim $aReturn[$aReturn[0][0] * 2][$aReturn[0][1]]
-        EndIf
-
-        $aReturn[$iCount][0] = _IsStringReturnNull($oObjectItem.Name)
-        $aReturn[$iCount][1] = _IsStringReturnNull($oObjectItem.Access)
-        $aReturn[$iCount][2] = _IsStringReturnNull($oObjectItem.Description)
-        $aReturn[$iCount][3] = _IsStringReturnNull($oObjectItem.ProviderName)
-      Next
-      ReDim $aReturn[$aReturn[0][0] + 1][$aReturn[0][1]]
-    EndIf
-    Return SetError($aReturn[0][0] = 0, 0, $aReturn)
-  EndFunc
-
-  Func _IsStringReturnNull($sString)
-    If IsString($sString) = 0 Then
-      $sString = ''
-    EndIf
-    If $sString = 'Network Connection' Then
-      $sString = 'Mapped Drive'
-    EndIf
-    Return $sString
-  EndFunc   ;==>_IsString
-
-  #EndRegion
-
-  #Region -- PRINTERS
-  ;Generated variables:
-  ;
-  ; $sPrinterDetails       ;Example output: formatted string of printer details array
-  ; $aPrinterDetails[i][0] ;Example output: PDFCreator or //sewprnt1/CHLIT01
-  ; $aPrinterDetails[i][1] ;Example output: 10.164.10.56
-  ; $aPrinterDetails[i][2] ;Example output: CHL - IT Copier
-  ; $aPrinterDetails[i][3] ;Example output: Ricoh Aficio MP 2550
-
-  Func ReadPrinters()
-    Global $sPrinterDetails = ''
-    Global $aPrinterDetails = ''
-
-    $aPrinterDetails = _PrinterDetails()
-    If @error = 0 Then
-      Global $sPrinterDetails = ''
-      For $i = 1 To $aPrinterDetails[0][0]
-        $sPrinterDetails &= ' • ' & $aPrinterDetails[$i][0] & @CRLF & _
-                            '    - Port: ' & $aPrinterDetails[$i][1] & @CRLF & _
-                            '    - Location: ' & $aPrinterDetails[$i][2] & @CRLF & _
-                            '    - Comments: ' & $aPrinterDetails[$i][3] & @CRLF
-      Next
-      $sPrinterDetails = StringTrimRight($sPrinterDetails, StringLen(@CRLF))
-      ;MsgBox($MB_SYSTEMMODAL, '', $sPrinterDetails)
-    EndIf
-  EndFunc
-
-  Func _PrinterDetails()
-    Local $aReturn[1][4] = [[0, 4]], $iCount = 0
-    Local $oWMIService = ObjGet('winmgmts:{impersonationLevel = impersonate}!\\' & '.' & '\root\cimv2')
-    Local $oColItems = $oWMIService.ExecQuery('SELECT * FROM Win32_Printer', 'WQL', 0x30)
-    If IsObj($oColItems) Then
-      For $oObjectItem In $oColItems
-        $aReturn[0][0] += 1
-        $iCount += 1
-
-        If $aReturn[0][0] <= $iCount + 1 Then
-          ReDim $aReturn[$aReturn[0][0] * 2][$aReturn[0][1]]
-        EndIf
-
-        $aReturn[$iCount][0] = _IsStringReturnNull($oObjectItem.Name)
-        $aReturn[$iCount][1] = _IsStringReturnNull($oObjectItem.PortName)
-        $aReturn[$iCount][2] = _IsStringReturnNull($oObjectItem.Location)
-        $aReturn[$iCount][3] = _IsStringReturnNull($oObjectItem.Comment)
-      Next
-      ReDim $aReturn[$aReturn[0][0] + 1][$aReturn[0][1]]
-    EndIf
-    Return SetError($aReturn[0][0] = 0, 0, $aReturn)
-  EndFunc
-
-  #EndRegion
-
-  #Region -- LOCALIZATION
-
-
-  ;; READ CUSTOM INFO
-  Func ReadAdditionalInfo()
-  ;Generated variables:
-  ;
-  ; $sCustomInformation
-
-    ;read custom information file, set to blank if not found
-    Global $sCustomInformation = ' '
-    $sCustomInformationFilePath = $sAppInstallPath & '\Support\CustomInformation.txt'
-    If FileExists($sCustomInformationFilePath) Then
-      Local $hFileOpen = FileOpen($sCustomInformationFilePath,  $FO_READ)
-      $sCustomInformation = FileRead($hFileOpen)
-      FileClose($hFileOpen)
-    EndIf
-
-    ;validate custom information file contents, disable section if data invalid
-    Switch (StringIsSpace($sCustomInformation))
-      Case 0
-        Global $bCustomInformationExists = True
-      Case 1
-        Global $bCustomInformationExists = False
-    EndSwitch
-  EndFunc
-
-  ;; READ LCM INFO
   Func ReadLCMInfo()
-  ;Generated variables:
-  ;
-  ; $sLCMXJCode   ;X88868
-  ; $sLCMCRCode   ;SE900412
-  ; $sLCMEdition  ;Server
+    ;;READ LCM INFO
+    ;; Generated variables:
+    ;;
+    ;; $sLCMXJCode   ;X88868
+    ;; $sLCMCRCode   ;SE900412
+    ;; $sLCMEdition  ;Server
 
     ;read LCM log file, set to blank if not found
     Global $sLCMXJCode  = ''
@@ -1574,231 +1788,6 @@ EndSwitch
   EndFunc
 #EndRegion
 
-#Region -- OPTIONS
-
-
-  ;; TOOLS
-  Func _elementExists($array, $element)
-    If $element > UBound($array)-1 Then Return False ; element is out of the array bounds
-    Return True ; element is in array bounds
-  EndFunc
-
-  Func ReadAD()
-    ;;READ DETAILS FROM ACTIVE DIRECTORY
-    Global $sADDescription
-    Global $sADDistinguishedName
-    Global $sADLocalAdminPassword
-    Global $sADLocalAdminPasswordExp
-    Global $sADOUPath
-
-    ;Local $aADProperties[5][2]
-
-    ;;Open Connection to Active Directory
-    _AD_Open()
-    If @error = 0 Then
-      ;If @error Then Exit MsgBox(16, "Active Directory Connection", "Function _AD_Open encountered a problem. @error = " & @error & ", @extended = " & @extended)
-
-      ;;ATTEMPT 1
-      ;$aADProperties = _AD_GetObjectProperties(@ComputerName & '$', 'description,distinguishedName,ms-Mcs-AdmPwd,ms-Mcs-AdmPwdExpirationTime')
-      ;If @error Then ReDim $aADProperties[5][2]
-      ;ReDim $aADProperties[5][2]
-
-      ;_ArrayDisplay($aADProperties, 'Debug')
-
-      ;$sADDescription           = $aADProperties[1][1]
-      ;$sADDistinguishedName     = $aADProperties[2][1]
-      ;$sADLocalAdminPassword    = $aADProperties[3][1]
-      ;$sADLocalAdminPasswordExp = $aADProperties[4][1]
-
-      ;MsgBox(0, 'Debug', 'Description: ' & $sADDescription & '. OU: ' & $sADDistinguishedName & '. Admin Pass: ' & $sADLocalAdminPassword & '. Admin Pass Exp: ' & $sADLocalAdminPasswordExp & '.')
-
-      ;$aProperties = _AD_GetObjectProperties(@ComputerName & "$")
-      ;_ArrayDisplay($aProperties, "Active Directory Functions - Example 3 - Properties for computer '" & @ComputerName & "'")
-
-      ;;ATTEMPT 2
-      $sADDescription           = ADQuery('description')
-      $sADDistinguishedName     = ADQuery('distinguishedName')
-      $sADLocalAdminPassword    = ADQuery('ms-Mcs-AdmPwd')
-      $sADLocalAdminPasswordExp = ADQuery('ms-Mcs-AdmPwdExpirationTime')
-
-      ;;Close Connection to Active Directory
-      _AD_Close()
-
-      ;;Parse AD OU path
-      If StringIsSpace($sADDistinguishedName) = False Then
-        $aADDistinguishedName = StringSplit($sADDistinguishedName, ',', $STR_NOCOUNT)
-        $sADOUPath = ''
-        _ArrayReverse($aADDistinguishedName)
-        For $i = 3 to UBound($aADDistinguishedName) - 2
-          $sADOUPath = $sADOUPath & ' > ' & $aADDistinguishedName[$i]
-        Next
-        $sADOUPath = StringTrimLeft($sADOUPath, 3)
-        $sADOUPath = StringReplace($sADOUPath, 'OU=', '')
-      EndIf
-    EndIf
-  EndFunc
-
-  Func ADQuery($sADParameter)
-    ;;Wrapper for _AD_GetObjectProperties to safely return single string.
-    ;;Open AD connection before calling this.
-
-    $aADProperties = _AD_GetObjectProperties(@ComputerName & '$', $sADParameter)
-
-    If IsArray($aADProperties) Then
-      ReDim $aADProperties[2][2]
-      Return $aADProperties[1][1]
-    Else
-      Return
-    EndIf
-  EndFunc
-
-  Func ReadServices()
-    ;;READ DETAILS ABOUT LOCAL SERVICES
-    Global $sServCrowdStrikeStatus
-    Global $sServWindowsUpdateStatus
-    Global $sServBeyondTrustStatus
-    Global $sServBeyondTrustMonitorStatus
-    Global $sServSplunkForwarderStatus
-    Global $sServSMSAgentStatus
-
-    Local $sErrorText = 'Not Installed'
-    Local $aServCrowdStrikeStatus
-    Local $aServWindowsUpdateStatus
-    Local $aServBeyondTrustStatus
-    Local $aServBeyondTrustMonitorStatus
-    Local $aServSplunkForwarderStatus
-    Local $aServSMSAgentStatus
-
-    ;;CrowdStrike
-    $aServCrowdStrikeStatus = _Service_QueryStatus('CSFalconService')
-    If @error Then
-      $sServCrowdStrikeStatus = $sErrorText
-    Else
-      $sServCrowdStrikeStatus = TranslateServiceStatusCode($aServCrowdStrikeStatus[1])
-    EndIf
-
-    ;;Windows Update
-    $aServWindowsUpdateStatus = _Service_QueryStatus('wuauserv')
-    If @error Then
-      $sServWindowsUpdateStatus = $sErrorText
-    Else
-      $sServWindowsUpdateStatus = TranslateServiceStatusCode($aServWindowsUpdateStatus[1])
-    EndIf
-
-    ;;BeyondTrust
-    $aServBeyondTrustStatus = _Service_QueryStatus('BTService')
-    If @error Then
-      $sServBeyondTrustStatus = $sErrorText
-    Else
-      $sServBeyondTrustStatus = TranslateServiceStatusCode($aServBeyondTrustStatus[1])
-    EndIf
-
-    ;;BeyondTrust Monitor
-    $aServBeyondTrustMonitorStatus = _Service_QueryStatus('BTMonitor')
-    If @error Then
-      $sServBeyondTrustMonitorStatus = $sErrorText
-    Else
-      $sServBeyondTrustMonitorStatus = TranslateServiceStatusCode($aServBeyondTrustMonitorStatus[1])
-    EndIf
-
-    ;;Splunk Forwarder
-    $aServSplunkForwarderStatus = _Service_QueryStatus('SplunkForwarder')
-    If @error Then
-      $sServSplunkForwarderStatus = $sErrorText
-    Else
-      $sServSplunkForwarderStatus = TranslateServiceStatusCode($aServSplunkForwarderStatus[1])
-    EndIf
-
-    ;;SCCM Client
-    $aServSMSAgentStatus = _Service_QueryStatus('CcmExec')
-    If @error Then
-      $sServSMSAgentStatus = $sErrorText
-    Else
-      $sServSMSAgentStatus = TranslateServiceStatusCode($aServSMSAgentStatus[1])
-    EndIf
-  EndFunc
-
-  Func TranslateServiceStatusCode($iStatusValue)
-    ;;Translates the code returned by the _Service_QueryStatus function.
-    Local $sStatus
-
-    Switch $iStatusValue
-      Case 1
-        $sStatus = 'Stopped'
-      Case 2
-        $sStatus = 'Starting'
-      Case 3
-        $sStatus = 'Stopping'
-      Case 4
-        $sStatus = 'Running'
-      Case 5
-        $sStatus = 'Continuing'
-      Case 6
-        $sStatus = 'Pausing'
-      Case 7
-        $sStatus = 'Paused'
-    EndSwitch
-    Return $sStatus
-  EndFunc
-
-  Func ReadRegistry()
-    ;;READ REGISTRY DETAILS
-    Global $sPCDescription
-
-    $sPCDescription = RegRead('HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters','srvcomment')
-  EndFunc
-#EndRegion
-
-#Region -- REFRESH INFO
-  ;; Standard Refresh
-  Func ReadComputer()
-    ReadOSVersion()
-    ReadArch()
-    ReadUser()
-    ReadPC()
-    ReadIPAddress()
-    ReadRegionalInfo()  ;look for location flags and set regional info accordingly (helpdesk phone/email, etc.)
-    ReadAdditionalInfo()  ;read contents of custom info file
-    ReadLCMInfo()
-    ReadConfig()
-    ReadConfig()
-    ReadDisks()
-    ReadPrinters()
-    ReadAD()
-    ReadServices()
-    ReadRegistry()
-
-    UpdateToolTip()
-    UpdateMainGUI()
-    UpdateSummaryString()
-
-    _ReduceMemory()
-  EndFunc
-
-  Func ReadComputerWait($idGUIParent)
-  ; create busy GUI and refresh info
-    ;$idGUIWorking = GUICreate('', 100, 40, -1, -1, BitOR($WS_POPUP, $WS_CAPTION), BitOR($WS_EX_TOPMOST, $WS_EX_TOOLWINDOW), $idGUIParent)
-    $idGUIWorking = GUICreate('Refreshing...', 200, 50, -1, -1, BitOR($WS_DLGFRAME, $WS_POPUP), BitOR($WS_EX_TOPMOST, $WS_EX_TOOLWINDOW), $idGUIParent)
-    $sLabel = GUICtrlCreateLabel('Refreshing...', 0, 17, 200, 20, $SS_CENTER)
-    GUICtrlSetFont($sLabel, 11, $FW_BOLD)
-
-    GUISetState(@SW_SHOWNORMAL, $idGUIWorking)
-
-    ReadComputer()
-
-    GUIDelete($idGUIWorking)
-  EndFunc
-
-  Func _ReduceMemory()
-  ;https://www.autoitscript.com/forum/topic/131315-accumulating-memory-usage/
-    Local $aReturn = DllCall("psapi.dll", "int", "EmptyWorkingSet", "long", -1)
-    If @error = 1 Then
-      Return SetError(1, 0, 0)
-    EndIf
-    Return $aReturn[0]
-  EndFunc
-#EndRegion
-
 #Region - GUIs
   ;; ABOUT THIS COMPUTER
   Func AboutThisComputer()
@@ -1904,7 +1893,7 @@ EndSwitch
       $rowMainRight28 = $rowMainRight27
       $rowMainRight29 = $rowMainRight28
     EndIf
-    If $bCustomInformationExists = True Then
+    If $bFreeTextDetailsExists = True Then
       $rowMainRight30 = $rowMainRight29 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
       $rowMainRight31 = $rowMainRight30 + $rowMainRightSpacing
       $rowMainRight32 = $rowMainRight31 + $rowMainRightSpacing + (($rowMainRightSpacing * 3) - 7) ;height of multiline custom info box, duplicate changes in rowMainRight below
@@ -1998,7 +1987,7 @@ EndSwitch
       $rowMainRight28Height = 0
       $rowMainRight29Height = 0
     EndIf
-    If $bCustomInformationExists = True Then
+    If $bFreeTextDetailsExists = True Then
       $rowMainRight30Height = $rowMainRightHeights
       $rowMainRight31Height = $rowMainRightHeights + (($rowMainRightSpacing * 3) - 7) ;height of multiline custom info box, duplicate changes in rowMainRightHeight above
       $rowMainRight32Height = $rowMainRightHeights
@@ -2232,10 +2221,10 @@ EndSwitch
     EndIf
 
     ; custom details
-    If $bCustomInformationExists = True Then
+    If $bFreeTextDetailsExists = True Then
       $idGroupMainRightCustom     = GUICtrlCreateGroup('More Details',                $columnMainRight01, $rowMainRight30, $columnMainRight00Width + 1, ($rowMainRight32 - $rowMainRight30) + 4)
 
-      $idLabelMainRight20a        = GUICtrlCreateEdit($sCustomInformation,            $columnMainRight01+8, $rowMainRight31, $columnMainRight00Width-9, $rowMainRight31Height-4, BitOR($ES_AUTOVSCROLL,$ES_READONLY,$ES_WANTRETURN,$WS_VSCROLL), 0)
+      $idLabelMainRight20a        = GUICtrlCreateEdit($sFreeTextDetails,            $columnMainRight01+8, $rowMainRight31, $columnMainRight00Width-9, $rowMainRight31Height-4, BitOR($ES_AUTOVSCROLL,$ES_READONLY,$ES_WANTRETURN,$WS_VSCROLL), 0)
     Else
       Local $idGroupMainRightCustom
     EndIf
@@ -2479,7 +2468,7 @@ EndSwitch
     GUICtrlSetData($idLabelMainRight17a, $sWMISMBIOSAssetTag)
     GUICtrlSetData($idLabelMainRight18a, $sLCMXJCode)
     GUICtrlSetData($idLabelMainRight19a, $sLCMCRCode)
-    GUICtrlSetData($idLabelMainRight20a, $sCustomInformation)
+    GUICtrlSetData($idLabelMainRight20a, $sFreeTextDetails)
   EndFunc
 
 ;; UPDATE SUMMARY FILE
@@ -2569,7 +2558,7 @@ EndSwitch
       $sPrinterDetails & @CRLF & _
       @CRLF & _
       'Custom:' & @CRLF & _
-      $sCustomInformation & @CRLF & _
+      $sFreeTextDetails & @CRLF & _
       'Helpdesk:' & @CRLF & _
       ' • Email: ' & $sOrgHelpdeskEmail & @CRLF & _
       ' • Phone: ' & $sOrgHelpdeskPhone & @CRLF & _
@@ -2694,10 +2683,10 @@ EndSwitch
 
   ;; Windows Update
   Func LaunchWindowsUpdate()
-    Switch $sOSVersionValue
-      Case $sOSVersionValue < '14' ;OS is older than Windows 10
+    Switch $iOSVersionValue
+      Case $iOSVersionValue < '14' ;OS is older than Windows 10
         StandardRunCmd('wuapp.exe')
-      Case $sOSVersionValue >= '14'  ;OS is Windows 10 or newer
+      Case $iOSVersionValue >= '14'  ;OS is Windows 10 or newer
         StandardRunCmd('explorer ms-settings:windowsupdate')
     EndSwitch
   EndFunc

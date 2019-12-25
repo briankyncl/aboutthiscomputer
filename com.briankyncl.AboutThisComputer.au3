@@ -1,8 +1,8 @@
 #NoTrayIcon
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=Images\BeOS_info.ico
-#AutoIt3Wrapper_Outfile=Releases\AboutThisComputer.exe
-#AutoIt3Wrapper_Outfile_x64=Releases\AboutThisComputer_x64.exe
+#AutoIt3Wrapper_Outfile=Compiled\AboutThisComputer.exe
+#AutoIt3Wrapper_Outfile_x64=Compiled\AboutThisComputer_x64.exe
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_Res_Comment=About This Computer
 #AutoIt3Wrapper_Res_Description=About This Computer

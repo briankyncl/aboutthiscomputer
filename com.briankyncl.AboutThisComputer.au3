@@ -1,14 +1,14 @@
 #NoTrayIcon
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=Images\BeOS_info.ico
-#AutoIt3Wrapper_Outfile=Compiled\AboutThisComputer.exe
-#AutoIt3Wrapper_Outfile_x64=Compiled\AboutThisComputer_x64.exe
+#AutoIt3Wrapper_Outfile=Releases\AboutThisComputer.exe
+#AutoIt3Wrapper_Outfile_x64=Releases\AboutThisComputer_x64.exe
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_Res_Comment=About This Computer
 #AutoIt3Wrapper_Res_Description=About This Computer
-#AutoIt3Wrapper_Res_Fileversion=0.1.0.1
+#AutoIt3Wrapper_Res_Fileversion=2.0.0.964
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=y
-#AutoIt3Wrapper_Res_LegalCopyright=Copyright (c) 2019 Brian Kyncl (briankyncl.com). All rights reserved.
+#AutoIt3Wrapper_Res_LegalCopyright=Copyright (c) 2020 Brian Kyncl (briankyncl.com). All rights reserved.
 #AutoIt3Wrapper_Res_SaveSource=y
 #AutoIt3Wrapper_Res_Language=1033
 #AutoIt3Wrapper_Add_Constants=n
@@ -21,26 +21,38 @@
   com.briankyncl.AboutThisComputer.au3
   Application for quickly displaying common computer information.
 
-  Created by Brian Kyncl on 2019-08-07
-  Copyright (c) 2019 Brian Kyncl. All rights reserved.
+  Created by Brian Kyncl on 2017-11-29
+  Copyright (c) 2020 Brian Kyncl (briankyncl.com). All rights reserved.
 
   Run as current user with implicit privileges.
 
   Assumptions:
-   - Application is used by an organization/business.
+   - Application is used by a business or other organized entity.
    - Organization has a corporate intranet.
+   - Organization uses mapped personal drives; mapped via AD object setting.
+   - Organization uses login scripts; configured via AD object setting.
    - Organization has an IT helpdesk.
-   - Organization uses employee numbers.
+   - Organization has a password self-service portal.
+   - Organization uses employee ID numbers.
    - Organization tracks computer hardware using asset tags.
    - Organization writes asset tags to BIOS.
    - Workstation is joined to an Active Directory domain.
    - Operating System is common desktop or server version of Windows used in enterprises.
    - IT helpdesk has a regional phone number
    - IT helpdesk has a corporate phone number
-   - IT helpdesk has an email address
+   - IT helpdesk has a regional email address
    - IT helpdesk has a website
    - IT helpdesk has a website for remote control sessions
    - SCCM Application Catalog is utilized.
+   - CrowdStrike is installed and service is running.
+   - BeyondTrust PowerInsight is installed and service is running.
+   - Splunk Forwarder is installed and service is running.
+   - SCCM Client is installed and service is running.
+   - Windows Update service is running.
+
+  Notes to Self:
+    2019-12-24: Resume working on ReadCustomization(), add code to not set variable if no result from RegRead
+
 #COMMENTS-END
 
 #Region -- PRE-FLIGHT
@@ -48,9 +60,9 @@
   ;;none
 
   ;;INCLUDES
-  #include 'UDF-ThirdParty\UDF-ADFunctions\AD.au3'
-  #include 'UDF-ThirdParty\UDF-Services\Services.au3'
-  #include 'UDF-ThirdParty\UDF-SMTPMailer\SmtpMailer.au3'
+  #include 'UDF-ADFunctions\AD.au3'
+  #include 'UDF-Services\Services.au3'
+  #include 'UDF-SMTPMailer\SmtpMailer.au3'
   #include <Array.au3>
   #include <AutoItConstants.au3>
   #include <ButtonConstants.au3>
@@ -73,179 +85,47 @@
   #include <WindowsConstants.au3>
 
   ;;ASSETS
-  FileInstall('Images\BeOS_info.ico', @TempDir & '\ATC-BeOS_info.ico', $FC_OVERWRITE)
+  ;FileInstall('Images\BeOS_info.ico', @TempDir & '\ATC-BeOS_info.ico', $FC_OVERWRITE)
 #EndRegion
 
 Main()      ;;Main application
 SoftExit()  ;;Exit app gracefully if code should ever find itself here.
-
-#Region -- MAIN
-  Func Main()
-    ;;Everything controlled from here.
-
-    ;;DECLARE CORE GLOBALS
-    ;; Declare core globals needed for application startup.
-    StartupCoreGlobals()
-
-    ;;PROCESS EXE PARAMETERS
-    ;; Parse provided command line parameters, if any.
-    StartupExeMode()
-
-    ;;RELAUNCH FROM TEMP
-    ;; Copy to and relaunch application from user's temp directory.
-    StartupRunFromTemp()
-
-    ;;DECLARE GLOBALS
-    ;; Declare globals not declared anywhere else.
-    StartupGlobals()
-
-    ;;READ CONFIG
-    ;; Read application configuration and customization.
-    ReadConfig()
-
-    ;;STAGE GUIs
-    ;; Define tray and display normal tray or window-mode tray.
-    ;; Define main GUI and display Loading... GUI or main GUI.
-    StartupBuildTray()
-    StartupBuildMainGUI()
-
-    ;;REFRESH COMPUTER INFO
-    ;; Read details about computer.
-    ReadComputer()
-    --ReadComputerSchedule()  ;;AdLibRegister ReadComputer()
-
-    ;;DISPLAY GUI
-    ;; Display either the main GUI or or the final tray and show.
-    --MainGUI()
-    --MainGUIWait()
-
-    ;;MAIN WAIT
-    ;; Enter main loop and wait
-
-
-
-
-
-
-
-
-    ;;display a main gui
-      ;function to either show final tray icon and enter main loop
-      ;or show main window and enter window open loop
-
-
-
-
-
-
-
-
-
-    ;;Code below is being used as reference
-    ;;DECLARE GLOBALS
-      ;;Declare main global variables.
-      MainDeclareGlobals()
-      LogDeclare()
-
-    ;;CHECK EXEC
-      ;;Validate details about the EXE and how it was launched.
-      MainExecCheck()
-
-    ;;DECLARE GUI VARIABLES
-      ;;Define variables for main GUI.
-      GUIMainDeclareGrid()
-
-    ;;DECLARE GUI ELEMENTS
-      ;;Define main GUI.
-      GUIMainDeclareElements()
-
-    ;;DISPLAY MAIN GUI
-      ;;Display the main GUI.
-      GUIMainDisplay()
-
-    ;;READ OS AND ARCHITECTURE
-      ;;Find the current operating system and operating system architecture.
-      ProgressSetStatusBar('Reading OS and architecture...')
-      ReadOS()
-      ReadOSArch()
-
-    ;;START LOGGING
-      ;;Define start logging.
-      ProgressSetStatusBar('Starting log...')
-      LogStart()
-
-    ;;IMPORT OPTIONS FILE
-      ;;Import options file (WKS_PrepOptions.txt).
-      ProgressSetStatusBarAndLog('Importing options file...')
-      MainOptionsImportFile()
-
-    ;;PARSE OPTIONS TO TEMPLATES
-      ;;Load data from Options array into Templates array and load into GUI
-      ProgressSetStatusBarAndLog('Parsing templates...')
-      MainOptionsLoadTemplates()
-
-    ;;PARSE OPTIONS TO TABLE
-      ;;Load data from Options array into Options table in GUI.
-      ProgressSetStatusBarAndLog('Parsing options...')
-      MainOptionsLoadTable()
-
-    ;;PREPARE GUI FOR USE
-      ;;Set GUI state for initial use by user.
-      ProgressSetStatusBarAndLog('Staging interface...')
-      SetGUIReady()
-
-    ;;CHECK FOR INCOMPLETE PREP
-      ;;Check file system for evidence of incomplete prep and offer to continue it.
-      ProgressSetStatusBarAndLog('Checking for incomplete prep...')
-      MainOptionsIncomplete()
-
-    ;;READY FOR USER INTERACTION
-      ;;All pre-flight configuration is done and application is ready for use.
-      ProgressSetStatusBarAndLog('Ready')
-      GUIMainWait()
-
-    ;;GRACEFUL EXIT
-      ;;Exit app gracefully if code should ever find itself here.
-      SoftExit()
-    ;;End reference code
-  EndFunc
-#EndRegion -- MAIN
 
 #Region -- STARTUP
   Func StartupCoreGlobals()
     ;;DECLARE CORE GLOBALS
 
     ;;APP INFO
-    Global $sAppOrg = 'com.briankyncl'
-    Global $sAppName = 'About This Computer'
-    Global $sAppShortName = 'ATC'
-    Global $sAppDocsHost = 'GitHub'
+    Global $sAppOrg        = 'com.briankyncl'
+    Global $sAppName       = 'About This Computer'
+    Global $sAppShortName  = 'ATC'
+    Global $sAppDocsHost   = 'GitHub'
     Global $sAppDocsFormat = 'website'
-    Global $sAppDocsURL = 'https://github.com/briankyncl/aboutthiscomputer'
+    Global $sAppDocsURL    = 'https://github.com/briankyncl/aboutthiscomputer'
 
     ;;APP VERSION
     Local  $aFileVersion = StringSplit(FileGetVersion(@AutoItExe), '.')
-    Global $sAppBuild = $aFileVersion[4]
-    Global $sAppVersion = $aFileVersion[1] & '.' & $aFileVersion[2] & '.' & $aFileVersion[3]
-    Global $sAppRelease = '2019-xx-xx'
+    Global $sAppBuild    = $aFileVersion[4]
+    Global $sAppVersion  = $aFileVersion[1] & '.' & $aFileVersion[2] & '.' & $aFileVersion[3]
+    Global $sAppRelease  = '2020-xx-xx'
 
     ;;APP PATHS
-    Global $sAppInstallPath = @ProgramFilesDir & '\' & $sAppOrg & '\' & $sAppName
-    Global $sAppInstallPathLegacy = = @ProgramFilesDir & '\com.briankyncl\About This Computer'
-    Global $sAppTempPath = @TempDir & '\' & $sAppOrg & '\' & $sAppName
-    Global $sAppStartMenuPath = @ProgramsCommonDir
-    Global $sAppRegistryPath = 'HKEY_LOCAL_MACHINE\Software\' & $sAppOrg & '\' & $sAppName
-    Global $sAppLogo = $sAppTempPath & '\BeOS_info.ico'
+    Global $sAppInstallPath       = @ProgramFilesDir & '\' & $sAppOrg & '\' & $sAppName
+    Global $sAppInstallPathLegacy = 'C:\ProgramData\com.briankyncl\About This Computer'
+    Global $sAppTempPath          = @TempDir & '\' & $sAppOrg & '\' & $sAppName
+    Global $sAppStartMenuPath     = @ProgramsCommonDir & '\' & $sAppName
+    Global $sAppRegistryPath      = 'HKEY_LOCAL_MACHINE\Software\' & $sAppOrg & '\' & $sAppName
+    Global $sAppLogo              = $sAppTempPath & '\ATC-BeOS_info.ico'
 
     ;;APP ASSETS
     FileInstall('Images\BeOS_info.ico', $sAppLogo, $FC_OVERWRITE)
+    ;FileInstall('Images\BeOS_info.ico', @TempDir & '\ATC-BeOS_info.ico', $FC_OVERWRITE)
   EndFunc
 
   Func StartupExeMode()
     ;;PROCESS EXECUTABLE PARAMETERS
-
     Global $sMainAppExeMode = ''
-    
+
     If $CmdLine[00] > 0 Then
       ;;one or more parameters were provided
       Switch $CmdLine[01]
@@ -285,7 +165,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
         ;;exe already in temp dir, attempt to delete
         If FileDelete($sAppTempPath & '\' & @ScriptName) <> 1 Then
           ;;unable to delete, notify and exit
-          MsgBox(BitOR($MB_OK, $MB_ICONERROR), $sAppName & ' Startup', 'Unable to start ' $sAppName & '. (Unable to delete existing executable from temp. Is ' & @ScriptName & ' already running?)')
+          MsgBox(BitOR($MB_OK, $MB_ICONERROR), $sAppName & ' Startup', 'Unable to start ' & $sAppName & '. (Unable to delete existing executable from temp. Is ' & @ScriptName & ' already running?)')
           SoftExit()
         Else
           ;;successful file delete
@@ -300,12 +180,12 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
           SoftExit()
         Else
           ;;unsuccessful launch, notify and exit
-          MsgBox(BitOR($MB_OK, $MB_ICONERROR), $sAppName & ' Startup', 'Unable to start ' $sAppName & '. (Unable to run executable from temp.)')
+          MsgBox(BitOR($MB_OK, $MB_ICONERROR), $sAppName & ' Startup', 'Unable to start ' & $sAppName & '. (Unable to run executable from temp.)')
           SoftExit()
         EndIf
       Else
         ;;unsuccessful file copy, notify and exit
-        MsgBox(BitOR($MB_OK, $MB_ICONERROR), $sAppName & ' Startup', 'Unable to start ' $sAppName & '. (Unable to copy executable to temp.)')
+        MsgBox(BitOR($MB_OK, $MB_ICONERROR), $sAppName & ' Startup', 'Unable to start ' & $sAppName & '. (Unable to copy executable to temp.)')
         SoftExit()
       EndIf
     Else
@@ -318,9 +198,11 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     ;;DECLARE GLOBAL VARIABLES
     ;;Declare global variables not declared anywhere else.
 
-    ;;default organization information
+    ;;Default organization information
+    ;; Duplicate these values in ReadCustomization()
     Global $sOrgName                     = 'Contoso'
     Global $sOrgDomain                   = 'contoso.com'
+    Global $sOrgFQDomain                 = 'corp.' & $sOrgDomain
     Global $sOrgIntranetName             = 'Intranet'
     Global $sOrgIntranetURL              = 'intranet.' & $sOrgDomain
     Global $sOrgHelpdeskName             = 'IT Helpdesk'
@@ -330,14 +212,18 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     Global $sOrgHelpdeskEmail            = 'helpdesk@' & $sOrgDomain
     Global $sOrgHelpdeskURL              = 'helpdesk.' & $sOrgDomain
     Global $sOrgHelpdeskRemoteSupportURL = 'remotesupport.' & $sOrgDomain
+    Global $sOrgHelpdeskRequestName      = 'Create an IT Helpdesk Request'  ;;'Create an IT' & @CRLF & 'Helpdesk Request'
+    Global $sOrgAppCatalogURL            = 'https://sccmserver.' & $sOrgFQDomain & '/CMApplicationCatalog'
+    Global $sOrgPersonalDriveName        = 'Home'  ;;(I:)
+    Global $sOrgLoginScriptPath          = '\\' & $sOrgFQDomain & '\NETLOGON'
 
     ;;generic globals
     ;Global $idGUIMain
     ;Global $idGUIContact
-    ;Global $GUI_CHECKENABLE
-    ;Global $GUI_UNCHECKENABLE
-    ;Global $GUI_CHECKDISABLE
-    ;Global $GUI_UNCHECKDISABLE
+    Global $GUI_CHECKENABLE
+    Global $GUI_UNCHECKENABLE
+    Global $GUI_CHECKDISABLE
+    Global $GUI_UNCHECKDISABLE
     ;Global $sSummaryString
     ;Global $bExitEnabled
     ;Global $lTemplates
@@ -388,7 +274,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     If @error Then
       $bContactHelpdeskEnabled = False
     Else
-      If $bContactHelpdeskEnabled = 1
+      If $bContactHelpdeskEnabled = 1 Then
         $bContactHelpdeskEnabled = True
       Else
         $bContactHelpdeskEnabled = False
@@ -400,546 +286,71 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     If @error Then
       $bExitEnabled = False
     Else
-      If $bExitEnabled = 1
+      If $bExitEnabled = 1 Then
         $bExitEnabled = True
       Else
         $bExitEnabled = False
       EndIf
     EndIf
+
+    ;;icon selection
+
+    ;;which of the "assumption" features are enabled/disabled
   EndFunc
+#EndRegion
 
-  Func StartupBuildTray()
-    ;;BUILD TRAY
+#Region -- MAIN
+  Func Main()
+    ;;Everything controlled from here.
 
-    ;;tray options
-    Opt('TrayAutoPause', 0)  ;;don't PAUSE script, if systray icon is clicked
-    Opt('TrayMenuMode', 3)  ;;the default tray menu items will not be shown and items are not checked when selected. These are options 1 and 2 for TrayMenuMode.
+    ;;DECLARE CORE GLOBALS
+    ;; Declare core globals needed for application startup.
+    StartupCoreGlobals()
 
-    ;;tray icon
-    TraySetIcon('Shell32.dll',322) ;;24 (question mark) or 44 (thin star) or 263 (question mark) or 322 (thin star) or 16783 ('i' icon)
+    ;;PROCESS EXE PARAMETERS
+    ;; Parse provided command line parameters, if any.
+    StartupExeMode()
 
-    ;;stage tray menu
-    Global $idTrayMainNetConnect = TrayCreateItem('Network Connections')
-    Global $idTrayMainInetCpl    = TrayCreateItem('Internet Options')
-      TrayCreateItem('')
-    Global $idTrayMainAppCatalog = TrayCreateItem('Application Catalog')
-    Global $idTrayMainAppWiz     = TrayCreateItem('Programs and Features')
-    Global $idTrayMainServices   = TrayCreateItem('Services')
-    Global $idTrayMainWinUpdate  = TrayCreateItem('Windows Update')
-      TrayCreateItem('')
-    Global $idTrayMainPrintMMC   = TrayCreateItem('Print Management')
-    Global $idTrayMainDevNPrint  = TrayCreateItem('Devices and Printers')
-    Global $idTrayMainDevMan     = TrayCreateItem('Device Manager')
-      TrayCreateItem('')
-    Global $idTrayMainCredMan    = TrayCreateItem('Credential Manager')
-    Global $idTrayMainMailAcct   = TrayCreateItem('Mail Accounts')
-      TrayCreateItem('')
-    Global $idTrayMainSearchAD   = TrayCreateItem('Search Active Directory')
-    Global $idTrayMainSysProp    = TrayCreateItem('System Properties')
-      TrayCreateItem('')
-    Global $idTrayMainShowInfo   = TrayCreateItem('About This Computer')
-      TrayCreateItem('')
-    Global $idTrayMainExit       = TrayCreateItem('Exit')
+    ;;RELAUNCH FROM TEMP
+    ;; Copy to and relaunch application from user's temp directory.
+    StartupRunFromTemp()
 
-    ;;stage tray
+    ;;DECLARE GLOBALS
+    ;; Declare globals not declared anywhere else.
+    StartupGlobals()
+
+    ;;READ CONFIG
+    ;; Read application configuration and customization.
+    ReadConfig()
+
+    ;;READ COMPUTER
+    ;; Read details about computer but do not apply to interface.
+    ReadComputer('NoRefresh')
+
+    ;;STAGE GUIs
+    ;; Define tray and display normal tray or window-mode tray.
+    ;; Define main GUI and display Loading... GUI or main GUI.
+    BuildTray()
+    BuildMainGUI()
+
+    ;;REFRESH COMPUTER INFO
+    ;; Reload details about computer and apply to interface.
+    ReadComputer()
+    ReadComputerSchedule(True)
+
+    ;;DISPLAY GUI(s)
+    ;; Display either the main GUI or the tray icon and wait for user input.
     Switch $sMainAppExeMode
-      Case 'window'
-        TraySetState(2) ;;hide tray icon
-      Case Else
-        TraySetState(1) ;;show the tray icon.
-        TraySetToolTip('Loading...')
-        TraySetClick(8) ;;pressing secondary mouse button will show the tray menu.
+      Case 'Tray'
+        MainTrayWait()
+      Case 'Window'
+        ReadComputerWait(0)
+        MainGUIWait()
     EndSwitch
-  EndFunc
 
-  Func StartupBuildMainGUI()
-    ;;CREATE MAIN GUI
-
-    ;Func AboutThisComputer() -- replace instances of this with main GUI wait function??
-
-    ;;DEFINE GUI GRID
-      ;;COLUMNS
-        ;;columns, left
-        $columnMainLeft00 = 0
-        $columnMainLeft01 = 20  ;image
-
-        ;;columns, left, widths
-        $columnMainLeft00Width = 140
-        $columnMainLeft01Width = $columnMainLeft00Width - 36    ;total width of column minus spacing left and right
-
-        ;;columns, right
-        $columnMainRight00 = $columnMainLeft00Width
-        $columnMainRight01 = $columnMainRight00    ;group line
-        $columnMainRight02 = $columnMainRight01 + 10    ;label title
-        $columnMainRight03 = $columnMainRight02 + 90    ;label info
-        $columnMainRight04 = $columnMainRight03 + 200
-
-        ;;columns, right, widths
-        $columnMainRight00Width = 300
-        $columnMainRight01Width = 10
-        $columnMainRight02Width = 90
-        $columnMainRight03Width = 200
-        $columnMainRight04Width = 0
-
-        ;;window boundary
-        $columnMainBounds = $columnMainLeft00Width + $columnMainRight00Width + 12   ;right edge of window
-
-      ;;ROWS
-        ;;rows, left
-        $rowMainLeft00 = 0
-        $rowMainLeft01 = 10
-
-        ;;rows, left, heights
-        $rowMainLeft00Height = 400
-        $rowMainLeft01Height = 128
-
-        ;;rows, right
-        $rowMainRightSpacing = 16   ;height of columns of text
-        $rowMainRightSpacers = 6    ;lower number means more space between groups
-        $rowMainRight00 = 0 - $rowMainRightSpacers                                        ;spacer
-        $rowMainRight01 = $rowMainRight00 + $rowMainRightSpacing
-        $rowMainRight02 = $rowMainRight01 + $rowMainRightSpacing
-        $rowMainRight03 = $rowMainRight02 + $rowMainRightSpacing
-        $rowMainRight03a = $rowMainRight03 + $rowMainRightSpacing
-        $rowMainRight04 = $rowMainRight03a + $rowMainRightSpacing
-        $rowMainRight05 = $rowMainRight04 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
-        $rowMainRight06 = $rowMainRight05 + $rowMainRightSpacing
-        $rowMainRight07 = $rowMainRight06 + $rowMainRightSpacing
-        If $bNetAdapter01Exists = True Then
-          $rowMainRight08 = $rowMainRight07 + $rowMainRightSpacing    ; IP address 1
-        Else
-          $rowMainRight08 = $rowMainRight07
-        EndIf
-        If $bNetAdapter02Exists = True Then
-          $rowMainRight09 = $rowMainRight08 + $rowMainRightSpacing    ; IP address 2
-        Else
-          $rowMainRight09 = $rowMainRight08
-        EndIf
-        If $bNetAdapter03Exists = True Then
-          $rowMainRight10 = $rowMainRight09 + $rowMainRightSpacing    ; IP address 3
-        Else
-          $rowMainRight10 = $rowMainRight09
-        EndIf
-        If $bNetAdapter04Exists = True Then
-          $rowMainRight11 = $rowMainRight10 + $rowMainRightSpacing    ; IP address 4
-        Else
-          $rowMainRight11 = $rowMainRight10
-        EndIf
-        If $bNetAdapter05Exists = True Then
-          $rowMainRight12 = $rowMainRight11 + $rowMainRightSpacing    ; IP address 5
-        Else
-          $rowMainRight12 = $rowMainRight11
-        EndIf
-        $rowMainRight13 = $rowMainRight12 + $rowMainRightSpacing
-        $rowMainRight14 = $rowMainRight13 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
-        $rowMainRight15 = $rowMainRight14 + $rowMainRightSpacing
-        $rowMainRight16 = $rowMainRight15 + $rowMainRightSpacing
-        $rowMainRight17 = $rowMainRight16 + $rowMainRightSpacing
-        $rowMainRight18 = $rowMainRight17 + $rowMainRightSpacing
-        $rowMainRight19 = $rowMainRight18 + $rowMainRightSpacing
-        $rowMainRight20 = $rowMainRight19 + $rowMainRightSpacing
-        $rowMainRight21 = $rowMainRight20 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
-        $rowMainRight22 = $rowMainRight21 + $rowMainRightSpacing
-        $rowMainRight23 = $rowMainRight22 + $rowMainRightSpacing
-        $rowMainRight24 = $rowMainRight23 + $rowMainRightSpacing
-        If $bAssetTagExists = True Then
-          $rowMainRight25 = $rowMainRight24 + $rowMainRightSpacing
-        Else
-          $rowMainRight25 = $rowMainRight24
-        EndIf
-        If $bLCMInfoExists = True Then
-          $rowMainRight26 = $rowMainRight25 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
-          $rowMainRight27 = $rowMainRight26 + $rowMainRightSpacing
-          $rowMainRight28 = $rowMainRight27 + $rowMainRightSpacing
-          $rowMainRight29 = $rowMainRight28 + $rowMainRightSpacing
-        Else
-          ;; set these rows to increase by 0 if no LCM info section exists
-          $rowMainRight26 = $rowMainRight25   ;spacer
-          $rowMainRight27 = $rowMainRight26
-          $rowMainRight28 = $rowMainRight27
-          $rowMainRight29 = $rowMainRight28
-        EndIf
-        If $bFreeTextDetailsExists = True Then
-          $rowMainRight30 = $rowMainRight29 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
-          $rowMainRight31 = $rowMainRight30 + $rowMainRightSpacing
-          $rowMainRight32 = $rowMainRight31 + $rowMainRightSpacing + (($rowMainRightSpacing * 3) - 7) ;height of multiline custom info box, duplicate changes in rowMainRight below
-        Else
-          ;; set these rows to increase by 0 if no custom info section exists
-          $rowMainRight30 = $rowMainRight29   ;spacer
-          $rowMainRight31 = $rowMainRight30
-          $rowMainRight32 = $rowMainRight31
-        EndIf
-        $rowMainRight33 = $rowMainRight32 + $rowMainRightSpacing
-        $rowMainRight34 = $rowMainRight33 + $rowMainRightSpacing
-        $rowMainRight35 = $rowMainRight34 + $rowMainRightSpacing
-        $rowMainRight36 = $rowMainRight35 + $rowMainRightSpacing
-        $rowMainRight37 = $rowMainRight36 + $rowMainRightSpacing
-        $rowMainRight38 = $rowMainRight37 + $rowMainRightSpacing
-        $rowMainRight39 = $rowMainRight38 + $rowMainRightSpacing
-        $rowMainRight40 = $rowMainRight39 + $rowMainRightSpacing
-        $rowMainRight41 = $rowMainRight40 + $rowMainRightSpacing
-        $rowMainRight42 = $rowMainRight41 + $rowMainRightSpacing
-        $rowMainRight43 = $rowMainRight42 + $rowMainRightSpacing
-        $rowMainRight44 = $rowMainRight43 + $rowMainRightSpacing
-        $rowMainRight45 = $rowMainRight44 + $rowMainRightSpacing
-        $rowMainRight46 = $rowMainRight45 + $rowMainRightSpacing
-        $rowMainRight47 = $rowMainRight46 + $rowMainRightSpacing
-        $rowMainRight48 = $rowMainRight47 + $rowMainRightSpacing
-        $rowMainRight49 = $rowMainRight48 + $rowMainRightSpacing
-        $rowMainRight50 = $rowMainRight49 + $rowMainRightSpacing
-
-        ;;rows, right, heights
-        $rowMainRightHeights  = $rowMainRightSpacing
-        $rowMainRight00Height = $rowMainRightHeights
-        $rowMainRight01Height = $rowMainRightHeights
-        $rowMainRight02Height = $rowMainRightHeights
-        $rowMainRight03Height = $rowMainRightHeights
-        $rowMainRight03aHeight = $rowMainRightHeights
-        $rowMainRight04Height = $rowMainRightHeights
-        $rowMainRight05Height = $rowMainRightHeights
-        $rowMainRight06Height = $rowMainRightHeights
-        $rowMainRight07Height = $rowMainRightHeights
-        If $bNetAdapter01Exists = True Then
-          $rowMainRight08Height = $rowMainRightHeights    ;IP address 1
-        Else
-          $rowMainRight08Height = 0
-        EndIf
-        If $bNetAdapter02Exists = True Then
-          $rowMainRight09Height = $rowMainRightHeights    ;IP address 2
-        Else
-          $rowMainRight09Height = 0
-        EndIf
-        If $bNetAdapter03Exists = True Then
-          $rowMainRight10Height = $rowMainRightHeights    ;IP address 3
-        Else
-          $rowMainRight10Height = 0
-        EndIf
-        If $bNetAdapter04Exists = True Then
-          $rowMainRight11Height = $rowMainRightHeights    ;IP address 4
-        Else
-          $rowMainRight11Height = 0
-        EndIf
-        If $bNetAdapter05Exists = True Then
-          $rowMainRight12Height = $rowMainRightHeights    ;IP address 5
-        Else
-          $rowMainRight12Height = 0
-        EndIf
-        $rowMainRight13Height = $rowMainRightHeights
-        $rowMainRight14Height = $rowMainRightHeights
-        $rowMainRight15Height = $rowMainRightHeights
-        $rowMainRight16Height = $rowMainRightHeights
-        $rowMainRight17Height = $rowMainRightHeights
-        $rowMainRight18Height = $rowMainRightHeights
-        $rowMainRight19Height = $rowMainRightHeights
-        $rowMainRight20Height = $rowMainRightHeights
-        $rowMainRight21Height = $rowMainRightHeights
-        $rowMainRight22Height = $rowMainRightHeights
-        $rowMainRight23Height = $rowMainRightHeights
-        $rowMainRight24Height = $rowMainRightHeights
-        If $bAssetTagExists = True Then
-          $rowMainRight25Height = $rowMainRightHeights
-        Else
-          $rowMainRight25Height = 0
-        EndIf
-        If $bLCMInfoExists = True Then
-          $rowMainRight26Height = $rowMainRightHeights
-          $rowMainRight27Height = $rowMainRightHeights
-          $rowMainRight28Height = $rowMainRightHeights
-          $rowMainRight29Height = $rowMainRightHeights
-        Else
-          ;; set these rows to 0 height if no LCM info section exists
-          $rowMainRight26Height = 0
-          $rowMainRight27Height = 0
-          $rowMainRight28Height = 0
-          $rowMainRight29Height = 0
-        EndIf
-        If $bFreeTextDetailsExists = True Then
-          $rowMainRight30Height = $rowMainRightHeights
-          $rowMainRight31Height = $rowMainRightHeights + (($rowMainRightSpacing * 3) - 7) ;height of multiline custom info box, duplicate changes in rowMainRightHeight above
-          $rowMainRight32Height = $rowMainRightHeights
-        Else
-          ;; set these rows to 0 height if no custom info section exists
-          $rowMainRight30Height = 0
-          $rowMainRight31Height = 0
-          $rowMainRight32Height = 0
-          ;; end
-        EndIf
-        $rowMainRight33Height = $rowMainRightHeights
-        $rowMainRight34Height = $rowMainRightHeights
-        $rowMainRight35Height = $rowMainRightHeights
-        $rowMainRight36Height = $rowMainRightHeights
-        $rowMainRight37Height = $rowMainRightHeights
-        $rowMainRight38Height = $rowMainRightHeights
-        $rowMainRight39Height = $rowMainRightHeights
-        $rowMainRight40Height = $rowMainRightHeights
-        $rowMainRight41Height = $rowMainRightHeights
-        $rowMainRight42Height = $rowMainRightHeights
-        $rowMainRight43Height = $rowMainRightHeights
-        $rowMainRight44Height = $rowMainRightHeights
-        $rowMainRight45Height = $rowMainRightHeights
-        $rowMainRight46Height = $rowMainRightHeights
-        $rowMainRight47Height = $rowMainRightHeights
-        $rowMainRight48Height = $rowMainRightHeights
-        $rowMainRight49Height = $rowMainRightHeights
-        $rowMainRight50Height = $rowMainRightHeights
-
-        ;;window boundary
-        $rowMainBounds = $rowMainRight33 + 17  ;;bottom edge of window, last used row in right column plus adjustment.
-
-      ;;COLUMNS, FROM BOTTOM
-        ;;columns, left, from bottom
-        $columnMainLeft_00 = 0
-        $columnMainLeft_01 = 10
-
-        ;;columns, left, widths
-        $columnMainLeft_00Width = 10
-        $columnMainLeft_01Width = $columnMainLeft00Width - 20
-
-      ;;ROWS, FROM BOTTOM
-        ;;rows, left, from bottom
-        $rowMainLeftSpacing = 35
-        $rowMainLeftSpacer = 25 ;high number means less space between, up to $rowMainLeftSpacing
-        $rowMainLeft_00 = $rowMainBounds - 24
-        $rowMainLeft_01 = $rowMainLeft_00 - $rowMainLeftSpacing
-        $rowMainLeft_02 = $rowMainLeft_01 - $rowMainLeftSpacing
-        $rowMainLeft_03 = $rowMainLeft_02 - $rowMainLeftSpacing + $rowMainLeftSpacer
-        $rowMainLeft_04 = $rowMainLeft_03 - $rowMainLeftSpacing - 10
-        $rowMainLeft_05 = $rowMainLeft_04 - $rowMainLeftSpacing
-        $rowMainLeft_06 = $rowMainLeft_05 - $rowMainLeftSpacing
-        $rowMainLeft_07 = $rowMainLeft_06 - $rowMainLeftSpacing
-        $rowMainLeft_08 = $rowMainLeft_07 - $rowMainLeftSpacing
-        $rowMainLeft_09 = $rowMainLeft_08 - $rowMainLeftSpacing
-        $rowMainLeft_10 = $rowMainLeft_09 - $rowMainLeftSpacing
-
-        ;;rows, left, from bottom heights
-        $rowMainLeftHeights = $rowMainLeftSpacing - 5
-        $rowMainLeft_00Height = 0
-        $rowMainLeft_01Height = $rowMainLeftHeights
-        $rowMainLeft_02Height = $rowMainLeftHeights
-        $rowMainLeft_03Height = $rowMainLeftHeights
-        $rowMainLeft_04Height = $rowMainLeftHeights + 10
-        $rowMainLeft_05Height = $rowMainLeftHeights
-        $rowMainLeft_06Height = $rowMainLeftHeights
-        $rowMainLeft_07Height = $rowMainLeftHeights
-        $rowMainLeft_08Height = $rowMainLeftHeights
-        $rowMainLeft_09Height = $rowMainLeftHeights
-        $rowMainLeft_10Height = $rowMainLeftHeights
-
-    ;;DECLARE MAIN WINDOW
-      Global $idGUIMain = GUICreate('About This Computer', $columnMainBounds, $rowMainBounds, -1, -1, -1, $WS_EX_TOPMOST)
-
-      $sCloseButtonText = 'Close'
-      If $sMainAppExeMode = 'Window' Then $sCloseButtonText = 'Exit'
-
-    ;;MENU BAR
-      ;;File
-        Global $idMenuMainFile = GUICtrlCreateMenu("&File")
-
-        Global $idMenuItemMainFileEmail = GUICtrlCreateMenuItem('Email Summary', $idMenuMainFile, -1)
-        Global $idMenuItemMainFileShow = GUICtrlCreateMenuItem('Show Summary', $idMenuMainFile, -1)
-          GUICtrlCreateMenuItem('', $idMenuMainFile, -1) ; create a separator line
-        Global $idMenuItemMainFilePrint = GUICtrlCreateMenuItem('Print Summary...', $idMenuMainFile, -1)
-          GUICtrlCreateMenuItem('', $idMenuMainFile, -1) ; create a separator line
-        Global $idMenuItemMainFileClose = GUICtrlCreateMenuItem($sCloseButtonText, $idMenuMainFile, -1)
-
-      ;;Edit
-        Global $idMenuMainEdit = GUICtrlCreateMenu('Edit')
-
-        Global $idMenuItemMainEditCut = GUICtrlCreateMenuItem('Cut', $idMenuMainEdit, -1)
-        Global $idMenuItemMainEditCopy = GUICtrlCreateMenuItem('Copy', $idMenuMainEdit, -1)
-        Global $idMenuItemMainEditPaste = GUICtrlCreateMenuItem('Paste', $idMenuMainEdit, -1)
-          GUICtrlCreateMenuItem('', $idMenuMainEdit, -1) ; create a separator line
-        Global $idMenuItemMainEditCopySum = GUICtrlCreateMenuItem('Copy Summary', $idMenuMainEdit, -1)
-
-      ;;Tools
-        Global $idMenuMainTools = GUICtrlCreateMenu('Tools')
-
-        Global $idMenuItemMainToolsNetConnect = GUICtrlCreateMenuItem('Network Connections', $idMenuMainTools, -1)
-        Global $idMenuItemMainToolsInetCpl = GUICtrlCreateMenuItem('Internet Options', $idMenuMainTools, -1)
-          GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
-        Global $idMenuItemMainToolsAppCatalog = GUICtrlCreateMenuItem('Application Catalog', $idMenuMainTools, -1)
-        Global $idMenuItemMainToolsAppWiz = GUICtrlCreateMenuItem('Programs and Features', $idMenuMainTools, -1)
-        Global $idMenuItemMainToolsServices = GUICtrlCreateMenuItem('Services', $idMenuMainTools, -1)
-        Global $idMenuItemMainToolsWinUpdate = GUICtrlCreateMenuItem('Windows Update', $idMenuMainTools, -1)
-          GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
-        Global $idMenuItemMainToolsPrintMMC = GUICtrlCreateMenuItem('Print Management', $idMenuMainTools, -1)
-        Global $idMenuItemMainToolsDevNPrint = GUICtrlCreateMenuItem('Devices and Printers', $idMenuMainTools, -1)
-        Global $idMenuItemMainToolsDevMan = GUICtrlCreateMenuItem('Device Manager', $idMenuMainTools, -1)
-          GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
-        Global $idMenuItemMainToolsCredMan = GUICtrlCreateMenuItem('Credential Manager', $idMenuMainTools, -1)
-        Global $idMenuItemMainToolsMailAcct = GUICtrlCreateMenuItem('Mail Accounts', $idMenuMainTools, -1)
-          GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
-        Global $idMenuItemMainToolsSearchAD = GUICtrlCreateMenuItem('Search Active Directory', $idMenuMainTools, -1)
-        Global $idMenuItemMainToolsSysProp = GUICtrlCreateMenuItem('System Properties', $idMenuMainTools, -1)
-        ;Global $idMenuItemMainToolsSysInfo = GUICtrlCreateMenuItem('System Information', $idMenuMainTools, -1)
-
-      ;;Help
-        Global $idMenuMainHelp = GUICtrlCreateMenu('Help')
-
-        Global $idMenuItemMainHelpLaunchLMIr = GUICtrlCreateMenuItem('LogMeIn Rescue', $idMenuMainHelp, -1)  ;↗
-          GUICtrlCreateMenuItem('', $idMenuMainHelp, -1) ; create a separator line
-        Global $idMenuItemMainHelpLaunchIntranet = GUICtrlCreateMenuItem($sOrgIntranetName, $idMenuMainHelp, -1)  ;↗
-        Global $idMenuItemMainHelpLaunchHDesk = GUICtrlCreateMenuItem($sOrgHelpdeskName, $idMenuMainHelp, -1) ;↗
-        Global $idMenuItemMainHelpLaunchPWM = GUICtrlCreateMenuItem('Password Self-Service', $idMenuMainHelp, -1) ;↗
-          GUICtrlCreateMenuItem('', $idMenuMainHelp, -1) ; create a separator line
-        Global $idMenuItemMainHelpDocumentation = GUICtrlCreateMenuItem('Documentation (PDF)', $idMenuMainHelp, -1)
-          GUICtrlCreateMenuItem('', $idMenuMainHelp, -1) ; create a separator line
-        Global $idMenuItemMainHelpAbout = GUICtrlCreateMenuItem('About', $idMenuMainHelp, -1)
-
-    ;;MAIN WINDOW ELEMENTS - LEFT COLUMN
-      $idGraphicMainAboutPC = GUICtrlCreateIcon($sAppInstallPath & '\Support\BeOS_info.ico', -1, $columnMainLeft01, $rowMainLeft01, 128, 128, -1, $GUI_WS_EX_PARENTDRAG)
-
-      Global $idButtonMainLeftClose = GUICtrlCreateButton($sCloseButtonText, $columnMainLeft_01, $rowMainLeft_01, $columnMainLeft_01Width, $rowMainLeft_01Height)
-      Global $idButtonMainLeftRefresh = GUICtrlCreateButton('Refresh', $columnMainLeft_01, $rowMainLeft_02, $columnMainLeft_01Width, $rowMainLeft_02Height)
-      If $bContactHelpdeskEnabled = True Then
-        Global $idButtonMainLeftContactHDesk = GUICtrlCreateButton('Create an IT' & @CRLF & 'Helpdesk Request', $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height, BitOR($BS_MULTILINE, $BS_CENTER, $BS_VCENTER))
-      Else
-        Global $idButtonMainLeftContactHDesk = GUICtrlCreateButton('Copy Summary', $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height)
-      EndIf
-
-    ;;MAIN WINDOW ELEMENTS - RIGHT COLUMN
-      ;;Contact information
-        $idGroupMainRightContact = GUICtrlCreateGroup($sOrgName & ' ' & $sOrgHelpdeskName, $columnMainRight01, $rowMainRight01, $columnMainRight00Width + 1, ($rowMainRight04 - $rowMainRight01) + 4)
-        $idLabelMainRight01 = GUICtrlCreateLabel('Email: ', $columnMainRight02, $rowMainRight02, $columnMainRight02Width, $rowMainRight02Height, $SS_RIGHT)
-        $idLabelMainRight02 = GUICtrlCreateLabel('Phone: ', $columnMainRight02, $rowMainRight03, $columnMainRight02Width, $rowMainRight03Height, $SS_RIGHT)
-        $idLabelMainRight02b = GUICtrlCreateLabel('Password Reset: ', $columnMainRight02, $rowMainRight03a, $columnMainRight02Width, $rowMainRight03aHeight, $SS_RIGHT)
-
-        $idLabelMainRight01a = GUICtrlCreateEdit($sOrgHelpdeskEmail, $columnMainRight03, $rowMainRight02, $columnMainRight03Width - 1, $rowMainRight02Height, $ES_READONLY, 0)
-        $idLabelMainRight02a = GUICtrlCreateEdit($sOrgHelpdeskPhone, $columnMainRight03, $rowMainRight03, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
-        $idLabelMainRight02c = GUICtrlCreateEdit($$sOrgHelpdeskCorporatePhone, $columnMainRight03, $rowMainRight03a, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
-
-      ;;Session information
-        $idGroupMainRightSession = GUICtrlCreateGroup('Session', $columnMainRight01, $rowMainRight05, $columnMainRight00Width + 1, ($rowMainRight13 - $rowMainRight05) + 4)
-        $idLabelMainRight03 = GUICtrlCreateLabel('Current User: ', $columnMainRight02, $rowMainRight06, $columnMainRight02Width, $rowMainRight06Height, $SS_RIGHT)
-        $idLabelMainRight04 = GUICtrlCreateLabel('Computer Name: ', $columnMainRight02, $rowMainRight07, $columnMainRight02Width, $rowMainRight07Height, $SS_RIGHT)
-
-        If $bNetAdapter01Exists = True Then
-          $idLabelMainRight05 = GUICtrlCreateLabel('IP Address: ', $columnMainRight02, $rowMainRight08, $columnMainRight02Width, $rowMainRight08Height, $SS_RIGHT)
-          $idLabelMainRight05a = GUICtrlCreateEdit($sNetAdapter01Address, $columnMainRight03-4, $rowMainRight08-2, $columnMainRight03Width - 1, $rowMainRight08Height, $ES_READONLY, 0)
-
-          GUICtrlSetFont($idLabelMainRight05a, 10, $FW_BOLD)
-        Else
-          Local $idLabelMainRight05
-        EndIf
-        If $bNetAdapter02Exists = True Then
-          $idLabelMainRight06 = GUICtrlCreateLabel('IP Address: ', $columnMainRight02, $rowMainRight09, $columnMainRight02Width, $rowMainRight09Height, $SS_RIGHT)
-          $idLabelMainRight06a = GUICtrlCreateEdit($sNetAdapter02Address, $columnMainRight03, $rowMainRight09, $columnMainRight03Width - 1, $rowMainRight09Height, $ES_READONLY, 0)
-        Else
-          Local $idLabelMainRight06
-        EndIf
-        If $bNetAdapter03Exists = True Then
-          $idLabelMainRight07 = GUICtrlCreateLabel('IP Address: ', $columnMainRight02, $rowMainRight10, $columnMainRight02Width, $rowMainRight10Height, $SS_RIGHT)
-          $idLabelMainRight07a = GUICtrlCreateEdit($sNetAdapter03Address, $columnMainRight03, $rowMainRight10, $columnMainRight03Width - 1, $rowMainRight10Height, $ES_READONLY, 0)
-        Else
-          Local $idLabelMainRight07
-        EndIf
-        If $bNetAdapter04Exists = True Then
-          $idLabelMainRight08 = GUICtrlCreateLabel('IP Address: ', $columnMainRight02, $rowMainRight11, $columnMainRight02Width, $rowMainRight11Height, $SS_RIGHT)
-          $idLabelMainRight08a = GUICtrlCreateEdit($sNetAdapter04Address, $columnMainRight03, $rowMainRight11, $columnMainRight03Width - 1, $rowMainRight11Height, $ES_READONLY, 0)
-        Else
-          Local $idLabelMainRight08
-        EndIf
-        If $bNetAdapter05Exists = True Then
-          $idLabelMainRight09 = GUICtrlCreateLabel('IP Address: ', $columnMainRight02, $rowMainRight12, $columnMainRight02Width, $rowMainRight12Height, $SS_RIGHT)
-          $idLabelMainRight09a = GUICtrlCreateEdit($sNetAdapter05Address, $columnMainRight03, $rowMainRight12, $columnMainRight03Width - 1, $rowMainRight12Height, $ES_READONLY, 0)
-        Else
-          Local $idLabelMainRight09
-        EndIf
-
-        $idLabelMainRight03a = GUICtrlCreateEdit($sWMIUserName, $columnMainRight03, $rowMainRight06, $columnMainRight03Width - 1, $rowMainRight06Height, $ES_READONLY, 0)
-        $idLabelMainRight04a = GUICtrlCreateEdit($sComputerName, $columnMainRight03, $rowMainRight07, $columnMainRight03Width - 1, $rowMainRight07Height, $ES_READONLY, 0)
-
-      ;;Operating system information
-        $idGroupMainRightOS = GUICtrlCreateGroup('Operating System', $columnMainRight01, $rowMainRight14, $columnMainRight00Width + 1, ($rowMainRight20 - $rowMainRight14) + 4)
-        $idLabelMainRight10 = GUICtrlCreateLabel('Version: ', $columnMainRight02, $rowMainRight15, $columnMainRight02Width, $rowMainRight15Height, $SS_RIGHT)
-        $idLabelMainRight11 = GUICtrlCreateLabel('Architecture: ', $columnMainRight02, $rowMainRight16, $columnMainRight02Width, $rowMainRight16Height, $SS_RIGHT)
-        $idLabelMainRight12 = GUICtrlCreateLabel('Uptime: ', $columnMainRight02, $rowMainRight17, $columnMainRight02Width, $rowMainRight17Height, $SS_RIGHT)
-        $idLabelMainRight13 = GUICtrlCreateLabel('Install Age: ', $columnMainRight02, $rowMainRight18, $columnMainRight02Width, $rowMainRight18Height, $SS_RIGHT)
-        $idLabelMainRight14 = GUICtrlCreateLabel('Domain: ', $columnMainRight02, $rowMainRight19, $columnMainRight02Width, $rowMainRight19Height, $SS_RIGHT)
-
-        $idLabelMainRight10a = GUICtrlCreateEdit($sOSVersionName, $columnMainRight03, $rowMainRight15, $columnMainRight03Width - 1, $rowMainRight15Height, $ES_READONLY, 0)
-        $idLabelMainRight11a = GUICtrlCreateEdit($sOSArchShortname, $columnMainRight03, $rowMainRight16, $columnMainRight03Width - 1, $rowMainRight16Height, $ES_READONLY, 0)
-        $idLabelMainRight12a = GUICtrlCreateEdit($sOSUptime, $columnMainRight03, $rowMainRight17, $columnMainRight03Width - 1, $rowMainRight17Height, $ES_READONLY, 0)
-        $idLabelMainRight13a = GUICtrlCreateEdit($sOSAgeAndDate, $columnMainRight03, $rowMainRight18, $columnMainRight03Width - 1, $rowMainRight18Height, $ES_READONLY, 0)
-        $idLabelMainRight14a = GUICtrlCreateEdit($sWMIDomain, $columnMainRight03, $rowMainRight19, $columnMainRight03Width - 1, $rowMainRight19Height, $ES_READONLY, 0)
-
-      ;;Hardware information
-        $idGroupMainRightHardware = GUICtrlCreateGroup('Hardware', $columnMainRight01, $rowMainRight21, $columnMainRight00Width + 1, ($rowMainRight25 - $rowMainRight21) + 4)
-        $idLabelMainRight15 = GUICtrlCreateLabel('Model: ', $columnMainRight02, $rowMainRight22, $columnMainRight02Width, $rowMainRight22Height, $SS_RIGHT)
-        $idLabelMainRight16 = GUICtrlCreateLabel('Serial: ', $columnMainRight02, $rowMainRight23, $columnMainRight02Width, $rowMainRight23Height, $SS_RIGHT)
-        If $bAssetTagExists = True Then
-          $idLabelMainRight17 = GUICtrlCreateLabel('Asset Tag: ', $columnMainRight02, $rowMainRight24, $columnMainRight02Width, $rowMainRight24Height, $SS_RIGHT)
-          $idLabelMainRight17a = GUICtrlCreateEdit($sWMISMBIOSAssetTag, $columnMainRight03, $rowMainRight24, $columnMainRight03Width - 1 - 1, $rowMainRight24Height, $ES_READONLY, 0)
-        Else
-          Local $idLabelMainRight17
-          Local $idLabelMainRight17a
-        EndIf
-        $idLabelMainRight15a = GUICtrlCreateEdit($sWMIManufacturer & ' ' & $sWMIModel, $columnMainRight03, $rowMainRight22, $columnMainRight03Width - 1 - 1, $rowMainRight22Height, $ES_READONLY, 0)
-        $idLabelMainRight16a = GUICtrlCreateEdit($sWMISerialNumber, $columnMainRight03, $rowMainRight23, $columnMainRight03Width - 1 - 1, $rowMainRight23Height, $ES_READONLY, 0)
-
-
-      ;;LCM details
-        If $bLCMInfoExists = True Then
-          $idGroupMainRightLCM = GUICtrlCreateGroup('PSC/IOP Details', $columnMainRight01, $rowMainRight26, $columnMainRight00Width + 1, ($rowMainRight29 - $rowMainRight26) + 4)
-          $idLabelMainRight18 = GUICtrlCreateLabel('Site Code: ', $columnMainRight02, $rowMainRight27, $columnMainRight02Width, $rowMainRight27Height, $SS_RIGHT)
-          $idLabelMainRight19 = GUICtrlCreateLabel('CRA: ', $columnMainRight02, $rowMainRight28, $columnMainRight02Width, $rowMainRight28Height, $SS_RIGHT)
-
-          $idLabelMainRight18a = GUICtrlCreateEdit($sLCMXJCode, $columnMainRight03, $rowMainRight27, $columnMainRight03Width - 1, $rowMainRight27Height, $ES_READONLY, 0)
-          $idLabelMainRight19a = GUICtrlCreateEdit($sLCMCRCode, $columnMainRight03, $rowMainRight28, $columnMainRight03Width - 1, $rowMainRight28Height, $ES_READONLY, 0)
-        Else
-          Local $idGroupMainRightLCM
-          Local $idLabelMainRight18
-          Local $idLabelMainRight19
-        EndIf
-
-      ;;Free-text details
-        If $bFreeTextDetailsExists = True Then
-          $idGroupMainRightCustom  GUICtrlCreateGroup('More Details', $columnMainRight01, $rowMainRight30, $columnMainRight00Width + 1, ($rowMainRight32 - $rowMainRight30) + 4)
-
-          $idLabelMainRight20a = GUICtrlCreateEdit($sFreeTextDetails, $columnMainRight01+8, $rowMainRight31, $columnMainRight00Width-9, $rowMainRight31Height-4, BitOR($ES_AUTOVSCROLL,$ES_READONLY,$ES_WANTRETURN,$WS_VSCROLL), 0)
-        Else
-          Local $idGroupMainRightCustom
-        EndIf
-
-    ;;GATHER GUI ELEMENTS INTO ARRAYS
-      Global $aMainMenus[4]
-        $aMainMenus[00] = $idMenuMainFile
-        $aMainMenus[01] = $idMenuMainEdit
-        $aMainMenus[02] = $idMenuMainTools
-        $aMainMenus[03] = $idMenuMainHelp
-
-      Global $aMainMenuItems[26]
-        $aMainMenuItems[00] = $idMenuItemMainFileEmail
-        $aMainMenuItems[01] = $idMenuItemMainFileShow
-        $aMainMenuItems[02] = $idMenuItemMainFilePrint
-        $aMainMenuItems[03] = $idMenuItemMainFileClose
-        $aMainMenuItems[04] = $idMenuItemMainEditCut
-        $aMainMenuItems[05] = $idMenuItemMainEditCopy
-        $aMainMenuItems[06] = $idMenuItemMainEditCopySum
-        $aMainMenuItems[07] = $idMenuItemMainEditPaste
-        $aMainMenuItems[08] = $idMenuItemMainToolsNetConnect
-        $aMainMenuItems[09] = $idMenuItemMainToolsInetCpl
-        $aMainMenuItems[10] = $idMenuItemMainToolsAppCatalog
-        $aMainMenuItems[11] = $idMenuItemMainToolsAppWiz
-        $aMainMenuItems[12] = $idMenuItemMainToolsServices
-        $aMainMenuItems[13] = $idMenuItemMainToolsPrintMMC
-        $aMainMenuItems[14] = $idMenuItemMainToolsDevNPrint
-        $aMainMenuItems[15] = $idMenuItemMainToolsDevMan
-        $aMainMenuItems[16] = $idMenuItemMainToolsCredMan
-        $aMainMenuItems[17] = $idMenuItemMainToolsMailAcct
-        $aMainMenuItems[18] = $idMenuItemMainToolsSearchAD
-        $aMainMenuItems[19] = $idMenuItemMainToolsSysProp
-        $aMainMenuItems[20] = $idMenuItemMainHelpLaunchLMIr
-        $aMainMenuItems[21] = $idMenuItemMainHelpLaunchIntranet
-        $aMainMenuItems[22] = $idMenuItemMainHelpLaunchHDesk
-        $aMainMenuItems[23] = $idMenuItemMainHelpLaunchPWM
-        $aMainMenuItems[24] = $idMenuItemMainHelpDocumentation
-        $aMainMenuItems[25] = $idMenuItemMainHelpAbout
-
-      Global $aMainButtons[3]
-        $aMainButtons[00] = $idButtonMainLeftClose
-        $aMainButtons[01] = $idButtonMainLeftRefresh
-        $aMainButtons[02] = $idButtonMainLeftContactHDesk
+    ;;GRACEFUL EXIT
+      ;;Exit app gracefully if code should ever find itself here.
+      End()
   EndFunc
 #EndRegion
 
@@ -947,7 +358,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
   ;;Fuctions for reading details about the computer.
 
   ;;CONTROLLERS
-    Func ReadComputer()
+    Func ReadComputer($sOption = 'Normal')
       ;;Controller for reading details about the computer.
       ;; Potentially used for refreshing a subset of details.
 
@@ -968,9 +379,11 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
       ReadLCMInfo()
       ;;;;;; move to branch ;;;;;;
 
-      UpdateToolTip()
-      UpdateMainGUI()
-      UpdateSummaryString()
+      If $sOption <> 'NoRefresh' Then
+        UpdateToolTip()
+        UpdateMainGUI()
+        UpdateSummaryString()
+      EndIf
 
       _ReduceMemory()
     EndFunc
@@ -985,6 +398,16 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
       ReadComputer()
 
       GUIDelete($idGUIWorking)
+    EndFunc
+
+    Func ReadComputerSchedule($bOption)
+      ;;Schedule periodic refresh of computer information
+      Switch $bOption
+        Case True
+          AdlibRegister('ReadComputer', 180000)  ;;3 minutes
+        Case False
+          AdlibUnRegister('ReadComputer')
+      EndSwitch
     EndFunc
 
   ;;READERS
@@ -1005,7 +428,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
       ;; https://www.microsoft.com/en-us/itpro/windows-10/release-information
       ;; https://docs.microsoft.com/en-us/windows/deployment/update/waas-overview
       ;; https://www.autoitscript.com/autoit3/docs/macros/SystemInfo.htm
-      
+
       Global $sOSType         = @OSType  ;Returns WIN_NT
       Global $sOSBuild        = @OSBuild
       Global $sOSServicePack  = @OSServicePack
@@ -1062,6 +485,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
       If $sOSVersion = 'WIN_10-1809-LTSB' Then $sOSVersionName = 'Windows 10 LTSC 2019 (1809)'
       If $sOSVersion = 'WIN_2019'         Then $sOSVersionName = 'Windows Server 2019'
       If $sOSVersion = 'WIN_10-1903'      Then $sOSVersionName = 'Windows 10, Release 1903'
+      If $sOSVersion = 'WIN_10-1909'      Then $sOSVersionName = 'Windows 10, Release 1909'
       If $sOSVersion = 'WIN_10-INSIDER'   Then $sOSVersionName = 'Windows 10, Insider Preview'
 
       ;;DEFINE OS VERSION VALUE
@@ -1092,10 +516,11 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
       If $sOSVersion = 'WIN_10-1809-LTSB' Then $iOSVersionValue = 25  ;;Windows 10 LTSC 2019 (1809)
       If $sOSVersion = 'WIN_2019'         Then $iOSVersionValue = 26  ;;Windows Server 2019
       If $sOSVersion = 'WIN_10-1903'      Then $iOSVersionValue = 27  ;;Windows 10, Release 1903
+      If $sOSVersion = 'WIN_10-1909'      Then $iOSVersionValue = 28  ;;Windows 10, Release 1909
       If $sOSVersion = 'WIN_10-INSIDER'   Then $iOSVersionValue = 99  ;;Windows 10, Insider Preview
 
       ;;DEFINE OS VERSION TYPE
-      If $iOSVersionValue < '08' Then ;older than Windows 7, manually set OS type
+      If $iOSVersionValue < '08' Then  ;;older than Windows 7, manually set OS type
         If $sOSVersion = 'WIN_XP'         Then $sOSVersionType = 'Client'  ;Windows XP
         If $sOSVersion = 'WIN_XPe'        Then $sOSVersionType = 'Client'  ;Windows XP Embedded
         If $sOSVersion = 'WIN_2003'       Then $sOSVersionType = 'Server'  ;Windows Server 2003
@@ -1103,7 +528,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
         If $sOSVersion = 'WIN_2003R2'     Then $sOSVersionType = 'Server'  ;Windows Server 2003 R2
         If $sOSVersion = 'WIN_VISTA'      Then $sOSVersionType = 'Client'  ;Windows Vista
         If $sOSVersion = 'WIN_2008'       Then $sOSVersionType = 'Server'  ;Windows Server 2008
-      ElseIf $iOSVersionValue >= '08' Then  ;Windows 7 or newer, read OS type from registry
+      ElseIf $iOSVersionValue >= '08' Then  ;;Windows 7 or newer, read OS type from registry
         $sOSVersionType = $sOSInstallationType
       EndIf
 
@@ -1474,7 +899,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
           $aReturn[$iCount][1] = _IsString($oObjectItem.IPAddress(0))
           $aReturn[$iCount][2] = _IsString($oObjectItem.MACAddress)
           $aReturn[$iCount][3] = _IsString($oObjectItem.DefaultIPGateway(0))
-          $aReturn[$iCount][4] = _IsString(_WMIArrayToString($oObjectItem.DNSServerSearchOrder(), ' - ')) ; You could use _ArrayToString() but I like creating my own Functions especially when I don't need alot of error checking.
+          $aReturn[$iCount][4] = _IsString(_WMIArrayToString($oObjectItem.DNSServerSearchOrder(), ' - '))
           $aReturn[$iCount][5] = _IsString($oObjectItem.DHCPEnabled)
           $aReturn[$iCount][6] = _IsString($oObjectItem.IPSubnet(0))
         Next
@@ -1590,6 +1015,9 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
       Global $sADLocalAdminPassword
       Global $sADLocalAdminPasswordExp
       Global $sADOUPath
+      Global $sADLoginScript
+      Global $sADHomeDirectory
+      Global $sADHomeDrive
 
       ;Local $aADProperties[5][2]
 
@@ -1617,10 +1045,14 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
         ;_ArrayDisplay($aProperties, "Active Directory Functions - Example 3 - Properties for computer '" & @ComputerName & "'")
 
         ;;ATTEMPT 2
-        $sADDescription           = ADQuery('description')
-        $sADDistinguishedName     = ADQuery('distinguishedName')
-        $sADLocalAdminPassword    = ADQuery('ms-Mcs-AdmPwd')
-        $sADLocalAdminPasswordExp = ADQuery('ms-Mcs-AdmPwdExpirationTime')
+        $sADDescription           = ADQuery(@ComputerName, 'description')
+        $sADDistinguishedName     = ADQuery(@ComputerName, 'distinguishedName')
+        $sADLocalAdminPassword    = ADQuery(@ComputerName, 'ms-Mcs-AdmPwd')
+        $sADLocalAdminPasswordExp = ADQuery(@ComputerName, 'ms-Mcs-AdmPwdExpirationTime')
+        $sADLoginScript           = ADQuery(@Username, 'scriptPath')  ;;Ex: "LoginScriptName.bat" without a path
+        $sADHomeDirectory         = ADQuery(@Username, 'homeDirectory')  ;;Ex: "\\servername\folder\username"
+        $sADHomeDrive             = ADQuery(@Username, 'homeDrive')  ;;Ex: "Z:"
+
 
         ;;Close Connection to Active Directory
         _AD_Close()
@@ -1639,11 +1071,11 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
       EndIf
     EndFunc
 
-    Func ADQuery($sADParameter)
+    Func ADQuery($sADObject, $sADParameter)
       ;;Wrapper for _AD_GetObjectProperties to safely return single string.
       ;; Open AD connection before calling this.
 
-      $aADProperties = _AD_GetObjectProperties(@ComputerName & '$', $sADParameter)
+      $aADProperties = _AD_GetObjectProperties($sADObject & '$', $sADParameter)
 
       If IsArray($aADProperties) Then
         ReDim $aADProperties[2][2]
@@ -1749,6 +1181,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
       ;;organization
         $sOrgName = RegRead($sAppRegistryPath, 'sOrgName')
         $sOrgDomain = RegRead($sAppRegistryPath, 'sOrgDomain')
+        $sOrgFQDomain = RegRead($sAppRegistryPath, 'sOrgFQDomain')
         $sOrgIntranetName = RegRead($sAppRegistryPath, 'sOrgIntranetName')
         $sOrgIntranetURL = RegRead($sAppRegistryPath, 'sOrgIntranetURL')
 
@@ -1760,6 +1193,12 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
         $sOrgHelpdeskEmail = RegRead($sAppRegistryPath, 'sOrgHelpdeskEmail')
         $sOrgHelpdeskURL = RegRead($sAppRegistryPath, 'sOrgHelpdeskURL')
         $sOrgHelpdeskRemoteSupportURL = RegRead($sAppRegistryPath, 'sOrgHelpdeskRemoteSupportURL')
+        $sOrgHelpdeskRequestName = RegRead($sAppRegistryPath, 'sOrgHelpdeskRequestName')
+
+      ;;other details
+        $sOrgAppCatalogURL = RegRead($sAppRegistryPath, 'sOrgAppCatalogURL')
+        $sOrgPersonalDriveName = RegRead($sAppRegistryPath, 'sOrgPersonalDriveName')
+        $sOrgLoginScriptPath = RegRead($sAppRegistryPath, 'sOrgLoginScriptPath')
 
       ;;free-text field
         Global $sFreeTextDetails = ''
@@ -1779,6 +1218,257 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
       Global $sPCDescription
 
       $sPCDescription = RegRead('HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters','srvcomment')
+    EndFunc
+
+    Func ReadLCMInfo()
+      ;;READ LCM INFO
+      ;; Generated variables:
+      ;;
+      ;; $sLCMXJCode   ;X88868
+      ;; $sLCMCRCode   ;SE900412
+      ;; $sLCMEdition  ;Server
+
+      ;;read LCM log file, set to blank if not found
+      Global $sLCMXJCode  = ''
+      Global $sLCMCRCode  = ''
+      Global $sLCMEdition = ''  ;not yet functional
+
+      ;;declare locals
+      Local $sLCMXJCode0
+      Local $sLCMCRCode0
+      Local $sLCMXJCode1
+      Local $sLCMCRCode1
+      Local $sLCMXJCode2
+      Local $sLCMCRCode2
+      Local $sLCMXJCode3
+      Local $sLCMCRCode3
+      Local $sLCMXJCode4
+      Local $sLCMCRCode4
+      Local $sLCMXJCode5
+      Local $sLCMCRCode5
+
+      ;;LOCATION 0 - USER OVERRIDE / CUSTOMIZATION
+      $sLCMXJCode0 = RegRead($sAppRegistryPath, 'sCustomLCMXJCode')
+      $sLCMCRCode0 = RegRead($sAppRegistryPath, 'sCustomLCMCRCode')
+
+      ;$sCustomLCMXJCodeFilePath  = $sAppInstallPath & '\Support\CustomLCMXJCode.txt'
+      ;$sCustomLCMCRCodeFilePath  = $sAppInstallPath & '\Support\CustomLCMCRCode.txt'
+      ;$sCustomLCMEditionFilePath = $sAppInstallPath & '\Support\CustomLCMEdition.txt'
+
+      ;If FileExists($sCustomLCMXJCodeFilePath) Then
+      ;  Local $hFileOpen = FileOpen($sCustomLCMXJCodeFilePath,  $FO_READ)
+      ;  $sLCMXJCode0 = FileRead($hFileOpen)
+      ;  FileClose($hFileOpen)
+      ;EndIf
+
+      ;If FileExists($sCustomLCMCRCodeFilePath) Then
+      ;  Local $hFileOpen = FileOpen($sCustomLCMCRCodeFilePath,  $FO_READ)
+      ;  $sLCMCRCode0 = FileRead($hFileOpen)
+      ;  FileClose($hFileOpen)
+      ;EndIf
+
+      ;If FileExists($sCustomLCMEditionFilePath) Then
+      ;  Local $hFileOpen = FileOpen($sCustomLCMEditionFilePath,  $FO_READ)
+      ;  $sLCMCRCode0 = FileRead($hFileOpen)
+      ;  FileClose($hFileOpen)
+      ;EndIf
+
+      ;;LOCATION 1 - DEPRECATED
+      $sLCMLogFilePath1 = 'C:\mulcm\data\logs\TouchReport.log'
+      If FileExists($sLCMLogFilePath1) Then    ;do if file exists
+        Local $hFileOpen = FileOpen($sLCMLogFilePath1,  $FO_READ)
+        If Not ($hFileOpen = '-1') Then ;do if file opens successfully
+          $pos = FileSetPos($hFileOpen, -4096, $FILE_END)
+          If $pos = 'False' Then  ;do if set position has no error
+            $string = FileRead($hFileOpen)
+          Else
+            FileSetPos($hFileOpen, 0, 0)
+            $string = FileRead($hFileOpen)
+          EndIf
+
+          ;; find X/J code
+          $aLCMXJCode = StringRegExp($string, '[XJxj]testCode:([XJxj][0-9]{1,5})', 1)
+
+          ;; find CR code
+          $aLCMCRCode = StringRegExp($string, '[CRcr]:([A-Z|a-z][A-Z|a-z][0-9]{1,6})', 1)
+
+          ;; load variables
+          If _elementExists($aLCMXJCode, 0) = True Then
+            $sLCMXJCode1  = StringUpper($aLCMXJCode[0])
+          Else
+            $sLCMXJCode1  = ' '
+          EndIf
+          If _elementExists($aLCMCRCode, 0) = True Then
+            $sLCMCRCode1  = StringUpper($aLCMCRCode[0])
+          Else
+            $sLCMCRCode1  = ' '
+          EndIf
+
+          FileClose($hFileOpen)
+        EndIf
+      EndIf
+
+      ;;LOCATION 2 - Maintenance.log
+      $sLCMLogFile2Path = 'C:\mulcm\data\logs\Maintenance.log'
+      If FileExists($sLCMLogFile2Path) Then    ;do if file exists
+        Local $hFileOpen = FileOpen($sLCMLogFile2Path,  $FO_READ)
+        If Not ($hFileOpen = '-1') Then ;do if file opens successfully
+          $pos = FileSetPos($hFileOpen, -4096, $FILE_END)
+          If $pos = 'False' Then  ;do if set position has no error
+            $string = FileRead($hFileOpen)
+          Else
+            FileSetPos($hFileOpen, 0, 0)
+            $string = FileRead($hFileOpen)
+          EndIf
+
+          ;; find X/J code
+          $aLCMXJCode = StringRegExp($string, "[XJxj]Test Code = '([XJxj][0-9]{1,5})'", 1)
+
+          ;; find CR code
+          $aLCMCRCode = StringRegExp($string, "'LCM-([A-Z|a-z][A-Z|a-z][0-9]{1,6})'", 1)
+
+          ;; load variables
+          If _elementExists($aLCMXJCode, 0) = True Then
+            $sLCMXJCode2  = StringUpper($aLCMXJCode[0])
+          Else
+            $sLCMXJCode2  = ' '
+          EndIf
+          If _elementExists($aLCMCRCode, 0) = True Then
+            $sLCMCRCode2  = StringUpper($aLCMCRCode[0])
+          Else
+            $sLCMCRCode2  = ' '
+          EndIf
+
+          FileClose($hFileOpen)
+        EndIf
+      EndIf
+
+      ;;LOCATION 3 - Remote Maintenance.log
+      $sLCMLogFile3Path = 'L:\mulcm\data\logs\Maintenance.log'
+      If FileExists($sLCMLogFile3Path) Then    ;do if file exists
+        Local $hFileOpen = FileOpen($sLCMLogFile3Path,  $FO_READ)
+        If Not ($hFileOpen = '-1') Then ;do if file opens successfully
+          $pos = FileSetPos($hFileOpen, -4096, $FILE_END)
+          If $pos = 'False' Then  ;do if set position has no error
+            $string = FileRead($hFileOpen)
+          Else
+            FileSetPos($hFileOpen, 0, 0)
+            $string = FileRead($hFileOpen)
+          EndIf
+
+          ;; find X/J code
+          $aLCMXJCode = StringRegExp($string, "[XJxj]Test Code = '([XJxj][0-9]{1,5})'", 1)
+
+          ;; find CR code
+          $aLCMCRCode = StringRegExp($string, "'LCM-([A-Z|a-z][A-Z|a-z][0-9]{1,6})'", 1)
+
+          ;; load variables
+          If _elementExists($aLCMXJCode, 0) = True Then
+            $sLCMXJCode3  = StringUpper($aLCMXJCode[0])
+          Else
+            $sLCMXJCode3  = ' '
+          EndIf
+          If _elementExists($aLCMCRCode, 0) = True Then
+            $sLCMCRCode3  = StringUpper($aLCMCRCode[0])
+          Else
+            $sLCMCRCode3  = ' '
+          EndIf
+
+          FileClose($hFileOpen)
+        EndIf
+      EndIf
+
+      ;;LOCATION 4 - TRDMessage.log
+      $sLCMLogFile4Path = 'C:\mulcm\data\logs\TRDMessage.log'
+      If FileExists($sLCMLogFile4Path) Then    ;do if file exists
+        Local $hFileOpen = FileOpen($sLCMLogFile4Path,  $FO_READ)
+        If Not ($hFileOpen = '-1') Then ;do if file opens successfully
+          $pos = FileSetPos($hFileOpen, -4096, $FILE_END)
+          If $pos = 'False' Then  ;do if set position has no error
+            $string = FileRead($hFileOpen)
+          Else
+            FileSetPos($hFileOpen, 0, 0)
+            $string = FileRead($hFileOpen)
+          EndIf
+
+          ;; find X/J code
+          $aLCMXJCode = StringRegExp($string, ",'([XJxj][0-9]{1,5})',", 1)
+
+          ;; find CR code
+          $aLCMCRCode = StringRegExp($string, ",'LCM-([A-Z|a-z][A-Z|a-z][0-9]{1,6})'", 1)
+
+          ;; load variables
+          If _elementExists($aLCMXJCode, 0) = True Then
+            $sLCMXJCode4  = StringUpper($aLCMXJCode[0])
+          Else
+            $sLCMXJCode4  = ' '
+          EndIf
+          If _elementExists($aLCMCRCode, 0) = True Then
+            $sLCMCRCode4  = StringUpper($aLCMCRCode[0])
+          Else
+            $sLCMCRCode4  = ' '
+          EndIf
+
+          FileClose($hFileOpen)
+        EndIf
+      EndIf
+
+      ;;LOCATION 5 - Remote TRDMessage.log
+      $sLCMLogFile5Path = 'L:\mulcm\data\logs\TRDMessage.log'
+      If FileExists($sLCMLogFile5Path) Then    ;do if file exists
+        Local $hFileOpen = FileOpen($sLCMLogFile5Path,  $FO_READ)
+        If Not ($hFileOpen = '-1') Then ;do if file opens successfully
+          $pos = FileSetPos($hFileOpen, -4096, $FILE_END)
+          If $pos = 'False' Then  ;do if set position has no error
+            $string = FileRead($hFileOpen)
+          Else
+            FileSetPos($hFileOpen, 0, 0)
+            $string = FileRead($hFileOpen)
+          EndIf
+
+          ;; find X/J code
+          $aLCMXJCode = StringRegExp($string, ",'([XJxj][0-9]{1,5})',", 1)
+
+          ;; find CR code
+          $aLCMCRCode = StringRegExp($string, ",'LCM-([A-Z|a-z][A-Z|a-z][0-9]{1,6})'", 1)
+
+          ;; load variables
+          If _elementExists($aLCMXJCode, 0) = True Then
+            $sLCMXJCode5  = StringUpper($aLCMXJCode[0])
+          Else
+            $sLCMXJCode5  = ' '
+          EndIf
+          If _elementExists($aLCMCRCode, 0) = True Then
+            $sLCMCRCode5  = StringUpper($aLCMCRCode[0])
+          Else
+            $sLCMCRCode5  = ' '
+          EndIf
+
+          FileClose($hFileOpen)
+        EndIf
+      EndIf
+
+      ;;find which variables have best LCM info, override with custom if exist
+      If StringIsSpace($sLCMXJCode1) = False Then $sLCMXJCode = $sLCMXJCode1
+      If StringIsSpace($sLCMCRCode1) = False Then $sLCMCRCode = $sLCMCRCode1
+      If StringIsSpace($sLCMXJCode2) = False Then $sLCMXJCode = $sLCMXJCode2
+      If StringIsSpace($sLCMCRCode2) = False Then $sLCMCRCode = $sLCMCRCode2
+      If StringIsSpace($sLCMXJCode3) = False Then $sLCMXJCode = $sLCMXJCode3
+      If StringIsSpace($sLCMCRCode3) = False Then $sLCMCRCode = $sLCMCRCode3
+      If StringIsSpace($sLCMXJCode4) = False Then $sLCMXJCode = $sLCMXJCode4
+      If StringIsSpace($sLCMCRCode4) = False Then $sLCMCRCode = $sLCMCRCode4
+      If StringIsSpace($sLCMXJCode5) = False Then $sLCMXJCode = $sLCMXJCode5
+      If StringIsSpace($sLCMCRCode5) = False Then $sLCMCRCode = $sLCMCRCode5
+      If StringIsSpace($sLCMXJCode0) = False Then $sLCMXJCode = $sLCMXJCode0
+      If StringIsSpace($sLCMCRCode0) = False Then $sLCMCRCode = $sLCMCRCode0
+
+      ;validate LCM info retrieved, disable section if data invalid
+      Switch (StringIsSpace($sLCMXJCode))
+        Case 0
+          Global $bLCMInfoExists = True
+        Case 1
+          Global $bLCMInfoExists = False
+      EndSwitch
     EndFunc
 
   ;;TOOLS
@@ -1852,7 +1542,6 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
 
     Func _ReduceMemory()
       ;;Reduce application RAM usage.
-      ;;
       ;;https://www.autoitscript.com/forum/topic/131315-accumulating-memory-usage/
       Local $aReturn = DllCall('psapi.dll','int','EmptyWorkingSet','long', -1)
       If @error = 1 Then
@@ -1862,195 +1551,1273 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     EndFunc
 #EndRegion
 
-#Region -- OPERATIONS
+#Region -- BUILD INTERFACE
+  Func BuildTray()
+    ;;BUILD TRAY
 
-;;RESUME HERE
-    ;;DISPLAY THE GUI
-      GUIMainSetDefaults()
-      GUISetState(@SW_SHOWNORMAL, $idGUIMain) ;show GUI
+    ;;tray options
+    Opt('TrayAutoPause', 0)  ;;don't PAUSE script, if systray icon is clicked
+    Opt('TrayMenuMode', 3)  ;;the default tray menu items will not be shown and items are not checked when selected. These are options 1 and 2 for TrayMenuMode.
 
-    ;;WAIT FOR INPUT
-      $sGUIBusyWait = 300
+    ;;tray icon
+    TraySetIcon('Shell32.dll',322) ;;24 (question mark) or 44 (thin star) or 263 (question mark) or 322 (thin star) or 16783 ('i' icon)
 
-      Local $aMsg
-      While 1
-        $aMsg = GUIGetMsg(1)  ;use advanced parameter
-        Switch $aMsg[1] ;check which GUI sent the message
-          Case $idGUIMain
-            Switch $aMsg[0]
-              ;; MENUS
-              ;File
-              Case $idMenuItemMainFileEmail
-                GUIMainSetBusyDefaults()
-                MailSummary()
-                CloseMain()
-                ExitLoop
-              Case $idMenuItemMainFileShow
-                GUIMainSetBusyDefaults()
-                LaunchShowSummary()
-                GUIMainSetDefaults()
-              Case $idMenuItemMainFilePrint
-                GUIMainSetBusyDefaults()
-                PrintSummary()
-                GUIMainSetDefaults()
-              Case $idMenuItemMainFileClose
-                CloseMain()
-                ExitLoop
+    ;;stage tray menu
+    ;; Duplicate these settings in Tools menu of main GUI.
+    Global $idTrayMainNetConnect = TrayCreateItem('Network Connections')
+    Global $idTrayMainInetCpl    = TrayCreateItem('Internet Options')
+      TrayCreateItem('')
+    Global $idTrayMainAppCatalog = TrayCreateItem('Application Catalog')
+    Global $idTrayMainAppWiz     = TrayCreateItem('Programs and Features')
+    Global $idTrayMainServices   = TrayCreateItem('Services')
+    Global $idTrayMainWinUpdate  = TrayCreateItem('Windows Update')
+      TrayCreateItem('')
+    Global $idTrayMainPrintMMC   = TrayCreateItem('Print Management')
+    Global $idTrayMainDevNPrint  = TrayCreateItem('Devices and Printers')
+    Global $idTrayMainDevMan     = TrayCreateItem('Device Manager')
+      TrayCreateItem('')
+    Global $idTrayMainCredMan    = TrayCreateItem('Credential Manager')
+    Global $idTrayMainMailAcct   = TrayCreateItem('Mail Accounts')
+      TrayCreateItem('')
+    Global $idTrayMainSearchAD   = TrayCreateItem('Search Active Directory')
+    Global $idTrayMainSysProp    = TrayCreateItem('System Properties')
+      TrayCreateItem('')
+    Global $idTrayMainSearchAD   = TrayCreateItem('Run Login Script')
+    Global $idTrayMainSysProp    = TrayCreateItem('Map ' & $sOrgPersonalDriveName & ' Drive')
+      TrayCreateItem('')
+    Global $idTrayMainShowInfo   = TrayCreateItem('About This Computer')
+      TrayCreateItem('')
+    Global $idTrayMainExit       = TrayCreateItem('Exit')
 
-              ;Edit
-              Case $idMenuItemMainEditCopy
-                Send("^c")  ;press ctrl + c
-              Case $idMenuItemMainEditCopySum
-                CopySummaryToClipboard()
+    Switch $bExitEnabled
+      Case True
+        TrayItemSetState($idTrayMainExit, $TRAY_ENABLE)
+      Case False
+        TrayItemSetState($idTrayMainExit, $TRAY_DISABLE)
+    EndSwitch
 
-              ;Tools
-              Case $idMenuItemMainToolsNetConnect
-                GUIMainSetBusyDefaults()
-                LaunchNetConnect()
-                CloseMain()
-                ExitLoop
-              Case $idMenuItemMainToolsInetCpl
-                GUIMainSetBusyDefaults()
-                LaunchInetCpl()
-                CloseMain()
-                ExitLoop
-              Case $idMenuItemMainToolsAppCatalog
-                GUIMainSetBusyDefaults()
-                LaunchAppCatalog()
-                CloseMain()
-                ExitLoop
-              Case $idMenuItemMainToolsAppWiz
-                GUIMainSetBusyDefaults()
-                LaunchAppWiz()
-                CloseMain()
-                ExitLoop
-              Case $idMenuItemMainToolsServices
-                GUIMainSetBusyDefaults()
-                LaunchServices()
-                CloseMain()
-                ExitLoop
-              Case $idMenuItemMainToolsWinUpdate
-                GUIMainSetBusyDefaults()
-                LaunchWindowsUpdate()
-                CloseMain()
-                ExitLoop
-              Case $idMenuItemMainToolsPrintMMC
-                GUIMainSetBusyDefaults()
-                LaunchPrintMMC()
-                CloseMain()
-                ExitLoop
-              Case $idMenuItemMainToolsDevNPrint
-                GUIMainSetBusyDefaults()
-                LaunchDevNPrint()
-                CloseMain()
-                ExitLoop
-              Case $idMenuItemMainToolsDevMan
-                GUIMainSetBusyDefaults()
-                LaunchDevMan()
-                CloseMain()
-                ExitLoop
-              Case $idMenuItemMainToolsCredMan
-                GUIMainSetBusyDefaults()
-                LaunchCredMan()
-                CloseMain()
-                ExitLoop
-              Case $idMenuItemMainToolsMailAcct
-                GUIMainSetBusyDefaults()
-                LaunchMailAcct()
-                CloseMain()
-                ExitLoop
-              Case $idMenuItemMainToolsSearchAD
-                GUIMainSetBusyDefaults()
-                LaunchSearchAD()
-                CloseMain()
-                ExitLoop
-              Case $idMenuItemMainToolsSysProp
-                GUIMainSetBusyDefaults()
-                LaunchSysProp()
-                CloseMain()
-                ExitLoop
+    ;;stage tray
+    Switch $sMainAppExeMode
+      Case 'window'
+        TraySetState(2) ;;hide tray icon
+      Case Else
+        TraySetState(1) ;;show the tray icon.
+        TraySetToolTip('Loading...')
+        TraySetClick(8) ;;pressing secondary mouse button will show the tray menu.
+    EndSwitch
+  EndFunc
 
-              ;Help
-              Case $idMenuItemMainHelpLaunchLMIr
-                GUIMainSetBusyDefaults()
-                LaunchLMIRescue()
-                CloseMain()
-                ExitLoop
-              Case $idMenuItemMainHelpLaunchIntranet
-                GUIMainSetBusyDefaults()
-                LaunchIntranet()
-                CloseMain()
-                ExitLoop
-              Case $idMenuItemMainHelpLaunchHDesk
-                GUIMainSetBusyDefaults()
-                LaunchITHelpdesk()
-                CloseMain()
-                ExitLoop
-              Case $idMenuItemMainHelpLaunchPWM
-                GUIMainSetBusyDefaults()
-                LaunchPaswordManagement()
-                CloseMain()
-                ExitLoop
-              Case $idMenuItemMainHelpDocumentation
-                GUIMainSetBusyDefaults()
-                LaunchDocumentation()
-                CloseMain()
-                ExitLoop
-              Case $idMenuItemMainHelpAbout
-                GUIMainSetBusyDefaults()
-                LaunchAbout()
-                GUIMainSetDefaults()
+  Func BuildMainGUI()
+    ;;CREATE MAIN GUI
 
-              ;; TEXT
+    ;;DEFINE GUI GRID
+      ;;COLUMNS
+        ;;columns, left
+        $columnMainLeft00 = 0
+        $columnMainLeft01 = 20  ;image
 
-              ;; BUTTONS
-              Case $idButtonMainLeftContactHDesk
-                GUIMainSetBusyDefaults()
-                If $bContactHelpdeskEnabled = True Then
-                  GUISetState(@SW_MINIMIZE, $idGUIMain) ;hide GUI
-                  Sleep(100)
-                  ContactHelpdesk()
-                  Sleep(100)
-                  GUISetState(@SW_RESTORE, $idGUIMain) ;restore GUI
-                Else
-                  CopySummaryToClipboard()
-                  Sleep($sGUIBusyWait)
-                EndIf
-                GUIMainSetDefaults()
-              Case $idButtonMainLeftRefresh
-                GUIMainSetBusyDefaults()
-                ReadComputerWait($idGUIMain)
-                GUIMainSetDefaults()
-              Case $idButtonMainLeftClose
-                CloseMain()
-                ExitLoop
+        ;;columns, left, widths
+        $columnMainLeft00Width = 140
+        $columnMainLeft01Width = $columnMainLeft00Width - 36    ;total width of column minus spacing left and right
 
-              ;; CLOSE
-              Case $GUI_EVENT_CLOSE
-                CloseMain()
-                ExitLoop
-            EndSwitch
-        EndSwitch
-      WEnd
+        ;;columns, right
+        $columnMainRight00 = $columnMainLeft00Width
+        $columnMainRight01 = $columnMainRight00    ;group line
+        $columnMainRight02 = $columnMainRight01 + 10    ;label title
+        $columnMainRight03 = $columnMainRight02 + 90    ;label info
+        $columnMainRight04 = $columnMainRight03 + 200
+
+        ;;columns, right, widths
+        $columnMainRight00Width = 300
+        $columnMainRight01Width = 10
+        $columnMainRight02Width = 90
+        $columnMainRight03Width = 200
+        $columnMainRight04Width = 0
+
+        ;;window boundary
+        $columnMainBounds = $columnMainLeft00Width + $columnMainRight00Width + 12   ;right edge of window
+
+      ;;ROWS
+        ;;rows, left
+        $rowMainLeft00 = 0
+        $rowMainLeft01 = 10
+
+        ;;rows, left, heights
+        $rowMainLeft00Height = 400
+        $rowMainLeft01Height = 128
+
+        ;;rows, right
+        $rowMainRightSpacing = 16   ;height of columns of text
+        $rowMainRightSpacers = 6    ;lower number means more space between groups
+        $rowMainRight00 = 0 - $rowMainRightSpacers                                        ;spacer
+        $rowMainRight01 = $rowMainRight00 + $rowMainRightSpacing
+        $rowMainRight02 = $rowMainRight01 + $rowMainRightSpacing
+        $rowMainRight03 = $rowMainRight02 + $rowMainRightSpacing
+        $rowMainRight03a = $rowMainRight03 + $rowMainRightSpacing
+        $rowMainRight04 = $rowMainRight03a + $rowMainRightSpacing
+        $rowMainRight05 = $rowMainRight04 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
+        $rowMainRight06 = $rowMainRight05 + $rowMainRightSpacing
+        $rowMainRight07 = $rowMainRight06 + $rowMainRightSpacing
+        If $bNetAdapter01Exists = True Then
+          $rowMainRight08 = $rowMainRight07 + $rowMainRightSpacing    ; IP address 1
+        Else
+          $rowMainRight08 = $rowMainRight07
+        EndIf
+        If $bNetAdapter02Exists = True Then
+          $rowMainRight09 = $rowMainRight08 + $rowMainRightSpacing    ; IP address 2
+        Else
+          $rowMainRight09 = $rowMainRight08
+        EndIf
+        If $bNetAdapter03Exists = True Then
+          $rowMainRight10 = $rowMainRight09 + $rowMainRightSpacing    ; IP address 3
+        Else
+          $rowMainRight10 = $rowMainRight09
+        EndIf
+        If $bNetAdapter04Exists = True Then
+          $rowMainRight11 = $rowMainRight10 + $rowMainRightSpacing    ; IP address 4
+        Else
+          $rowMainRight11 = $rowMainRight10
+        EndIf
+        If $bNetAdapter05Exists = True Then
+          $rowMainRight12 = $rowMainRight11 + $rowMainRightSpacing    ; IP address 5
+        Else
+          $rowMainRight12 = $rowMainRight11
+        EndIf
+        $rowMainRight13 = $rowMainRight12 + $rowMainRightSpacing
+        $rowMainRight14 = $rowMainRight13 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
+        $rowMainRight15 = $rowMainRight14 + $rowMainRightSpacing
+        $rowMainRight16 = $rowMainRight15 + $rowMainRightSpacing
+        $rowMainRight17 = $rowMainRight16 + $rowMainRightSpacing
+        $rowMainRight18 = $rowMainRight17 + $rowMainRightSpacing
+        $rowMainRight19 = $rowMainRight18 + $rowMainRightSpacing
+        $rowMainRight20 = $rowMainRight19 + $rowMainRightSpacing
+        $rowMainRight21 = $rowMainRight20 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
+        $rowMainRight22 = $rowMainRight21 + $rowMainRightSpacing
+        $rowMainRight23 = $rowMainRight22 + $rowMainRightSpacing
+        $rowMainRight24 = $rowMainRight23 + $rowMainRightSpacing
+        If $bAssetTagExists = True Then
+          $rowMainRight25 = $rowMainRight24 + $rowMainRightSpacing
+        Else
+          $rowMainRight25 = $rowMainRight24
+        EndIf
+        If $bLCMInfoExists = True Then
+          $rowMainRight26 = $rowMainRight25 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
+          $rowMainRight27 = $rowMainRight26 + $rowMainRightSpacing
+          $rowMainRight28 = $rowMainRight27 + $rowMainRightSpacing
+          $rowMainRight29 = $rowMainRight28 + $rowMainRightSpacing
+        Else
+          ;; set these rows to increase by 0 if no LCM info section exists
+          $rowMainRight26 = $rowMainRight25   ;spacer
+          $rowMainRight27 = $rowMainRight26
+          $rowMainRight28 = $rowMainRight27
+          $rowMainRight29 = $rowMainRight28
+        EndIf
+        If $bFreeTextDetailsExists = True Then
+          $rowMainRight30 = $rowMainRight29 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
+          $rowMainRight31 = $rowMainRight30 + $rowMainRightSpacing
+          $rowMainRight32 = $rowMainRight31 + $rowMainRightSpacing + (($rowMainRightSpacing * 3) - 7) ;height of multiline custom info box, duplicate changes in rowMainRight below
+        Else
+          ;; set these rows to increase by 0 if no custom info section exists
+          $rowMainRight30 = $rowMainRight29   ;spacer
+          $rowMainRight31 = $rowMainRight30
+          $rowMainRight32 = $rowMainRight31
+        EndIf
+        $rowMainRight33 = $rowMainRight32 + $rowMainRightSpacing
+        $rowMainRight34 = $rowMainRight33 + $rowMainRightSpacing
+        $rowMainRight35 = $rowMainRight34 + $rowMainRightSpacing
+        $rowMainRight36 = $rowMainRight35 + $rowMainRightSpacing
+        $rowMainRight37 = $rowMainRight36 + $rowMainRightSpacing
+        $rowMainRight38 = $rowMainRight37 + $rowMainRightSpacing
+        $rowMainRight39 = $rowMainRight38 + $rowMainRightSpacing
+        $rowMainRight40 = $rowMainRight39 + $rowMainRightSpacing
+        $rowMainRight41 = $rowMainRight40 + $rowMainRightSpacing
+        $rowMainRight42 = $rowMainRight41 + $rowMainRightSpacing
+        $rowMainRight43 = $rowMainRight42 + $rowMainRightSpacing
+        $rowMainRight44 = $rowMainRight43 + $rowMainRightSpacing
+        $rowMainRight45 = $rowMainRight44 + $rowMainRightSpacing
+        $rowMainRight46 = $rowMainRight45 + $rowMainRightSpacing
+        $rowMainRight47 = $rowMainRight46 + $rowMainRightSpacing
+        $rowMainRight48 = $rowMainRight47 + $rowMainRightSpacing
+        $rowMainRight49 = $rowMainRight48 + $rowMainRightSpacing
+        $rowMainRight50 = $rowMainRight49 + $rowMainRightSpacing
+
+        ;;rows, right, heights
+        $rowMainRightHeights  = $rowMainRightSpacing
+        $rowMainRight00Height = $rowMainRightHeights
+        $rowMainRight01Height = $rowMainRightHeights
+        $rowMainRight02Height = $rowMainRightHeights
+        $rowMainRight03Height = $rowMainRightHeights
+        $rowMainRight03aHeight = $rowMainRightHeights
+        $rowMainRight04Height = $rowMainRightHeights
+        $rowMainRight05Height = $rowMainRightHeights
+        $rowMainRight06Height = $rowMainRightHeights
+        $rowMainRight07Height = $rowMainRightHeights
+        If $bNetAdapter01Exists = True Then
+          $rowMainRight08Height = $rowMainRightHeights    ;IP address 1
+        Else
+          $rowMainRight08Height = 0
+        EndIf
+        If $bNetAdapter02Exists = True Then
+          $rowMainRight09Height = $rowMainRightHeights    ;IP address 2
+        Else
+          $rowMainRight09Height = 0
+        EndIf
+        If $bNetAdapter03Exists = True Then
+          $rowMainRight10Height = $rowMainRightHeights    ;IP address 3
+        Else
+          $rowMainRight10Height = 0
+        EndIf
+        If $bNetAdapter04Exists = True Then
+          $rowMainRight11Height = $rowMainRightHeights    ;IP address 4
+        Else
+          $rowMainRight11Height = 0
+        EndIf
+        If $bNetAdapter05Exists = True Then
+          $rowMainRight12Height = $rowMainRightHeights    ;IP address 5
+        Else
+          $rowMainRight12Height = 0
+        EndIf
+        $rowMainRight13Height = $rowMainRightHeights
+        $rowMainRight14Height = $rowMainRightHeights
+        $rowMainRight15Height = $rowMainRightHeights
+        $rowMainRight16Height = $rowMainRightHeights
+        $rowMainRight17Height = $rowMainRightHeights
+        $rowMainRight18Height = $rowMainRightHeights
+        $rowMainRight19Height = $rowMainRightHeights
+        $rowMainRight20Height = $rowMainRightHeights
+        $rowMainRight21Height = $rowMainRightHeights
+        $rowMainRight22Height = $rowMainRightHeights
+        $rowMainRight23Height = $rowMainRightHeights
+        $rowMainRight24Height = $rowMainRightHeights
+        If $bAssetTagExists = True Then
+          $rowMainRight25Height = $rowMainRightHeights
+        Else
+          $rowMainRight25Height = 0
+        EndIf
+        If $bLCMInfoExists = True Then
+          $rowMainRight26Height = $rowMainRightHeights
+          $rowMainRight27Height = $rowMainRightHeights
+          $rowMainRight28Height = $rowMainRightHeights
+          $rowMainRight29Height = $rowMainRightHeights
+        Else
+          ;; set these rows to 0 height if no LCM info section exists
+          $rowMainRight26Height = 0
+          $rowMainRight27Height = 0
+          $rowMainRight28Height = 0
+          $rowMainRight29Height = 0
+        EndIf
+        If $bFreeTextDetailsExists = True Then
+          $rowMainRight30Height = $rowMainRightHeights
+          $rowMainRight31Height = $rowMainRightHeights + (($rowMainRightSpacing * 3) - 7) ;height of multiline custom info box, duplicate changes in rowMainRightHeight above
+          $rowMainRight32Height = $rowMainRightHeights
+        Else
+          ;; set these rows to 0 height if no custom info section exists
+          $rowMainRight30Height = 0
+          $rowMainRight31Height = 0
+          $rowMainRight32Height = 0
+          ;; end
+        EndIf
+        $rowMainRight33Height = $rowMainRightHeights
+        $rowMainRight34Height = $rowMainRightHeights
+        $rowMainRight35Height = $rowMainRightHeights
+        $rowMainRight36Height = $rowMainRightHeights
+        $rowMainRight37Height = $rowMainRightHeights
+        $rowMainRight38Height = $rowMainRightHeights
+        $rowMainRight39Height = $rowMainRightHeights
+        $rowMainRight40Height = $rowMainRightHeights
+        $rowMainRight41Height = $rowMainRightHeights
+        $rowMainRight42Height = $rowMainRightHeights
+        $rowMainRight43Height = $rowMainRightHeights
+        $rowMainRight44Height = $rowMainRightHeights
+        $rowMainRight45Height = $rowMainRightHeights
+        $rowMainRight46Height = $rowMainRightHeights
+        $rowMainRight47Height = $rowMainRightHeights
+        $rowMainRight48Height = $rowMainRightHeights
+        $rowMainRight49Height = $rowMainRightHeights
+        $rowMainRight50Height = $rowMainRightHeights
+
+        ;;window boundary
+        $rowMainBounds = $rowMainRight33 + 17  ;;bottom edge of window, last used row in right column plus adjustment.
+
+      ;;COLUMNS, FROM BOTTOM
+        ;;columns, left, from bottom
+        $columnMainLeft_00 = 0
+        $columnMainLeft_01 = 10
+
+        ;;columns, left, widths
+        $columnMainLeft_00Width = 10
+        $columnMainLeft_01Width = $columnMainLeft00Width - 20
+
+      ;;ROWS, FROM BOTTOM
+        ;;rows, left, from bottom
+        $rowMainLeftSpacing = 35
+        $rowMainLeftSpacer = 25 ;high number means less space between, up to $rowMainLeftSpacing
+        $rowMainLeft_00 = $rowMainBounds - 24
+        $rowMainLeft_01 = $rowMainLeft_00 - $rowMainLeftSpacing
+        $rowMainLeft_02 = $rowMainLeft_01 - $rowMainLeftSpacing
+        $rowMainLeft_03 = $rowMainLeft_02 - $rowMainLeftSpacing + $rowMainLeftSpacer
+        $rowMainLeft_04 = $rowMainLeft_03 - $rowMainLeftSpacing - 10
+        $rowMainLeft_05 = $rowMainLeft_04 - $rowMainLeftSpacing
+        $rowMainLeft_06 = $rowMainLeft_05 - $rowMainLeftSpacing
+        $rowMainLeft_07 = $rowMainLeft_06 - $rowMainLeftSpacing
+        $rowMainLeft_08 = $rowMainLeft_07 - $rowMainLeftSpacing
+        $rowMainLeft_09 = $rowMainLeft_08 - $rowMainLeftSpacing
+        $rowMainLeft_10 = $rowMainLeft_09 - $rowMainLeftSpacing
+
+        ;;rows, left, from bottom heights
+        $rowMainLeftHeights = $rowMainLeftSpacing - 5
+        $rowMainLeft_00Height = 0
+        $rowMainLeft_01Height = $rowMainLeftHeights
+        $rowMainLeft_02Height = $rowMainLeftHeights
+        $rowMainLeft_03Height = $rowMainLeftHeights
+        $rowMainLeft_04Height = $rowMainLeftHeights + 10
+        $rowMainLeft_05Height = $rowMainLeftHeights
+        $rowMainLeft_06Height = $rowMainLeftHeights
+        $rowMainLeft_07Height = $rowMainLeftHeights
+        $rowMainLeft_08Height = $rowMainLeftHeights
+        $rowMainLeft_09Height = $rowMainLeftHeights
+        $rowMainLeft_10Height = $rowMainLeftHeights
+
+    ;;DECLARE MAIN WINDOW
+      Global $idGUIMain = GUICreate('About This Computer', $columnMainBounds, $rowMainBounds, -1, -1, -1, $WS_EX_TOPMOST)
+
+      $sCloseButtonText = 'Close'
+      If $sMainAppExeMode = 'Window' Then $sCloseButtonText = 'Exit'
+
+    ;;MENU BAR
+      ;;File
+        Global $idMenuMainFile = GUICtrlCreateMenu("&File")
+
+        Global $idMenuItemMainFileEmail = GUICtrlCreateMenuItem('Email Summary', $idMenuMainFile, -1)
+        Global $idMenuItemMainFileShow = GUICtrlCreateMenuItem('Show Summary', $idMenuMainFile, -1)
+          GUICtrlCreateMenuItem('', $idMenuMainFile, -1) ; create a separator line
+        Global $idMenuItemMainFilePrint = GUICtrlCreateMenuItem('Print Summary...', $idMenuMainFile, -1)
+          GUICtrlCreateMenuItem('', $idMenuMainFile, -1) ; create a separator line
+        Global $idMenuItemMainFileClose = GUICtrlCreateMenuItem($sCloseButtonText, $idMenuMainFile, -1)
+
+      ;;Edit
+        Global $idMenuMainEdit = GUICtrlCreateMenu('&Edit')
+
+        Global $idMenuItemMainEditCut = GUICtrlCreateMenuItem('Cut', $idMenuMainEdit, -1)
+        Global $idMenuItemMainEditCopy = GUICtrlCreateMenuItem('Copy', $idMenuMainEdit, -1)
+        Global $idMenuItemMainEditPaste = GUICtrlCreateMenuItem('Paste', $idMenuMainEdit, -1)
+          GUICtrlCreateMenuItem('', $idMenuMainEdit, -1) ; create a separator line
+        Global $idMenuItemMainEditCopySum = GUICtrlCreateMenuItem('Copy Summary', $idMenuMainEdit, -1)
+
+      ;;Tools
+        Global $idMenuMainTools = GUICtrlCreateMenu('&Tools')
+
+        Global $idMenuItemMainToolsNetConnect = GUICtrlCreateMenuItem('Network Connections', $idMenuMainTools, -1)
+        Global $idMenuItemMainToolsInetCpl = GUICtrlCreateMenuItem('Internet Options', $idMenuMainTools, -1)
+          GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
+        Global $idMenuItemMainToolsAppCatalog = GUICtrlCreateMenuItem('Application Catalog', $idMenuMainTools, -1)
+        Global $idMenuItemMainToolsAppWiz = GUICtrlCreateMenuItem('Programs and Features', $idMenuMainTools, -1)
+        Global $idMenuItemMainToolsServices = GUICtrlCreateMenuItem('Services', $idMenuMainTools, -1)
+        Global $idMenuItemMainToolsWinUpdate = GUICtrlCreateMenuItem('Windows Update', $idMenuMainTools, -1)
+          GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
+        Global $idMenuItemMainToolsPrintMMC = GUICtrlCreateMenuItem('Print Management', $idMenuMainTools, -1)
+        Global $idMenuItemMainToolsDevNPrint = GUICtrlCreateMenuItem('Devices and Printers', $idMenuMainTools, -1)
+        Global $idMenuItemMainToolsDevMan = GUICtrlCreateMenuItem('Device Manager', $idMenuMainTools, -1)
+          GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
+        Global $idMenuItemMainToolsCredMan = GUICtrlCreateMenuItem('Credential Manager', $idMenuMainTools, -1)
+        Global $idMenuItemMainToolsMailAcct = GUICtrlCreateMenuItem('Mail Accounts', $idMenuMainTools, -1)
+          GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
+        Global $idMenuItemMainToolsSearchAD = GUICtrlCreateMenuItem('Search Active Directory', $idMenuMainTools, -1)
+        Global $idMenuItemMainToolsSysProp = GUICtrlCreateMenuItem('System Properties', $idMenuMainTools, -1)
+          GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
+        Global $idMenuItemMainToolsLoginScript = GUICtrlCreateMenuItem('Run Login Script', $idMenuMainTools, -1)
+        Global $idMenuItemMainToolsPersonalDrive = GUICtrlCreateMenuItem('Map ' & $sOrgPersonalDriveName & ' Drive', $idMenuMainTools, -1)
+        ;Global $idMenuItemMainToolsSysInfo = GUICtrlCreateMenuItem('System Information', $idMenuMainTools, -1)
+
+      ;;Help
+        Global $idMenuMainHelp = GUICtrlCreateMenu('&Help')
+
+        Global $idMenuItemMainHelpLaunchLMIr = GUICtrlCreateMenuItem('LogMeIn Rescue', $idMenuMainHelp, -1)  ;↗
+          GUICtrlCreateMenuItem('', $idMenuMainHelp, -1) ; create a separator line
+        Global $idMenuItemMainHelpLaunchIntranet = GUICtrlCreateMenuItem($sOrgIntranetName, $idMenuMainHelp, -1)  ;↗
+        Global $idMenuItemMainHelpLaunchHDesk = GUICtrlCreateMenuItem($sOrgHelpdeskName, $idMenuMainHelp, -1) ;↗
+        Global $idMenuItemMainHelpLaunchPWM = GUICtrlCreateMenuItem('Password Self-Service', $idMenuMainHelp, -1) ;↗
+          GUICtrlCreateMenuItem('', $idMenuMainHelp, -1) ; create a separator line
+        Global $idMenuItemMainHelpDocumentation = GUICtrlCreateMenuItem('Documentation (' & $sAppDocsHost & ')', $idMenuMainHelp, -1)
+          GUICtrlCreateMenuItem('', $idMenuMainHelp, -1) ; create a separator line
+        Global $idMenuItemMainHelpAbout = GUICtrlCreateMenuItem('About', $idMenuMainHelp, -1)
+
+    ;;MAIN WINDOW ELEMENTS - LEFT COLUMN
+      $idGraphicMainAboutPC = GUICtrlCreateIcon($sAppLogo, -1, $columnMainLeft01, $rowMainLeft01, 128, 128, -1, $GUI_WS_EX_PARENTDRAG)
+
+      Global $idButtonMainLeftClose = GUICtrlCreateButton($sCloseButtonText, $columnMainLeft_01, $rowMainLeft_01, $columnMainLeft_01Width, $rowMainLeft_01Height)
+      Global $idButtonMainLeftRefresh = GUICtrlCreateButton('Refresh', $columnMainLeft_01, $rowMainLeft_02, $columnMainLeft_01Width, $rowMainLeft_02Height)
+      If $bContactHelpdeskEnabled = True Then
+        Global $idButtonMainLeftContactHDesk = GUICtrlCreateButton($sOrgHelpdeskRequestName, $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height, BitOR($BS_MULTILINE, $BS_CENTER, $BS_VCENTER))
+      Else
+        Global $idButtonMainLeftContactHDesk = GUICtrlCreateButton('Copy Summary', $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height)
+      EndIf
+
+    ;;MAIN WINDOW ELEMENTS - RIGHT COLUMN
+      ;;Contact information
+        $idGroupMainRightContact = GUICtrlCreateGroup($sOrgName & ' ' & $sOrgHelpdeskName, $columnMainRight01, $rowMainRight01, $columnMainRight00Width + 1, ($rowMainRight04 - $rowMainRight01) + 4)
+        $idLabelMainRight01 = GUICtrlCreateLabel('Email: ', $columnMainRight02, $rowMainRight02, $columnMainRight02Width, $rowMainRight02Height, $SS_RIGHT)
+        $idLabelMainRight02 = GUICtrlCreateLabel('Phone: ', $columnMainRight02, $rowMainRight03, $columnMainRight02Width, $rowMainRight03Height, $SS_RIGHT)
+        $idLabelMainRight02b = GUICtrlCreateLabel('Password Reset: ', $columnMainRight02, $rowMainRight03a, $columnMainRight02Width, $rowMainRight03aHeight, $SS_RIGHT)
+
+        Global $idLabelMainRight01a = GUICtrlCreateEdit($sOrgHelpdeskEmail, $columnMainRight03, $rowMainRight02, $columnMainRight03Width - 1, $rowMainRight02Height, $ES_READONLY, 0)
+        Global $idLabelMainRight02a = GUICtrlCreateEdit($sOrgHelpdeskPhone, $columnMainRight03, $rowMainRight03, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
+        Global $idLabelMainRight02c = GUICtrlCreateEdit($sOrgHelpdeskCorporatePhone, $columnMainRight03, $rowMainRight03a, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
+
+      ;;Session information
+        $idGroupMainRightSession = GUICtrlCreateGroup('Session', $columnMainRight01, $rowMainRight05, $columnMainRight00Width + 1, ($rowMainRight13 - $rowMainRight05) + 4)
+        $idLabelMainRight03 = GUICtrlCreateLabel('Current User: ', $columnMainRight02, $rowMainRight06, $columnMainRight02Width, $rowMainRight06Height, $SS_RIGHT)
+        $idLabelMainRight04 = GUICtrlCreateLabel('Computer Name: ', $columnMainRight02, $rowMainRight07, $columnMainRight02Width, $rowMainRight07Height, $SS_RIGHT)
+
+        If $bNetAdapter01Exists = True Then
+          $idLabelMainRight05 = GUICtrlCreateLabel('IP Address: ', $columnMainRight02, $rowMainRight08, $columnMainRight02Width, $rowMainRight08Height, $SS_RIGHT)
+          Global $idLabelMainRight05a = GUICtrlCreateEdit($sNetAdapter01Address, $columnMainRight03-4, $rowMainRight08-2, $columnMainRight03Width - 1, $rowMainRight08Height, $ES_READONLY, 0)
+
+          GUICtrlSetFont($idLabelMainRight05a, 10, $FW_BOLD)
+        Else
+          Local $idLabelMainRight05
+          Global $idLabelMainRight05a
+        EndIf
+        If $bNetAdapter02Exists = True Then
+          $idLabelMainRight06 = GUICtrlCreateLabel('IP Address: ', $columnMainRight02, $rowMainRight09, $columnMainRight02Width, $rowMainRight09Height, $SS_RIGHT)
+          Global $idLabelMainRight06a = GUICtrlCreateEdit($sNetAdapter02Address, $columnMainRight03, $rowMainRight09, $columnMainRight03Width - 1, $rowMainRight09Height, $ES_READONLY, 0)
+        Else
+          Local $idLabelMainRight06
+          Global $idLabelMainRight06a
+        EndIf
+        If $bNetAdapter03Exists = True Then
+          $idLabelMainRight07 = GUICtrlCreateLabel('IP Address: ', $columnMainRight02, $rowMainRight10, $columnMainRight02Width, $rowMainRight10Height, $SS_RIGHT)
+          Global $idLabelMainRight07a = GUICtrlCreateEdit($sNetAdapter03Address, $columnMainRight03, $rowMainRight10, $columnMainRight03Width - 1, $rowMainRight10Height, $ES_READONLY, 0)
+        Else
+          Local $idLabelMainRight07
+          Global $idLabelMainRight07a
+        EndIf
+        If $bNetAdapter04Exists = True Then
+          $idLabelMainRight08 = GUICtrlCreateLabel('IP Address: ', $columnMainRight02, $rowMainRight11, $columnMainRight02Width, $rowMainRight11Height, $SS_RIGHT)
+          Global $idLabelMainRight08a = GUICtrlCreateEdit($sNetAdapter04Address, $columnMainRight03, $rowMainRight11, $columnMainRight03Width - 1, $rowMainRight11Height, $ES_READONLY, 0)
+        Else
+          Local $idLabelMainRight08
+          Global $idLabelMainRight08a
+        EndIf
+        If $bNetAdapter05Exists = True Then
+          $idLabelMainRight09 = GUICtrlCreateLabel('IP Address: ', $columnMainRight02, $rowMainRight12, $columnMainRight02Width, $rowMainRight12Height, $SS_RIGHT)
+          Global $idLabelMainRight09a = GUICtrlCreateEdit($sNetAdapter05Address, $columnMainRight03, $rowMainRight12, $columnMainRight03Width - 1, $rowMainRight12Height, $ES_READONLY, 0)
+        Else
+          Local $idLabelMainRight09
+          Global $idLabelMainRight09a
+        EndIf
+
+        Global $idLabelMainRight03a = GUICtrlCreateEdit($sWMIUserName, $columnMainRight03, $rowMainRight06, $columnMainRight03Width - 1, $rowMainRight06Height, $ES_READONLY, 0)
+        Global $idLabelMainRight04a = GUICtrlCreateEdit($sComputerName, $columnMainRight03, $rowMainRight07, $columnMainRight03Width - 1, $rowMainRight07Height, $ES_READONLY, 0)
+
+      ;;Operating system information
+        $idGroupMainRightOS = GUICtrlCreateGroup('Operating System', $columnMainRight01, $rowMainRight14, $columnMainRight00Width + 1, ($rowMainRight20 - $rowMainRight14) + 4)
+        $idLabelMainRight10 = GUICtrlCreateLabel('Version: ', $columnMainRight02, $rowMainRight15, $columnMainRight02Width, $rowMainRight15Height, $SS_RIGHT)
+        $idLabelMainRight11 = GUICtrlCreateLabel('Architecture: ', $columnMainRight02, $rowMainRight16, $columnMainRight02Width, $rowMainRight16Height, $SS_RIGHT)
+        $idLabelMainRight12 = GUICtrlCreateLabel('Uptime: ', $columnMainRight02, $rowMainRight17, $columnMainRight02Width, $rowMainRight17Height, $SS_RIGHT)
+        $idLabelMainRight13 = GUICtrlCreateLabel('Install Age: ', $columnMainRight02, $rowMainRight18, $columnMainRight02Width, $rowMainRight18Height, $SS_RIGHT)
+        $idLabelMainRight14 = GUICtrlCreateLabel('Domain: ', $columnMainRight02, $rowMainRight19, $columnMainRight02Width, $rowMainRight19Height, $SS_RIGHT)
+
+        Global $idLabelMainRight10a = GUICtrlCreateEdit($sOSVersionName, $columnMainRight03, $rowMainRight15, $columnMainRight03Width - 1, $rowMainRight15Height, $ES_READONLY, 0)
+        Global $idLabelMainRight11a = GUICtrlCreateEdit($sOSArchShortname, $columnMainRight03, $rowMainRight16, $columnMainRight03Width - 1, $rowMainRight16Height, $ES_READONLY, 0)
+        Global $idLabelMainRight12a = GUICtrlCreateEdit($sOSUptime, $columnMainRight03, $rowMainRight17, $columnMainRight03Width - 1, $rowMainRight17Height, $ES_READONLY, 0)
+        Global $idLabelMainRight13a = GUICtrlCreateEdit($sOSAgeAndDate, $columnMainRight03, $rowMainRight18, $columnMainRight03Width - 1, $rowMainRight18Height, $ES_READONLY, 0)
+        Global $idLabelMainRight14a = GUICtrlCreateEdit($sWMIDomain, $columnMainRight03, $rowMainRight19, $columnMainRight03Width - 1, $rowMainRight19Height, $ES_READONLY, 0)
+
+      ;;Hardware information
+        $idGroupMainRightHardware = GUICtrlCreateGroup('Hardware', $columnMainRight01, $rowMainRight21, $columnMainRight00Width + 1, ($rowMainRight25 - $rowMainRight21) + 4)
+        $idLabelMainRight15 = GUICtrlCreateLabel('Model: ', $columnMainRight02, $rowMainRight22, $columnMainRight02Width, $rowMainRight22Height, $SS_RIGHT)
+        $idLabelMainRight16 = GUICtrlCreateLabel('Serial: ', $columnMainRight02, $rowMainRight23, $columnMainRight02Width, $rowMainRight23Height, $SS_RIGHT)
+        If $bAssetTagExists = True Then
+          $idLabelMainRight17 = GUICtrlCreateLabel('Asset Tag: ', $columnMainRight02, $rowMainRight24, $columnMainRight02Width, $rowMainRight24Height, $SS_RIGHT)
+          Global $idLabelMainRight17a = GUICtrlCreateEdit($sWMISMBIOSAssetTag, $columnMainRight03, $rowMainRight24, $columnMainRight03Width - 1 - 1, $rowMainRight24Height, $ES_READONLY, 0)
+        Else
+          Local $idLabelMainRight17
+          Global $idLabelMainRight17a
+        EndIf
+        Global $idLabelMainRight15a = GUICtrlCreateEdit($sWMIManufacturer & ' ' & $sWMIModel, $columnMainRight03, $rowMainRight22, $columnMainRight03Width - 1 - 1, $rowMainRight22Height, $ES_READONLY, 0)
+        Global $idLabelMainRight16a = GUICtrlCreateEdit($sWMISerialNumber, $columnMainRight03, $rowMainRight23, $columnMainRight03Width - 1 - 1, $rowMainRight23Height, $ES_READONLY, 0)
 
 
+      ;;LCM details
+        If $bLCMInfoExists = True Then
+          $idGroupMainRightLCM = GUICtrlCreateGroup('PSC/IOP Details', $columnMainRight01, $rowMainRight26, $columnMainRight00Width + 1, ($rowMainRight29 - $rowMainRight26) + 4)
+          $idLabelMainRight18 = GUICtrlCreateLabel('Site Code: ', $columnMainRight02, $rowMainRight27, $columnMainRight02Width, $rowMainRight27Height, $SS_RIGHT)
+          $idLabelMainRight19 = GUICtrlCreateLabel('CRA: ', $columnMainRight02, $rowMainRight28, $columnMainRight02Width, $rowMainRight28Height, $SS_RIGHT)
 
+          Global $idLabelMainRight18a = GUICtrlCreateEdit($sLCMXJCode, $columnMainRight03, $rowMainRight27, $columnMainRight03Width - 1, $rowMainRight27Height, $ES_READONLY, 0)
+          Global $idLabelMainRight19a = GUICtrlCreateEdit($sLCMCRCode, $columnMainRight03, $rowMainRight28, $columnMainRight03Width - 1, $rowMainRight28Height, $ES_READONLY, 0)
+        Else
+          Local $idGroupMainRightLCM
+          Local $idLabelMainRight18
+          Local $idLabelMainRight19
+          Global $idLabelMainRight18a
+          Global $idLabelMainRight19a
+        EndIf
+
+      ;;Free-text details
+        If $bFreeTextDetailsExists = True Then
+          $idGroupMainRightCustom = GUICtrlCreateGroup('More Details', $columnMainRight01, $rowMainRight30, $columnMainRight00Width + 1, ($rowMainRight32 - $rowMainRight30) + 4)
+
+          Global $idLabelMainRight20a = GUICtrlCreateEdit($sFreeTextDetails, $columnMainRight01+8, $rowMainRight31, $columnMainRight00Width-9, $rowMainRight31Height-4, BitOR($ES_AUTOVSCROLL,$ES_READONLY,$ES_WANTRETURN,$WS_VSCROLL), 0)
+        Else
+          Local $idGroupMainRightCustom
+          Global $idLabelMainRight20a
+        EndIf
+
+    ;;GATHER GUI ELEMENTS INTO ARRAYS
+      Global $aMainMenus[4]
+        $aMainMenus[00] = $idMenuMainFile
+        $aMainMenus[01] = $idMenuMainEdit
+        $aMainMenus[02] = $idMenuMainTools
+        $aMainMenus[03] = $idMenuMainHelp
+
+      Global $aMainMenuItems[26]
+        ;;NOT MAINTAINED
+        $aMainMenuItems[00] = $idMenuItemMainFileEmail
+        $aMainMenuItems[01] = $idMenuItemMainFileShow
+        $aMainMenuItems[02] = $idMenuItemMainFilePrint
+        $aMainMenuItems[03] = $idMenuItemMainFileClose
+        $aMainMenuItems[04] = $idMenuItemMainEditCut
+        $aMainMenuItems[05] = $idMenuItemMainEditCopy
+        $aMainMenuItems[06] = $idMenuItemMainEditCopySum
+        $aMainMenuItems[07] = $idMenuItemMainEditPaste
+        $aMainMenuItems[08] = $idMenuItemMainToolsNetConnect
+        $aMainMenuItems[09] = $idMenuItemMainToolsInetCpl
+        $aMainMenuItems[10] = $idMenuItemMainToolsAppCatalog
+        $aMainMenuItems[11] = $idMenuItemMainToolsAppWiz
+        $aMainMenuItems[12] = $idMenuItemMainToolsServices
+        $aMainMenuItems[13] = $idMenuItemMainToolsPrintMMC
+        $aMainMenuItems[14] = $idMenuItemMainToolsDevNPrint
+        $aMainMenuItems[15] = $idMenuItemMainToolsDevMan
+        $aMainMenuItems[16] = $idMenuItemMainToolsCredMan
+        $aMainMenuItems[17] = $idMenuItemMainToolsMailAcct
+        $aMainMenuItems[18] = $idMenuItemMainToolsSearchAD
+        $aMainMenuItems[19] = $idMenuItemMainToolsSysProp
+        $aMainMenuItems[20] = $idMenuItemMainHelpLaunchLMIr
+        $aMainMenuItems[21] = $idMenuItemMainHelpLaunchIntranet
+        $aMainMenuItems[22] = $idMenuItemMainHelpLaunchHDesk
+        $aMainMenuItems[23] = $idMenuItemMainHelpLaunchPWM
+        $aMainMenuItems[24] = $idMenuItemMainHelpDocumentation
+        $aMainMenuItems[25] = $idMenuItemMainHelpAbout
+
+      Global $aMainButtons[3]
+        $aMainButtons[00] = $idButtonMainLeftClose
+        $aMainButtons[01] = $idButtonMainLeftRefresh
+        $aMainButtons[02] = $idButtonMainLeftContactHDesk
+  EndFunc
 #EndRegion
 
+#Region -- OPERATIONS
+  Func MainTrayWait()
+    ;;WAIT FOR TRAY INPUT
+    While 1
+      Sleep(10)
+      Switch TrayGetMsg()
+        Case $idTrayMainNetConnect
+          LaunchNetConnect()
+        Case $idTrayMainInetCpl
+          LaunchInetCpl()
+        Case $idTrayMainAppCatalog
+          LaunchAppCatalog()
+        Case $idTrayMainAppWiz
+          LaunchAppWiz()
+        Case $idTrayMainServices
+          LaunchServices()
+        Case $idTrayMainWinUpdate
+          LaunchWindowsUpdate()
+        Case $idTrayMainPrintMMC
+          LaunchPrintMMC()
+        Case $idTrayMainDevNPrint
+          LaunchDevNPrint()
+        Case $idTrayMainDevMan
+          LaunchDevMan()
+        Case $idTrayMainCredMan
+          LaunchCredMan()
+        Case $idTrayMainMailAcct
+          LaunchMailAcct()
+        Case $idTrayMainSearchAD
+          LaunchSearchAD()
+        Case $idTrayMainSysProp
+          LaunchSysProp()
 
+        Case $TRAY_EVENT_PRIMARYUP, $idTrayMainShowInfo ;;left-click on tray icon or "About This Computer" clicked
+          TraySetState(2)  ;;hide tray icon
+          ReadComputerSchedule(False)
+          MainGUIWait()
+          ReadComputerSchedule(True)
+        Case $idTrayMainExit
+          End()
+      EndSwitch
+    WEnd
+  EndFunc
 
+  Func MainGUIWait()
+    ;;DISPLAY THE GUI AND WAIT FOR USER INPUT
+    GUIMainSetDefaults()
+    GUISetState(@SW_SHOWNORMAL, $idGUIMain) ;show GUI
 
+    ;;WAIT FOR INPUT
+    $sGUIBusyWait = 300
 
+    Local $aMsg
+    While 1
+      $aMsg = GUIGetMsg(1)  ;;use advanced parameter
+      Switch $aMsg[1]  ;;check which GUI sent the message
+        Case $idGUIMain
+          Switch $aMsg[0]
+            ;;MENU - FILE
+            Case $idMenuItemMainFileEmail
+              GUIMainSetBusyDefaults()
+              MailSummary()
+              MainGUIClose()
+              ExitLoop
+            Case $idMenuItemMainFileShow
+              GUIMainSetBusyDefaults()
+              LaunchShowSummary()
+              GUIMainSetDefaults()
+            Case $idMenuItemMainFilePrint
+              GUIMainSetBusyDefaults()
+              PrintSummary()
+              GUIMainSetDefaults()
+            Case $idMenuItemMainFileClose
+              MainGUIClose()
+              ExitLoop
 
+            ;;MENU - EDIT
+            Case $idMenuItemMainEditCopy
+              Send("^c")  ;;press ctrl + c
+            Case $idMenuItemMainEditCopySum
+              CopySummaryToClipboard()
 
+            ;;MENU - TOOLS
+            Case $idMenuItemMainToolsNetConnect
+              GUIMainSetBusyDefaults()
+              LaunchNetConnect()
+              MainGUIClose()
+              ExitLoop
+            Case $idMenuItemMainToolsInetCpl
+              GUIMainSetBusyDefaults()
+              LaunchInetCpl()
+              MainGUIClose()
+              ExitLoop
+            Case $idMenuItemMainToolsAppCatalog
+              GUIMainSetBusyDefaults()
+              LaunchAppCatalog()
+              MainGUIClose()
+              ExitLoop
+            Case $idMenuItemMainToolsAppWiz
+              GUIMainSetBusyDefaults()
+              LaunchAppWiz()
+              MainGUIClose()
+              ExitLoop
+            Case $idMenuItemMainToolsServices
+              GUIMainSetBusyDefaults()
+              LaunchServices()
+              MainGUIClose()
+              ExitLoop
+            Case $idMenuItemMainToolsWinUpdate
+              GUIMainSetBusyDefaults()
+              LaunchWindowsUpdate()
+              MainGUIClose()
+              ExitLoop
+            Case $idMenuItemMainToolsPrintMMC
+              GUIMainSetBusyDefaults()
+              LaunchPrintMMC()
+              MainGUIClose()
+              ExitLoop
+            Case $idMenuItemMainToolsDevNPrint
+              GUIMainSetBusyDefaults()
+              LaunchDevNPrint()
+              MainGUIClose()
+              ExitLoop
+            Case $idMenuItemMainToolsDevMan
+              GUIMainSetBusyDefaults()
+              LaunchDevMan()
+              MainGUIClose()
+              ExitLoop
+            Case $idMenuItemMainToolsCredMan
+              GUIMainSetBusyDefaults()
+              LaunchCredMan()
+              MainGUIClose()
+              ExitLoop
+            Case $idMenuItemMainToolsMailAcct
+              GUIMainSetBusyDefaults()
+              LaunchMailAcct()
+              MainGUIClose()
+              ExitLoop
+            Case $idMenuItemMainToolsSearchAD
+              GUIMainSetBusyDefaults()
+              LaunchSearchAD()
+              MainGUIClose()
+              ExitLoop
+            Case $idMenuItemMainToolsSysProp
+              GUIMainSetBusyDefaults()
+              LaunchSysProp()
+              MainGUIClose()
+              ExitLoop
 
+            ;;MENU - HELP
+            Case $idMenuItemMainHelpLaunchLMIr
+              GUIMainSetBusyDefaults()
+              LaunchRemoteSupportApp()
+              MainGUIClose()
+              ExitLoop
+            Case $idMenuItemMainHelpLaunchIntranet
+              GUIMainSetBusyDefaults()
+              LaunchIntranet()
+              MainGUIClose()
+              ExitLoop
+            Case $idMenuItemMainHelpLaunchHDesk
+              GUIMainSetBusyDefaults()
+              LaunchITHelpdesk()
+              MainGUIClose()
+              ExitLoop
+            Case $idMenuItemMainHelpLaunchPWM
+              GUIMainSetBusyDefaults()
+              LaunchPaswordManagement()
+              MainGUIClose()
+              ExitLoop
+            Case $idMenuItemMainHelpDocumentation
+              GUIMainSetBusyDefaults()
+              LaunchDocumentation()
+              MainGUIClose()
+              ExitLoop
+            Case $idMenuItemMainHelpAbout
+              GUIMainSetBusyDefaults()
+              LaunchAbout()
+              GUIMainSetDefaults()
 
+            ;;TEXT
 
+            ;;BUTTONS
+            Case $idButtonMainLeftContactHDesk
+              GUIMainSetBusyDefaults()
+              If $bContactHelpdeskEnabled = True Then
+                GUISetState(@SW_MINIMIZE, $idGUIMain)  ;;minimize main GUI
+                Sleep(100)
+                ContactHelpdesk()
+                Sleep(100)
+                GUISetState(@SW_RESTORE, $idGUIMain)  ;;restore GUI
+              Else
+                CopySummaryToClipboard()
+                Sleep($sGUIBusyWait)
+              EndIf
+              GUIMainSetDefaults()
+            Case $idButtonMainLeftRefresh
+              GUIMainSetBusyDefaults()
+              ReadComputerWait($idGUIMain)
+              GUIMainSetDefaults()
+            Case $idButtonMainLeftClose
+              MainGUIClose()
+              ExitLoop
 
+            ;;CLOSE
+            Case $GUI_EVENT_CLOSE
+              MainGUIClose()
+              ExitLoop
+          EndSwitch
+      EndSwitch
+    WEnd
+  EndFunc
 
+  Func MainGUIClose()
+    ;;CLOSE MAIN GUI AND RETURN TO TRAY
+    Switch $sMainAppExeMode
+      Case 'Tray'
+        GUIDelete($idGUIMain)
+        TraySetState(1) ;re-enable tray icon
+        MainTrayWait()
+      Case 'Window'
+        GUIDelete($idGUIMain)
+        SoftExit()
+    EndSwitch
+  EndFunc
 
+  Func UpdateToolTip()
+    ;;UPDATE TRAY ICON TOOLTIP
+    $sTrayToolTip = 'Computer Name: ' & $sComputerName & @CRLF & _
+                    'IP Address: ' & $sNetAdapter01Address & @CRLF & _
+                    'Uptime: ' & $sOSUptime
+    TraySetToolTip($sTrayToolTip)
+  EndFunc
 
+  Func UpdateMainGUI()
+    ;;UPDATE MAIN GUI FIELDS
+    GUICtrlSetData($idLabelMainRight01a, $sOrgHelpdeskEmail)
+    GUICtrlSetData($idLabelMainRight02a, $sOrgHelpdeskPhone)
+    GUICtrlSetData($idLabelMainRight02c, $sOrgHelpdeskCorporatePhone)
+    GUICtrlSetData($idLabelMainRight03a, $sWMIUserName)
+    GUICtrlSetData($idLabelMainRight04a, $sComputerName)
+    GUICtrlSetData($idLabelMainRight05a, $sNetAdapter01Address)
+    GUICtrlSetData($idLabelMainRight06a, $sNetAdapter02Address)
+    GUICtrlSetData($idLabelMainRight07a, $sNetAdapter03Address)
+    GUICtrlSetData($idLabelMainRight08a, $sNetAdapter04Address)
+    GUICtrlSetData($idLabelMainRight09a, $sNetAdapter05Address)
+    GUICtrlSetData($idLabelMainRight10a, $sOSVersionName)
+    GUICtrlSetData($idLabelMainRight11a, $sOSArchShortname)
+    GUICtrlSetData($idLabelMainRight12a, $sOSUptime)
+    GUICtrlSetData($idLabelMainRight13a, $sOSAgeAndDate)
+    GUICtrlSetData($idLabelMainRight14a, $sWMIDomain)
+    GUICtrlSetData($idLabelMainRight15a, $sWMIManufacturer & ' ' & $sWMIModel)
+    GUICtrlSetData($idLabelMainRight16a, $sWMISerialNumber)
+    GUICtrlSetData($idLabelMainRight17a, $sWMISMBIOSAssetTag)
+    GUICtrlSetData($idLabelMainRight18a, $sLCMXJCode)
+    GUICtrlSetData($idLabelMainRight19a, $sLCMCRCode)
+    GUICtrlSetData($idLabelMainRight20a, $sFreeTextDetails)
+  EndFunc
 
+  Func UpdateSummaryString()
+    ;;UPDATE SUMMARY STRING
+
+    Global $sSummaryString
+
+    ;;Build network adapter strings
+    Local $sNetAdapter01String
+    Local $sNetAdapter02String
+    Local $sNetAdapter03String
+    Local $sNetAdapter04String
+    Local $sNetAdapter05String
+    If StringIsSpace($sNetAdapter01Address) = False Then $sNetAdapter01String = ( _
+      ' • Network Adapter 1: ' & $sNetAdapter01Name & @CRLF & _
+      '    - Address: ' & $sNetAdapter01Address & @CRLF & _
+      '    - Subnet Mask: ' & $sNetAdapter01SubnetMask & @CRLF & _
+      '    - Gateway: ' & $sNetAdapter01Gateway & @CRLF)
+    If StringIsSpace($sNetAdapter02Address) = False Then $sNetAdapter02String = ( _
+      ' • Network Adapter 2: ' & $sNetAdapter02Name & @CRLF & _
+      '    - Address: ' & $sNetAdapter02Address & @CRLF & _
+      '    - Subnet Mask: ' & $sNetAdapter02SubnetMask & @CRLF & _
+      '    - Gateway: ' & $sNetAdapter02Gateway & @CRLF)
+    If StringIsSpace($sNetAdapter03Address) = False Then $sNetAdapter03String = ( _
+      ' • Network Adapter 3: ' & $sNetAdapter03Name & @CRLF & _
+      '    - Address: ' & $sNetAdapter03Address & @CRLF & _
+      '    - Subnet Mask: ' & $sNetAdapter03SubnetMask & @CRLF & _
+      '    - Gateway: ' & $sNetAdapter03Gateway & @CRLF)
+    If StringIsSpace($sNetAdapter04Address) = False Then $sNetAdapter04String = ( _
+      ' • Network Adapter 4: ' & $sNetAdapter04Name & @CRLF & _
+      '    - Address: ' & $sNetAdapter04Address & @CRLF & _
+      '    - Subnet Mask: ' & $sNetAdapter04SubnetMask & @CRLF & _
+      '    - Gateway: ' & $sNetAdapter04Gateway & @CRLF)
+    If StringIsSpace($sNetAdapter05Address) = False Then $sNetAdapter05String = ( _
+      ' • Network Adapter 5: ' & $sNetAdapter05Name & @CRLF & _
+      '    - Address: ' & $sNetAdapter05Address & @CRLF & _
+      '    - Subnet Mask: ' & $sNetAdapter05SubnetMask & @CRLF & _
+      '    - Gateway: ' & $sNetAdapter05Gateway & @CRLF)
+
+    $sSummaryString = _
+      'Session:' & @CRLF & _
+      ' • Current User: ' & $sWMIUserName & @CRLF & _
+      ' • Computer Name: ' & $sComputerName & @CRLF & _
+      ' • Network Adapter 1: ' & $sNetAdapter01Name & @CRLF & _
+      '    - Address: ' & $sNetAdapter01Address & @CRLF & _
+      '    - Subnet Mask: ' & $sNetAdapter01SubnetMask & @CRLF & _
+      '    - Gateway: ' & $sNetAdapter01Gateway & @CRLF & _
+      $sNetAdapter02String & _
+      $sNetAdapter03String & _
+      $sNetAdapter04String & _
+      $sNetAdapter05String & _
+      @CRLF & _
+      'Operating System:' & @CRLF & _
+      ' • Version: ' & $sOSVersionName & @CRLF & _
+      ' • Edition: ' & $sOSEdition & @CRLF & _
+      ' • Architecture: ' & $sOSArchShortname & @CRLF & _
+      ' • Uptime: ' & $sOSUptime & @CRLF & _
+      ' • Install Age: ' & $sOSAgeAndDate & @CRLF & _
+      ' • Domain: ' & $sWMIDomain & @CRLF & _
+      ' • Description: ' & $sPCDescription & @CRLF & _
+      @CRLF & _
+      'Active Directory:' & @CRLF & _
+      ' • Description: ' & $sADDescription & @CRLF & _
+      ' • OU: ' & $sADOUPath & @CRLF & _
+      ' • User Login Script: ' & $sOrgLoginScriptPath & '\' & $sADLoginScript & @CRLF & _
+      ' • User ' & $sOrgPersonalDriveName & ' Drive: (' & $sADHomeDrive & ') ' & $sADHomeDirectory & @CRLF & _
+      @CRLF & _
+      'Services:' & @CRLF & _
+      ' • Windows Update: ' & $sServWindowsUpdateStatus & @CRLF & _
+      ' • SCCM Client (SMS Agent Host): ' & $sServSMSAgentStatus & @CRLF & _
+      ' • CrowdStrike Windows Sensor: ' & $sServCrowdStrikeStatus & @CRLF & _
+      ' • Splunk Universal Forwarder: ' & $sServSplunkForwarderStatus & @CRLF & _
+      ' • BeyondTrust PowerBroker: ' & $sServBeyondTrustStatus & @CRLF & _
+      ' • BeyondTrust Monitor: ' & $sServBeyondTrustMonitorStatus & @CRLF & _
+      @CRLF & _
+      'Hardware:' & @CRLF & _
+      ' • Manufacturer: ' & $sWMIManufacturer & @CRLF & _
+      ' • Model: ' & $sWMIModel & @CRLF & _
+      ' • Serial: ' & $sWMISerialNumber & @CRLF & _
+      ' • Asset Tag: ' & $sWMISMBIOSAssetTag & @CRLF & _
+      @CRLF & _
+      'LCM:' & @CRLF & _
+      ' • Site Code: ' & $sLCMXJCode & @CRLF & _
+      ' • CRA: ' & $sLCMCRCode & @CRLF & _
+      @CRLF & _
+      'Drives:' & @CRLF & _
+      $sDiskDetails & @CRLF & _
+      @CRLF & _
+      'Printers:' & @CRLF & _
+      $sPrinterDetails & @CRLF & _
+      @CRLF & _
+      'Custom:' & @CRLF & _
+      $sFreeTextDetails & @CRLF & _
+      'Helpdesk:' & @CRLF & _
+      ' • Email: ' & $sOrgHelpdeskEmail & @CRLF & _
+      ' • Phone: ' & $sOrgHelpdeskPhone & @CRLF & _
+      ' • Password Reset: ' & $sOrgHelpdeskCorporatePhone & @CRLF & _
+      ' • Website: ' & $sOrgHelpdeskURL & @CRLF & _
+      ' • LMIr URL: ' & $sOrgHelpdeskRemoteSupportURL & @CRLF & _
+      @CRLF & _
+      'About This Computer  •  ' & $sAppVersion & '  •  ' & @YEAR & '-' & @MON & '-' & @MDAY & ' ' & @HOUR & ':' & @MIN & ':' & @SEC & '  •  [mB7a78-' & $sAppBuild & ']'
+  EndFunc
+
+  Func UpdateSummaryFile()
+    ;;UPDATE SUMMARY FILE
+    Global $sSummaryFilePath = $sAppTempPath & '\AboutThisComputerSummary.txt'
+    If FileExists($sSummaryFilePath) Then FileDelete($sSummaryFilePath)
+    FileWrite($sSummaryFilePath, $sSummaryString)
+  EndFunc
+
+  Func CopySummaryToClipboard()
+    ;;COPY SUMMARY STRING TO CLIPBOARD
+    ClipPut($sSummaryString)
+  EndFunc
+
+  Func MailSummary()
+    ;;PLACE SUMMARY STRING IN EMAIL BODY
+    $sEmailTo = $sOrgHelpdeskEmail
+    $sEmailSubject = 'Details about ' & $sComputerName & ' from ' & $sCurrentUsername
+    $sEmailBody = StringReplace($sSummaryString, @CRLF, '%0D%0A')
+    $sMailTo = 'mailto:' & $sEmailTo & '?subject=' & $sEmailSubject & '&body=%0D%0A%0D%0A' & $sEmailBody
+    ShellExecute($sMailTo)
+  EndFunc
+
+  Func PrintSummary()
+    ;;SEND SUMMARY STRING TO PRINTER
+    UpdateSummaryFile()
+
+    $iButtonPressed = MsgBox(BitOR($MB_ICONQUESTION, $MB_TOPMOST, $MB_SETFOREGROUND, $MB_YESNO, $MB_DEFBUTTON2), 'Print Summary', 'Print summary to default printer?', 0, $idGUIMain)
+    If $iButtonPressed = $IDYES Then
+      $iPrintSuccess = _FilePrint($sSummaryFilePath)
+      If $iPrintSuccess Then
+        ;MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION, $MB_TOPMOST, $MB_SETFOREGROUND), 'Print Summary', 'Sent to printer.')
+      Else
+        MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Print Summary', 'Unable to send to printer.')
+      EndIf
+    EndIf
+  EndFunc
+#EndRegion
+
+#Region -- GUI STATES
+  Func GUIMainSetDefaults()
+    ;;SET GUI DEFAULTS
+    GUIMainSetMenuDefaults()
+    GUIMainSetMenuItemDefaults()
+    GUIMainSetButtonDefaults()
+  EndFunc
+
+  Func GUIMainSetBusyDefaults()
+    ;;SET GUI BUSY DEFAULTS
+    GUIMainSetMenus($GUI_DISABLE)
+    GUIMainSetMenuItems($GUI_DISABLE)
+    GUIMainSetButtons($GUI_DISABLE)
+  EndFunc
+
+  Func GUIMainSetMenuDefaults()
+    ;;SET MENU DEFAULTS
+    GUIMainSetMenus($GUI_ENABLE)
+  EndFunc
+
+  Func GUIMainSetMenuItemDefaults()
+    ;;SET MENU ITEM DEFAULTS
+    GUIMainSetMenuItems($GUI_ENABLE)
+    ToggleGUIControl($idMenuItemMainEditCut, $GUI_DISABLE)
+    ToggleGUIControl($idMenuItemMainEditPaste, $GUI_DISABLE)
+  EndFunc
+
+  Func GUIMainSetButtonDefaults()
+    ;;SET BUTTON DEFAULTS
+    GUIMainSetButtons($GUI_ENABLE)
+  EndFunc
+
+  Func GUIMainSetMenus($Option)
+    ;;SET ALL MENUS WITH OPTION
+    ;; $GUI_ENABLE
+    ;; $GUI_DISABLE
+
+    For $i = 0 To UBound($aMainMenus) - 1
+      ToggleGUIControl($aMainMenus[$i], $Option)
+    Next
+  EndFunc
+
+  Func GUIMainSetMenuItems($Option)
+    ;;SET ALL MENU ITEMS WITH OPTION
+    ;; $GUI_ENABLE
+    ;; $GUI_DISABLE
+
+    For $i = 0 To UBound($aMainMenuItems) - 1
+      ToggleGUIControl($aMainMenuItems[$i], $Option)
+    Next
+  EndFunc
+
+  Func GUIMainSetButtons($Option)
+    ;;SET ALL BUTTONS WITH OPTION
+    ;; $GUI_ENABLE
+    ;; $GUI_DISABLE
+
+    For $i = 0 To UBound($aMainButtons) - 1
+      ToggleGUIControl($aMainButtons[$i], $Option)
+    Next
+  EndFunc
+#EndRegion
+
+#Region -- LAUNCH EXTERNAL APPS
+  Func LaunchShowSummary()
+    ;;SHOW SUMMARY STRING WINDOW
+    Local $iWidth  = 600
+    Local $iHeight = 500
+    $idGUISummary = GUICreate('Summary', $iWidth, $iHeight, -1, -1, BitOR($WS_SIZEBOX, $WS_EX_TOPMOST), '', $idGUIMain)
+
+    GUISetState(@SW_DISABLE, $idGUIMain)
+    GUISetState(@SW_SHOWNORMAL, $idGUISummary)
+
+    ;GUICtrlCreateGroup('', 10, 10, 380, 480)
+    GUICtrlCreateEdit($sSummaryString, 15, 15, $iWidth - 32, $iHeight - 55, BitOR($ES_WANTRETURN, $WS_VSCROLL, $WS_HSCROLL, $ES_AUTOVSCROLL, $ES_AUTOHSCROLL, $ES_READONLY), -1)
+    GUICtrlSetResizing(-1, $GUI_DOCKBORDERS)
+
+    While 1
+      Switch GUIGetMsg()
+        Case $GUI_EVENT_CLOSE
+          GUISetState(@SW_ENABLE, $idGUIMain)
+          GUIDelete($idGUISummary)
+          ExitLoop
+      EndSwitch
+    WEnd
+  EndFunc
+
+  Func LaunchNetConnect()
+    ;;LAUNCH NETWORK CONNECTIONS
+    StandardRunCmd('ncpa.cpl')
+  EndFunc
+
+  Func LaunchInetCpl()
+    ;;LAUNCH INTERNET OPTIONS
+    StandardRunCmd('inetcpl.cpl')
+  EndFunc
+
+  Func LaunchAppCatalog()
+    ;;LAUNCH APPLICATION CATALOG
+    ShellExecute('iexplore.exe', $sOrgAppCatalogURL, 'C:\Windows\System32')
+  EndFunc
+
+  Func LaunchAppWiz()
+    ;;LAUNCH PROGRAMS AND FEATURES
+    StandardRunCmd('appwiz.cpl')
+  EndFunc
+
+  Func LaunchServices()
+    ;;LAUNCH SERVICES
+    StandardRunCmd('services.msc')
+  EndFunc
+
+  Func LaunchWindowsUpdate()
+    ;;LAUNCH WINDOWS UPDATE
+    Switch $iOSVersionValue
+      Case $iOSVersionValue < '14' ;OS is older than Windows 10
+        StandardRunCmd('wuapp.exe')
+      Case $iOSVersionValue >= '14'  ;OS is Windows 10 or newer
+        StandardRunCmd('explorer ms-settings:windowsupdate')
+    EndSwitch
+  EndFunc
+
+  Func LaunchPrintMMC()
+    ;;LAUNCH PRINT MANAGEMENT
+    ;StandardRunCmd('printmanagement.msc')
+    ShellExecute('printmanagement.msc', '', @SystemDir, 'runas')
+  EndFunc
+
+  Func LaunchDevNPrint()
+    ;;LAUNCH DEVICES AND PRINTERS
+    StandardRunCmd('explorer shell:::{A8A91A66-3A7D-4424-8D24-04E180695C7A}')
+  EndFunc
+
+  Func LaunchDevMan()
+    ;;LAUNCH DEVICE MANAGER
+    ;StandardRunCmd('devmgmt.msc')    ;needs to be ran elevated?
+    ShellExecute('devmgmt.msc', '', @SystemDir, 'runas')
+  EndFunc
+
+  Func LaunchCredMan()
+    ;;LAUNCH CREDENTIAL MANAGER
+    StandardRunCmd('control /name Microsoft.CredentialManager')
+  EndFunc
+
+  Func LaunchMailAcct()
+    ;;LAUNCH MAIL ACCOUNTS
+    StandardRunCmd('control mlcfg32.cpl')
+    ;StandardRunCmd(@WindowsDir & '\SYSTEM32\rundll32.exe shell32.dll,Control_RunDLL mlcfg32.cpl')
+    ;ShellExecute(@WindowsDir & '\SysNative\rundll32.exe shell32.dll,Control_RunDLL mlcfg32.cpl')
+    ;ShellExecute('rundll32.exe shell32.dll,Control_RunDLL mlcfg32.cpl', '', @WindowsDir & '\SysNative\', 'runas')
+    ;DllCall('kernel32.dll', 'int', 'Wow64EnableWow64FsRedirection', 'int', 0)
+    ;ShellExecute('control mlcfg32.cpl', '', @SystemDir, 'runas')
+    ;DllCall('kernel32.dll', 'int', 'Wow64EnableWow64FsRedirection', 'int', 1)
+  EndFunc
+
+  Func LaunchSearchAD()
+    ;;LAUNCH SEARCH ACTIVE DIRECTORY
+    StandardRunCmd(@WindowsDir & '\SYSTEM32\rundll32.exe dsquery,OpenQueryWindow')
+  EndFunc
+
+  Func LaunchSysProp()
+    ;;LAUNCH SYSTEM PROPERTIES
+    StandardRunCmd('Sysdm.cpl')
+  EndFunc
+
+  Func LaunchSysInfo()
+    ;;LAUNCH SYSTEM INFORMATION
+    StandardRunCmd('msinfo32.exe')
+  EndFunc
+
+  Func LaunchRemoteSupportApp()
+    ;;LAUNCH REMOTE SUPPORT APPLICATION
+    ShellExecute('iexplore.exe', $sOrgHelpdeskRemoteSupportURL, 'C:\Windows\System32')
+  EndFunc
+
+  Func LaunchIntranet()
+    ;;LAUNCH INTRANET
+    ShellExecute('iexplore.exe', $sOrgIntranetURL, 'C:\Windows\System32')
+  EndFunc
+
+  Func LaunchITHelpdesk()
+    ;;LAUNCH IT HELPDESK
+    ShellExecute('iexplore.exe', $sOrgHelpdeskURL, 'C:\Windows\System32')
+  EndFunc
+
+  Func LaunchPaswordManagement()
+    ;;LAUNCH PASSWORD MANAGEMENT SELF-SERVICE
+    ShellExecute('iexplore.exe', 'http://pwm.' & $sOrgDomain, 'C:\Windows\System32')
+  EndFunc
+
+  Func LaunchDocumentation()
+    ;;LAUNCH DOCUMENTATION
+    ;;TODO
+  EndFunc
+
+  Func LaunchAbout()
+    ;;LAUNCH ABOUT WINDOW
+
+    ;;Variables
+    $sWindowTitle = 'About'
+    $idParentGUI = $idGUIMain
+    $sGraphic = $sAppLogo
+    $sTitle = 'About This Computer'
+    $sSubtitle = 'A workstation information utility.'
+    $sVersion = 'Version ' & $sAppVersion
+    $sCredits = 'Created by Brian Kyncl (brian@briankyncl.com)' & @CRLF & 'BeOS icons by StudioTwentyEight' & @CRLF & '(http://www.studiotwentyeight.net)'
+
+    ;;GUI SIZING
+    $iGUIAboutWidthDefault = 256
+
+    ;;HEADER
+    $iColumnAboutHeader00 = 00
+    $iColumnAboutHeader01 = ($iGUIAboutWidthDefault - 128) / 2  ;column for main image
+
+    $iColumnAboutHeader00Width = $iGUIAboutWidthDefault
+    $iColumnAboutHeader01Width = 128 ;width of main image
+
+    $iRowAboutHeader00  = 00
+    $iRowAboutHeader01  = 20
+
+    $iRowAboutHeader00Height  = 168 ;height of image row
+    $iRowAboutHeader01Height  = 128 ;height of main image
+
+    ;;TITLE
+    $iColumnAboutTitle00  = 00
+    $iColumnAboutTitle01  = 10
+
+    $iColumnAboutTitle00Wdith = $iGUIAboutWidthDefault
+    $iColumnAboutTitle01Width = $iColumnAboutTitle00Wdith - 20
+
+    $iRowAboutTitle00 = $iColumnAboutHeader00 + $iRowAboutHeader00Height
+    $iRowAboutTitle01 = $iRowAboutTitle00
+
+    $iRowAboutTitle00Height = 22
+    $iRowAboutTitle01Height = 22
+
+    ;;SUBTITLE
+    $iColumnAboutSubtitle00  = 00
+    $iColumnAboutSubtitle01  = 10
+
+    $iColumnAboutSubtitle00Wdith = $iGUIAboutWidthDefault
+    $iColumnAboutSubtitle01Width = $iColumnAboutSubtitle00Wdith - 20
+
+    $iRowAboutSubtitle00 = $iRowAboutTitle00 + $iRowAboutTitle00Height
+    $iRowAboutSubtitle01 = $iRowAboutSubtitle00
+
+    $iRowAboutSubtitle00Height = 15
+    $iRowAboutSubtitle01Height = 15
+
+    ;;VERSION
+    $iColumnAboutVersion00  = 00
+    $iColumnAboutVersion01  = 10
+
+    $iColumnAboutVersion00Wdith = $iGUIAboutWidthDefault
+    $iColumnAboutVersion01Width = $iColumnAboutSubtitle00Wdith - 20
+
+    $iRowAboutVersion00 = $iRowAboutSubtitle00 + $iRowAboutSubtitle00Height
+    $iRowAboutVersion01 = $iRowAboutVersion00 + 25
+
+    $iRowAboutVersion00Height = 30
+    $iRowAboutVersion01Height = 25
+
+    ;;CREDITS
+    $iColumnAboutCredits00  = 00
+    $iColumnAboutCredits01  = 10
+
+    $iColumnAboutCredits00Wdith = $iGUIAboutWidthDefault
+    $iColumnAboutCredits01Width = $iColumnAboutSubtitle00Wdith - 20
+
+    $iRowAboutCredits00 = $iRowAboutVersion00 + $iRowAboutVersion00Height
+    $iRowAboutCredits01 = $iRowAboutCredits00 + 25
+
+    $iRowAboutCredits00Height = 70
+    $iRowAboutCredits01Height = 45
+
+    $iGUIAboutHeightDefault = $iRowAboutCredits00 + $iRowAboutCredits00Height + 10
+
+    ;;DECLARE GUI
+      ;GUICreate('Summary', 400, 500, -1, -1, BitOR($WS_SIZEBOX, $WS_EX_TOPMOST), '', $idGUIMain)
+      ;Global $idGUIAbout = GUICreate($sWindowTitle, $iGUIAboutWidthDefault, $iGUIAboutHeightDefault, -1, -1, -1, $WS_EX_TOPMOST, $idParentGUI)
+      Global $idGUIAbout = GUICreate($sWindowTitle, $iGUIAboutWidthDefault, $iGUIAboutHeightDefault, -1, -1, BitOR($WS_CAPTION, $WS_SYSMENU), '', $idParentGUI)
+
+      ;;GRAPHIC
+      GUICtrlCreateIcon($sGraphic, -1, $iColumnAboutHeader01 + 12, $iRowAboutHeader01, $iColumnAboutHeader01Width, $iRowAboutHeader01Height, -1)
+
+      ;;TITLE
+      GUICtrlCreateLabel($sTitle, $iColumnAboutTitle01, $iRowAboutTitle01, $iColumnAboutTitle01Width, $iRowAboutTitle01Height, $SS_CENTER)
+      GUICtrlSetFont(-1, 14, $FW_BOLD)
+
+      ;;SUBTITLE
+      GUICtrlCreateLabel($sSubtitle, $iColumnAboutSubtitle01, $iRowAboutSubtitle01, $iColumnAboutSubtitle01Width, $iRowAboutSubtitle01Height, $SS_CENTER)
+      GUICtrlSetFont(-1, 10)
+
+      ;;VERSION
+      GUICtrlCreateLabel($sVersion, $iColumnAboutVersion01, $iRowAboutVersion01, $iColumnAboutVersion01Width, $iRowAboutVersion01Height, $SS_CENTER)
+
+      ;;CREDITS
+      GUICtrlCreateLabel($sCredits, $iColumnAboutCredits01, $iRowAboutCredits01, $iColumnAboutCredits01Width, $iRowAboutCredits01Height, $SS_CENTER)
+      GUICtrlSetState(-1, $GUI_DISABLE)
+
+    GUISetState(@SW_DISABLE, $idParentGUI)
+    GUISetState(@SW_SHOWNORMAL, $idGUIAbout)
+
+    While 1
+      Switch GUIGetMsg()
+        Case $GUI_EVENT_CLOSE
+          GUISetState(@SW_ENABLE, $idParentGUI)
+          GUIDelete($idGUIAbout)
+          ExitLoop
+      EndSwitch
+    WEnd
+  EndFunc
+#EndRegion
 
 
 
@@ -2092,812 +2859,15 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
 
 
 
-#Region -- START
-Switch $sMainAppExeMode
-  Case 'Tray'
-    Main()
-  Case 'Window'
-    ReadComputerWait(0)
-    AboutThisComputer()
-EndSwitch
-#EndRegion
 
 
 
 
 
 
-#Region -- MAIN
-;; MAIN LOOP
-  Func Main()
-    ;;; BUILD TRAY
-    ;Opt("TrayAutoPause", 0)  ; don't PAUSE script, if systray icon is clicked
-    ;Opt("TrayMenuMode", 3) ; The default tray menu items will not be shown and items are not checked when selected. These are options 1 and 2 for TrayMenuMode.
-    ;TraySetIcon("Shell32.dll",322) ;24 (question mark) or 44 (thin star) or 263 (question mark) or 322 (thin star) or 16783 ('i' icon)
 
-    ;Global $idTrayMainNetConnect = TrayCreateItem('Network Connections')
-    ;Global $idTrayMainInetCpl    = TrayCreateItem('Internet Options')
-    ;TrayCreateItem('') ; Create a separator line.
-    ;Global $idTrayMainAppCatalog = TrayCreateItem('Application Catalog')
-    ;Global $idTrayMainAppWiz     = TrayCreateItem('Programs and Features')
-    ;Global $idTrayMainServices   = TrayCreateItem('Services')
-    ;Global $idTrayMainWinUpdate  = TrayCreateItem('Windows Update')
-    ;TrayCreateItem('') ; Create a separator line.
-    ;Global $idTrayMainPrintMMC   = TrayCreateItem('Print Management')
-    ;Global $idTrayMainDevNPrint  = TrayCreateItem('Devices and Printers')
-    ;Global $idTrayMainDevMan     = TrayCreateItem('Device Manager')
-    ;TrayCreateItem('') ; Create a separator line.
-    ;Global $idTrayMainCredMan    = TrayCreateItem('Credential Manager')
-    ;Global $idTrayMainMailAcct   = TrayCreateItem('Mail Accounts')
-    ;TrayCreateItem('') ; Create a separator line.
-    ;Global $idTrayMainSearchAD   = TrayCreateItem('Search Active Directory')
-    ;Global $idTrayMainSysProp    = TrayCreateItem('System Properties')
-    ;TrayCreateItem('') ; Create a separator line.
-    ;Global $idTrayMainShowInfo   = TrayCreateItem('About This Computer')
-    ;TrayCreateItem('') ; Create a separator line.
-    ;Global $idTrayMainExit       = TrayCreateItem("Exit")
 
-    ;;; DISPLAY TRAY
-    ;TraySetState(1) ; Show the tray icon.
-    ;TraySetToolTip('Loading...')
-    ;TraySetClick(8) ; Pressing secondary mouse button will show the tray menu.
 
-    ;; REFRESH INFO AND SCHEDULE
-    ReadComputer()
-    AdlibRegister('ReadComputer', 180000)
-
-    Switch $bExitEnabled
-      Case True
-        TrayItemSetState($idTrayMainExit, $TRAY_ENABLE)
-      Case False
-        TrayItemSetState($idTrayMainExit, $TRAY_DISABLE)
-    EndSwitch
-
-    ;; WAIT FOR INPUT
-    While 1
-      Sleep(10)
-      Switch TrayGetMsg()
-        Case $TRAY_EVENT_PRIMARYUP
-          ;;left-click on tray icon
-          TraySetState(2) ;;hide tray icon
-          AdlibUnRegister('ReadComputer')
-          AboutThisComputer()
-          AdlibRegister('ReadComputer', 180000)
-        Case $idTrayMainNetConnect
-          LaunchNetConnect()
-        Case $idTrayMainInetCpl
-          LaunchInetCpl()
-        Case $idTrayMainAppCatalog
-          LaunchAppCatalog()
-        Case $idTrayMainAppWiz
-          LaunchAppWiz()
-        Case $idTrayMainServices
-          LaunchServices()
-        Case $idTrayMainWinUpdate
-          LaunchWindowsUpdate()
-        Case $idTrayMainPrintMMC
-          LaunchPrintMMC()
-        Case $idTrayMainDevNPrint
-          LaunchDevNPrint()
-        Case $idTrayMainDevMan
-          LaunchDevMan()
-        Case $idTrayMainCredMan
-          LaunchCredMan()
-        Case $idTrayMainMailAcct
-          LaunchMailAcct()
-        Case $idTrayMainSearchAD
-          LaunchSearchAD()
-        Case $idTrayMainSysProp
-          LaunchSysProp()
-
-        Case $idTrayMainShowInfo
-          TraySetState(2) ;hide tray icon
-          AdlibUnRegister("ReadComputer")
-          AboutThisComputer()
-          AdlibRegister("ReadComputer", 180000)
-        Case $idTrayMainExit
-          End()
-      EndSwitch
-    WEnd
-  EndFunc
-#EndRegion
-
-#Region -- READ ENVIRONMENT
-  Func ReadLCMInfo()
-    ;;READ LCM INFO
-    ;; Generated variables:
-    ;;
-    ;; $sLCMXJCode   ;X88868
-    ;; $sLCMCRCode   ;SE900412
-    ;; $sLCMEdition  ;Server
-
-    ;read LCM log file, set to blank if not found
-    Global $sLCMXJCode  = ''
-    Global $sLCMCRCode  = ''
-    Global $sLCMEdition = ''  ;not yet functional
-
-    ;declare locals
-    Local $sLCMXJCode0
-    Local $sLCMCRCode0
-    Local $sLCMXJCode1
-    Local $sLCMCRCode1
-    Local $sLCMXJCode2
-    Local $sLCMCRCode2
-    Local $sLCMXJCode3
-    Local $sLCMCRCode3
-    Local $sLCMXJCode4
-    Local $sLCMCRCode4
-    Local $sLCMXJCode5
-    Local $sLCMCRCode5
-
-    ;; LOCATION 0 - USER OVERRIDE / CUSTOMIZATION
-    $sCustomLCMXJCodeFilePath  = $sAppInstallPath & '\Support\CustomLCMXJCode.txt'
-    $sCustomLCMCRCodeFilePath  = $sAppInstallPath & '\Support\CustomLCMCRCode.txt'
-    $sCustomLCMEditionFilePath = $sAppInstallPath & '\Support\CustomLCMEdition.txt'
-
-    If FileExists($sCustomLCMXJCodeFilePath) Then
-      Local $hFileOpen = FileOpen($sCustomLCMXJCodeFilePath,  $FO_READ)
-      $sLCMXJCode0 = FileRead($hFileOpen)
-      FileClose($hFileOpen)
-    EndIf
-
-    If FileExists($sCustomLCMCRCodeFilePath) Then
-      Local $hFileOpen = FileOpen($sCustomLCMCRCodeFilePath,  $FO_READ)
-      $sLCMCRCode0 = FileRead($hFileOpen)
-      FileClose($hFileOpen)
-    EndIf
-
-    If FileExists($sCustomLCMEditionFilePath) Then
-      Local $hFileOpen = FileOpen($sCustomLCMEditionFilePath,  $FO_READ)
-      $sLCMCRCode0 = FileRead($hFileOpen)
-      FileClose($hFileOpen)
-    EndIf
-
-    ;; LOCATION 1 - DEPRECATED
-    $sLCMLogFilePath1 = 'C:\mulcm\data\logs\TouchReport.log'
-    If FileExists($sLCMLogFilePath1) Then    ;do if file exists
-      Local $hFileOpen = FileOpen($sLCMLogFilePath1,  $FO_READ)
-      If Not ($hFileOpen = '-1') Then ;do if file opens successfully
-        $pos = FileSetPos($hFileOpen, -4096, $FILE_END)
-        If $pos = 'False' Then  ;do if set position has no error
-          $string = FileRead($hFileOpen)
-        Else
-          FileSetPos($hFileOpen, 0, 0)
-          $string = FileRead($hFileOpen)
-        EndIf
-
-        ;; find X/J code
-        $aLCMXJCode = StringRegExp($string, '[XJxj]testCode:([XJxj][0-9]{1,5})', 1)
-
-        ;; find CR code
-        $aLCMCRCode = StringRegExp($string, '[CRcr]:([A-Z|a-z][A-Z|a-z][0-9]{1,6})', 1)
-
-        ;; load variables
-        If _elementExists($aLCMXJCode, 0) = True Then
-          $sLCMXJCode1  = StringUpper($aLCMXJCode[0])
-        Else
-          $sLCMXJCode1  = ' '
-        EndIf
-        If _elementExists($aLCMCRCode, 0) = True Then
-          $sLCMCRCode1  = StringUpper($aLCMCRCode[0])
-        Else
-          $sLCMCRCode1  = ' '
-        EndIf
-
-        FileClose($hFileOpen)
-      EndIf
-    EndIf
-
-    ;; LOCATION 2 - Maintenance.log
-    $sLCMLogFile2Path = 'C:\mulcm\data\logs\Maintenance.log'
-    If FileExists($sLCMLogFile2Path) Then    ;do if file exists
-      Local $hFileOpen = FileOpen($sLCMLogFile2Path,  $FO_READ)
-      If Not ($hFileOpen = '-1') Then ;do if file opens successfully
-        $pos = FileSetPos($hFileOpen, -4096, $FILE_END)
-        If $pos = 'False' Then  ;do if set position has no error
-          $string = FileRead($hFileOpen)
-        Else
-          FileSetPos($hFileOpen, 0, 0)
-          $string = FileRead($hFileOpen)
-        EndIf
-
-        ;; find X/J code
-        $aLCMXJCode = StringRegExp($string, "[XJxj]Test Code = '([XJxj][0-9]{1,5})'", 1)
-
-        ;; find CR code
-        $aLCMCRCode = StringRegExp($string, "'LCM-([A-Z|a-z][A-Z|a-z][0-9]{1,6})'", 1)
-
-        ;; load variables
-        If _elementExists($aLCMXJCode, 0) = True Then
-          $sLCMXJCode2  = StringUpper($aLCMXJCode[0])
-        Else
-          $sLCMXJCode2  = ' '
-        EndIf
-        If _elementExists($aLCMCRCode, 0) = True Then
-          $sLCMCRCode2  = StringUpper($aLCMCRCode[0])
-        Else
-          $sLCMCRCode2  = ' '
-        EndIf
-
-        FileClose($hFileOpen)
-      EndIf
-    EndIf
-
-    ;; LOCATION 3 - Remote Maintenance.log
-    $sLCMLogFile3Path = 'L:\mulcm\data\logs\Maintenance.log'
-    If FileExists($sLCMLogFile3Path) Then    ;do if file exists
-      Local $hFileOpen = FileOpen($sLCMLogFile3Path,  $FO_READ)
-      If Not ($hFileOpen = '-1') Then ;do if file opens successfully
-        $pos = FileSetPos($hFileOpen, -4096, $FILE_END)
-        If $pos = 'False' Then  ;do if set position has no error
-          $string = FileRead($hFileOpen)
-        Else
-          FileSetPos($hFileOpen, 0, 0)
-          $string = FileRead($hFileOpen)
-        EndIf
-
-        ;; find X/J code
-        $aLCMXJCode = StringRegExp($string, "[XJxj]Test Code = '([XJxj][0-9]{1,5})'", 1)
-
-        ;; find CR code
-        $aLCMCRCode = StringRegExp($string, "'LCM-([A-Z|a-z][A-Z|a-z][0-9]{1,6})'", 1)
-
-        ;; load variables
-        If _elementExists($aLCMXJCode, 0) = True Then
-          $sLCMXJCode3  = StringUpper($aLCMXJCode[0])
-        Else
-          $sLCMXJCode3  = ' '
-        EndIf
-        If _elementExists($aLCMCRCode, 0) = True Then
-          $sLCMCRCode3  = StringUpper($aLCMCRCode[0])
-        Else
-          $sLCMCRCode3  = ' '
-        EndIf
-
-        FileClose($hFileOpen)
-      EndIf
-    EndIf
-
-    ;; LOCATION 4 - TRDMessage.log
-    $sLCMLogFile4Path = 'C:\mulcm\data\logs\TRDMessage.log'
-    If FileExists($sLCMLogFile4Path) Then    ;do if file exists
-      Local $hFileOpen = FileOpen($sLCMLogFile4Path,  $FO_READ)
-      If Not ($hFileOpen = '-1') Then ;do if file opens successfully
-        $pos = FileSetPos($hFileOpen, -4096, $FILE_END)
-        If $pos = 'False' Then  ;do if set position has no error
-          $string = FileRead($hFileOpen)
-        Else
-          FileSetPos($hFileOpen, 0, 0)
-          $string = FileRead($hFileOpen)
-        EndIf
-
-        ;; find X/J code
-        $aLCMXJCode = StringRegExp($string, ",'([XJxj][0-9]{1,5})',", 1)
-
-        ;; find CR code
-        $aLCMCRCode = StringRegExp($string, ",'LCM-([A-Z|a-z][A-Z|a-z][0-9]{1,6})'", 1)
-
-        ;; load variables
-        If _elementExists($aLCMXJCode, 0) = True Then
-          $sLCMXJCode4  = StringUpper($aLCMXJCode[0])
-        Else
-          $sLCMXJCode4  = ' '
-        EndIf
-        If _elementExists($aLCMCRCode, 0) = True Then
-          $sLCMCRCode4  = StringUpper($aLCMCRCode[0])
-        Else
-          $sLCMCRCode4  = ' '
-        EndIf
-
-        FileClose($hFileOpen)
-      EndIf
-    EndIf
-
-    ;; LOCATION 5 - Remote TRDMessage.log
-    $sLCMLogFile5Path = 'L:\mulcm\data\logs\TRDMessage.log'
-    If FileExists($sLCMLogFile5Path) Then    ;do if file exists
-      Local $hFileOpen = FileOpen($sLCMLogFile5Path,  $FO_READ)
-      If Not ($hFileOpen = '-1') Then ;do if file opens successfully
-        $pos = FileSetPos($hFileOpen, -4096, $FILE_END)
-        If $pos = 'False' Then  ;do if set position has no error
-          $string = FileRead($hFileOpen)
-        Else
-          FileSetPos($hFileOpen, 0, 0)
-          $string = FileRead($hFileOpen)
-        EndIf
-
-        ;; find X/J code
-        $aLCMXJCode = StringRegExp($string, ",'([XJxj][0-9]{1,5})',", 1)
-
-        ;; find CR code
-        $aLCMCRCode = StringRegExp($string, ",'LCM-([A-Z|a-z][A-Z|a-z][0-9]{1,6})'", 1)
-
-        ;; load variables
-        If _elementExists($aLCMXJCode, 0) = True Then
-          $sLCMXJCode5  = StringUpper($aLCMXJCode[0])
-        Else
-          $sLCMXJCode5  = ' '
-        EndIf
-        If _elementExists($aLCMCRCode, 0) = True Then
-          $sLCMCRCode5  = StringUpper($aLCMCRCode[0])
-        Else
-          $sLCMCRCode5  = ' '
-        EndIf
-
-        FileClose($hFileOpen)
-      EndIf
-    EndIf
-
-    ;find which variables have best LCM info, override with custom if exist
-    If StringIsSpace($sLCMXJCode1) = False Then $sLCMXJCode = $sLCMXJCode1
-    If StringIsSpace($sLCMCRCode1) = False Then $sLCMCRCode = $sLCMCRCode1
-    If StringIsSpace($sLCMXJCode2) = False Then $sLCMXJCode = $sLCMXJCode2
-    If StringIsSpace($sLCMCRCode2) = False Then $sLCMCRCode = $sLCMCRCode2
-    If StringIsSpace($sLCMXJCode3) = False Then $sLCMXJCode = $sLCMXJCode3
-    If StringIsSpace($sLCMCRCode3) = False Then $sLCMCRCode = $sLCMCRCode3
-    If StringIsSpace($sLCMXJCode4) = False Then $sLCMXJCode = $sLCMXJCode4
-    If StringIsSpace($sLCMCRCode4) = False Then $sLCMCRCode = $sLCMCRCode4
-    If StringIsSpace($sLCMXJCode5) = False Then $sLCMXJCode = $sLCMXJCode5
-    If StringIsSpace($sLCMCRCode5) = False Then $sLCMCRCode = $sLCMCRCode5
-    If StringIsSpace($sLCMXJCode0) = False Then $sLCMXJCode = $sLCMXJCode0
-    If StringIsSpace($sLCMCRCode0) = False Then $sLCMCRCode = $sLCMCRCode0
-
-    ;validate LCM info retrieved, disable section if data invalid
-    Switch (StringIsSpace($sLCMXJCode))
-      Case 0
-        Global $bLCMInfoExists = True
-      Case 1
-        Global $bLCMInfoExists = False
-    EndSwitch
-  EndFunc
-#EndRegion
-
-#Region - GUIs
-  ;; ABOUT THIS COMPUTER
-
-
-;; UPDATE TOOLTIP
-  Func UpdateToolTip()
-    $sTrayToolTip = 'Computer Name: ' & $sComputerName & @CRLF & _
-                    'IP Address: ' & $sNetAdapter01Address & @CRLF & _
-                    'Uptime: ' & $sOSUptime
-    TraySetToolTip($sTrayToolTip)
-  EndFunc
-
-;; UPDATE MAIN GUI
-  Func UpdateMainGUI()
-    GUICtrlSetData($idLabelMainRight01a, $sOrgHelpdeskEmail)
-    GUICtrlSetData($idLabelMainRight02a, $sOrgHelpdeskPhone)
-    GUICtrlSetData($idLabelMainRight02c, $$sOrgHelpdeskCorporatePhone)
-    GUICtrlSetData($idLabelMainRight03a, $sWMIUserName)
-    GUICtrlSetData($idLabelMainRight04a, $sComputerName)
-    GUICtrlSetData($idLabelMainRight05a, $sNetAdapter01Address)
-    GUICtrlSetData($idLabelMainRight06a, $sNetAdapter02Address)
-    GUICtrlSetData($idLabelMainRight07a, $sNetAdapter03Address)
-    GUICtrlSetData($idLabelMainRight08a, $sNetAdapter04Address)
-    GUICtrlSetData($idLabelMainRight09a, $sNetAdapter05Address)
-    GUICtrlSetData($idLabelMainRight10a, $sOSVersionName)
-    GUICtrlSetData($idLabelMainRight11a, $sOSArchShortname)
-    GUICtrlSetData($idLabelMainRight12a, $sOSUptime)
-    GUICtrlSetData($idLabelMainRight13a, $sOSAgeAndDate)
-    GUICtrlSetData($idLabelMainRight14a, $sWMIDomain)
-    GUICtrlSetData($idLabelMainRight15a, $sWMIManufacturer & ' ' & $sWMIModel)
-    GUICtrlSetData($idLabelMainRight16a, $sWMISerialNumber)
-    GUICtrlSetData($idLabelMainRight17a, $sWMISMBIOSAssetTag)
-    GUICtrlSetData($idLabelMainRight18a, $sLCMXJCode)
-    GUICtrlSetData($idLabelMainRight19a, $sLCMCRCode)
-    GUICtrlSetData($idLabelMainRight20a, $sFreeTextDetails)
-  EndFunc
-
-;; UPDATE SUMMARY FILE
-  Func UpdateSummaryFile()
-    Global $sSummaryFilePath = $sAppTempPath & '\AboutThisComputerSummary.txt'
-    If FileExists($sSummaryFilePath) Then FileDelete($sSummaryFilePath)
-    FileWrite($sSummaryFilePath, $sSummaryString)
-  EndFunc
-
-;; UPDATE SUMMARY STRING
-  Func UpdateSummaryString()
-    ;build network adapter strings
-    Local $sNetAdapter01String
-    Local $sNetAdapter02String
-    Local $sNetAdapter03String
-    Local $sNetAdapter04String
-    Local $sNetAdapter05String
-    If StringIsSpace($sNetAdapter01Address) = False Then $sNetAdapter01String = (' • Network Adapter 1: ' & $sNetAdapter01Name & @CRLF & _
-                                                                                 '    - Address: ' & $sNetAdapter01Address & @CRLF & _
-                                                                                 '    - Subnet Mask: ' & $sNetAdapter01SubnetMask & @CRLF & _
-                                                                                 '    - Gateway: ' & $sNetAdapter01Gateway & @CRLF)
-    If StringIsSpace($sNetAdapter02Address) = False Then $sNetAdapter02String = (' • Network Adapter 2: ' & $sNetAdapter02Name & @CRLF & _
-                                                                                 '    - Address: ' & $sNetAdapter02Address & @CRLF & _
-                                                                                 '    - Subnet Mask: ' & $sNetAdapter02SubnetMask & @CRLF & _
-                                                                                 '    - Gateway: ' & $sNetAdapter02Gateway & @CRLF)
-    If StringIsSpace($sNetAdapter03Address) = False Then $sNetAdapter03String = (' • Network Adapter 3: ' & $sNetAdapter03Name & @CRLF & _
-                                                                                 '    - Address: ' & $sNetAdapter03Address & @CRLF & _
-                                                                                 '    - Subnet Mask: ' & $sNetAdapter03SubnetMask & @CRLF & _
-                                                                                 '    - Gateway: ' & $sNetAdapter03Gateway & @CRLF)
-    If StringIsSpace($sNetAdapter04Address) = False Then $sNetAdapter04String = (' • Network Adapter 4: ' & $sNetAdapter04Name & @CRLF & _
-                                                                                 '    - Address: ' & $sNetAdapter04Address & @CRLF & _
-                                                                                 '    - Subnet Mask: ' & $sNetAdapter04SubnetMask & @CRLF & _
-                                                                                 '    - Gateway: ' & $sNetAdapter04Gateway & @CRLF)
-    If StringIsSpace($sNetAdapter05Address) = False Then $sNetAdapter05String = (' • Network Adapter 5: ' & $sNetAdapter05Name & @CRLF & _
-                                                                                 '    - Address: ' & $sNetAdapter05Address & @CRLF & _
-                                                                                 '    - Subnet Mask: ' & $sNetAdapter05SubnetMask & @CRLF & _
-                                                                                 '    - Gateway: ' & $sNetAdapter05Gateway & @CRLF)
-
-    $sSummaryString = _
-      'Session:' & @CRLF & _
-      ' • Current User: ' & $sWMIUserName & @CRLF & _
-      ' • Computer Name: ' & $sComputerName & @CRLF & _
-      ' • Network Adapter 1: ' & $sNetAdapter01Name & @CRLF & _
-      '    - Address: ' & $sNetAdapter01Address & @CRLF & _
-      '    - Subnet Mask: ' & $sNetAdapter01SubnetMask & @CRLF & _
-      '    - Gateway: ' & $sNetAdapter01Gateway & @CRLF & _
-      $sNetAdapter02String & _
-      $sNetAdapter03String & _
-      $sNetAdapter04String & _
-      $sNetAdapter05String & _
-      @CRLF & _
-      'Operating System:' & @CRLF & _
-      ' • Version: ' & $sOSVersionName & @CRLF & _
-      ' • Edition: ' & $sOSEdition & @CRLF & _
-      ' • Architecture: ' & $sOSArchShortname & @CRLF & _
-      ' • Uptime: ' & $sOSUptime & @CRLF & _
-      ' • Install Age: ' & $sOSAgeAndDate & @CRLF & _
-      ' • Domain: ' & $sWMIDomain & @CRLF & _
-      ' • Description: ' & $sPCDescription & @CRLF & _
-      @CRLF & _
-      'Active Directory:' & @CRLF & _
-      ' • Description: ' & $sADDescription & @CRLF & _
-      ' • OU: ' & $sADOUPath & @CRLF & _
-      @CRLF & _
-      'Services:' & @CRLF & _
-      ' • Windows Update: ' & $sServWindowsUpdateStatus & @CRLF & _
-      ' • SCCM Client (SMS Agent Host): ' & $sServSMSAgentStatus & @CRLF & _
-      ' • CrowdStrike Windows Sensor: ' & $sServCrowdStrikeStatus & @CRLF & _
-      ' • Splunk Universal Forwarder: ' & $sServSplunkForwarderStatus & @CRLF & _
-      ' • BeyondTrust PowerBroker: ' & $sServBeyondTrustStatus & @CRLF & _
-      ' • BeyondTrust Monitor: ' & $sServBeyondTrustMonitorStatus & @CRLF & _
-      @CRLF & _
-      'Hardware:' & @CRLF & _
-      ' • Manufacturer: ' & $sWMIManufacturer & @CRLF & _
-      ' • Model: ' & $sWMIModel & @CRLF & _
-      ' • Serial: ' & $sWMISerialNumber & @CRLF & _
-      ' • Asset Tag: ' & $sWMISMBIOSAssetTag & @CRLF & _
-      @CRLF & _
-      'LCM:' & @CRLF & _
-      ' • Site Code: ' & $sLCMXJCode & @CRLF & _
-      ' • CRA: ' & $sLCMCRCode & @CRLF & _
-      @CRLF & _
-      'Drives:' & @CRLF & _
-      $sDiskDetails & @CRLF & _
-      @CRLF & _
-      'Printers:' & @CRLF & _
-      $sPrinterDetails & @CRLF & _
-      @CRLF & _
-      'Custom:' & @CRLF & _
-      $sFreeTextDetails & @CRLF & _
-      'Helpdesk:' & @CRLF & _
-      ' • Email: ' & $sOrgHelpdeskEmail & @CRLF & _
-      ' • Phone: ' & $sOrgHelpdeskPhone & @CRLF & _
-      ' • Password Reset: ' & $$sOrgHelpdeskCorporatePhone & @CRLF & _
-      ' • Website: ' & $sOrgHelpdeskURL & @CRLF & _
-      ' • LMIr URL: ' & $sOrgHelpdeskRemoteSupportURL & @CRLF & _
-      @CRLF & _
-      'About This Computer  •  ' & $sAppVersion & '  •  ' & @YEAR & '-' & @MON & '-' & @MDAY & ' ' & @HOUR & ':' & @MIN & ':' & @SEC & '  •  [mB7a78-' & $sAppBuild & ']'
-  EndFunc
-#EndRegion
-
-#Region - GUI STATES
-  ;; SET GUI DEFAULTS
-    Func GUIMainSetDefaults()
-      SetMenuDefaults()
-      SetMenuItemDefaults()
-      SetButtonDefaults()
-    EndFunc
-
-  ;; SET GUI BUSY DEFAULTS
-    Func GUIMainSetBusyDefaults()
-      SetMenus($GUI_DISABLE)
-      SetMenuItems($GUI_DISABLE)
-      SetButtons($GUI_DISABLE)
-    EndFunc
-
-  ;; SET MENU DEFAULTS
-    Func SetMenuDefaults()
-      SetMenus($GUI_ENABLE)
-    EndFunc
-
-  ;; SET MENU ITEM DEFAULTS
-    Func SetMenuItemDefaults()
-      SetMenuItems($GUI_ENABLE)
-      ToggleGUIControl($idMenuItemMainEditCut, $GUI_DISABLE)
-      ToggleGUIControl($idMenuItemMainEditPaste, $GUI_DISABLE)
-    EndFunc
-
-  ;; SET BUTTON DEFAULTS
-    Func SetButtonDefaults()
-      SetButtons($GUI_ENABLE)
-    EndFunc
-
-  ;; SET ALL MENUS WITH OPTION
-    Func SetMenus($Option)
-      ;$GUI_ENABLE
-      ;$GUI_DISABLE
-
-      For $i = 0 To UBound($aMainMenus) - 1
-        ToggleGUIControl($aMainMenus[$i], $Option)
-      Next
-    EndFunc
-
-  ;; SET ALL MENU ITEMS WITH OPTION
-    Func SetMenuItems($Option)
-      ;$GUI_ENABLE
-      ;$GUI_DISABLE
-
-      For $i = 0 To UBound($aMainMenuItems) - 1
-        ToggleGUIControl($aMainMenuItems[$i], $Option)
-      Next
-    EndFunc
-
-  ;; SET ALL BUTTONS WITH OPTION
-    Func SetButtons($Option)
-      ;$GUI_ENABLE
-      ;$GUI_DISABLE
-
-      For $i = 0 To UBound($aMainButtons) - 1
-        ToggleGUIControl($aMainButtons[$i], $Option)
-      Next
-    EndFunc
-#EndRegion
-
-#Region - LAUNCH EXTERNAL APPS
-  ;; Show Summary
-  Func LaunchShowSummary()
-    Local $iWidth  = 600
-    Local $iHeight = 500
-    $idGUISummary = GUICreate('Summary', $iWidth, $iHeight, -1, -1, BitOR($WS_SIZEBOX, $WS_EX_TOPMOST), '', $idGUIMain)
-
-    GUISetState(@SW_DISABLE, $idGUIMain)
-    GUISetState(@SW_SHOWNORMAL, $idGUISummary)
-
-    ;GUICtrlCreateGroup('', 10, 10, 380, 480)
-    GUICtrlCreateEdit($sSummaryString, 15, 15, $iWidth - 32, $iHeight - 55, BitOR($ES_WANTRETURN, $WS_VSCROLL, $WS_HSCROLL, $ES_AUTOVSCROLL, $ES_AUTOHSCROLL, $ES_READONLY), -1)
-    GUICtrlSetResizing(-1, $GUI_DOCKBORDERS)
-
-    While 1
-      Switch GUIGetMsg()
-        Case $GUI_EVENT_CLOSE
-          GUISetState(@SW_ENABLE, $idGUIMain)
-          GUIDelete($idGUISummary)
-          ExitLoop
-      EndSwitch
-    WEnd
-  EndFunc
-  ;; Network Connections
-  Func LaunchNetConnect()
-    StandardRunCmd('ncpa.cpl')
-  EndFunc
-
-  ;; Internet Options
-  Func LaunchInetCpl()
-    StandardRunCmd('inetcpl.cpl')
-  EndFunc
-
-  ;; Application Catalog
-  Func LaunchAppCatalog()
-    ShellExecute('iexplore.exe', 'http://rtwcmp01/CMApplicationCatalog', 'C:\Windows\System32')
-  EndFunc
-
-  ;; Programs and Features
-  Func LaunchAppWiz()
-    StandardRunCmd('appwiz.cpl')
-  EndFunc
-
-  ;; Services
-  Func LaunchServices()
-    StandardRunCmd('services.msc')
-  EndFunc
-
-  ;; Windows Update
-  Func LaunchWindowsUpdate()
-    Switch $iOSVersionValue
-      Case $iOSVersionValue < '14' ;OS is older than Windows 10
-        StandardRunCmd('wuapp.exe')
-      Case $iOSVersionValue >= '14'  ;OS is Windows 10 or newer
-        StandardRunCmd('explorer ms-settings:windowsupdate')
-    EndSwitch
-  EndFunc
-
-  ;; Print Management
-  Func LaunchPrintMMC()
-    ;StandardRunCmd('printmanagement.msc')
-  ShellExecute('printmanagement.msc', '', @SystemDir, 'runas')
-  EndFunc
-
-  ;; Devices and Printers
-  Func LaunchDevNPrint()
-    StandardRunCmd('explorer shell:::{A8A91A66-3A7D-4424-8D24-04E180695C7A}')
-  EndFunc
-
-  ;; Device Manager
-  Func LaunchDevMan()
-    StandardRunCmd('devmgmt.msc')    ;needs to be ran elevated?
-  EndFunc
-
-  ;; Credential Manager
-  Func LaunchCredMan()
-    StandardRunCmd('control /name Microsoft.CredentialManager')
-  EndFunc
-
-  ;; Credential Manager
-  Func LaunchMailAcct()
-    StandardRunCmd('control mlcfg32.cpl')
-    ;StandardRunCmd(@WindowsDir & '\SYSTEM32\rundll32.exe shell32.dll,Control_RunDLL mlcfg32.cpl')
-    ;ShellExecute(@WindowsDir & '\SysNative\rundll32.exe shell32.dll,Control_RunDLL mlcfg32.cpl')
-    ;ShellExecute('rundll32.exe shell32.dll,Control_RunDLL mlcfg32.cpl', '', @WindowsDir & '\SysNative\', 'runas')
-    ;DllCall('kernel32.dll', 'int', 'Wow64EnableWow64FsRedirection', 'int', 0)
-    ;ShellExecute('control mlcfg32.cpl', '', @SystemDir, 'runas')
-    ;DllCall('kernel32.dll', 'int', 'Wow64EnableWow64FsRedirection', 'int', 1)
-  EndFunc
-
-  ;; Search Active Directory
-  Func LaunchSearchAD()
-    StandardRunCmd(@WindowsDir & '\SYSTEM32\rundll32.exe dsquery,OpenQueryWindow')
-  EndFunc
-
-  ;; System Properties
-  Func LaunchSysProp()
-    StandardRunCmd('Sysdm.cpl')
-  EndFunc
-
-  ;; System Information
-  Func LaunchSysInfo()
-    StandardRunCmd('msinfo32.exe')
-  EndFunc
-
-  ;; LogMeIn Rescue
-  Func LaunchLMIRescue()
-    ShellExecute('iexplore.exe', $sOrgHelpdeskRemoteSupportURL, 'C:\Windows\System32')
-  EndFunc
-
-  ;; Intranet
-  Func LaunchIntranet()
-    ShellExecute('iexplore.exe', $sOrgIntranetURL, 'C:\Windows\System32')
-  EndFunc
-
-  ;; IT Helpdesk
-  Func LaunchITHelpdesk()
-    ShellExecute('iexplore.exe', $sOrgHelpdeskURL, 'C:\Windows\System32')
-  EndFunc
-
-  ;; Password Management / Self-Service
-  Func LaunchPaswordManagement()
-    ShellExecute('iexplore.exe', 'http://pwm.' & $sOrgDomain, 'C:\Windows\System32')
-  EndFunc
-
-  ;; Documentation
-  Func LaunchDocumentation()
-    ;;TODO
-  EndFunc
-
-  ;; About
-  Func LaunchAbout()
-    ;Variables
-    $sWindowTitle = 'About'
-    $idParentGUI = $idGUIMain
-    $sGraphic = $sAppInstallPath & '\Support\BeOS_info.ico'
-    $sTitle = 'About This Computer'
-    $sSubtitle = 'A workstation information utility.'
-    $sVersion = 'Version ' & $sAppVersion
-    $sCredits = 'Created by Brian Kyncl (me@briankyncl.com)' & @CRLF & 'BeOS icons by StudioTwentyEight' & @CRLF & '(http://www.studiotwentyeight.net)'
-
-    ;GUI SIZING
-      $iGUIAboutWidthDefault = 256
-
-      ;HEADER
-        $iColumnAboutHeader00 = 00
-        $iColumnAboutHeader01 = ($iGUIAboutWidthDefault - 128) / 2  ;column for main image
-
-        $iColumnAboutHeader00Width = $iGUIAboutWidthDefault
-        $iColumnAboutHeader01Width = 128 ;width of main image
-
-        $iRowAboutHeader00  = 00
-        $iRowAboutHeader01  = 20
-
-        $iRowAboutHeader00Height  = 168 ;height of image row
-        $iRowAboutHeader01Height  = 128 ;height of main image
-
-      ;TITLE
-        $iColumnAboutTitle00  = 00
-        $iColumnAboutTitle01  = 10
-
-        $iColumnAboutTitle00Wdith = $iGUIAboutWidthDefault
-        $iColumnAboutTitle01Width = $iColumnAboutTitle00Wdith - 20
-
-        $iRowAboutTitle00 = $iColumnAboutHeader00 + $iRowAboutHeader00Height
-        $iRowAboutTitle01 = $iRowAboutTitle00
-
-        $iRowAboutTitle00Height = 22
-        $iRowAboutTitle01Height = 22
-
-      ;SUBTITLE
-        $iColumnAboutSubtitle00  = 00
-        $iColumnAboutSubtitle01  = 10
-
-        $iColumnAboutSubtitle00Wdith = $iGUIAboutWidthDefault
-        $iColumnAboutSubtitle01Width = $iColumnAboutSubtitle00Wdith - 20
-
-        $iRowAboutSubtitle00 = $iRowAboutTitle00 + $iRowAboutTitle00Height
-        $iRowAboutSubtitle01 = $iRowAboutSubtitle00
-
-        $iRowAboutSubtitle00Height = 15
-        $iRowAboutSubtitle01Height = 15
-
-      ;VERSION
-        $iColumnAboutVersion00  = 00
-        $iColumnAboutVersion01  = 10
-
-        $iColumnAboutVersion00Wdith = $iGUIAboutWidthDefault
-        $iColumnAboutVersion01Width = $iColumnAboutSubtitle00Wdith - 20
-
-        $iRowAboutVersion00 = $iRowAboutSubtitle00 + $iRowAboutSubtitle00Height
-        $iRowAboutVersion01 = $iRowAboutVersion00 + 25
-
-        $iRowAboutVersion00Height = 30
-        $iRowAboutVersion01Height = 25
-
-      ;CREDITS
-        $iColumnAboutCredits00  = 00
-        $iColumnAboutCredits01  = 10
-
-        $iColumnAboutCredits00Wdith = $iGUIAboutWidthDefault
-        $iColumnAboutCredits01Width = $iColumnAboutSubtitle00Wdith - 20
-
-        $iRowAboutCredits00 = $iRowAboutVersion00 + $iRowAboutVersion00Height
-        $iRowAboutCredits01 = $iRowAboutCredits00 + 25
-
-        $iRowAboutCredits00Height = 70
-        $iRowAboutCredits01Height = 45
-
-      $iGUIAboutHeightDefault = $iRowAboutCredits00 + $iRowAboutCredits00Height + 10
-
-    ;DECLARE GUI
-      ;GUICreate('Summary', 400, 500, -1, -1, BitOR($WS_SIZEBOX, $WS_EX_TOPMOST), '', $idGUIMain)
-      ;Global $idGUIAbout = GUICreate($sWindowTitle, $iGUIAboutWidthDefault, $iGUIAboutHeightDefault, -1, -1, -1, $WS_EX_TOPMOST, $idParentGUI)
-      Global $idGUIAbout = GUICreate($sWindowTitle, $iGUIAboutWidthDefault, $iGUIAboutHeightDefault, -1, -1, BitOR($WS_CAPTION, $WS_SYSMENU), '', $idParentGUI)
-
-      ;GRAPHIC
-      GUICtrlCreateIcon($sGraphic, -1, $iColumnAboutHeader01 + 12, $iRowAboutHeader01, $iColumnAboutHeader01Width, $iRowAboutHeader01Height, -1)
-
-      ;TITLE
-      GUICtrlCreateLabel($sTitle, $iColumnAboutTitle01, $iRowAboutTitle01, $iColumnAboutTitle01Width, $iRowAboutTitle01Height, $SS_CENTER)
-      GUICtrlSetFont(-1, 14, $FW_BOLD)
-
-      ;SUBTITLE
-      GUICtrlCreateLabel($sSubtitle, $iColumnAboutSubtitle01, $iRowAboutSubtitle01, $iColumnAboutSubtitle01Width, $iRowAboutSubtitle01Height, $SS_CENTER)
-      GUICtrlSetFont(-1, 10)
-
-      ;VERSION
-      GUICtrlCreateLabel($sVersion, $iColumnAboutVersion01, $iRowAboutVersion01, $iColumnAboutVersion01Width, $iRowAboutVersion01Height, $SS_CENTER)
-
-      ;CREDITS
-      GUICtrlCreateLabel($sCredits, $iColumnAboutCredits01, $iRowAboutCredits01, $iColumnAboutCredits01Width, $iRowAboutCredits01Height, $SS_CENTER)
-      GUICtrlSetState(-1, $GUI_DISABLE)
-
-    GUISetState(@SW_DISABLE, $idParentGUI)
-    GUISetState(@SW_SHOWNORMAL, $idGUIAbout)
-
-    While 1
-      Switch GUIGetMsg()
-        Case $GUI_EVENT_CLOSE
-          GUISetState(@SW_ENABLE, $idParentGUI)
-          GUIDelete($idGUIAbout)
-          ExitLoop
-      EndSwitch
-    WEnd
-  EndFunc
-#EndRegion
 
 #Region - CONTACT HELPDESK
   Func ContactHelpdesk()
@@ -2907,56 +2877,58 @@ EndSwitch
   EndFunc
 
   Func ContactHelpdeskMain()
-  ;; DEFINE MAIN WINDOW
-  ;   - needs tab mappings (assign where pressing tab moves the cursor to)
-  ;   - needs to handle email send errors
-  ;   - needs to validate email format
-  ;   - link to Snipping Tool somewhere?
-  ;   - BeOS email icon somewhere?
-  ;   - needs GUI busy state
-  ;
-  ;    _____________________________________________________________
-  ;   |                                           [ - ] [ = ] [ X ] |
-  ;   |_____________________________________________________________|
-  ;   |  _________                                                  |
-  ;   | |         |           To: _helpdesk@domain.com_____________ | < use helpdesk email from GUI, not editable or maybe dropdown of possible helpdesk email address?
-  ;   | |         |         From: _Your email address______________ | < use logged-in username + @domain.com, not editable
-  ;   | |         |                                                 |
-  ;   | |  Send   |         Name: _Your first and last name________ | < require, default text is grayed-out "Enter your first and last name."
-  ;   | |         |  Employee ID: _Your employee number____________ | < require, default text is grayed-out "Enter your employee ID number."
-  ;   | |         |                                                 |
-  ;   | |_________|      Subject: _________________________________ | < generate generic if none is provided
-  ;   |                                                             |
-  ;   |              Enter a detailed description of your request:  |
-  ;   |              _____________________________________________  |
-  ;   |             |                                             | | < require, scrollable, default text is grayed-out and offers suggestions. what suggestions?
-  ;   |             |                                             | |
-  ;   |             |                                             | |
-  ;   |             |                                             | |
-  ;   |             |                                             | |
-  ;   |             |                                             | |
-  ;   |             |                                             | |
-  ;   |             |                                             | |
-  ;   |             |                                             | |
-  ;   |             |                                             | |
-  ;   |             |                                             | |
-  ;   |             |                                             | |
-  ;   |             |                                             | |
-  ;   |             |                                             | |
-  ;   |             |_____________________________________________| |
-  ;   |                                                             |
-  ;   |              Attachment: ____________________________ [...] | < capable of receiving drag-and-drop, button to open "Select File" dialog
-  ;   |                                                             |
-  ;   |              The following details will automatically be    |
-  ;   |              included in your request:                      |
-  ;   |              _____________________________________________  |
-  ;   |             |                                             | | < scrollable, disabled, output of summary string
-  ;   |             |                                             | |
-  ;   |  _________  |                                             | |
-  ;   | |         | |                                             | |
-  ;   | | Cancel  | |                                             | |
-  ;   | |_________| |_____________________________________________| |
-  ;   |_____________________________________________________________|
+    ;; DEFINE MAIN WINDOW
+    ;   - needs tab mappings (assign where pressing tab moves the cursor to)
+    ;   - needs to handle email send errors
+    ;   - needs to validate email format
+    ;   - link to Snipping Tool somewhere?
+    ;   - BeOS email icon somewhere?
+    ;   - needs GUI busy state
+    ;
+    ;    _____________________________________________________________
+    ;   |                                           [ - ] [ = ] [ X ] |
+    ;   |_____________________________________________________________|
+    ;   |  _________                                                  |
+    ;   | |         |           To: _helpdesk@domain.com_____________ | < use helpdesk email from GUI, not editable or maybe dropdown of possible helpdesk email address?
+    ;   | |         |         From: _Your email address______________ | < use logged-in username + @domain.com, not editable
+    ;   | |         |                                                 |
+    ;   | |  Send   |         Name: _Your first and last name________ | < require, default text is grayed-out "Enter your first and last name."
+    ;   | |         |  Employee ID: _Your employee number____________ | < require, default text is grayed-out "Enter your employee ID number."
+    ;   | |         |                                                 |
+    ;   | |_________|      Subject: _________________________________ | < generate generic if none is provided
+    ;   |                                                             |
+    ;   |              Enter a detailed description of your request:  |
+    ;   |              _____________________________________________  |
+    ;   |             |                                             | | < require, scrollable, default text is grayed-out and offers suggestions. what suggestions?
+    ;   |             |                                             | |
+    ;   |             |                                             | |
+    ;   |             |                                             | |
+    ;   |             |                                             | |
+    ;   |             |                                             | |
+    ;   |             |                                             | |
+    ;   |             |                                             | |
+    ;   |             |                                             | |
+    ;   |             |                                             | |
+    ;   |             |                                             | |
+    ;   |             |                                             | |
+    ;   |             |                                             | |
+    ;   |             |                                             | |
+    ;   |             |_____________________________________________| |
+    ;   |                                                             |
+    ;   |              Attachment: ____________________________ [...] | < capable of receiving drag-and-drop, button to open "Select File" dialog
+    ;   |                                                             |
+    ;   |              The following details will automatically be    |
+    ;   |              included in your request:                      |
+    ;   |              _____________________________________________  |
+    ;   |             |                                             | | < scrollable, disabled, output of summary string
+    ;   |             |                                             | |
+    ;   |  _________  |                                             | |
+    ;   | |         | |                                             | |
+    ;   | | Cancel  | |                                             | |
+    ;   | |_________| |_____________________________________________| |
+    ;   |_____________________________________________________________|
+
+    Global $lTemplates
 
     ;; COLUMNS
     ;columns, left
@@ -3492,7 +3464,7 @@ EndSwitch
       If StringIsSpace($sTemplateFromAddress) = False Then
         $sContactFormFrom = $sTemplateFromAddress
       Else
-        $sContactFormFrom = $sCurrentUsername & '@' $sOrgDomain
+        $sContactFormFrom = $sCurrentUsername & '@' & $sOrgDomain
       EndIf
       If StringIsSpace($sTemplateToAddress) = False Then
         $sContactFormTo = $sTemplateToAddress
@@ -3704,7 +3676,7 @@ EndSwitch
       GUIContactSetComboDefaults()
       GUIContactSetInputDefaults()
       ControlFocus($idGUIContact, '', $idContactLastFocus) ;reset focus to last known
-      GUIContactSetButtonDefaults()
+      GUIContactGUIMainSetButtonDefaults()
 
       ;enable Body input box
       WinSetState($idInputContactRightBody, '', @SW_ENABLE)
@@ -3714,7 +3686,7 @@ EndSwitch
     Func GUIContactSetBusyDefaults()
       GUIContactSetCombos($GUI_DISABLE)
       GUIContactSetInputs($GUI_DISABLE)
-      GUIContactSetButtons($GUI_DISABLE)
+      GUIContactGUIMainSetButtons($GUI_DISABLE)
 
       WinSetState($idInputContactRightBody, '', @SW_DISABLE)
     EndFunc
@@ -3741,8 +3713,8 @@ EndSwitch
     EndFunc
 
   ;; SET BUTTON DEFAULTS
-    Func GUIContactSetButtonDefaults()
-      GUIContactSetButtons($GUI_ENABLE)
+    Func GUIContactGUIMainSetButtonDefaults()
+      GUIContactGUIMainSetButtons($GUI_ENABLE)
 
       Switch (StringIsSpace(GUICtrlRead($idInputContactRightAttachmentPath)))
         Case True
@@ -3780,7 +3752,7 @@ EndSwitch
     EndFunc
 
   ;; SET ALL BUTTONS WITH OPTION
-    Func GUIContactSetButtons($Option)
+    Func GUIContactGUIMainSetButtons($Option)
       ;$GUI_ENABLE
       ;$GUI_DISABLE
 
@@ -3789,23 +3761,65 @@ EndSwitch
       Next
     EndFunc
   #EndRegion
-
 #EndRegion
 
-#Region - TOOLS
-  ;; TOGGLE GUI CONTROL STATE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;=====================================================================================================================================================================
+;;================================================================== LINE OF CODE REWRITE SEPARATION ==================================================================
+;;=====================================================================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Region -- TOOLS
   Func ToggleGUIControl($idGUIControl, $Option)
+    ;;TOGGLE GUI CONTROL STATE
     ;; Change a GUI control's state only if the desired state is different than the current state.
     ;; This is an attempt to prevent a flickering GUI when states change
-    ;
-    ;$GUI_ENABLE
-    ;$GUI_DISABLE
-    ;$GUI_CHECKED
-    ;$GUI_UNCHECKED
-    ;$GUI_CHECKENABLE
-    ;$GUI_UNCHECKENABLE
-    ;$GUI_CHECKDISABLE
-    ;$GUI_UNCHECKDISABLE
+    ;;
+    ;; $GUI_ENABLE
+    ;; $GUI_DISABLE
+    ;; $GUI_CHECKED
+    ;; $GUI_UNCHECKED
+    ;; $GUI_CHECKENABLE
+    ;; $GUI_UNCHECKENABLE
+    ;; $GUI_CHECKDISABLE
+    ;; $GUI_UNCHECKDISABLE
 
     Switch $Option
       Case $GUI_ENABLE, $GUI_DISABLE
@@ -3827,48 +3841,25 @@ EndSwitch
     EndSwitch
   EndFunc
 
-  Func CopySummaryToClipboard()
-    ClipPut($sSummaryString)
-  EndFunc
-
-  Func MailSummary()
-    $sEmailTo = $sOrgHelpdeskEmail
-    $sEmailSubject = 'Details about ' & $sComputerName & ' from ' & $sCurrentUsername
-    $sEmailBody = StringReplace($sSummaryString, @CRLF, '%0D%0A')
-    $sMailTo = 'mailto:' & $sEmailTo & '?subject=' & $sEmailSubject & '&body=%0D%0A%0D%0A' & $sEmailBody
-    ShellExecute($sMailTo)
-  EndFunc
-
-  Func PrintSummary()
-    UpdateSummaryFile()
-
-    $iButtonPressed = MsgBox(BitOR($MB_ICONQUESTION, $MB_TOPMOST, $MB_SETFOREGROUND, $MB_YESNO, $MB_DEFBUTTON2), 'Print Summary', 'Print summary to default printer?', 0, $idGUIMain)
-    If $iButtonPressed = $IDYES Then
-      $iPrintSuccess = _FilePrint($sSummaryFilePath)
-      If $iPrintSuccess Then
-        ;MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION, $MB_TOPMOST, $MB_SETFOREGROUND), 'Print Summary', 'Sent to printer.')
-      Else
-        MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Print Summary', 'Unable to send to printer.')
-      EndIf
-    EndIf
-  EndFunc
-
   Func StandardRunCmd($cmd)
-    ;$cmd = 'net share C=C:\ /GRANT:EVERYONE,FULL'
-    ;StandardRunCmd($cmd)
+    ;;STANDARDIZED COMMAND CALL
+    ;; $cmd = 'net share C=C:\ /GRANT:EVERYONE,FULL'
+    ;; StandardRunCmd($cmd)
 
     Run(@ComSpec & " /c " & $cmd, @SystemDir, @SW_HIDE)
   EndFunc
 
   Func StandardRunWaitCmd($cmd)
-    ;$cmd = 'net share C=C:\ /GRANT:EVERYONE,FULL'
-    ;StandardRunCmd($cmd)
+    ;;STANDARDIZED COMMAND CALL AND WAIT
+    ;; $cmd = 'net share C=C:\ /GRANT:EVERYONE,FULL'
+    ;; StandardRunCmd($cmd)
 
     RunWait(@ComSpec & " /c " & $cmd, @SystemDir, @SW_HIDE)
   EndFunc
 
   Func _IsValidEmail($email)
-    ;https://www.autoitscript.com/forum/topic/101396-check-if-an-email-address-is-valid/?do=findComment&comment=721006
+    ;;VALIDATE PROVIDED EMAIL ADDRESS
+    ;;https://www.autoitscript.com/forum/topic/101396-check-if-an-email-address-is-valid/?do=findComment&comment=721006
     If StringRegExp($email, "^([a-zA-Z0-9_\-])([a-zA-Z0-9_\-\.]*)@(\[((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}|((([a-zA-Z0-9\-]+)\.)+))([a-zA-Z]{2,}|(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\])$") Then
       ;MsgBox(4096, '', 'Input is valid email address format.')
       Return True
@@ -3879,31 +3870,23 @@ EndSwitch
   EndFunc
 #EndRegion
 
-;; CLOSE MAIN GUI
-  Func CloseMain()
-    Switch $sMainAppExeMode
-      Case 'Tray'
-        GUIDelete($idGUIMain)
-        TraySetState(1) ;re-enable tray icon
-      Case 'Window'
-        GUIDelete($idGUIMain)
-        SoftExit()
-    EndSwitch
-  EndFunc
-
-#Region -- End
-;; SAFE CLOSE AND EXIT
+#Region -- END
   Func End()
+    ;;SAFE CLOSE AND EXIT
     TraySetState(2)
     SoftExit()
   EndFunc
 
-;; SOFT EXIT
   Func SoftExit()
-    AdlibUnRegister("ReadComputer")
+    ;;SOFT EXIT
+    ReadComputerSchedule(False)
+    HardExit()
+  EndFunc
+
+  Func HardExit()
+    ;;HARD EXIT
     Exit
   EndFunc
 
-;; CATCH
-Exit
+  Exit
 #EndRegion

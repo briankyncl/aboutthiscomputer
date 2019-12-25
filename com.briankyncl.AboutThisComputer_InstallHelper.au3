@@ -14,9 +14,6 @@
 #AutoIt3Wrapper_Add_Constants=n
 #AutoIt3Wrapper_AU3Check_Stop_OnWarning=y
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
-; *** Start added by AutoIt3Wrapper ***
-#include <FileConstants.au3>
-; *** End added by AutoIt3Wrapper ***
 
 #COMMENTS-START
 
@@ -35,6 +32,7 @@
   _WinAPI_Wow64EnableWow64FsRedirection(False)
 
 ;; INCLUDES
+  #include <FileConstants.au3>
   #include <WinAPIFiles.au3>
 #EndRegion
 
@@ -49,7 +47,7 @@
           Case 'AfterInstall'
             Global $sExeMode = 'AfterInstall'
         EndSwitch
-      Case Else	;incorrect parameters provided
+      Case Else ;incorrect parameters provided
         MsgBox(1, 'About This Computer Install Helper', 'Incorrect paramters provided. Try "AboutThisComputerInstallHelper.exe -mode BeforeInstall".')
         SoftExit()
     EndSwitch
@@ -66,7 +64,7 @@
   Global $sBuildNum          = $aVerBuildNum[4]
   Global $sVersionNum        = $aVerBuildNum[1] & '.' & $aVerBuildNum[2] & '.' & $aVerBuildNum[3]
 
-  Global $bDebug             = False	;;True or False
+  Global $bDebug             = False  ;;True or False
 
 ;; GLOBAL DECLARATIONS
   Global $sTempDirRoot       = @TempDir & '\com.briankyncl'

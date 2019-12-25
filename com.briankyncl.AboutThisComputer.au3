@@ -1176,41 +1176,41 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
 
     Func ReadCustomization()
       ;;READ APP CUSTOMIZATION
-      ;;Read application customization.
+      ;; Read application customization.
 
       ;;organization
-        $sOrgName = RegRead($sAppRegistryPath, 'sOrgName')
-        $sOrgDomain = RegRead($sAppRegistryPath, 'sOrgDomain')
-        $sOrgFQDomain = RegRead($sAppRegistryPath, 'sOrgFQDomain')
-        $sOrgIntranetName = RegRead($sAppRegistryPath, 'sOrgIntranetName')
-        $sOrgIntranetURL = RegRead($sAppRegistryPath, 'sOrgIntranetURL')
+      If RegRead($sAppRegistryPath, 'sOrgName') Then $sOrgName = RegRead($sAppRegistryPath, 'sOrgName')
+      If RegRead($sAppRegistryPath, 'sOrgDomain') Then $sOrgDomain = RegRead($sAppRegistryPath, 'sOrgDomain')
+      If RegRead($sAppRegistryPath, 'sOrgFQDomain') Then $sOrgFQDomain = RegRead($sAppRegistryPath, 'sOrgFQDomain')
+      If RegRead($sAppRegistryPath, 'sOrgIntranetName') Then $sOrgIntranetName = RegRead($sAppRegistryPath, 'sOrgIntranetName')
+      If RegRead($sAppRegistryPath, 'sOrgIntranetURL') Then $sOrgIntranetURL = RegRead($sAppRegistryPath, 'sOrgIntranetURL')
 
       ;;helpdesk details
-        $sOrgHelpdeskName = RegRead($sAppRegistryPath, 'sOrgHelpdeskName')
-        $sOrgHelpdeskPhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskPhone')
-        $sOrgHelpdeskRegionalPhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskRegionalPhone')
-        $sOrgHelpdeskCorporatePhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskCorporatePhone')
-        $sOrgHelpdeskEmail = RegRead($sAppRegistryPath, 'sOrgHelpdeskEmail')
-        $sOrgHelpdeskURL = RegRead($sAppRegistryPath, 'sOrgHelpdeskURL')
-        $sOrgHelpdeskRemoteSupportURL = RegRead($sAppRegistryPath, 'sOrgHelpdeskRemoteSupportURL')
-        $sOrgHelpdeskRequestName = RegRead($sAppRegistryPath, 'sOrgHelpdeskRequestName')
+      If RegRead($sAppRegistryPath, 'sOrgHelpdeskName') Then $sOrgHelpdeskName = RegRead($sAppRegistryPath, 'sOrgHelpdeskName')
+      If RegRead($sAppRegistryPath, 'sOrgHelpdeskPhone') Then $sOrgHelpdeskPhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskPhone')
+      If RegRead($sAppRegistryPath, 'sOrgHelpdeskRegionalPhone') Then $sOrgHelpdeskRegionalPhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskRegionalPhone')
+      If RegRead($sAppRegistryPath, 'sOrgHelpdeskCorporatePhone') Then $sOrgHelpdeskCorporatePhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskCorporatePhone')
+      If RegRead($sAppRegistryPath, 'sOrgHelpdeskEmail') Then $sOrgHelpdeskEmail = RegRead($sAppRegistryPath, 'sOrgHelpdeskEmail')
+      If RegRead($sAppRegistryPath, 'sOrgHelpdeskURL') Then $sOrgHelpdeskURL = RegRead($sAppRegistryPath, 'sOrgHelpdeskURL')
+      If RegRead($sAppRegistryPath, 'sOrgHelpdeskRemoteSupportURL') Then $sOrgHelpdeskRemoteSupportURL = RegRead($sAppRegistryPath, 'sOrgHelpdeskRemoteSupportURL')
+      If RegRead($sAppRegistryPath, 'sOrgHelpdeskRequestName') Then $sOrgHelpdeskRequestName = RegRead($sAppRegistryPath, 'sOrgHelpdeskRequestName')
 
       ;;other details
-        $sOrgAppCatalogURL = RegRead($sAppRegistryPath, 'sOrgAppCatalogURL')
-        $sOrgPersonalDriveName = RegRead($sAppRegistryPath, 'sOrgPersonalDriveName')
-        $sOrgLoginScriptPath = RegRead($sAppRegistryPath, 'sOrgLoginScriptPath')
+      If RegRead($sAppRegistryPath, 'sOrgAppCatalogURL') Then $sOrgAppCatalogURL = RegRead($sAppRegistryPath, 'sOrgAppCatalogURL')
+      If RegRead($sAppRegistryPath, 'sOrgPersonalDriveName') Then $sOrgPersonalDriveName = RegRead($sAppRegistryPath, 'sOrgPersonalDriveName')
+      If RegRead($sAppRegistryPath, 'sOrgLoginScriptPath') Then $sOrgLoginScriptPath = RegRead($sAppRegistryPath, 'sOrgLoginScriptPath')
 
       ;;free-text field
-        Global $sFreeTextDetails = ''
+      Global $sFreeTextDetails = ''
 
-        $sFreeTextDetails = RegRead($sAppRegistryPath, 'sFreeTextDetails')
+      $sFreeTextDetails = RegRead($sAppRegistryPath, 'sFreeTextDetails')
 
-        Switch (StringIsSpace($sFreeTextDetails))
-          Case 0
-            Global $bFreeTextDetailsExists = True
-          Case 1
-            Global $bFreeTextDetailsExists = False
-        EndSwitch
+      Switch (StringIsSpace($sFreeTextDetails))
+        Case 0
+          Global $bFreeTextDetailsExists = True
+        Case 1
+          Global $bFreeTextDetailsExists = False
+      EndSwitch
     EndFunc
 
     Func ReadRegistry()

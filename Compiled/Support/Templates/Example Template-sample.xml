@@ -1,0 +1,33 @@
+<!-- About This Computer :: IT Helpdesk Request Template
+::
+:: * The name of this file minus the extension is what is shown in the contact form GUI.
+:: * Template files ending in -sample.xml will be ignored.
+:: * These XML-style comments are not actually ignored by the template parser.
+:: 
+:: FromAddress    = Overwrites app default. Must contain only one address. Must be a LabCorp email address.
+:: ToAddress      = Overwrites app default. Separate multiple addresses with a semicolon.
+:: CCAddress      = Separate multiple addresses with a semicolon.
+:: BCCAddress     = Separate multiple addresses with a semicolon.
+:: Subject        = 
+:: Name           = 
+:: Employee ID    = Must contain only numbers.
+:: Phone          = 
+:: Location       = 
+:: Body           = Accepts multiple lines.
+:: AttachmentPath = Full path to file(s) to attach. Separate multiple files with a semicolon. Files are attached in addition to any files attached by user in contact form GUI.
+::
+-->
+
+<FromAddress>kynclb@labcorp.com</FromAddress>
+<ToAddress>helpdesk@labcorp.com</ToAddress>
+<CCAddress>supervisor1@labcorp.com;supervisor2@labcorp.com</CCAddress>
+<BCCAddress>manager@labcorp.com</BCCAddress>
+<Subject>The subject of this request</Subject>
+<Name>Brian Kyncl</Name>
+<EmployeeID>123456</EmployeeID>
+<Phone>555-555-5555</Phone>
+<Location>Seattle lab, chemistry aisle</Location>
+<Body>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales, odio facilisis auctor sodales, diam elit dignissim felis, vitae fermentum massa justo in orci. Morbi rhoncus, augue ac egestas dignissim, est quam vehicula ex, in interdum purus odio ac lacus. Maecenas nec euismod elit, ac luctus sem. Aliquam pretium massa vel purus finibus elementum. Pellentesque id ex enim. Ut luctus accumsan augue, vitae eleifend urna bibendum eget. Integer euismod dui vitae nunc convallis, at laoreet metus placerat. Sed at dapibus dui. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Fusce sed magna eget augue dapibus efficitur in eu nunc. Donec consectetur, mi et vulputate convallis, tortor ante scelerisque purus, at ornare magna massa quis dui. Donec fermentum tempor nisi et lacinia.
+
+Sed quis maximus tellus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec non metus at ligula porttitor faucibus. Etiam a pretium urna. Fusce dapibus pretium viverra. Nulla sollicitudin commodo elit quis suscipit. Suspendisse a nisi ut sem malesuada ullamcorper ut eget sem. Donec tincidunt posuere sem ac efficitur.</Body>
+<AttachmentPath>C:\Users\Me\Desktop\File1.png;"C:\Users\Another User\Downloads\File2.docx"</AttachmentPath>

@@ -6,7 +6,7 @@
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_Res_Comment=About This Computer
 #AutoIt3Wrapper_Res_Description=About This Computer
-#AutoIt3Wrapper_Res_Fileversion=2.0.0.964
+#AutoIt3Wrapper_Res_Fileversion=2.0.0.998
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=y
 #AutoIt3Wrapper_Res_LegalCopyright=Copyright (c) 2020 Brian Kyncl (briankyncl.com). All rights reserved.
 #AutoIt3Wrapper_Res_SaveSource=y
@@ -49,10 +49,6 @@
    - Splunk Forwarder is installed and service is running.
    - SCCM Client is installed and service is running.
    - Windows Update service is running.
-
-  Notes to Self:
-    2019-12-24: Resume working on ReadCustomization(), add code to not set variable if no result from RegRead
-
 #COMMENTS-END
 
 #Region -- PRE-FLIGHT
@@ -61,6 +57,7 @@
 
   ;;INCLUDES
   #include 'UDF-ADFunctions\AD.au3'
+  #include 'UDF-SelfDelete\_SelfDelete.au3'
   #include 'UDF-Services\Services.au3'
   #include 'UDF-SMTPMailer\SmtpMailer.au3'
   #include <Array.au3>
@@ -83,13 +80,10 @@
   #include <TrayConstants.au3>
   #include <WinAPIFiles.au3>
   #include <WindowsConstants.au3>
-
-  ;;ASSETS
-  ;FileInstall('Images\BeOS_info.ico', @TempDir & '\ATC-BeOS_info.ico', $FC_OVERWRITE)
 #EndRegion
 
-Main()      ;;Main application
-SoftExit()  ;;Exit app gracefully if code should ever find itself here.
+Main()  ;;Main application
+End()   ;;Exit app gracefully if code should ever find itself here.
 
 #Region -- STARTUP
   Func StartupCoreGlobals()
@@ -111,15 +105,18 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
 
     ;;APP PATHS
     Global $sAppInstallPath       = @ProgramFilesDir & '\' & $sAppOrg & '\' & $sAppName
-    Global $sAppInstallPathLegacy = 'C:\ProgramData\com.briankyncl\About This Computer'
+    Global $sAppInstallPathLegacy = @AppDataCommonDir & '\com.briankyncl\About This Computer'
+    Global $sAppSourcePath        = @ScriptDir
     Global $sAppTempPath          = @TempDir & '\' & $sAppOrg & '\' & $sAppName
     Global $sAppStartMenuPath     = @ProgramsCommonDir & '\' & $sAppName
     Global $sAppRegistryPath      = 'HKEY_LOCAL_MACHINE\Software\' & $sAppOrg & '\' & $sAppName
     Global $sAppLogo              = $sAppTempPath & '\ATC-BeOS_info.ico'
 
+    DirCreate($sAppTempPath)
+
     ;;APP ASSETS
-    FileInstall('Images\BeOS_info.ico', $sAppLogo, $FC_OVERWRITE)
-    ;FileInstall('Images\BeOS_info.ico', @TempDir & '\ATC-BeOS_info.ico', $FC_OVERWRITE)
+    FileInstall('Images\BeOS_info.ico', $sAppTempPath & '\ATC-BeOS_info.ico', $FC_OVERWRITE)
+    ;FileMove(@TempDir & '\ATC-BeOS_info.ico', $sAppTempPath, $FC_OVERWRITE)
   EndFunc
 
   Func StartupExeMode()
@@ -159,7 +156,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     ;EndIf
 
     ;;relaunch application from temp
-    If StringInStr(@ScriptFullPath, $sAppTempPath, $STR_NOCASESENSEBASIC) <> 0 Then
+    If StringInStr(@ScriptFullPath, $sAppTempPath, $STR_NOCASESENSEBASIC) = 0 Then
       ;;exe launched from non-temp location
       If FileExists($sAppTempPath & '\' & @ScriptName) = 1 Then
         ;;exe already in temp dir, attempt to delete
@@ -200,6 +197,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
 
     ;;Default organization information
     ;; Duplicate these values in ReadCustomization()
+    ;; Duplicate these values in InstallHelper
     Global $sOrgName                     = 'Contoso'
     Global $sOrgDomain                   = 'contoso.com'
     Global $sOrgFQDomain                 = 'corp.' & $sOrgDomain
@@ -212,20 +210,20 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     Global $sOrgHelpdeskEmail            = 'helpdesk@' & $sOrgDomain
     Global $sOrgHelpdeskURL              = 'helpdesk.' & $sOrgDomain
     Global $sOrgHelpdeskRemoteSupportURL = 'remotesupport.' & $sOrgDomain
-    Global $sOrgHelpdeskRequestName      = 'Create an IT Helpdesk Request'  ;;'Create an IT' & @CRLF & 'Helpdesk Request'
+    Global $sOrgHelpdeskRequestName      = 'Create an IT' & @CRLF & 'Helpdesk Request'
     Global $sOrgAppCatalogURL            = 'https://sccmserver.' & $sOrgFQDomain & '/CMApplicationCatalog'
-    Global $sOrgPersonalDriveName        = 'Home'  ;;(I:)
+    Global $sOrgPersonalDriveName        = 'Home Drive'  ;;'I: Drive', or 'Home Folder', etc.
     Global $sOrgLoginScriptPath          = '\\' & $sOrgFQDomain & '\NETLOGON'
 
-    ;;generic globals
-    ;Global $idGUIMain
+    ;;Generic globals
+    Global $hGUIMain
     ;Global $idGUIContact
     Global $GUI_CHECKENABLE
     Global $GUI_UNCHECKENABLE
     Global $GUI_CHECKDISABLE
     Global $GUI_UNCHECKDISABLE
     ;Global $sSummaryString
-    ;Global $bExitEnabled
+    ;Global $bConfigExitEnabled
     ;Global $lTemplates
     ;Global $sTemplateFromAddress
     ;Global $sTemplateToAddress
@@ -267,35 +265,39 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
 
   Func ReadConfig()
     ;;READ APP CONFIGURATION
-    ;;Read application configuration.
+    ;;Read application configuration from registry.
+    ;;
+    ;;Duplicate these entries in InstallHelper
 
     ;;contact form enable/disable
-    Global $bContactHelpdeskEnabled = RegRead($sAppRegistryPath, 'bConfigContactHelpdeskEnabled')
+    Global $bConfigContactHelpdeskEnabled = RegRead($sAppRegistryPath, 'bConfigContactHelpdeskEnabled')
     If @error Then
-      $bContactHelpdeskEnabled = False
+      $bConfigContactHelpdeskEnabled = False
     Else
-      If $bContactHelpdeskEnabled = 1 Then
-        $bContactHelpdeskEnabled = True
+      If $bConfigContactHelpdeskEnabled = 1 Then
+        $bConfigContactHelpdeskEnabled = True
       Else
-        $bContactHelpdeskEnabled = False
+        $bConfigContactHelpdeskEnabled = False
       EndIf
     EndIf
 
     ;;exit enable/disable
-    Global $bExitEnabled = RegRead($sAppRegistryPath, 'bConfigExitEnabled')
+    Global $bConfigExitEnabled = RegRead($sAppRegistryPath, 'bConfigExitEnabled')
     If @error Then
-      $bExitEnabled = False
+      $bConfigExitEnabled = False
     Else
-      If $bExitEnabled = 1 Then
-        $bExitEnabled = True
+      If $bConfigExitEnabled = 1 Then
+        $bConfigExitEnabled = True
       Else
-        $bExitEnabled = False
+        $bConfigExitEnabled = False
       EndIf
     EndIf
 
     ;;icon selection
 
-    ;;which of the "assumption" features are enabled/disabled
+    ;;"assumption" features enabled/disabled
+    ;;TODO
+
   EndFunc
 #EndRegion
 
@@ -379,10 +381,13 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
       ReadLCMInfo()
       ;;;;;; move to branch ;;;;;;
 
+      UpdateSummaryString()
+
       If $sOption <> 'NoRefresh' Then
-        UpdateToolTip()
+        GUIDelete($hGUIMain)
+        BuildMainGUI()
         UpdateMainGUI()
-        UpdateSummaryString()
+        RefreshTray()
       EndIf
 
       _ReduceMemory()
@@ -1045,10 +1050,10 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
         ;_ArrayDisplay($aProperties, "Active Directory Functions - Example 3 - Properties for computer '" & @ComputerName & "'")
 
         ;;ATTEMPT 2
-        $sADDescription           = ADQuery(@ComputerName, 'description')
-        $sADDistinguishedName     = ADQuery(@ComputerName, 'distinguishedName')
-        $sADLocalAdminPassword    = ADQuery(@ComputerName, 'ms-Mcs-AdmPwd')
-        $sADLocalAdminPasswordExp = ADQuery(@ComputerName, 'ms-Mcs-AdmPwdExpirationTime')
+        $sADDescription           = ADQuery(@ComputerName & '$', 'description')
+        $sADDistinguishedName     = ADQuery(@ComputerName & '$', 'distinguishedName')
+        $sADLocalAdminPassword    = ADQuery(@ComputerName & '$', 'ms-Mcs-AdmPwd')
+        $sADLocalAdminPasswordExp = ADQuery(@ComputerName & '$', 'ms-Mcs-AdmPwdExpirationTime')
         $sADLoginScript           = ADQuery(@Username, 'scriptPath')  ;;Ex: "LoginScriptName.bat" without a path
         $sADHomeDirectory         = ADQuery(@Username, 'homeDirectory')  ;;Ex: "\\servername\folder\username"
         $sADHomeDrive             = ADQuery(@Username, 'homeDrive')  ;;Ex: "Z:"
@@ -1075,7 +1080,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
       ;;Wrapper for _AD_GetObjectProperties to safely return single string.
       ;; Open AD connection before calling this.
 
-      $aADProperties = _AD_GetObjectProperties($sADObject & '$', $sADParameter)
+      $aADProperties = _AD_GetObjectProperties($sADObject, $sADParameter)
 
       If IsArray($aADProperties) Then
         ReDim $aADProperties[2][2]
@@ -1202,8 +1207,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
 
       ;;free-text field
       Global $sFreeTextDetails = ''
-
-      $sFreeTextDetails = RegRead($sAppRegistryPath, 'sFreeTextDetails')
+      If RegRead($sAppRegistryPath, 'sFreeTextDetails') Then $sFreeTextDetails = RegRead($sAppRegistryPath, 'sFreeTextDetails')
 
       Switch (StringIsSpace($sFreeTextDetails))
         Case 0
@@ -1226,12 +1230,10 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
       ;;
       ;; $sLCMXJCode   ;X88868
       ;; $sLCMCRCode   ;SE900412
-      ;; $sLCMEdition  ;Server
 
       ;;read LCM log file, set to blank if not found
       Global $sLCMXJCode  = ''
       Global $sLCMCRCode  = ''
-      Global $sLCMEdition = ''  ;not yet functional
 
       ;;declare locals
       Local $sLCMXJCode0
@@ -1583,13 +1585,13 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     Global $idTrayMainSysProp    = TrayCreateItem('System Properties')
       TrayCreateItem('')
     Global $idTrayMainSearchAD   = TrayCreateItem('Run Login Script')
-    Global $idTrayMainSysProp    = TrayCreateItem('Map ' & $sOrgPersonalDriveName & ' Drive')
+    Global $idTrayMainSysProp    = TrayCreateItem('Map ' & $sOrgPersonalDriveName)
       TrayCreateItem('')
     Global $idTrayMainShowInfo   = TrayCreateItem('About This Computer')
       TrayCreateItem('')
     Global $idTrayMainExit       = TrayCreateItem('Exit')
 
-    Switch $bExitEnabled
+    Switch $bConfigExitEnabled
       Case True
         TrayItemSetState($idTrayMainExit, $TRAY_ENABLE)
       Case False
@@ -1879,7 +1881,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
         $rowMainLeft_10Height = $rowMainLeftHeights
 
     ;;DECLARE MAIN WINDOW
-      Global $idGUIMain = GUICreate('About This Computer', $columnMainBounds, $rowMainBounds, -1, -1, -1, $WS_EX_TOPMOST)
+      Global $hGUIMain = GUICreate('About This Computer', $columnMainBounds, $rowMainBounds, -1, -1, -1, $WS_EX_TOPMOST)
 
       $sCloseButtonText = 'Close'
       If $sMainAppExeMode = 'Window' Then $sCloseButtonText = 'Exit'
@@ -1947,7 +1949,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
 
       Global $idButtonMainLeftClose = GUICtrlCreateButton($sCloseButtonText, $columnMainLeft_01, $rowMainLeft_01, $columnMainLeft_01Width, $rowMainLeft_01Height)
       Global $idButtonMainLeftRefresh = GUICtrlCreateButton('Refresh', $columnMainLeft_01, $rowMainLeft_02, $columnMainLeft_01Width, $rowMainLeft_02Height)
-      If $bContactHelpdeskEnabled = True Then
+      If $bConfigContactHelpdeskEnabled = True Then
         Global $idButtonMainLeftContactHDesk = GUICtrlCreateButton($sOrgHelpdeskRequestName, $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height, BitOR($BS_MULTILINE, $BS_CENTER, $BS_VCENTER))
       Else
         Global $idButtonMainLeftContactHDesk = GUICtrlCreateButton('Copy Summary', $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height)
@@ -2155,7 +2157,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
   Func MainGUIWait()
     ;;DISPLAY THE GUI AND WAIT FOR USER INPUT
     GUIMainSetDefaults()
-    GUISetState(@SW_SHOWNORMAL, $idGUIMain) ;show GUI
+    GUISetState(@SW_SHOWNORMAL, $hGUIMain)  ;;show GUI
 
     ;;WAIT FOR INPUT
     $sGUIBusyWait = 300
@@ -2164,7 +2166,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     While 1
       $aMsg = GUIGetMsg(1)  ;;use advanced parameter
       Switch $aMsg[1]  ;;check which GUI sent the message
-        Case $idGUIMain
+        Case $hGUIMain
           Switch $aMsg[0]
             ;;MENU - FILE
             Case $idMenuItemMainFileEmail
@@ -2293,12 +2295,12 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
             ;;BUTTONS
             Case $idButtonMainLeftContactHDesk
               GUIMainSetBusyDefaults()
-              If $bContactHelpdeskEnabled = True Then
-                GUISetState(@SW_MINIMIZE, $idGUIMain)  ;;minimize main GUI
+              If $bConfigContactHelpdeskEnabled = True Then
+                GUISetState(@SW_MINIMIZE, $hGUIMain)  ;;minimize main GUI
                 Sleep(100)
                 ContactHelpdesk()
                 Sleep(100)
-                GUISetState(@SW_RESTORE, $idGUIMain)  ;;restore GUI
+                GUISetState(@SW_RESTORE, $hGUIMain)  ;;restore GUI
               Else
                 CopySummaryToClipboard()
                 Sleep($sGUIBusyWait)
@@ -2306,7 +2308,9 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
               GUIMainSetDefaults()
             Case $idButtonMainLeftRefresh
               GUIMainSetBusyDefaults()
-              ReadComputerWait($idGUIMain)
+              GUISetState(@SW_HIDE, $hGUIMain)
+              ReadComputerWait($hGUIMain)
+              GUISetState(@SW_SHOWNORMAL, $hGUIMain)
               GUIMainSetDefaults()
             Case $idButtonMainLeftClose
               MainGUIClose()
@@ -2325,21 +2329,29 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     ;;CLOSE MAIN GUI AND RETURN TO TRAY
     Switch $sMainAppExeMode
       Case 'Tray'
-        GUIDelete($idGUIMain)
+        GUISetState(@SW_HIDE, $hGUIMain)  ;;hide GUI
+        ;GUIDelete($hGUIMain)
         TraySetState(1) ;re-enable tray icon
         MainTrayWait()
       Case 'Window'
-        GUIDelete($idGUIMain)
-        SoftExit()
+        GUISetState(@SW_HIDE, $hGUIMain)  ;;hide GUI
+        End()
     EndSwitch
   EndFunc
 
-  Func UpdateToolTip()
-    ;;UPDATE TRAY ICON TOOLTIP
+  Func RefreshTray()
+    ;;UPDATE TRAY MENU AND TOOLTIP
     $sTrayToolTip = 'Computer Name: ' & $sComputerName & @CRLF & _
                     'IP Address: ' & $sNetAdapter01Address & @CRLF & _
                     'Uptime: ' & $sOSUptime
     TraySetToolTip($sTrayToolTip)
+
+    Switch $bConfigExitEnabled
+      Case True
+        TrayItemSetState($idTrayMainExit, $TRAY_ENABLE)
+      Case False
+        TrayItemSetState($idTrayMainExit, $TRAY_DISABLE)
+    EndSwitch
   EndFunc
 
   Func UpdateMainGUI()
@@ -2404,6 +2416,30 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
       '    - Subnet Mask: ' & $sNetAdapter05SubnetMask & @CRLF & _
       '    - Gateway: ' & $sNetAdapter05Gateway & @CRLF)
 
+    ;;Build AD information strings
+    If StringIsSpace($sADLoginScript) = 1 Or $sADLoginScript = '0' Then
+      ;;No logon script defined for AD user object.
+      Local $sUserLoginScript = ''
+    Else
+      Local $sUserLoginScript = $sOrgLoginScriptPath & '\' & $sADLoginScript
+    EndIf
+
+    If StringIsSpace($sADHomeDirectory) = 1 Or $sADHomeDirectory = '0' Then
+      ;;No home folder defined for AD user object.
+      Local $sUserHomeDrive = ''
+    Else
+      If StringIsSpace($sADHomeDrive) = 1 Or $sADHomeDrive = '0' Then
+        ;;No home drive defined for AD user object.
+        Local $sUserHomeDrive = ''
+      Else
+        ;;No home drive defined but home folder is defined.
+        Local $sUserHomeDrive = '$sADHomeDirectory'
+      EndIf
+      ;;Home folder and drive defined for AD user object.
+      Local $sUserHomeDrive = '(' & $sADHomeDrive & ') ' & $sADHomeDirectory
+    EndIf
+
+    ;;Build summary string
     $sSummaryString = _
       'Session:' & @CRLF & _
       ' • Current User: ' & $sWMIUserName & @CRLF & _
@@ -2424,13 +2460,13 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
       ' • Uptime: ' & $sOSUptime & @CRLF & _
       ' • Install Age: ' & $sOSAgeAndDate & @CRLF & _
       ' • Domain: ' & $sWMIDomain & @CRLF & _
-      ' • Description: ' & $sPCDescription & @CRLF & _
+      ' • Local Description: ' & $sPCDescription & @CRLF & _
       @CRLF & _
       'Active Directory:' & @CRLF & _
-      ' • Description: ' & $sADDescription & @CRLF & _
-      ' • OU: ' & $sADOUPath & @CRLF & _
-      ' • User Login Script: ' & $sOrgLoginScriptPath & '\' & $sADLoginScript & @CRLF & _
-      ' • User ' & $sOrgPersonalDriveName & ' Drive: (' & $sADHomeDrive & ') ' & $sADHomeDirectory & @CRLF & _
+      ' • Computer Description: ' & $sADDescription & @CRLF & _
+      ' • Computer OU: ' & $sADOUPath & @CRLF & _
+      ' • User Login Script: ' & $sUserLoginScript & @CRLF & _
+      ' • User ' & $sOrgPersonalDriveName & ': ' & $sUserHomeDrive & @CRLF & _
       @CRLF & _
       'Services:' & @CRLF & _
       ' • Windows Update: ' & $sServWindowsUpdateStatus & @CRLF & _
@@ -2493,7 +2529,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     ;;SEND SUMMARY STRING TO PRINTER
     UpdateSummaryFile()
 
-    $iButtonPressed = MsgBox(BitOR($MB_ICONQUESTION, $MB_TOPMOST, $MB_SETFOREGROUND, $MB_YESNO, $MB_DEFBUTTON2), 'Print Summary', 'Print summary to default printer?', 0, $idGUIMain)
+    $iButtonPressed = MsgBox(BitOR($MB_ICONQUESTION, $MB_TOPMOST, $MB_SETFOREGROUND, $MB_YESNO, $MB_DEFBUTTON2), 'Print Summary', 'Print summary to default printer?', 0, $hGUIMain)
     If $iButtonPressed = $IDYES Then
       $iPrintSuccess = _FilePrint($sSummaryFilePath)
       If $iPrintSuccess Then
@@ -2573,9 +2609,9 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     ;;SHOW SUMMARY STRING WINDOW
     Local $iWidth  = 600
     Local $iHeight = 500
-    $idGUISummary = GUICreate('Summary', $iWidth, $iHeight, -1, -1, BitOR($WS_SIZEBOX, $WS_EX_TOPMOST), '', $idGUIMain)
+    $idGUISummary = GUICreate('Summary', $iWidth, $iHeight, -1, -1, BitOR($WS_SIZEBOX, $WS_EX_TOPMOST), '', $hGUIMain)
 
-    GUISetState(@SW_DISABLE, $idGUIMain)
+    GUISetState(@SW_DISABLE, $hGUIMain)
     GUISetState(@SW_SHOWNORMAL, $idGUISummary)
 
     ;GUICtrlCreateGroup('', 10, 10, 380, 480)
@@ -2585,7 +2621,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     While 1
       Switch GUIGetMsg()
         Case $GUI_EVENT_CLOSE
-          GUISetState(@SW_ENABLE, $idGUIMain)
+          GUISetState(@SW_ENABLE, $hGUIMain)
           GUIDelete($idGUISummary)
           ExitLoop
       EndSwitch
@@ -2705,7 +2741,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
 
     ;;Variables
     $sWindowTitle = 'About'
-    $idParentGUI = $idGUIMain
+    $idParentGUI = $hGUIMain
     $sGraphic = $sAppLogo
     $sTitle = 'About This Computer'
     $sSubtitle = 'A workstation information utility.'
@@ -2783,7 +2819,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     $iGUIAboutHeightDefault = $iRowAboutCredits00 + $iRowAboutCredits00Height + 10
 
     ;;DECLARE GUI
-      ;GUICreate('Summary', 400, 500, -1, -1, BitOR($WS_SIZEBOX, $WS_EX_TOPMOST), '', $idGUIMain)
+      ;GUICreate('Summary', 400, 500, -1, -1, BitOR($WS_SIZEBOX, $WS_EX_TOPMOST), '', $hGUIMain)
       ;Global $idGUIAbout = GUICreate($sWindowTitle, $iGUIAboutWidthDefault, $iGUIAboutHeightDefault, -1, -1, -1, $WS_EX_TOPMOST, $idParentGUI)
       Global $idGUIAbout = GUICreate($sWindowTitle, $iGUIAboutWidthDefault, $iGUIAboutHeightDefault, -1, -1, BitOR($WS_CAPTION, $WS_SYSMENU), '', $idParentGUI)
 
@@ -3082,7 +3118,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
     Global $bContactFormSubmitSuccess = False
 
   ;; BUILD CONTACT HELPDESK WINDOW
-    Global $idGUIContact = GUICreate('Create an ' & $sOrgHelpdeskName & ' Request', $columnContactBounds, $rowContactBounds, -1, -1, -1, $WS_EX_TOPMOST)   ;$idGUIMain
+    Global $idGUIContact = GUICreate('Create an ' & $sOrgHelpdeskName & ' Request', $columnContactBounds, $rowContactBounds, -1, -1, -1, $WS_EX_TOPMOST)   ;$hGUIMain
 
     ;; LEFT COLUMN, TOP
     $idGraphicContact = GUICtrlCreateIcon($sAppInstallPath & '\Support\BeOS_Customize_wrench.ico', -1, $columnContactLeft01, $rowContactLeft01, 96, 96, -1, $GUI_WS_EX_PARENTDRAG)
@@ -3278,7 +3314,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
 ;; CLOSE CONTACT GUI GRACEFULLY
   Func GUIContactClose()
     GUIDelete($idGUIContact)  ;delete Contact GUI
-    GUISetState(@SW_ENABLE, $idGUIMain) ;show main GUI
+    GUISetState(@SW_ENABLE, $hGUIMain) ;show main GUI
     If FileExists($sContactFormScreenshotPath) = True Then FileDelete($sContactFormScreenshotPath)  ;delete screenshot
   EndFunc
 
@@ -3873,6 +3909,7 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
 #Region -- END
   Func End()
     ;;SAFE CLOSE AND EXIT
+    GUIDelete($hGUIMain)
     TraySetState(2)
     SoftExit()
   EndFunc
@@ -3880,6 +3917,8 @@ SoftExit()  ;;Exit app gracefully if code should ever find itself here.
   Func SoftExit()
     ;;SOFT EXIT
     ReadComputerSchedule(False)
+    ;DirRemove(@TempDir & '\' & $sAppOrg, $DIR_REMOVE)
+    ;_SelfDelete(5,0)
     HardExit()
   EndFunc
 

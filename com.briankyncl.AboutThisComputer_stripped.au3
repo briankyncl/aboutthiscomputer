@@ -1,12 +1,12 @@
 #NoTrayIcon
 #Region
 #AutoIt3Wrapper_Icon=Images\BeOS_info.ico
-#AutoIt3Wrapper_Outfile=Releases\AboutThisComputer.exe
-#AutoIt3Wrapper_Outfile_x64=Releases\AboutThisComputer_x64.exe
+#AutoIt3Wrapper_Outfile=Compiled\AboutThisComputer.exe
+#AutoIt3Wrapper_Outfile_x64=Compiled\AboutThisComputer_x64.exe
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_Res_Comment=About This Computer
 #AutoIt3Wrapper_Res_Description=About This Computer
-#AutoIt3Wrapper_Res_Fileversion=2.0.0.963
+#AutoIt3Wrapper_Res_Fileversion=2.0.0.997
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=y
 #AutoIt3Wrapper_Res_LegalCopyright=Copyright (c) 2020 Brian Kyncl (briankyncl.com). All rights reserved.
 #AutoIt3Wrapper_Res_SaveSource=y
@@ -7729,6 +7729,40 @@ $oNewDACL.AddAce($oACE)
 Next
 $oNewDACL.ACLRevision = $oDACL.ACLRevision
 Return $oNewDACL
+EndFunc
+Func _SelfDelete($iDelay = 5, $fUsePID = Default, $fRemoveDir = Default)
+If @Compiled = 0 Then
+Return SetError(1, 0, 0)
+EndIf
+Local $sTempFileName = @ScriptName
+$sTempFileName = StringLeft($sTempFileName, StringInStr($sTempFileName, '.', $STR_NOCASESENSEBASIC, -1) - 1)
+While FileExists(@TempDir & '\' & $sTempFileName & '.bat')
+$sTempFileName &= Chr(Random(65, 122, 1))
+WEnd
+$sTempFileName = @TempDir & '\' & $sTempFileName & '.bat'
+Local $sDelay = ''
+$iDelay = Int($iDelay)
+If $iDelay > 0 Then
+$sDelay = 'IF %TIMER% GTR ' & $iDelay & ' GOTO DELETE'
+EndIf
+Local $sRemoveDir = ''
+If $fRemoveDir Then
+$sRemoveDir = 'RD /S /Q "' & FileGetShortName(@ScriptDir) & '"' & @CRLF
+EndIf
+Local $sAppID = @ScriptName, $sImageName = 'IMAGENAME'
+If $fUsePID Then
+$sAppID = @AutoItPID
+$sImageName = 'PID'
+EndIf
+Local Const $iInternalDelay = 2,  $sScriptPath = FileGetShortName(@ScriptFullPath)
+Local Const $sData = 'SET TIMER=0' & @CRLF  & ':START' & @CRLF  & 'PING -n ' & $iInternalDelay & ' 127.0.0.1 > nul' & @CRLF  & $sDelay & @CRLF  & 'SET /A TIMER+=1' & @CRLF  & @CRLF  & 'TASKLIST /NH /FI "' & $sImageName & ' EQ ' & $sAppID & '" | FIND /I "' & $sAppID & '" >nul && GOTO START' & @CRLF  & 'GOTO DELETE' & @CRLF  & @CRLF  & ':DELETE' & @CRLF  & 'TASKKILL /F /FI "' & $sImageName & ' EQ ' & $sAppID & '"' & @CRLF  & 'DEL "' & $sScriptPath & '"' & @CRLF  & 'IF EXIST "' & $sScriptPath & '" GOTO DELETE' & @CRLF  & $sRemoveDir  & 'GOTO END' & @CRLF  & @CRLF  & ':END' & @CRLF  & 'DEL "' & $sTempFileName & '"'
+Local Const $hFileOpen = FileOpen($sTempFileName, $FO_OVERWRITE)
+If $hFileOpen = -1 Then
+Return SetError(2, 0, 0)
+EndIf
+FileWrite($hFileOpen, $sData)
+FileClose($hFileOpen)
+Return Run($sTempFileName, @TempDir, @SW_HIDE)
 EndFunc
 Func _SetPrivilege($avPrivilege)
 Local $iDim = UBound($avPrivilege, 0), $avPrevState[1][2]
@@ -23829,7 +23863,7 @@ Global Const $CDRF_SKIPPOSTPAINT = 0x00000100
 Global Const $GUI_SS_DEFAULT_GUI = BitOR($WS_MINIMIZEBOX, $WS_CAPTION, $WS_POPUP, $WS_SYSMENU)
 #EndRegion
 Main()
-SoftExit()
+End()
 #Region -- STARTUP
 Func StartupCoreGlobals()
 Global $sAppOrg        = 'com.briankyncl'
@@ -23843,12 +23877,14 @@ Global $sAppBuild    = $aFileVersion[4]
 Global $sAppVersion  = $aFileVersion[1] & '.' & $aFileVersion[2] & '.' & $aFileVersion[3]
 Global $sAppRelease  = '2020-xx-xx'
 Global $sAppInstallPath       = @ProgramFilesDir & '\' & $sAppOrg & '\' & $sAppName
-Global $sAppInstallPathLegacy = 'C:\ProgramData\com.briankyncl\About This Computer'
+Global $sAppInstallPathLegacy = @AppDataCommonDir & '\com.briankyncl\About This Computer'
+Global $sAppSourcePath        = @ScriptDir
 Global $sAppTempPath          = @TempDir & '\' & $sAppOrg & '\' & $sAppName
 Global $sAppStartMenuPath     = @ProgramsCommonDir & '\' & $sAppName
 Global $sAppRegistryPath      = 'HKEY_LOCAL_MACHINE\Software\' & $sAppOrg & '\' & $sAppName
 Global $sAppLogo              = $sAppTempPath & '\ATC-BeOS_info.ico'
-FileInstall('Images\BeOS_info.ico', $sAppLogo, $FC_OVERWRITE)
+DirCreate($sAppTempPath)
+FileInstall('Images\BeOS_info.ico', $sAppTempPath & '\ATC-BeOS_info.ico', $FC_OVERWRITE)
 EndFunc
 Func StartupExeMode()
 Global $sMainAppExeMode = ''
@@ -23871,7 +23907,7 @@ EndIf
 EndFunc
 Func StartupRunFromTemp()
 Local $sStartupParam = $CmdLineRaw
-If StringInStr(@ScriptFullPath, $sAppTempPath, $STR_NOCASESENSEBASIC) <> 0 Then
+If StringInStr(@ScriptFullPath, $sAppTempPath, $STR_NOCASESENSEBASIC) = 0 Then
 If FileExists($sAppTempPath & '\' & @ScriptName) = 1 Then
 If FileDelete($sAppTempPath & '\' & @ScriptName) <> 1 Then
 MsgBox(BitOR($MB_OK, $MB_ICONERROR), $sAppName & ' Startup', 'Unable to start ' & $sAppName & '. (Unable to delete existing executable from temp. Is ' & @ScriptName & ' already running?)')
@@ -23906,34 +23942,35 @@ Global $sOrgHelpdeskCorporatePhone   = $sOrgHelpdeskPhone
 Global $sOrgHelpdeskEmail            = 'helpdesk@' & $sOrgDomain
 Global $sOrgHelpdeskURL              = 'helpdesk.' & $sOrgDomain
 Global $sOrgHelpdeskRemoteSupportURL = 'remotesupport.' & $sOrgDomain
-Global $sOrgHelpdeskRequestName      = 'Create an IT Helpdesk Request'
+Global $sOrgHelpdeskRequestName      = 'Create an IT' & @CRLF & 'Helpdesk Request'
 Global $sOrgAppCatalogURL            = 'https://sccmserver.' & $sOrgFQDomain & '/CMApplicationCatalog'
-Global $sOrgPersonalDriveName        = 'Home'
+Global $sOrgPersonalDriveName        = 'Home Drive'
 Global $sOrgLoginScriptPath          = '\\' & $sOrgFQDomain & '\NETLOGON'
+Global $hGUIMain
 Global $GUI_CHECKENABLE
 Global $GUI_UNCHECKENABLE
 Global $GUI_CHECKDISABLE
 Global $GUI_UNCHECKDISABLE
 EndFunc
 Func ReadConfig()
-Global $bContactHelpdeskEnabled = RegRead($sAppRegistryPath, 'bConfigContactHelpdeskEnabled')
+Global $bConfigContactHelpdeskEnabled = RegRead($sAppRegistryPath, 'bConfigContactHelpdeskEnabled')
 If @error Then
-$bContactHelpdeskEnabled = False
+$bConfigContactHelpdeskEnabled = False
 Else
-If $bContactHelpdeskEnabled = 1 Then
-$bContactHelpdeskEnabled = True
+If $bConfigContactHelpdeskEnabled = 1 Then
+$bConfigContactHelpdeskEnabled = True
 Else
-$bContactHelpdeskEnabled = False
+$bConfigContactHelpdeskEnabled = False
 EndIf
 EndIf
-Global $bExitEnabled = RegRead($sAppRegistryPath, 'bConfigExitEnabled')
+Global $bConfigExitEnabled = RegRead($sAppRegistryPath, 'bConfigExitEnabled')
 If @error Then
-$bExitEnabled = False
+$bConfigExitEnabled = False
 Else
-If $bExitEnabled = 1 Then
-$bExitEnabled = True
+If $bConfigExitEnabled = 1 Then
+$bConfigExitEnabled = True
 Else
-$bExitEnabled = False
+$bConfigExitEnabled = False
 EndIf
 EndIf
 EndFunc
@@ -23975,10 +24012,12 @@ ReadConfig()
 ReadCustomization()
 ReadRegistry()
 ReadLCMInfo()
-If $sOption <> 'NoRefresh' Then
-UpdateToolTip()
-UpdateMainGUI()
 UpdateSummaryString()
+If $sOption <> 'NoRefresh' Then
+GUIDelete($hGUIMain)
+BuildMainGUI()
+UpdateMainGUI()
+RefreshTray()
 EndIf
 _ReduceMemory()
 EndFunc
@@ -24400,10 +24439,10 @@ Global $sADHomeDirectory
 Global $sADHomeDrive
 _AD_Open()
 If @error = 0 Then
-$sADDescription           = ADQuery(@ComputerName, 'description')
-$sADDistinguishedName     = ADQuery(@ComputerName, 'distinguishedName')
-$sADLocalAdminPassword    = ADQuery(@ComputerName, 'ms-Mcs-AdmPwd')
-$sADLocalAdminPasswordExp = ADQuery(@ComputerName, 'ms-Mcs-AdmPwdExpirationTime')
+$sADDescription           = ADQuery(@ComputerName & '$', 'description')
+$sADDistinguishedName     = ADQuery(@ComputerName & '$', 'distinguishedName')
+$sADLocalAdminPassword    = ADQuery(@ComputerName & '$', 'ms-Mcs-AdmPwd')
+$sADLocalAdminPasswordExp = ADQuery(@ComputerName & '$', 'ms-Mcs-AdmPwdExpirationTime')
 $sADLoginScript           = ADQuery(@Username, 'scriptPath')
 $sADHomeDirectory         = ADQuery(@Username, 'homeDirectory')
 $sADHomeDrive             = ADQuery(@Username, 'homeDrive')
@@ -24421,7 +24460,7 @@ EndIf
 EndIf
 EndFunc
 Func ADQuery($sADObject, $sADParameter)
-$aADProperties = _AD_GetObjectProperties($sADObject & '$', $sADParameter)
+$aADProperties = _AD_GetObjectProperties($sADObject, $sADParameter)
 If IsArray($aADProperties) Then
 ReDim $aADProperties[2][2]
 Return $aADProperties[1][1]
@@ -24501,24 +24540,24 @@ EndSwitch
 Return $sStatus
 EndFunc
 Func ReadCustomization()
-$sOrgName = RegRead($sAppRegistryPath, 'sOrgName')
-$sOrgDomain = RegRead($sAppRegistryPath, 'sOrgDomain')
-$sOrgFQDomain = RegRead($sAppRegistryPath, 'sOrgFQDomain')
-$sOrgIntranetName = RegRead($sAppRegistryPath, 'sOrgIntranetName')
-$sOrgIntranetURL = RegRead($sAppRegistryPath, 'sOrgIntranetURL')
-$sOrgHelpdeskName = RegRead($sAppRegistryPath, 'sOrgHelpdeskName')
-$sOrgHelpdeskPhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskPhone')
-$sOrgHelpdeskRegionalPhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskRegionalPhone')
-$sOrgHelpdeskCorporatePhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskCorporatePhone')
-$sOrgHelpdeskEmail = RegRead($sAppRegistryPath, 'sOrgHelpdeskEmail')
-$sOrgHelpdeskURL = RegRead($sAppRegistryPath, 'sOrgHelpdeskURL')
-$sOrgHelpdeskRemoteSupportURL = RegRead($sAppRegistryPath, 'sOrgHelpdeskRemoteSupportURL')
-$sOrgHelpdeskRequestName = RegRead($sAppRegistryPath, 'sOrgHelpdeskRequestName')
-$sOrgAppCatalogURL = RegRead($sAppRegistryPath, 'sOrgAppCatalogURL')
-$sOrgPersonalDriveName = RegRead($sAppRegistryPath, 'sOrgPersonalDriveName')
-$sOrgLoginScriptPath = RegRead($sAppRegistryPath, 'sOrgLoginScriptPath')
+If RegRead($sAppRegistryPath, 'sOrgName') Then $sOrgName = RegRead($sAppRegistryPath, 'sOrgName')
+If RegRead($sAppRegistryPath, 'sOrgDomain') Then $sOrgDomain = RegRead($sAppRegistryPath, 'sOrgDomain')
+If RegRead($sAppRegistryPath, 'sOrgFQDomain') Then $sOrgFQDomain = RegRead($sAppRegistryPath, 'sOrgFQDomain')
+If RegRead($sAppRegistryPath, 'sOrgIntranetName') Then $sOrgIntranetName = RegRead($sAppRegistryPath, 'sOrgIntranetName')
+If RegRead($sAppRegistryPath, 'sOrgIntranetURL') Then $sOrgIntranetURL = RegRead($sAppRegistryPath, 'sOrgIntranetURL')
+If RegRead($sAppRegistryPath, 'sOrgHelpdeskName') Then $sOrgHelpdeskName = RegRead($sAppRegistryPath, 'sOrgHelpdeskName')
+If RegRead($sAppRegistryPath, 'sOrgHelpdeskPhone') Then $sOrgHelpdeskPhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskPhone')
+If RegRead($sAppRegistryPath, 'sOrgHelpdeskRegionalPhone') Then $sOrgHelpdeskRegionalPhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskRegionalPhone')
+If RegRead($sAppRegistryPath, 'sOrgHelpdeskCorporatePhone') Then $sOrgHelpdeskCorporatePhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskCorporatePhone')
+If RegRead($sAppRegistryPath, 'sOrgHelpdeskEmail') Then $sOrgHelpdeskEmail = RegRead($sAppRegistryPath, 'sOrgHelpdeskEmail')
+If RegRead($sAppRegistryPath, 'sOrgHelpdeskURL') Then $sOrgHelpdeskURL = RegRead($sAppRegistryPath, 'sOrgHelpdeskURL')
+If RegRead($sAppRegistryPath, 'sOrgHelpdeskRemoteSupportURL') Then $sOrgHelpdeskRemoteSupportURL = RegRead($sAppRegistryPath, 'sOrgHelpdeskRemoteSupportURL')
+If RegRead($sAppRegistryPath, 'sOrgHelpdeskRequestName') Then $sOrgHelpdeskRequestName = RegRead($sAppRegistryPath, 'sOrgHelpdeskRequestName')
+If RegRead($sAppRegistryPath, 'sOrgAppCatalogURL') Then $sOrgAppCatalogURL = RegRead($sAppRegistryPath, 'sOrgAppCatalogURL')
+If RegRead($sAppRegistryPath, 'sOrgPersonalDriveName') Then $sOrgPersonalDriveName = RegRead($sAppRegistryPath, 'sOrgPersonalDriveName')
+If RegRead($sAppRegistryPath, 'sOrgLoginScriptPath') Then $sOrgLoginScriptPath = RegRead($sAppRegistryPath, 'sOrgLoginScriptPath')
 Global $sFreeTextDetails = ''
-$sFreeTextDetails = RegRead($sAppRegistryPath, 'sFreeTextDetails')
+If RegRead($sAppRegistryPath, 'sFreeTextDetails') Then $sFreeTextDetails = RegRead($sAppRegistryPath, 'sFreeTextDetails')
 Switch (StringIsSpace($sFreeTextDetails))
 Case 0
 Global $bFreeTextDetailsExists = True
@@ -24533,7 +24572,6 @@ EndFunc
 Func ReadLCMInfo()
 Global $sLCMXJCode  = ''
 Global $sLCMCRCode  = ''
-Global $sLCMEdition = ''
 Local $sLCMXJCode0
 Local $sLCMCRCode0
 Local $sLCMXJCode1
@@ -24792,7 +24830,7 @@ TrayCreateItem('')
 Global $idTrayMainShowInfo   = TrayCreateItem('About This Computer')
 TrayCreateItem('')
 Global $idTrayMainExit       = TrayCreateItem('Exit')
-Switch $bExitEnabled
+Switch $bConfigExitEnabled
 Case True
 TrayItemSetState($idTrayMainExit, $TRAY_ENABLE)
 Case False
@@ -25038,7 +25076,7 @@ $rowMainLeft_07Height = $rowMainLeftHeights
 $rowMainLeft_08Height = $rowMainLeftHeights
 $rowMainLeft_09Height = $rowMainLeftHeights
 $rowMainLeft_10Height = $rowMainLeftHeights
-Global $idGUIMain = GUICreate('About This Computer', $columnMainBounds, $rowMainBounds, -1, -1, -1, $WS_EX_TOPMOST)
+Global $hGUIMain = GUICreate('About This Computer', $columnMainBounds, $rowMainBounds, -1, -1, -1, $WS_EX_TOPMOST)
 $sCloseButtonText = 'Close'
 If $sMainAppExeMode = 'Window' Then $sCloseButtonText = 'Exit'
 Global $idMenuMainFile = GUICtrlCreateMenu("&File")
@@ -25088,7 +25126,7 @@ Global $idMenuItemMainHelpAbout = GUICtrlCreateMenuItem('About', $idMenuMainHelp
 $idGraphicMainAboutPC = GUICtrlCreateIcon($sAppLogo, -1, $columnMainLeft01, $rowMainLeft01, 128, 128, -1, $GUI_WS_EX_PARENTDRAG)
 Global $idButtonMainLeftClose = GUICtrlCreateButton($sCloseButtonText, $columnMainLeft_01, $rowMainLeft_01, $columnMainLeft_01Width, $rowMainLeft_01Height)
 Global $idButtonMainLeftRefresh = GUICtrlCreateButton('Refresh', $columnMainLeft_01, $rowMainLeft_02, $columnMainLeft_01Width, $rowMainLeft_02Height)
-If $bContactHelpdeskEnabled = True Then
+If $bConfigContactHelpdeskEnabled = True Then
 Global $idButtonMainLeftContactHDesk = GUICtrlCreateButton($sOrgHelpdeskRequestName, $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height, BitOR($BS_MULTILINE, $BS_CENTER, $BS_VCENTER))
 Else
 Global $idButtonMainLeftContactHDesk = GUICtrlCreateButton('Copy Summary', $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height)
@@ -25265,13 +25303,13 @@ WEnd
 EndFunc
 Func MainGUIWait()
 GUIMainSetDefaults()
-GUISetState(@SW_SHOWNORMAL, $idGUIMain)
+GUISetState(@SW_SHOWNORMAL, $hGUIMain)
 $sGUIBusyWait = 300
 Local $aMsg
 While 1
 $aMsg = GUIGetMsg(1)
 Switch $aMsg[1]
-Case $idGUIMain
+Case $hGUIMain
 Switch $aMsg[0]
 Case $idMenuItemMainFileEmail
 GUIMainSetBusyDefaults()
@@ -25389,12 +25427,12 @@ LaunchAbout()
 GUIMainSetDefaults()
 Case $idButtonMainLeftContactHDesk
 GUIMainSetBusyDefaults()
-If $bContactHelpdeskEnabled = True Then
-GUISetState(@SW_MINIMIZE, $idGUIMain)
+If $bConfigContactHelpdeskEnabled = True Then
+GUISetState(@SW_MINIMIZE, $hGUIMain)
 Sleep(100)
 ContactHelpdesk()
 Sleep(100)
-GUISetState(@SW_RESTORE, $idGUIMain)
+GUISetState(@SW_RESTORE, $hGUIMain)
 Else
 CopySummaryToClipboard()
 Sleep($sGUIBusyWait)
@@ -25402,7 +25440,9 @@ EndIf
 GUIMainSetDefaults()
 Case $idButtonMainLeftRefresh
 GUIMainSetBusyDefaults()
-ReadComputerWait($idGUIMain)
+GUISetState(@SW_HIDE, $hGUIMain)
+ReadComputerWait($hGUIMain)
+GUISetState(@SW_SHOWNORMAL, $hGUIMain)
 GUIMainSetDefaults()
 Case $idButtonMainLeftClose
 MainGUIClose()
@@ -25417,17 +25457,23 @@ EndFunc
 Func MainGUIClose()
 Switch $sMainAppExeMode
 Case 'Tray'
-GUIDelete($idGUIMain)
+GUISetState(@SW_HIDE, $hGUIMain)
 TraySetState(1)
 MainTrayWait()
 Case 'Window'
-GUIDelete($idGUIMain)
-SoftExit()
+GUISetState(@SW_HIDE, $hGUIMain)
+End()
 EndSwitch
 EndFunc
-Func UpdateToolTip()
+Func RefreshTray()
 $sTrayToolTip = 'Computer Name: ' & $sComputerName & @CRLF & 'IP Address: ' & $sNetAdapter01Address & @CRLF & 'Uptime: ' & $sOSUptime
 TraySetToolTip($sTrayToolTip)
+Switch $bConfigExitEnabled
+Case True
+TrayItemSetState($idTrayMainExit, $TRAY_ENABLE)
+Case False
+TrayItemSetState($idTrayMainExit, $TRAY_DISABLE)
+EndSwitch
 EndFunc
 Func UpdateMainGUI()
 GUICtrlSetData($idLabelMainRight01a, $sOrgHelpdeskEmail)
@@ -25464,7 +25510,22 @@ If StringIsSpace($sNetAdapter02Address) = False Then $sNetAdapter02String = ( ' 
 If StringIsSpace($sNetAdapter03Address) = False Then $sNetAdapter03String = ( ' • Network Adapter 3: ' & $sNetAdapter03Name & @CRLF & '    - Address: ' & $sNetAdapter03Address & @CRLF & '    - Subnet Mask: ' & $sNetAdapter03SubnetMask & @CRLF & '    - Gateway: ' & $sNetAdapter03Gateway & @CRLF)
 If StringIsSpace($sNetAdapter04Address) = False Then $sNetAdapter04String = ( ' • Network Adapter 4: ' & $sNetAdapter04Name & @CRLF & '    - Address: ' & $sNetAdapter04Address & @CRLF & '    - Subnet Mask: ' & $sNetAdapter04SubnetMask & @CRLF & '    - Gateway: ' & $sNetAdapter04Gateway & @CRLF)
 If StringIsSpace($sNetAdapter05Address) = False Then $sNetAdapter05String = ( ' • Network Adapter 5: ' & $sNetAdapter05Name & @CRLF & '    - Address: ' & $sNetAdapter05Address & @CRLF & '    - Subnet Mask: ' & $sNetAdapter05SubnetMask & @CRLF & '    - Gateway: ' & $sNetAdapter05Gateway & @CRLF)
-$sSummaryString = 'Session:' & @CRLF & ' • Current User: ' & $sWMIUserName & @CRLF & ' • Computer Name: ' & $sComputerName & @CRLF & ' • Network Adapter 1: ' & $sNetAdapter01Name & @CRLF & '    - Address: ' & $sNetAdapter01Address & @CRLF & '    - Subnet Mask: ' & $sNetAdapter01SubnetMask & @CRLF & '    - Gateway: ' & $sNetAdapter01Gateway & @CRLF & $sNetAdapter02String & $sNetAdapter03String & $sNetAdapter04String & $sNetAdapter05String & @CRLF & 'Operating System:' & @CRLF & ' • Version: ' & $sOSVersionName & @CRLF & ' • Edition: ' & $sOSEdition & @CRLF & ' • Architecture: ' & $sOSArchShortname & @CRLF & ' • Uptime: ' & $sOSUptime & @CRLF & ' • Install Age: ' & $sOSAgeAndDate & @CRLF & ' • Domain: ' & $sWMIDomain & @CRLF & ' • Description: ' & $sPCDescription & @CRLF & @CRLF & 'Active Directory:' & @CRLF & ' • Description: ' & $sADDescription & @CRLF & ' • OU: ' & $sADOUPath & @CRLF & ' • User Login Script: ' & $sOrgLoginScriptPath & '\' & $sADLoginScript & @CRLF & ' • User ' & $sOrgPersonalDriveName & ' Drive: (' & $sADHomeDrive & ') ' & $sADHomeDirectory & @CRLF & @CRLF & 'Services:' & @CRLF & ' • Windows Update: ' & $sServWindowsUpdateStatus & @CRLF & ' • SCCM Client (SMS Agent Host): ' & $sServSMSAgentStatus & @CRLF & ' • CrowdStrike Windows Sensor: ' & $sServCrowdStrikeStatus & @CRLF & ' • Splunk Universal Forwarder: ' & $sServSplunkForwarderStatus & @CRLF & ' • BeyondTrust PowerBroker: ' & $sServBeyondTrustStatus & @CRLF & ' • BeyondTrust Monitor: ' & $sServBeyondTrustMonitorStatus & @CRLF & @CRLF & 'Hardware:' & @CRLF & ' • Manufacturer: ' & $sWMIManufacturer & @CRLF & ' • Model: ' & $sWMIModel & @CRLF & ' • Serial: ' & $sWMISerialNumber & @CRLF & ' • Asset Tag: ' & $sWMISMBIOSAssetTag & @CRLF & @CRLF & 'LCM:' & @CRLF & ' • Site Code: ' & $sLCMXJCode & @CRLF & ' • CRA: ' & $sLCMCRCode & @CRLF & @CRLF & 'Drives:' & @CRLF & $sDiskDetails & @CRLF & @CRLF & 'Printers:' & @CRLF & $sPrinterDetails & @CRLF & @CRLF & 'Custom:' & @CRLF & $sFreeTextDetails & @CRLF & 'Helpdesk:' & @CRLF & ' • Email: ' & $sOrgHelpdeskEmail & @CRLF & ' • Phone: ' & $sOrgHelpdeskPhone & @CRLF & ' • Password Reset: ' & $sOrgHelpdeskCorporatePhone & @CRLF & ' • Website: ' & $sOrgHelpdeskURL & @CRLF & ' • LMIr URL: ' & $sOrgHelpdeskRemoteSupportURL & @CRLF & @CRLF & 'About This Computer  •  ' & $sAppVersion & '  •  ' & @YEAR & '-' & @MON & '-' & @MDAY & ' ' & @HOUR & ':' & @MIN & ':' & @SEC & '  •  [mB7a78-' & $sAppBuild & ']'
+If StringIsSpace($sADLoginScript) = 1 Or $sADLoginScript = '0' Then
+Local $sUserLoginScript = ''
+Else
+Local $sUserLoginScript = $sOrgLoginScriptPath & '\' & $sADLoginScript
+EndIf
+If StringIsSpace($sADHomeDirectory) = 1 Or $sADHomeDirectory = '0' Then
+Local $sUserHomeDrive = ''
+Else
+If StringIsSpace($sADHomeDrive) = 1 Or $sADHomeDrive = '0' Then
+Local $sUserHomeDrive = ''
+Else
+Local $sUserHomeDrive = '$sADHomeDirectory'
+EndIf
+Local $sUserHomeDrive = '(' & $sADHomeDrive & ') ' & $sADHomeDirectory
+EndIf
+$sSummaryString = 'Session:' & @CRLF & ' • Current User: ' & $sWMIUserName & @CRLF & ' • Computer Name: ' & $sComputerName & @CRLF & ' • Network Adapter 1: ' & $sNetAdapter01Name & @CRLF & '    - Address: ' & $sNetAdapter01Address & @CRLF & '    - Subnet Mask: ' & $sNetAdapter01SubnetMask & @CRLF & '    - Gateway: ' & $sNetAdapter01Gateway & @CRLF & $sNetAdapter02String & $sNetAdapter03String & $sNetAdapter04String & $sNetAdapter05String & @CRLF & 'Operating System:' & @CRLF & ' • Version: ' & $sOSVersionName & @CRLF & ' • Edition: ' & $sOSEdition & @CRLF & ' • Architecture: ' & $sOSArchShortname & @CRLF & ' • Uptime: ' & $sOSUptime & @CRLF & ' • Install Age: ' & $sOSAgeAndDate & @CRLF & ' • Domain: ' & $sWMIDomain & @CRLF & ' • Local Description: ' & $sPCDescription & @CRLF & @CRLF & 'Active Directory:' & @CRLF & ' • Computer Description: ' & $sADDescription & @CRLF & ' • Computer OU: ' & $sADOUPath & @CRLF & ' • User Login Script: ' & $sUserLoginScript & @CRLF & ' • User ' & $sOrgPersonalDriveName & ': ' & $sUserHomeDrive & @CRLF & @CRLF & 'Services:' & @CRLF & ' • Windows Update: ' & $sServWindowsUpdateStatus & @CRLF & ' • SCCM Client (SMS Agent Host): ' & $sServSMSAgentStatus & @CRLF & ' • CrowdStrike Windows Sensor: ' & $sServCrowdStrikeStatus & @CRLF & ' • Splunk Universal Forwarder: ' & $sServSplunkForwarderStatus & @CRLF & ' • BeyondTrust PowerBroker: ' & $sServBeyondTrustStatus & @CRLF & ' • BeyondTrust Monitor: ' & $sServBeyondTrustMonitorStatus & @CRLF & @CRLF & 'Hardware:' & @CRLF & ' • Manufacturer: ' & $sWMIManufacturer & @CRLF & ' • Model: ' & $sWMIModel & @CRLF & ' • Serial: ' & $sWMISerialNumber & @CRLF & ' • Asset Tag: ' & $sWMISMBIOSAssetTag & @CRLF & @CRLF & 'LCM:' & @CRLF & ' • Site Code: ' & $sLCMXJCode & @CRLF & ' • CRA: ' & $sLCMCRCode & @CRLF & @CRLF & 'Drives:' & @CRLF & $sDiskDetails & @CRLF & @CRLF & 'Printers:' & @CRLF & $sPrinterDetails & @CRLF & @CRLF & 'Custom:' & @CRLF & $sFreeTextDetails & @CRLF & 'Helpdesk:' & @CRLF & ' • Email: ' & $sOrgHelpdeskEmail & @CRLF & ' • Phone: ' & $sOrgHelpdeskPhone & @CRLF & ' • Password Reset: ' & $sOrgHelpdeskCorporatePhone & @CRLF & ' • Website: ' & $sOrgHelpdeskURL & @CRLF & ' • LMIr URL: ' & $sOrgHelpdeskRemoteSupportURL & @CRLF & @CRLF & 'About This Computer  •  ' & $sAppVersion & '  •  ' & @YEAR & '-' & @MON & '-' & @MDAY & ' ' & @HOUR & ':' & @MIN & ':' & @SEC & '  •  [mB7a78-' & $sAppBuild & ']'
 EndFunc
 Func UpdateSummaryFile()
 Global $sSummaryFilePath = $sAppTempPath & '\AboutThisComputerSummary.txt'
@@ -25483,7 +25544,7 @@ ShellExecute($sMailTo)
 EndFunc
 Func PrintSummary()
 UpdateSummaryFile()
-$iButtonPressed = MsgBox(BitOR($MB_ICONQUESTION, $MB_TOPMOST, $MB_SETFOREGROUND, $MB_YESNO, $MB_DEFBUTTON2), 'Print Summary', 'Print summary to default printer?', 0, $idGUIMain)
+$iButtonPressed = MsgBox(BitOR($MB_ICONQUESTION, $MB_TOPMOST, $MB_SETFOREGROUND, $MB_YESNO, $MB_DEFBUTTON2), 'Print Summary', 'Print summary to default printer?', 0, $hGUIMain)
 If $iButtonPressed = $IDYES Then
 $iPrintSuccess = _FilePrint($sSummaryFilePath)
 If $iPrintSuccess Then
@@ -25535,15 +25596,15 @@ EndFunc
 Func LaunchShowSummary()
 Local $iWidth  = 600
 Local $iHeight = 500
-$idGUISummary = GUICreate('Summary', $iWidth, $iHeight, -1, -1, BitOR($WS_SIZEBOX, $WS_EX_TOPMOST), '', $idGUIMain)
-GUISetState(@SW_DISABLE, $idGUIMain)
+$idGUISummary = GUICreate('Summary', $iWidth, $iHeight, -1, -1, BitOR($WS_SIZEBOX, $WS_EX_TOPMOST), '', $hGUIMain)
+GUISetState(@SW_DISABLE, $hGUIMain)
 GUISetState(@SW_SHOWNORMAL, $idGUISummary)
 GUICtrlCreateEdit($sSummaryString, 15, 15, $iWidth - 32, $iHeight - 55, BitOR($ES_WANTRETURN, $WS_VSCROLL, $WS_HSCROLL, $ES_AUTOVSCROLL, $ES_AUTOHSCROLL, $ES_READONLY), -1)
 GUICtrlSetResizing(-1, $GUI_DOCKBORDERS)
 While 1
 Switch GUIGetMsg()
 Case $GUI_EVENT_CLOSE
-GUISetState(@SW_ENABLE, $idGUIMain)
+GUISetState(@SW_ENABLE, $hGUIMain)
 GUIDelete($idGUISummary)
 ExitLoop
 EndSwitch
@@ -25612,7 +25673,7 @@ Func LaunchDocumentation()
 EndFunc
 Func LaunchAbout()
 $sWindowTitle = 'About'
-$idParentGUI = $idGUIMain
+$idParentGUI = $hGUIMain
 $sGraphic = $sAppLogo
 $sTitle = 'About This Computer'
 $sSubtitle = 'A workstation information utility.'
@@ -25947,7 +26008,7 @@ WEnd
 EndFunc
 Func GUIContactClose()
 GUIDelete($idGUIContact)
-GUISetState(@SW_ENABLE, $idGUIMain)
+GUISetState(@SW_ENABLE, $hGUIMain)
 If FileExists($sContactFormScreenshotPath) = True Then FileDelete($sContactFormScreenshotPath)
 EndFunc
 #Region - Form Operations
@@ -26282,6 +26343,7 @@ EndFunc
 #EndRegion
 #Region -- END
 Func End()
+GUIDelete($hGUIMain)
 TraySetState(2)
 SoftExit()
 EndFunc

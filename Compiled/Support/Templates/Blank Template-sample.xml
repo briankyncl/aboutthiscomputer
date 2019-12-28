@@ -1,0 +1,31 @@
+<!-- About This Computer :: IT Helpdesk Request Template
+::
+:: * The name of this file minus the extension is what is shown in the contact form GUI.
+:: * Template files ending in -sample.xml will be ignored.
+:: * These XML-style comments are not actually ignored by the template parser.
+:: 
+:: FromAddress    = Overwrites app default. Must contain only one address. Must be a LabCorp email address.
+:: ToAddress      = Overwrites app default. Separate multiple addresses with a semicolon.
+:: CCAddress      = Separate multiple addresses with a semicolon.
+:: BCCAddress     = Separate multiple addresses with a semicolon.
+:: Subject        = 
+:: Name           = 
+:: Employee ID    = Must contain only numbers.
+:: Phone          = 
+:: Location       = 
+:: Body           = Accepts multiple lines.
+:: AttachmentPath = Full path to file(s) to attach. Separate multiple files with a semicolon. Files are attached in addition to any files attached by user in contact form GUI.
+::
+-->
+
+<FromAddress></FromAddress>
+<ToAddress></ToAddress>
+<CCAddress></CCAddress>
+<BCCAddress></BCCAddress>
+<Subject></Subject>
+<Name></Name>
+<EmployeeID></EmployeeID>
+<Phone></Phone>
+<Location></Location>
+<Body></Body>
+<AttachmentPath></AttachmentPath>

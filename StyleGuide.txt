@@ -1,0 +1,73 @@
+#COMMENTS-START
+  StyleGuide.txt
+  Auto-It style guide.
+
+  Created by Brian Kyncl on 2019-06-06
+  Copyright (c) 2020 Brian Kyncl. All rights reserved.
+#COMMENTS-END
+
+CHARACTERS
+  - Tabs should use spaces, not the tab character.
+
+  - Single-quotes should be used for all code enclosures.
+      [Example] Function('Parameter text.')
+
+  - Double-quotes should only be used for passing to OS, or in user-readable text.
+      [Example] Function('BatchCommand "parameter"')
+      [Example] MsgBox('Hello, "world"!')
+
+CODE FOLDING AND SPLITTING
+  - Bodies of code more than (~5) lines should consider receiving a header/sub-header and indented to enable code folding.
+  - Bodies of code more than (~1000) lines should consider being split into separate UDF files.
+
+CODE WRAPPING
+  - TODO
+
+INDENTATION
+  - Tab character should be space, not tab.
+  - Tab spacing should be two (2) spaces.
+  - Sections should be intended by (1) "tab" (two spaces).
+
+COMMENTS
+  - Overview: - Code remarks or otherwise intentional comments should use (2) semi-colons. 
+              - Code that is temporarily commented out should use (1) semicolon.
+              - Add comments to code as if you're looking at the code for the first time in two years and you're wondering what this does.
+
+  - Functions should have an indented, all-caps title as the first line after the function is declared.
+    The following line(s) should be a brief description of the function.
+    Consider including the variables created by the function with sample output.
+    [Example]
+      Function()
+        ;;THE EXAMPLE FUNCTION
+        ;; This is the function that exists to be an example.
+        ;;
+        ;; $sFuncData -- Ex: "This is a string of text."
+
+  - Section headers should use (2) semi-colons and be in all caps.
+    [Example]
+      ;;SECTION HEADER
+
+  - Sub-section headers should use (2) semi-colons and be in sentence case or all lowercase
+    [Example]
+      ;;Section sub-header
+
+  - Per-line comments should be (2) spaces from code, use (2) semi-colons, and be in sentence case or all lowercase.
+    [Example]
+      Function($sParameter)  ;;This is the per-line comment.
+
+  - Code that is commented to temporarily disable it should use (1) semi-colon immediately before the code.
+    [Example]
+      ;Function($sParameter)
+
+VARIABLES
+  - Variables should start with a character describing the kind of data they contain.
+    $iVariable  = Integer
+    $sVariable  = String
+    $bVariable  = Boolean
+    $aVariable  = Array
+    $lVariable  = List
+    $idVariable = Element ID
+    $hVariable  = Element handle
+
+STRUCTURE
+  - TODO

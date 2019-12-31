@@ -364,6 +364,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       ;;Controller for reading details about the computer.
       ;; Potentially used for refreshing a subset of details.
 
+      ;;read computer and user details
       ReadOS()
       ReadOSArch()
       ReadUser()
@@ -373,16 +374,15 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       ReadPrinters()
       ReadAD()
       ReadServices()
+      ReadRegistry()
+      ReadLCMInfo()  ;;move to branch
+
+      ;;read app config and customization
       ReadConfig()
       ReadCustomization()
-      ReadRegistry()
 
-      ;;;;;; move to branch ;;;;;;
-      ReadLCMInfo()
-      ;;;;;; move to branch ;;;;;;
-
+      ;;update interface with new data
       UpdateSummaryString()
-
       If $sOption <> 'NoRefresh' Then
         GUIDelete($hGUIMain)
         BuildMainGUI()
@@ -390,6 +390,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         RefreshTray()
       EndIf
 
+      ;;cleanup that memory leak
       _ReduceMemory()
     EndFunc
 
@@ -434,7 +435,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       ;; https://docs.microsoft.com/en-us/windows/deployment/update/waas-overview
       ;; https://www.autoitscript.com/autoit3/docs/macros/SystemInfo.htm
 
-      Global $sOSType         = @OSType  ;Returns WIN_NT
+      Global $sOSType         = @OSType  ;;Returns WIN_NT
       Global $sOSBuild        = @OSBuild
       Global $sOSServicePack  = @OSServicePack
       Global $sOSProductName  = ''

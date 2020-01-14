@@ -1,0 +1,396 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"StartupBui",
+				"StartupBuildGUI"
+			],
+			[
+				"sOrgIntran",
+				"sOrgIntranetName"
+			],
+			[
+				"Stringi",
+				"StringInStr()"
+			],
+			[
+				"sDirLog",
+				"sDirLogLocal"
+			],
+			[
+				"sContactFormSc",
+				"sContactFormScreenshotName"
+			],
+			[
+				"scontactFormSc",
+				"sContactFormScreenshotPath"
+			],
+			[
+				"sHelpdesk",
+				"sHelpdeskPhone"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "com.briankyncl.AboutThisComputer.au3",
+			"settings":
+			{
+				"buffer_size": 174242,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 299.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"al",
+				"AlignTab"
+			],
+			[
+				"ali",
+				"AlignTab"
+			],
+			[
+				"install",
+				"Package Control: Install Local Dependency"
+			],
+			[
+				"packag",
+				"Install Package Control"
+			],
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			],
+			[
+				"textp pastry",
+				"Text Pastry: Command-Line"
+			],
+			[
+				"alig",
+				"AlignTab"
+			],
+			[
+				"tex",
+				"Text Pastry: Paste Lines"
+			]
+		],
+		"width": 444.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/briankyncl/aboutthiscomputer"
+	],
+	"file_history":
+	[
+		"/Users/Brian/Downloads/esxi",
+		"/Users/Brian/Downloads/nginx.conf",
+		"/Users/Brian/Downloads/files.sh",
+		"/Users/Brian/GitRepos/aboutthiscomputer/com.briankyncl.AboutThisComputer.au3",
+		"/Users/Brian/Documents/Workspaces/com.briankyncl/About This Computer/Reference/WKS_Prep.au3",
+		"/Users/Brian/Documents/Workspaces/com.briankyncl/About This Computer/Reference/UDF-FirstParty/WKS_Prep-Tools.au3",
+		"/Users/Brian/GitRepos/aboutthiscomputer/com.briankyncl.AboutThisComputer_InstallHelper.au3",
+		"/Users/Brian/GitRepos/aboutthiscomputer/UDF-Services/Services.au3",
+		"/Volumes/Documents/com.briankyncl/About This Computer/Reference/WKS_Prep.au3",
+		"/Volumes/Documents/com.briankyncl/About This Computer/com.briankyncl.AboutThisComputer.au3",
+		"/Volumes/Documents/com.briankyncl/About This Computer/Reference/UDF-FirstParty/WKS_Prep-Packages-Application.au3",
+		"/Volumes/Documents/com.briankyncl/About This Computer/UDF/com.briankyncl.GetWindowsVersion.au3",
+		"/Users/Brian/Desktop/Text Pastry.sublime-package",
+		"/Users/Brian/Desktop/AboutThisComputer.au3",
+		"/Users/Brian/Applications/MeshCommander/To run MeshCommander.txt",
+		"/Users/Brian/Documents/Workspaces/Network/iptables",
+		"/Users/Brian/Desktop/config",
+		"/Users/Brian/Downloads/briansiphone7.conf",
+		"/Volumes/Development/Beta/WKS_Prep.au3",
+		"/Users/Brian/Desktop/WKS_Prep.au3",
+		"/Users/Brian/Desktop/Publish-0-SignExecutables.bat",
+		"/Users/Brian/Desktop/com.briankyncl.loginLCA.Seattle.bat",
+		"/Users/Brian/Desktop/WorkstationPrep.au3",
+		"/Users/Brian/Desktop/WKS_PrepCopyToFlashDrive.au3",
+		"/Volumes/Development/Beta/WKS_Prep_stripped.au3",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/workstations/host-workstation-nwseamon004.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/workstations/host-workstation-nwseamon003.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/workstations/host-workstation-nwseamon002.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-StatTrax.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/workstations/host-workstation-nwseamon001.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-ChromeApplicationProcess.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/pscs/host-switch-X00147.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/pscs/host-switch-X05266.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/pscs/host-switch-X05275.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/pscs/host-switch-X05247.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/pscs/host-switch-X05238.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/pscs/host-switch-X05273.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/pscs/host-switch-X05274.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/pscs/host-switch-X05276.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/pscs/host-switch-X01043.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/pscs/host-switch-X05250.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/pscs/host-switch-X05236.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/pscs/host-switch-X04031.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/pscs/host-switch-X05242.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/pscs/host-switch-X05138.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/labs/host-switch-chldot02.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/labs/host-switch-ahl.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/labs/host-switch-mbs.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/labs/host-switch-sci.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/labs/host-switch-eve.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/labs/host-switch-chldot06.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/labs/host-switch-chldot05.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/labs/host-switch-chldot04.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/labs/host-switch-chldot03.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/labs/host-switch-chldot01.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/labs/host-switch-bhl.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-LinkQuality-6.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/labs/host-switch-renton.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-LinkQuality-5.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/iops/host-switch-J14294.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/iops/host-switch-J14283.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/iops/host-switch-J13829.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/iops/host-switch-J12826.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/iops/host-switch-J14308.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/iops/host-switch-J14314.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/iops/host-switch-J14284.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/iops/host-switch-J14306.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/iops/host-switch-J14310.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/iops/host-switch-J03788.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/iops/host-switch-J06456.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/iops/host-switch-J14290.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/iops/host-switch-J13249.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/iops/host-switch-J05637.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/iops/host-switch-J13824.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/iops/host-switch-J14360.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/iops/host-switch-J10603.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-LinkQualityHighLatency.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/switches/iops/host-switch-J01338.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/printers/host-printer-CHLACC01.cfg.bak",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/appliances/host-xyplex-semic1.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/appliances/host-xyplex-semic2.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/appliances/host-xyplex-semic3.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/appliances/host-xyplex-setcbx10.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/appliances/host-xyplex-wad101.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/appliances/host-xyplex-wad102.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/appliances/host-xyplex-wad104.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/appliances/host-xyplex-wad108.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/appliances/host-xyplex-wad109.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/appliances/host-xyplex-wad115.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-DCPRTSVR01.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-DAWFGBZ.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SESCRIBE.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SENECA.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWRDS01.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWIIS01.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWDSH01.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWFIN04.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWDPM01.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWFIN05.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWADMC01.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWSCRIBE01.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWPRNT2.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWPRNT1.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWFIN03.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWSAL01.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-sewcsp01.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWANT01.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWLFS01.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWTAT01.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWANT06.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWANT02.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SECWPS02.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SECWPS01.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWANT05.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-sewbiorad01.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWANT04.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-NWSEAFLOW02.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-WADICL.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-sewalbas01.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-WebCTRL.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-sdstattrax3.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-DriveSpaceD-3.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SERENWFS01.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-MemoryUsage-3.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SECWCSP01.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-DHCP.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-MariaDB-2.cfg",
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWPREP01.cfg"
+	],
+	"find":
+	{
+		"height": 26.0
+	},
+	"find_in_files":
+	{
+		"height": 102.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "com.briankyncl.AboutThisComputer.au3",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 174242,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/AutoItScript/AutoIt.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 39.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "AboutThisComputer.sublime-project",
+	"replace":
+	{
+		"height": 48.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 229.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

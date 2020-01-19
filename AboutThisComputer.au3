@@ -350,8 +350,10 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         MainGUIWait()
     EndSwitch
 
+    ;;undeclared variable usage probably happens at this point.
+
     ;;GRACEFUL EXIT
-      ;;Exit app gracefully if code should ever find itself here.
+    ;; Exit app gracefully if code should ever find itself here.
       End()
   EndFunc
 #EndRegion

@@ -2877,38 +2877,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#Region - CONTACT HELPDESK
+#Region - HELPDESK CONTACT FORM
   Func ContactHelpdesk()
     GUIContactReadTemplates()
     ContactHelpdeskMain()
@@ -3102,7 +3071,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     $rowContactLeft_09Height = $rowContactLeftHeights
     $rowContactLeft_10Height = $rowContactLeftHeights
 
-  ;; CLEAR VARIABLES
+    ;;CLEAR VARIABLES
     Global $sContactFormFrom = ''
     Global $sContactFormTo = ''
     Global $sContactFormCC = ''
@@ -3120,16 +3089,16 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     Global $sContactFormAttachments = ''
     Global $bContactFormSubmitSuccess = False
 
-  ;; BUILD CONTACT HELPDESK WINDOW
+    ;;BUILD CONTACT HELPDESK WINDOW
     Global $idGUIContact = GUICreate('Create an ' & $sOrgHelpdeskName & ' Request', $columnContactBounds, $rowContactBounds, -1, -1, -1, $WS_EX_TOPMOST)   ;$hGUIMain
 
-    ;; LEFT COLUMN, TOP
+    ;;LEFT COLUMN, TOP
     $idGraphicContact = GUICtrlCreateIcon($sAppInstallPath & '\Support\BeOS_Customize_wrench.ico', -1, $columnContactLeft01, $rowContactLeft01, 96, 96, -1, $GUI_WS_EX_PARENTDRAG)
 
-    ;; LEFT COLUMN, BOTTOM
+    ;;LEFT COLUMN, BOTTOM
     Global $idButtonContactLeftSend = GUICtrlCreateButton('Submit Request', $columnContactLeft_01, $rowContactLeft_01, $columnContactLeft_01Width, $rowContactLeft_01Height, BitOR($BS_MULTILINE, $BS_CENTER, $BS_VCENTER))
 
-    ;; RIGHT COLUMN, TOP, LABELS
+    ;;RIGHT COLUMN, TOP, LABELS
     $sLabelTemplate   = 'Template:  '
     $sLabelTo         = 'To:  '
     $sLabelFrom       = 'From:  '
@@ -3185,7 +3154,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     Global $idInputContactRightScreenshotPath     = GUICtrlCreateInput('', $columnContactRight02 + 4,                  $rowContactRight10, $columnContactRight02Width - 28 - 3,               $rowContactRight10Height, BitOR($ES_AUTOHSCROLL,$ES_READONLY))
     Global $idButtonContactRightClearScreenshot   = GUICtrlCreateButton('X', $columnContactRight02 + 205,              $rowContactRight10 - 1, 23,                                            $rowContactRight10Height + 2)
 
-  ;; GATHER GUI ELEMENTS INTO ARRAYS
+    ;;GATHER GUI ELEMENTS INTO ARRAYS
     Global $aContactCombos[1]
       $aContactCombos[00] = $idInputContactRightTemplate
 
@@ -3206,17 +3175,17 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       $aContactButtons[03] = $idButtonContactRightTakeScreenshot
       $aContactButtons[04] = $idButtonContactRightClearScreenshot
 
-  ;; DISPLAY THE GUI
+    ;;DISPLAY THE GUI
     Global $idContactLastFocus  ;pre-decalre
     GUIContactSetDefaults() ;set defaults
     GUISetState(@SW_SHOWNORMAL, $idGUIContact) ;show GUI
     ControlFocus($idGUIContact, '', $idInputContactRightSubject)  ;set text cursor focus
     $idContactLastFocus = ControlGetFocus($idGUIContact)  ;save focus
 
-  ;; CATCH INPUT BOX FOCUS MESSAGES
+    ;;CATCH INPUT BOX FOCUS MESSAGES
     GUIRegisterMsg($WM_COMMAND, "ED_WM_COMMAND")
 
-  ;; WAIT FOR INPUT
+    ;;WAIT FOR INPUT
     Local $aMsg
     While 1
       $aMsg = GUIGetMsg(1)  ;use advanced parameter
@@ -3314,7 +3283,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     WEnd
   EndFunc
 
-;; CLOSE CONTACT GUI GRACEFULLY
+  ;;CLOSE CONTACT GUI GRACEFULLY
   Func GUIContactClose()
     GUIDelete($idGUIContact)  ;delete Contact GUI
     GUISetState(@SW_ENABLE, $hGUIMain) ;show main GUI
@@ -3376,112 +3345,110 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       GUIContactSubmitTicket()
     EndFunc
 
-  Func GUIContactReadTemplates()
-    ;Generated variables:
-    ;
-    ; $aContactTemplates[$i]
-    ; $lTemplates
+    Func GUIContactReadTemplates()
+      ;Generated variables:
+      ;
+      ; $aContactTemplates[$i]
+      ; $lTemplates
 
-    ;empty $lTemplates
-    $lTemplates = ''
+      ;empty $lTemplates
+      $lTemplates = ''
 
-    ;location of templates
-    Global $sContactTemplatesDir = $sAppInstallPath & '\Support\Templates'
+      ;location of templates
+      Global $sContactTemplatesDir = $sAppInstallPath & '\Support\Templates'
 
-    ;read dir of templates into array
-    Global $aContactTemplates = ''
-    $aContactTemplates = _FileListToArrayRec($sContactTemplatesDir, '*.xml|*-sample.xml', $FLTAR_FILES + $FLTAR_NOHIDDEN + $FLTAR_NOSYSTEM + $FLTAR_NOLINK, $FLTAR_RECUR, $FLTAR_SORT, $FLTAR_FULLPATH)
-      ;should return array of file paths, $array[0] is number of file paths returned
+      ;read dir of templates into array
+      Global $aContactTemplates = ''
+      $aContactTemplates = _FileListToArrayRec($sContactTemplatesDir, '*.xml|*-sample.xml', $FLTAR_FILES + $FLTAR_NOHIDDEN + $FLTAR_NOSYSTEM + $FLTAR_NOLINK, $FLTAR_RECUR, $FLTAR_SORT, $FLTAR_FULLPATH)
+        ;should return array of file paths, $array[0] is number of file paths returned
 
-    ;populate variable to be used by Templates combo box
-    For $i = 1 To UBound($aContactTemplates) - 1
-      $aTemp = StringSplit($aContactTemplates[$i], '\')
-      $sTempFileName = $aTemp[$aTemp[0]]
-      $sTemplateTitle = StringTrimRight($sTempFileName, 4)
-      $lTemplates &= "|" & $sTemplateTitle
-    Next
+      ;populate variable to be used by Templates combo box
+      For $i = 1 To UBound($aContactTemplates) - 1
+        $aTemp = StringSplit($aContactTemplates[$i], '\')
+        $sTempFileName = $aTemp[$aTemp[0]]
+        $sTemplateTitle = StringTrimRight($sTempFileName, 4)
+        $lTemplates &= "|" & $sTemplateTitle
+      Next
+    EndFunc
 
-  EndFunc
+    Func GUIContactLoadTemplate()
+      ;; returns the following variables:
+      ;;
+      ;; $sTemplateFromAddress
+      ;; $sTemplateToAddress
+      ;; $sTemplateCCAddress
+      ;; $sTemplateBCCAddress
+      ;; $sTemplateSubject
+      ;; $sTemplateName
+      ;; $sTemplateEmployeeID
+      ;; $sTemplatePhone
+      ;; $sTemplateLocation
+      ;; $sTemplateBody
+      ;; $sTemplatePath
 
-  Func GUIContactLoadTemplate()
-  ; returns the following variables:
-  ;
-  ; $sTemplateFromAddress
-  ; $sTemplateToAddress
-  ; $sTemplateCCAddress
-  ; $sTemplateBCCAddress
-  ; $sTemplateSubject
-  ; $sTemplateName
-  ; $sTemplateEmployeeID
-  ; $sTemplatePhone
-  ; $sTemplateLocation
-  ; $sTemplateBody
-  ; $sTemplatePath
+      Global $sTemplateFromAddress = ''
+      Global $sTemplateToAddress = ''
+      Global $sTemplateCCAddress = ''
+      Global $sTemplateBCCAddress = ''
+      Global $sTemplateSubject = ''
+      Global $sTemplateName = ''
+      Global $sTemplateEmployeeID = ''
+      Global $sTemplatePhone = ''
+      Global $sTemplateLocation = ''
+      Global $sTemplateBody = ''
+      Global $sTemplateAttachmentPath = ''
 
-    Global $sTemplateFromAddress = ''
-    Global $sTemplateToAddress = ''
-    Global $sTemplateCCAddress = ''
-    Global $sTemplateBCCAddress = ''
-    Global $sTemplateSubject = ''
-    Global $sTemplateName = ''
-    Global $sTemplateEmployeeID = ''
-    Global $sTemplatePhone = ''
-    Global $sTemplateLocation = ''
-    Global $sTemplateBody = ''
-    Global $sTemplateAttachmentPath = ''
+      ;load selected template into GUI
+      $sTemplateSelecton = GUICtrlRead($idInputContactRightTemplate)
+      $sTemplateSelectionPath = $sContactTemplatesDir & '\' & $sTemplateSelecton & '.xml'
 
-    ;load selected template into GUI
-    $sTemplateSelecton = GUICtrlRead($idInputContactRightTemplate)
-    $sTemplateSelectionPath = $sContactTemplatesDir & '\' & $sTemplateSelecton & '.xml'
+      ;parse template into variables
+      If FileExists($sTemplateSelectionPath) Then  ;if the path really does exist
+        Local $hFileOpen = FileOpen($sTemplateSelectionPath,  $FO_READ)  ;open file
+        If Not ($hFileOpen = '-1') Then  ;do if file opens successfully
+          $string = FileRead($hFileOpen)  ;read contents of file into one big string
 
-    ;parse template into variables
-    If FileExists($sTemplateSelectionPath) Then  ;if the path really does exist
-      Local $hFileOpen = FileOpen($sTemplateSelectionPath,  $FO_READ)  ;open file
-      If Not ($hFileOpen = '-1') Then  ;do if file opens successfully
-        $string = FileRead($hFileOpen)  ;read contents of file into one big string
+          ;reg exp file contents into parts of the array
+          $aTemplateFromAddress = StringRegExp($string, '<FromAddress>(.*)</FromAddress>', 1)
+          $aTemplateToAddress = StringRegExp($string, '<ToAddress>(.*)</ToAddress>', 1)
+          $aTemplateCCAddress = StringRegExp($string, '<CCAddress>(.*)</CCAddress>', 1)
+          $aTemplateBCCAddress = StringRegExp($string, '<BCCAddress>(.*)</BCCAddress>', 1)
+          $aTemplateSubject = StringRegExp($string, '<Subject>(.*)</Subject>', 1)
+          $aTemplateName = StringRegExp($string, '<Name>(.*)</Name>', 1)
+          $aTemplateEmployeeID = StringRegExp($string, '<EmployeeID>(.*)</EmployeeID>', 1)
+          $aTemplatePhone = StringRegExp($string, '<Phone>(.*)</Phone>', 1)
+          $aTemplateLocation = StringRegExp($string, '<Location>(.*)</Location>', 1)
+          $aTemplateBody = StringRegExp($string, '(?s)<Body>(.*)</Body>', 1)  ;(?s) allows matching across multiple lines
+          $aTemplateAttachmentPath = StringRegExp($string, '<AttachmentPath>(.*)</AttachmentPath>', 1)
 
-        ;reg exp file contents into parts of the array
-        $aTemplateFromAddress = StringRegExp($string, '<FromAddress>(.*)</FromAddress>', 1)
-        $aTemplateToAddress = StringRegExp($string, '<ToAddress>(.*)</ToAddress>', 1)
-        $aTemplateCCAddress = StringRegExp($string, '<CCAddress>(.*)</CCAddress>', 1)
-        $aTemplateBCCAddress = StringRegExp($string, '<BCCAddress>(.*)</BCCAddress>', 1)
-        $aTemplateSubject = StringRegExp($string, '<Subject>(.*)</Subject>', 1)
-        $aTemplateName = StringRegExp($string, '<Name>(.*)</Name>', 1)
-        $aTemplateEmployeeID = StringRegExp($string, '<EmployeeID>(.*)</EmployeeID>', 1)
-        $aTemplatePhone = StringRegExp($string, '<Phone>(.*)</Phone>', 1)
-        $aTemplateLocation = StringRegExp($string, '<Location>(.*)</Location>', 1)
-        $aTemplateBody = StringRegExp($string, '(?s)<Body>(.*)</Body>', 1)  ;(?s) allows matching across multiple lines
-        $aTemplateAttachmentPath = StringRegExp($string, '<AttachmentPath>(.*)</AttachmentPath>', 1)
-
-        ;load RegExp arrays into string variables
-        If _elementExists($aTemplateFromAddress, 0) = True     Then $sTemplateFromAddress = $aTemplateFromAddress[0]
-        If _elementExists($aTemplateToAddress, 0) = True       Then $sTemplateToAddress = $aTemplateToAddress[0]
-        If _elementExists($aTemplateCCAddress, 0) = True       Then $sTemplateCCAddress = $aTemplateCCAddress[0]
-        If _elementExists($aTemplateBCCAddress, 0) = True      Then $sTemplateBCCAddress = $aTemplateBCCAddress[0]
-        If _elementExists($aTemplateSubject, 0) = True         Then $sTemplateSubject = $aTemplateSubject[0]
-        If _elementExists($aTemplateName, 0) = True            Then $sTemplateName = $aTemplateName[0]
-        If _elementExists($aTemplateEmployeeID, 0) = True      Then $sTemplateEmployeeID = $aTemplateEmployeeID[0]
-        If _elementExists($aTemplatePhone, 0) = True           Then $sTemplatePhone = $aTemplatePhone[0]
-        If _elementExists($aTemplateLocation, 0) = True        Then $sTemplateLocation = $aTemplateLocation[0]
-        If _elementExists($aTemplateBody, 0) = True            Then $sTemplateBody = $aTemplateBody[0]
-        If _elementExists($aTemplateAttachmentPath, 0) = True  Then $sTemplateAttachmentPath = $aTemplateAttachmentPath[0]
+          ;load RegExp arrays into string variables
+          If _elementExists($aTemplateFromAddress, 0) = True     Then $sTemplateFromAddress = $aTemplateFromAddress[0]
+          If _elementExists($aTemplateToAddress, 0) = True       Then $sTemplateToAddress = $aTemplateToAddress[0]
+          If _elementExists($aTemplateCCAddress, 0) = True       Then $sTemplateCCAddress = $aTemplateCCAddress[0]
+          If _elementExists($aTemplateBCCAddress, 0) = True      Then $sTemplateBCCAddress = $aTemplateBCCAddress[0]
+          If _elementExists($aTemplateSubject, 0) = True         Then $sTemplateSubject = $aTemplateSubject[0]
+          If _elementExists($aTemplateName, 0) = True            Then $sTemplateName = $aTemplateName[0]
+          If _elementExists($aTemplateEmployeeID, 0) = True      Then $sTemplateEmployeeID = $aTemplateEmployeeID[0]
+          If _elementExists($aTemplatePhone, 0) = True           Then $sTemplatePhone = $aTemplatePhone[0]
+          If _elementExists($aTemplateLocation, 0) = True        Then $sTemplateLocation = $aTemplateLocation[0]
+          If _elementExists($aTemplateBody, 0) = True            Then $sTemplateBody = $aTemplateBody[0]
+          If _elementExists($aTemplateAttachmentPath, 0) = True  Then $sTemplateAttachmentPath = $aTemplateAttachmentPath[0]
+        EndIf
       EndIf
-    EndIf
 
-    ;update GUI with template variables
-    ;;from
-    ;;to
-    ;;cc
-    ;;bcc
-    If StringIsSpace($sTemplateSubject) = False Then GUICtrlSetData($idInputContactRightSubject, $sTemplateSubject)  ;;subject
-    If StringIsSpace($sTemplateName) = False Then GUICtrlSetData($idInputContactRightName, $sTemplateName)  ;;name
-    If StringIsSpace($sTemplateEmployeeID) = False Then GUICtrlSetData($idInputContactRightEmployeeID, $sTemplateEmployeeID)  ;;employee ID
-    If StringIsSpace($sTemplatePhone) = False Then GUICtrlSetData($idInputContactRightPhone, $sTemplatePhone)  ;;phone
-    If StringIsSpace($sTemplateLocation) = False Then GUICtrlSetData($idInputContactRightLocation, $sTemplateLocation)  ;;location
-    If StringIsSpace($sTemplateBody) = False Then _GUICtrlRichEdit_SetText($idInputContactRightBody, $sTemplateBody)  ;;body
-    ;;attachment
-
-  EndFunc
+      ;update GUI with template variables
+      ;;from
+      ;;to
+      ;;cc
+      ;;bcc
+      If StringIsSpace($sTemplateSubject) = False Then GUICtrlSetData($idInputContactRightSubject, $sTemplateSubject)  ;;subject
+      If StringIsSpace($sTemplateName) = False Then GUICtrlSetData($idInputContactRightName, $sTemplateName)  ;;name
+      If StringIsSpace($sTemplateEmployeeID) = False Then GUICtrlSetData($idInputContactRightEmployeeID, $sTemplateEmployeeID)  ;;employee ID
+      If StringIsSpace($sTemplatePhone) = False Then GUICtrlSetData($idInputContactRightPhone, $sTemplatePhone)  ;;phone
+      If StringIsSpace($sTemplateLocation) = False Then GUICtrlSetData($idInputContactRightLocation, $sTemplateLocation)  ;;location
+      If StringIsSpace($sTemplateBody) = False Then _GUICtrlRichEdit_SetText($idInputContactRightBody, $sTemplateBody)  ;;body
+      ;;attachment
+    EndFunc
 
     Func GUIContactReadForm()
     ;returned variables:
@@ -3571,13 +3538,13 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         Return
       EndIf
 
-;~       ;test Employee ID is only digits
-;~       If (StringIsDigit($sContactFormEmployeeID) = 0) Then $bContactFormValid = False
-;~       If $bContactFormValid = False Then
-;~         MsgBox(BitOR($MB_OK, $MB_ICONWARNING, $MB_TOPMOST, $MB_SETFOREGROUND), 'Missing Information', 'Your Employee ID must be only numbers.', 0, $idGUIContact)
-;~         $idContactLastFocus = GUICtrlGetHandle($idInputContactRightEmployeeID)
-;~         Return
-;~       EndIf
+      ;;test Employee ID is only digits
+      ;If (StringIsDigit($sContactFormEmployeeID) = 0) Then $bContactFormValid = False
+      ;If $bContactFormValid = False Then
+      ;  MsgBox(BitOR($MB_OK, $MB_ICONWARNING, $MB_TOPMOST, $MB_SETFOREGROUND), 'Missing Information', 'Your Employee ID must be only numbers.', 0, $idGUIContact)
+      ;  $idContactLastFocus = GUICtrlGetHandle($idInputContactRightEmployeeID)
+      ;  Return
+      ;EndIf
 
       ;test Phone is present
       If (StringIsSpace($sContactFormPhone) = 1) Then $bContactFormValid = False
@@ -3801,22 +3768,6 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     EndFunc
   #EndRegion
 #EndRegion
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

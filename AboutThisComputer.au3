@@ -6,7 +6,7 @@
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_Res_Comment=About This Computer
 #AutoIt3Wrapper_Res_Description=About This Computer
-#AutoIt3Wrapper_Res_Fileversion=2.0.0.998
+#AutoIt3Wrapper_Res_Fileversion=2.0.0.1006
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=y
 #AutoIt3Wrapper_Res_LegalCopyright=Copyright (c) 2020 Brian Kyncl (briankyncl.com). All rights reserved.
 #AutoIt3Wrapper_Res_SaveSource=y
@@ -2442,6 +2442,12 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       Local $sUserHomeDrive = '(' & $sADHomeDrive & ') ' & $sADHomeDirectory
     EndIf
 
+    ;;Trim strings as needed
+    Local $sFreeTextDetails_Trimmed = ''
+    If StringIsSpace($sFreeTextDetails) = 0 Then  ;;0 means string is not spaces
+      $sFreeTextDetails_Trimmed = $sFreeTextDetails & @CRLF
+    EndIf
+
     ;;Build summary string
     $sSummaryString = _
       'Session:' & @CRLF & _
@@ -2496,7 +2502,8 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       $sPrinterDetails & @CRLF & _
       @CRLF & _
       'Custom:' & @CRLF & _
-      $sFreeTextDetails & @CRLF & _
+      $sFreeTextDetails_Trimmed & _
+      @CRLF & _
       'Helpdesk:' & @CRLF & _
       ' • Email: ' & $sOrgHelpdeskEmail & @CRLF & _
       ' • Phone: ' & $sOrgHelpdeskPhone & @CRLF & _

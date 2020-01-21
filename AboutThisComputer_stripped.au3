@@ -6,7 +6,7 @@
 #AutoIt3Wrapper_Compile_Both=y
 #AutoIt3Wrapper_Res_Comment=About This Computer
 #AutoIt3Wrapper_Res_Description=About This Computer
-#AutoIt3Wrapper_Res_Fileversion=2.0.0.997
+#AutoIt3Wrapper_Res_Fileversion=2.0.0.1005
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=y
 #AutoIt3Wrapper_Res_LegalCopyright=Copyright (c) 2020 Brian Kyncl (briankyncl.com). All rights reserved.
 #AutoIt3Wrapper_Res_SaveSource=y
@@ -24008,10 +24008,10 @@ ReadDisks()
 ReadPrinters()
 ReadAD()
 ReadServices()
-ReadConfig()
-ReadCustomization()
 ReadRegistry()
 ReadLCMInfo()
+ReadConfig()
+ReadCustomization()
 UpdateSummaryString()
 If $sOption <> 'NoRefresh' Then
 GUIDelete($hGUIMain)
@@ -24825,7 +24825,7 @@ Global $idTrayMainSearchAD   = TrayCreateItem('Search Active Directory')
 Global $idTrayMainSysProp    = TrayCreateItem('System Properties')
 TrayCreateItem('')
 Global $idTrayMainSearchAD   = TrayCreateItem('Run Login Script')
-Global $idTrayMainSysProp    = TrayCreateItem('Map ' & $sOrgPersonalDriveName & ' Drive')
+Global $idTrayMainSysProp    = TrayCreateItem('Map ' & $sOrgPersonalDriveName)
 TrayCreateItem('')
 Global $idTrayMainShowInfo   = TrayCreateItem('About This Computer')
 TrayCreateItem('')
@@ -25525,7 +25525,11 @@ Local $sUserHomeDrive = '$sADHomeDirectory'
 EndIf
 Local $sUserHomeDrive = '(' & $sADHomeDrive & ') ' & $sADHomeDirectory
 EndIf
-$sSummaryString = 'Session:' & @CRLF & ' • Current User: ' & $sWMIUserName & @CRLF & ' • Computer Name: ' & $sComputerName & @CRLF & ' • Network Adapter 1: ' & $sNetAdapter01Name & @CRLF & '    - Address: ' & $sNetAdapter01Address & @CRLF & '    - Subnet Mask: ' & $sNetAdapter01SubnetMask & @CRLF & '    - Gateway: ' & $sNetAdapter01Gateway & @CRLF & $sNetAdapter02String & $sNetAdapter03String & $sNetAdapter04String & $sNetAdapter05String & @CRLF & 'Operating System:' & @CRLF & ' • Version: ' & $sOSVersionName & @CRLF & ' • Edition: ' & $sOSEdition & @CRLF & ' • Architecture: ' & $sOSArchShortname & @CRLF & ' • Uptime: ' & $sOSUptime & @CRLF & ' • Install Age: ' & $sOSAgeAndDate & @CRLF & ' • Domain: ' & $sWMIDomain & @CRLF & ' • Local Description: ' & $sPCDescription & @CRLF & @CRLF & 'Active Directory:' & @CRLF & ' • Computer Description: ' & $sADDescription & @CRLF & ' • Computer OU: ' & $sADOUPath & @CRLF & ' • User Login Script: ' & $sUserLoginScript & @CRLF & ' • User ' & $sOrgPersonalDriveName & ': ' & $sUserHomeDrive & @CRLF & @CRLF & 'Services:' & @CRLF & ' • Windows Update: ' & $sServWindowsUpdateStatus & @CRLF & ' • SCCM Client (SMS Agent Host): ' & $sServSMSAgentStatus & @CRLF & ' • CrowdStrike Windows Sensor: ' & $sServCrowdStrikeStatus & @CRLF & ' • Splunk Universal Forwarder: ' & $sServSplunkForwarderStatus & @CRLF & ' • BeyondTrust PowerBroker: ' & $sServBeyondTrustStatus & @CRLF & ' • BeyondTrust Monitor: ' & $sServBeyondTrustMonitorStatus & @CRLF & @CRLF & 'Hardware:' & @CRLF & ' • Manufacturer: ' & $sWMIManufacturer & @CRLF & ' • Model: ' & $sWMIModel & @CRLF & ' • Serial: ' & $sWMISerialNumber & @CRLF & ' • Asset Tag: ' & $sWMISMBIOSAssetTag & @CRLF & @CRLF & 'LCM:' & @CRLF & ' • Site Code: ' & $sLCMXJCode & @CRLF & ' • CRA: ' & $sLCMCRCode & @CRLF & @CRLF & 'Drives:' & @CRLF & $sDiskDetails & @CRLF & @CRLF & 'Printers:' & @CRLF & $sPrinterDetails & @CRLF & @CRLF & 'Custom:' & @CRLF & $sFreeTextDetails & @CRLF & 'Helpdesk:' & @CRLF & ' • Email: ' & $sOrgHelpdeskEmail & @CRLF & ' • Phone: ' & $sOrgHelpdeskPhone & @CRLF & ' • Password Reset: ' & $sOrgHelpdeskCorporatePhone & @CRLF & ' • Website: ' & $sOrgHelpdeskURL & @CRLF & ' • LMIr URL: ' & $sOrgHelpdeskRemoteSupportURL & @CRLF & @CRLF & 'About This Computer  •  ' & $sAppVersion & '  •  ' & @YEAR & '-' & @MON & '-' & @MDAY & ' ' & @HOUR & ':' & @MIN & ':' & @SEC & '  •  [mB7a78-' & $sAppBuild & ']'
+Local $sFreeTextDetails_Trimmed = ''
+If StringIsSpace($sFreeTextDetails) = 0 Then
+$sFreeTextDetails_Trimmed = $sFreeTextDetails & @CRLF
+EndIf
+$sSummaryString = 'Session:' & @CRLF & ' • Current User: ' & $sWMIUserName & @CRLF & ' • Computer Name: ' & $sComputerName & @CRLF & ' • Network Adapter 1: ' & $sNetAdapter01Name & @CRLF & '    - Address: ' & $sNetAdapter01Address & @CRLF & '    - Subnet Mask: ' & $sNetAdapter01SubnetMask & @CRLF & '    - Gateway: ' & $sNetAdapter01Gateway & @CRLF & $sNetAdapter02String & $sNetAdapter03String & $sNetAdapter04String & $sNetAdapter05String & @CRLF & 'Operating System:' & @CRLF & ' • Version: ' & $sOSVersionName & @CRLF & ' • Edition: ' & $sOSEdition & @CRLF & ' • Architecture: ' & $sOSArchShortname & @CRLF & ' • Uptime: ' & $sOSUptime & @CRLF & ' • Install Age: ' & $sOSAgeAndDate & @CRLF & ' • Domain: ' & $sWMIDomain & @CRLF & ' • Local Description: ' & $sPCDescription & @CRLF & @CRLF & 'Active Directory:' & @CRLF & ' • Computer Description: ' & $sADDescription & @CRLF & ' • Computer OU: ' & $sADOUPath & @CRLF & ' • User Login Script: ' & $sUserLoginScript & @CRLF & ' • User ' & $sOrgPersonalDriveName & ': ' & $sUserHomeDrive & @CRLF & @CRLF & 'Services:' & @CRLF & ' • Windows Update: ' & $sServWindowsUpdateStatus & @CRLF & ' • SCCM Client (SMS Agent Host): ' & $sServSMSAgentStatus & @CRLF & ' • CrowdStrike Windows Sensor: ' & $sServCrowdStrikeStatus & @CRLF & ' • Splunk Universal Forwarder: ' & $sServSplunkForwarderStatus & @CRLF & ' • BeyondTrust PowerBroker: ' & $sServBeyondTrustStatus & @CRLF & ' • BeyondTrust Monitor: ' & $sServBeyondTrustMonitorStatus & @CRLF & @CRLF & 'Hardware:' & @CRLF & ' • Manufacturer: ' & $sWMIManufacturer & @CRLF & ' • Model: ' & $sWMIModel & @CRLF & ' • Serial: ' & $sWMISerialNumber & @CRLF & ' • Asset Tag: ' & $sWMISMBIOSAssetTag & @CRLF & @CRLF & 'LCM:' & @CRLF & ' • Site Code: ' & $sLCMXJCode & @CRLF & ' • CRA: ' & $sLCMCRCode & @CRLF & @CRLF & 'Drives:' & @CRLF & $sDiskDetails & @CRLF & @CRLF & 'Printers:' & @CRLF & $sPrinterDetails & @CRLF & @CRLF & 'Custom:' & @CRLF & $sFreeTextDetails_Trimmed & @CRLF & 'Helpdesk:' & @CRLF & ' • Email: ' & $sOrgHelpdeskEmail & @CRLF & ' • Phone: ' & $sOrgHelpdeskPhone & @CRLF & ' • Password Reset: ' & $sOrgHelpdeskCorporatePhone & @CRLF & ' • Website: ' & $sOrgHelpdeskURL & @CRLF & ' • LMIr URL: ' & $sOrgHelpdeskRemoteSupportURL & @CRLF & @CRLF & 'About This Computer  •  ' & $sAppVersion & '  •  ' & @YEAR & '-' & @MON & '-' & @MDAY & ' ' & @HOUR & ':' & @MIN & ':' & @SEC & '  •  [mB7a78-' & $sAppBuild & ']'
 EndFunc
 Func UpdateSummaryFile()
 Global $sSummaryFilePath = $sAppTempPath & '\AboutThisComputerSummary.txt'
@@ -25742,7 +25746,7 @@ EndSwitch
 WEnd
 EndFunc
 #EndRegion
-#Region - CONTACT HELPDESK
+#Region - HELPDESK CONTACT FORM
 Func ContactHelpdesk()
 GUIContactReadTemplates()
 ContactHelpdeskMain()

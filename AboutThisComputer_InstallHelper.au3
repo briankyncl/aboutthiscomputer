@@ -28,6 +28,7 @@
 
 #Region -- PRE-FLIGHT
   ;;INCLUDES
+  #include 'UDF-ATCCustomization\_ATC_Customization.au3'
   #include <FileConstants.au3>
   #include <WinAPIFiles.au3>
 #EndRegion
@@ -169,32 +170,34 @@
       EndIf
     Next
 
-    ;;STAGE CUSTOMIZATION REGISTRY ENTRIES
-    ;; Test if registry key exists, if not, create it.
-    Local $aRegistryCustomization[17]
-      $aRegistryCustomization[00] = 'sOrgName'
-      $aRegistryCustomization[01] = 'sOrgDomain'
-      $aRegistryCustomization[02] = 'sOrgFQDomain'
-      $aRegistryCustomization[03] = 'sOrgIntranetName'
-      $aRegistryCustomization[04] = 'sOrgIntranetURL'
-      $aRegistryCustomization[05] = 'sOrgHelpdeskName'
-      $aRegistryCustomization[06] = 'sOrgHelpdeskPhone'
-      $aRegistryCustomization[07] = 'sOrgHelpdeskRegionalPhone'
-      $aRegistryCustomization[08] = 'sOrgHelpdeskCorporatePhone'
-      $aRegistryCustomization[09] = 'sOrgHelpdeskEmail'
-      $aRegistryCustomization[10] = 'sOrgHelpdeskURL'
-      $aRegistryCustomization[11] = 'sOrgHelpdeskRemoteSupportURL'
-      $aRegistryCustomization[12] = 'sOrgHelpdeskRequestName'
-      $aRegistryCustomization[13] = 'sOrgAppCatalogURL'
-      $aRegistryCustomization[14] = 'sOrgPersonalDriveName'
-      $aRegistryCustomization[15] = 'sOrgLoginScriptPath'
-      $aRegistryCustomization[16] = 'sFreeTextDetails'
-    For $i = 0 to UBound($aRegistryCustomization) - 1
-      RegRead($sAppRegistryPath, $aRegistryCustomization[$i])
-      If @error <> 0 Then
-        RegWrite($sAppRegistryPath, $aRegistryCustomization[$i], 'REG_SZ', '')
-      EndIf
-    Next
+    ;;;STAGE CUSTOMIZATION REGISTRY ENTRIES
+    ;;; Test if registry key exists, if not, create it.
+    ;Local $aRegistryCustomization[17]
+    ;  $aRegistryCustomization[00] = 'sOrgName'
+    ;  $aRegistryCustomization[01] = 'sOrgDomain'
+    ;  $aRegistryCustomization[02] = 'sOrgFQDomain'
+    ;  $aRegistryCustomization[03] = 'sIntranetName'
+    ;  $aRegistryCustomization[04] = 'sIntranetURL'
+    ;  $aRegistryCustomization[05] = 'sHelpdeskName'
+    ;  $aRegistryCustomization[06] = 'sHelpdeskPhone'
+    ;  $aRegistryCustomization[07] = 'sHelpdeskRegionalPhone'
+    ;  $aRegistryCustomization[08] = 'sHelpdeskCorporatePhone'
+    ;  $aRegistryCustomization[09] = 'sHelpdeskEmail'
+    ;  $aRegistryCustomization[10] = 'sHelpdeskURL'
+    ;  $aRegistryCustomization[11] = 'sHelpdeskRemoteSupportURL'
+    ;  $aRegistryCustomization[12] = 'sHelpdeskRequestName'
+    ;  $aRegistryCustomization[13] = 'sSCCMAppCatalogURL'
+    ;  $aRegistryCustomization[14] = 'sHomeFolderName'
+    ;  $aRegistryCustomization[15] = 'sLoginScriptPath'
+    ;  $aRegistryCustomization[16] = 'sFreeTextDetails'
+    ;For $i = 0 to UBound($aRegistryCustomization) - 1
+    ;  RegRead($sAppRegistryPath, $aRegistryCustomization[$i])
+    ;  If @error <> 0 Then
+    ;    RegWrite($sAppRegistryPath, $aRegistryCustomization[$i], 'REG_SZ', '')
+    ;  EndIf
+    ;Next
+
+    _ATC_Customization($sAppRegistryPath, 'Stage')
 
     ;;MIGRATE CONFIGURATION
     If FileExists($sAppInstallPathLegacy) Then
@@ -205,7 +208,7 @@
       If FileExists($sCustomHelpdeskEmailFilePath) Then
         Local $hFileOpen = FileOpen($sCustomHelpdeskEmailFilePath,  $FO_READ)
         If (StringIsSpace(FileReadLine($hFileOpen, 1)) = 0) Then
-          RegWrite($sAppRegistryPath, 'sOrgHelpdeskEmail', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'sHelpdeskEmail', 'REG_SZ', FileReadLine($hFileOpen, 1))
         EndIf
         FileClose($hFileOpen)
         FileDelete($sCustomHelpdeskEmailFilePath)
@@ -216,7 +219,7 @@
       If FileExists($sCustomHelpdeskPhoneFilePath) Then
         Local $hFileOpen = FileOpen($sCustomHelpdeskPhoneFilePath,  $FO_READ)
         If (StringIsSpace(FileReadLine($hFileOpen, 1)) = 0) Then
-          RegWrite($sAppRegistryPath, 'sOrgHelpdeskPhone', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'sHelpdeskPhone', 'REG_SZ', FileReadLine($hFileOpen, 1))
         EndIf
         FileClose($hFileOpen)
         FileDelete($sCustomHelpdeskPhoneFilePath)
@@ -227,7 +230,7 @@
       If FileExists($sCustomHelpdeskPasswordResetsFilePath) Then
         Local $hFileOpen = FileOpen($sCustomHelpdeskPasswordResetsFilePath,  $FO_READ)
         If (StringIsSpace(FileReadLine($hFileOpen, 1)) = 0) Then
-          RegWrite($sAppRegistryPath, 'sOrgHelpdeskCorporatePhone', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'sHelpdeskCorporatePhone', 'REG_SZ', FileReadLine($hFileOpen, 1))
         EndIf
         FileClose($hFileOpen)
         FileDelete($sCustomHelpdeskPasswordResetsFilePath)
@@ -238,7 +241,7 @@
       If FileExists($sCustomHelpdeskAddressFilePath) Then
         Local $hFileOpen = FileOpen($sCustomHelpdeskAddressFilePath,  $FO_READ)
         If (StringIsSpace(FileReadLine($hFileOpen, 1)) = 0) Then
-          RegWrite($sAppRegistryPath, 'sOrgHelpdeskURL', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'sHelpdeskURL', 'REG_SZ', FileReadLine($hFileOpen, 1))
         EndIf
         FileClose($hFileOpen)
         FileDelete($sCustomHelpdeskAddressFilePath)
@@ -249,7 +252,7 @@
       If FileExists($sCustomHelpdeskLMIrAddressFilePath) Then
         Local $hFileOpen = FileOpen($sCustomHelpdeskLMIrAddressFilePath,  $FO_READ)
         If (StringIsSpace(FileReadLine($hFileOpen, 1)) = 0) Then
-          RegWrite($sAppRegistryPath, 'sOrgHelpdeskRemoteSupportURL', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'sHelpdeskRemoteSupportURL', 'REG_SZ', FileReadLine($hFileOpen, 1))
         EndIf
         FileClose($hFileOpen)
         FileDelete($sCustomHelpdeskLMIrAddressFilePath)

@@ -35,15 +35,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "com.briankyncl.AboutThisComputer.au3",
-			"settings":
-			{
-				"buffer_size": 174242,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -109,10 +100,11 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/briankyncl/aboutthiscomputer"
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer"
 	],
 	"file_history":
 	[
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer.au3",
 		"/Users/Brian/Downloads/esxi",
 		"/Users/Brian/Downloads/nginx.conf",
 		"/Users/Brian/Downloads/files.sh",
@@ -239,8 +231,7 @@
 		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-MemoryUsage-3.cfg",
 		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SECWCSP01.cfg",
 		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-DHCP.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-MariaDB-2.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWPREP01.cfg"
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-MariaDB-2.cfg"
 	],
 	"find":
 	{
@@ -258,6 +249,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"Func ReadConfig()"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -275,39 +267,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "com.briankyncl.AboutThisComputer.au3",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 174242,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/AutoItScript/AutoIt.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
 			]
 		}
 	],

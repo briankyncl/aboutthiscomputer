@@ -23933,19 +23933,19 @@ Func StartupGlobals()
 Global $sOrgName                     = 'Contoso'
 Global $sOrgDomain                   = 'contoso.com'
 Global $sOrgFQDomain                 = 'corp.' & $sOrgDomain
-Global $sOrgIntranetName             = 'Intranet'
-Global $sOrgIntranetURL              = 'intranet.' & $sOrgDomain
-Global $sOrgHelpdeskName             = 'IT Helpdesk'
-Global $sOrgHelpdeskPhone            = '1-800-555-5555'
-Global $sOrgHelpdeskRegionalPhone    = $sOrgHelpdeskPhone
-Global $sOrgHelpdeskCorporatePhone   = $sOrgHelpdeskPhone
-Global $sOrgHelpdeskEmail            = 'helpdesk@' & $sOrgDomain
-Global $sOrgHelpdeskURL              = 'helpdesk.' & $sOrgDomain
-Global $sOrgHelpdeskRemoteSupportURL = 'remotesupport.' & $sOrgDomain
-Global $sOrgHelpdeskRequestName      = 'Create an IT' & @CRLF & 'Helpdesk Request'
-Global $sOrgAppCatalogURL            = 'https://sccmserver.' & $sOrgFQDomain & '/CMApplicationCatalog'
-Global $sOrgPersonalDriveName        = 'Home Drive'
-Global $sOrgLoginScriptPath          = '\\' & $sOrgFQDomain & '\NETLOGON'
+Global $sIntranetName             = 'Intranet'
+Global $sIntranetURL              = 'intranet.' & $sOrgDomain
+Global $sHelpdeskName             = 'IT Helpdesk'
+Global $sHelpdeskPhone            = '1-800-555-5555'
+Global $sHelpdeskRegionalPhone    = $sHelpdeskPhone
+Global $sHelpdeskCorporatePhone   = $sHelpdeskPhone
+Global $sHelpdeskEmail            = 'helpdesk@' & $sOrgDomain
+Global $sHelpdeskURL              = 'helpdesk.' & $sOrgDomain
+Global $sHelpdeskRemoteSupportURL = 'remotesupport.' & $sOrgDomain
+Global $sHelpdeskRequestName      = 'Create an IT' & @CRLF & 'Helpdesk Request'
+Global $sSCCMAppCatalogURL            = 'https://sccmserver.' & $sOrgFQDomain & '/CMApplicationCatalog'
+Global $sHomeFolderName        = 'Home Drive'
+Global $sLoginScriptPath          = '\\' & $sOrgFQDomain & '\NETLOGON'
 Global $hGUIMain
 Global $GUI_CHECKENABLE
 Global $GUI_UNCHECKENABLE
@@ -24543,19 +24543,19 @@ Func ReadCustomization()
 If RegRead($sAppRegistryPath, 'sOrgName') Then $sOrgName = RegRead($sAppRegistryPath, 'sOrgName')
 If RegRead($sAppRegistryPath, 'sOrgDomain') Then $sOrgDomain = RegRead($sAppRegistryPath, 'sOrgDomain')
 If RegRead($sAppRegistryPath, 'sOrgFQDomain') Then $sOrgFQDomain = RegRead($sAppRegistryPath, 'sOrgFQDomain')
-If RegRead($sAppRegistryPath, 'sOrgIntranetName') Then $sOrgIntranetName = RegRead($sAppRegistryPath, 'sOrgIntranetName')
-If RegRead($sAppRegistryPath, 'sOrgIntranetURL') Then $sOrgIntranetURL = RegRead($sAppRegistryPath, 'sOrgIntranetURL')
-If RegRead($sAppRegistryPath, 'sOrgHelpdeskName') Then $sOrgHelpdeskName = RegRead($sAppRegistryPath, 'sOrgHelpdeskName')
-If RegRead($sAppRegistryPath, 'sOrgHelpdeskPhone') Then $sOrgHelpdeskPhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskPhone')
-If RegRead($sAppRegistryPath, 'sOrgHelpdeskRegionalPhone') Then $sOrgHelpdeskRegionalPhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskRegionalPhone')
-If RegRead($sAppRegistryPath, 'sOrgHelpdeskCorporatePhone') Then $sOrgHelpdeskCorporatePhone = RegRead($sAppRegistryPath, 'sOrgHelpdeskCorporatePhone')
-If RegRead($sAppRegistryPath, 'sOrgHelpdeskEmail') Then $sOrgHelpdeskEmail = RegRead($sAppRegistryPath, 'sOrgHelpdeskEmail')
-If RegRead($sAppRegistryPath, 'sOrgHelpdeskURL') Then $sOrgHelpdeskURL = RegRead($sAppRegistryPath, 'sOrgHelpdeskURL')
-If RegRead($sAppRegistryPath, 'sOrgHelpdeskRemoteSupportURL') Then $sOrgHelpdeskRemoteSupportURL = RegRead($sAppRegistryPath, 'sOrgHelpdeskRemoteSupportURL')
-If RegRead($sAppRegistryPath, 'sOrgHelpdeskRequestName') Then $sOrgHelpdeskRequestName = RegRead($sAppRegistryPath, 'sOrgHelpdeskRequestName')
-If RegRead($sAppRegistryPath, 'sOrgAppCatalogURL') Then $sOrgAppCatalogURL = RegRead($sAppRegistryPath, 'sOrgAppCatalogURL')
-If RegRead($sAppRegistryPath, 'sOrgPersonalDriveName') Then $sOrgPersonalDriveName = RegRead($sAppRegistryPath, 'sOrgPersonalDriveName')
-If RegRead($sAppRegistryPath, 'sOrgLoginScriptPath') Then $sOrgLoginScriptPath = RegRead($sAppRegistryPath, 'sOrgLoginScriptPath')
+If RegRead($sAppRegistryPath, 'sIntranetName') Then $sIntranetName = RegRead($sAppRegistryPath, 'sIntranetName')
+If RegRead($sAppRegistryPath, 'sIntranetURL') Then $sIntranetURL = RegRead($sAppRegistryPath, 'sIntranetURL')
+If RegRead($sAppRegistryPath, 'sHelpdeskName') Then $sHelpdeskName = RegRead($sAppRegistryPath, 'sHelpdeskName')
+If RegRead($sAppRegistryPath, 'sHelpdeskPhone') Then $sHelpdeskPhone = RegRead($sAppRegistryPath, 'sHelpdeskPhone')
+If RegRead($sAppRegistryPath, 'sHelpdeskRegionalPhone') Then $sHelpdeskRegionalPhone = RegRead($sAppRegistryPath, 'sHelpdeskRegionalPhone')
+If RegRead($sAppRegistryPath, 'sHelpdeskCorporatePhone') Then $sHelpdeskCorporatePhone = RegRead($sAppRegistryPath, 'sHelpdeskCorporatePhone')
+If RegRead($sAppRegistryPath, 'sHelpdeskEmail') Then $sHelpdeskEmail = RegRead($sAppRegistryPath, 'sHelpdeskEmail')
+If RegRead($sAppRegistryPath, 'sHelpdeskURL') Then $sHelpdeskURL = RegRead($sAppRegistryPath, 'sHelpdeskURL')
+If RegRead($sAppRegistryPath, 'sHelpdeskRemoteSupportURL') Then $sHelpdeskRemoteSupportURL = RegRead($sAppRegistryPath, 'sHelpdeskRemoteSupportURL')
+If RegRead($sAppRegistryPath, 'sHelpdeskRequestName') Then $sHelpdeskRequestName = RegRead($sAppRegistryPath, 'sHelpdeskRequestName')
+If RegRead($sAppRegistryPath, 'sSCCMAppCatalogURL') Then $sSCCMAppCatalogURL = RegRead($sAppRegistryPath, 'sSCCMAppCatalogURL')
+If RegRead($sAppRegistryPath, 'sHomeFolderName') Then $sHomeFolderName = RegRead($sAppRegistryPath, 'sHomeFolderName')
+If RegRead($sAppRegistryPath, 'sLoginScriptPath') Then $sLoginScriptPath = RegRead($sAppRegistryPath, 'sLoginScriptPath')
 Global $sFreeTextDetails = ''
 If RegRead($sAppRegistryPath, 'sFreeTextDetails') Then $sFreeTextDetails = RegRead($sAppRegistryPath, 'sFreeTextDetails')
 Switch (StringIsSpace($sFreeTextDetails))
@@ -24825,7 +24825,7 @@ Global $idTrayMainSearchAD   = TrayCreateItem('Search Active Directory')
 Global $idTrayMainSysProp    = TrayCreateItem('System Properties')
 TrayCreateItem('')
 Global $idTrayMainSearchAD   = TrayCreateItem('Run Login Script')
-Global $idTrayMainSysProp    = TrayCreateItem('Map ' & $sOrgPersonalDriveName)
+Global $idTrayMainSysProp    = TrayCreateItem('Map ' & $sHomeFolderName)
 TrayCreateItem('')
 Global $idTrayMainShowInfo   = TrayCreateItem('About This Computer')
 TrayCreateItem('')
@@ -25112,12 +25112,12 @@ Global $idMenuItemMainToolsSearchAD = GUICtrlCreateMenuItem('Search Active Direc
 Global $idMenuItemMainToolsSysProp = GUICtrlCreateMenuItem('System Properties', $idMenuMainTools, -1)
 GUICtrlCreateMenuItem('', $idMenuMainTools, -1)
 Global $idMenuItemMainToolsLoginScript = GUICtrlCreateMenuItem('Run Login Script', $idMenuMainTools, -1)
-Global $idMenuItemMainToolsPersonalDrive = GUICtrlCreateMenuItem('Map ' & $sOrgPersonalDriveName & ' Drive', $idMenuMainTools, -1)
+Global $idMenuItemMainToolsPersonalDrive = GUICtrlCreateMenuItem('Map ' & $sHomeFolderName & ' Drive', $idMenuMainTools, -1)
 Global $idMenuMainHelp = GUICtrlCreateMenu('&Help')
 Global $idMenuItemMainHelpLaunchLMIr = GUICtrlCreateMenuItem('LogMeIn Rescue', $idMenuMainHelp, -1)
 GUICtrlCreateMenuItem('', $idMenuMainHelp, -1)
-Global $idMenuItemMainHelpLaunchIntranet = GUICtrlCreateMenuItem($sOrgIntranetName, $idMenuMainHelp, -1)
-Global $idMenuItemMainHelpLaunchHDesk = GUICtrlCreateMenuItem($sOrgHelpdeskName, $idMenuMainHelp, -1)
+Global $idMenuItemMainHelpLaunchIntranet = GUICtrlCreateMenuItem($sIntranetName, $idMenuMainHelp, -1)
+Global $idMenuItemMainHelpLaunchHDesk = GUICtrlCreateMenuItem($sHelpdeskName, $idMenuMainHelp, -1)
 Global $idMenuItemMainHelpLaunchPWM = GUICtrlCreateMenuItem('Password Self-Service', $idMenuMainHelp, -1)
 GUICtrlCreateMenuItem('', $idMenuMainHelp, -1)
 Global $idMenuItemMainHelpDocumentation = GUICtrlCreateMenuItem('Documentation (' & $sAppDocsHost & ')', $idMenuMainHelp, -1)
@@ -25127,17 +25127,17 @@ $idGraphicMainAboutPC = GUICtrlCreateIcon($sAppLogo, -1, $columnMainLeft01, $row
 Global $idButtonMainLeftClose = GUICtrlCreateButton($sCloseButtonText, $columnMainLeft_01, $rowMainLeft_01, $columnMainLeft_01Width, $rowMainLeft_01Height)
 Global $idButtonMainLeftRefresh = GUICtrlCreateButton('Refresh', $columnMainLeft_01, $rowMainLeft_02, $columnMainLeft_01Width, $rowMainLeft_02Height)
 If $bConfigContactHelpdeskEnabled = True Then
-Global $idButtonMainLeftContactHDesk = GUICtrlCreateButton($sOrgHelpdeskRequestName, $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height, BitOR($BS_MULTILINE, $BS_CENTER, $BS_VCENTER))
+Global $idButtonMainLeftContactHDesk = GUICtrlCreateButton($sHelpdeskRequestName, $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height, BitOR($BS_MULTILINE, $BS_CENTER, $BS_VCENTER))
 Else
 Global $idButtonMainLeftContactHDesk = GUICtrlCreateButton('Copy Summary', $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height)
 EndIf
-$idGroupMainRightContact = GUICtrlCreateGroup($sOrgName & ' ' & $sOrgHelpdeskName, $columnMainRight01, $rowMainRight01, $columnMainRight00Width + 1, ($rowMainRight04 - $rowMainRight01) + 4)
+$idGroupMainRightContact = GUICtrlCreateGroup($sOrgName & ' ' & $sHelpdeskName, $columnMainRight01, $rowMainRight01, $columnMainRight00Width + 1, ($rowMainRight04 - $rowMainRight01) + 4)
 $idLabelMainRight01 = GUICtrlCreateLabel('Email: ', $columnMainRight02, $rowMainRight02, $columnMainRight02Width, $rowMainRight02Height, $SS_RIGHT)
 $idLabelMainRight02 = GUICtrlCreateLabel('Phone: ', $columnMainRight02, $rowMainRight03, $columnMainRight02Width, $rowMainRight03Height, $SS_RIGHT)
 $idLabelMainRight02b = GUICtrlCreateLabel('Password Reset: ', $columnMainRight02, $rowMainRight03a, $columnMainRight02Width, $rowMainRight03aHeight, $SS_RIGHT)
-Global $idLabelMainRight01a = GUICtrlCreateEdit($sOrgHelpdeskEmail, $columnMainRight03, $rowMainRight02, $columnMainRight03Width - 1, $rowMainRight02Height, $ES_READONLY, 0)
-Global $idLabelMainRight02a = GUICtrlCreateEdit($sOrgHelpdeskPhone, $columnMainRight03, $rowMainRight03, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
-Global $idLabelMainRight02c = GUICtrlCreateEdit($sOrgHelpdeskCorporatePhone, $columnMainRight03, $rowMainRight03a, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
+Global $idLabelMainRight01a = GUICtrlCreateEdit($sHelpdeskEmail, $columnMainRight03, $rowMainRight02, $columnMainRight03Width - 1, $rowMainRight02Height, $ES_READONLY, 0)
+Global $idLabelMainRight02a = GUICtrlCreateEdit($sHelpdeskPhone, $columnMainRight03, $rowMainRight03, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
+Global $idLabelMainRight02c = GUICtrlCreateEdit($sHelpdeskCorporatePhone, $columnMainRight03, $rowMainRight03a, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
 $idGroupMainRightSession = GUICtrlCreateGroup('Session', $columnMainRight01, $rowMainRight05, $columnMainRight00Width + 1, ($rowMainRight13 - $rowMainRight05) + 4)
 $idLabelMainRight03 = GUICtrlCreateLabel('Current User: ', $columnMainRight02, $rowMainRight06, $columnMainRight02Width, $rowMainRight06Height, $SS_RIGHT)
 $idLabelMainRight04 = GUICtrlCreateLabel('Computer Name: ', $columnMainRight02, $rowMainRight07, $columnMainRight02Width, $rowMainRight07Height, $SS_RIGHT)
@@ -25476,9 +25476,9 @@ TrayItemSetState($idTrayMainExit, $TRAY_DISABLE)
 EndSwitch
 EndFunc
 Func UpdateMainGUI()
-GUICtrlSetData($idLabelMainRight01a, $sOrgHelpdeskEmail)
-GUICtrlSetData($idLabelMainRight02a, $sOrgHelpdeskPhone)
-GUICtrlSetData($idLabelMainRight02c, $sOrgHelpdeskCorporatePhone)
+GUICtrlSetData($idLabelMainRight01a, $sHelpdeskEmail)
+GUICtrlSetData($idLabelMainRight02a, $sHelpdeskPhone)
+GUICtrlSetData($idLabelMainRight02c, $sHelpdeskCorporatePhone)
 GUICtrlSetData($idLabelMainRight03a, $sWMIUserName)
 GUICtrlSetData($idLabelMainRight04a, $sComputerName)
 GUICtrlSetData($idLabelMainRight05a, $sNetAdapter01Address)
@@ -25513,7 +25513,7 @@ If StringIsSpace($sNetAdapter05Address) = False Then $sNetAdapter05String = ( ' 
 If StringIsSpace($sADLoginScript) = 1 Or $sADLoginScript = '0' Then
 Local $sUserLoginScript = ''
 Else
-Local $sUserLoginScript = $sOrgLoginScriptPath & '\' & $sADLoginScript
+Local $sUserLoginScript = $sLoginScriptPath & '\' & $sADLoginScript
 EndIf
 If StringIsSpace($sADHomeDirectory) = 1 Or $sADHomeDirectory = '0' Then
 Local $sUserHomeDrive = ''
@@ -25529,7 +25529,7 @@ Local $sFreeTextDetails_Trimmed = ''
 If StringIsSpace($sFreeTextDetails) = 0 Then
 $sFreeTextDetails_Trimmed = $sFreeTextDetails & @CRLF
 EndIf
-$sSummaryString = 'Session:' & @CRLF & ' • Current User: ' & $sWMIUserName & @CRLF & ' • Computer Name: ' & $sComputerName & @CRLF & ' • Network Adapter 1: ' & $sNetAdapter01Name & @CRLF & '    - Address: ' & $sNetAdapter01Address & @CRLF & '    - Subnet Mask: ' & $sNetAdapter01SubnetMask & @CRLF & '    - Gateway: ' & $sNetAdapter01Gateway & @CRLF & $sNetAdapter02String & $sNetAdapter03String & $sNetAdapter04String & $sNetAdapter05String & @CRLF & 'Operating System:' & @CRLF & ' • Version: ' & $sOSVersionName & @CRLF & ' • Edition: ' & $sOSEdition & @CRLF & ' • Architecture: ' & $sOSArchShortname & @CRLF & ' • Uptime: ' & $sOSUptime & @CRLF & ' • Install Age: ' & $sOSAgeAndDate & @CRLF & ' • Domain: ' & $sWMIDomain & @CRLF & ' • Local Description: ' & $sPCDescription & @CRLF & @CRLF & 'Active Directory:' & @CRLF & ' • Computer Description: ' & $sADDescription & @CRLF & ' • Computer OU: ' & $sADOUPath & @CRLF & ' • User Login Script: ' & $sUserLoginScript & @CRLF & ' • User ' & $sOrgPersonalDriveName & ': ' & $sUserHomeDrive & @CRLF & @CRLF & 'Services:' & @CRLF & ' • Windows Update: ' & $sServWindowsUpdateStatus & @CRLF & ' • SCCM Client (SMS Agent Host): ' & $sServSMSAgentStatus & @CRLF & ' • CrowdStrike Windows Sensor: ' & $sServCrowdStrikeStatus & @CRLF & ' • Splunk Universal Forwarder: ' & $sServSplunkForwarderStatus & @CRLF & ' • BeyondTrust PowerBroker: ' & $sServBeyondTrustStatus & @CRLF & ' • BeyondTrust Monitor: ' & $sServBeyondTrustMonitorStatus & @CRLF & @CRLF & 'Hardware:' & @CRLF & ' • Manufacturer: ' & $sWMIManufacturer & @CRLF & ' • Model: ' & $sWMIModel & @CRLF & ' • Serial: ' & $sWMISerialNumber & @CRLF & ' • Asset Tag: ' & $sWMISMBIOSAssetTag & @CRLF & @CRLF & 'LCM:' & @CRLF & ' • Site Code: ' & $sLCMXJCode & @CRLF & ' • CRA: ' & $sLCMCRCode & @CRLF & @CRLF & 'Drives:' & @CRLF & $sDiskDetails & @CRLF & @CRLF & 'Printers:' & @CRLF & $sPrinterDetails & @CRLF & @CRLF & 'Custom:' & @CRLF & $sFreeTextDetails_Trimmed & @CRLF & 'Helpdesk:' & @CRLF & ' • Email: ' & $sOrgHelpdeskEmail & @CRLF & ' • Phone: ' & $sOrgHelpdeskPhone & @CRLF & ' • Password Reset: ' & $sOrgHelpdeskCorporatePhone & @CRLF & ' • Website: ' & $sOrgHelpdeskURL & @CRLF & ' • LMIr URL: ' & $sOrgHelpdeskRemoteSupportURL & @CRLF & @CRLF & 'About This Computer  •  ' & $sAppVersion & '  •  ' & @YEAR & '-' & @MON & '-' & @MDAY & ' ' & @HOUR & ':' & @MIN & ':' & @SEC & '  •  [mB7a78-' & $sAppBuild & ']'
+$sSummaryString = 'Session:' & @CRLF & ' • Current User: ' & $sWMIUserName & @CRLF & ' • Computer Name: ' & $sComputerName & @CRLF & ' • Network Adapter 1: ' & $sNetAdapter01Name & @CRLF & '    - Address: ' & $sNetAdapter01Address & @CRLF & '    - Subnet Mask: ' & $sNetAdapter01SubnetMask & @CRLF & '    - Gateway: ' & $sNetAdapter01Gateway & @CRLF & $sNetAdapter02String & $sNetAdapter03String & $sNetAdapter04String & $sNetAdapter05String & @CRLF & 'Operating System:' & @CRLF & ' • Version: ' & $sOSVersionName & @CRLF & ' • Edition: ' & $sOSEdition & @CRLF & ' • Architecture: ' & $sOSArchShortname & @CRLF & ' • Uptime: ' & $sOSUptime & @CRLF & ' • Install Age: ' & $sOSAgeAndDate & @CRLF & ' • Domain: ' & $sWMIDomain & @CRLF & ' • Local Description: ' & $sPCDescription & @CRLF & @CRLF & 'Active Directory:' & @CRLF & ' • Computer Description: ' & $sADDescription & @CRLF & ' • Computer OU: ' & $sADOUPath & @CRLF & ' • User Login Script: ' & $sUserLoginScript & @CRLF & ' • User ' & $sHomeFolderName & ': ' & $sUserHomeDrive & @CRLF & @CRLF & 'Services:' & @CRLF & ' • Windows Update: ' & $sServWindowsUpdateStatus & @CRLF & ' • SCCM Client (SMS Agent Host): ' & $sServSMSAgentStatus & @CRLF & ' • CrowdStrike Windows Sensor: ' & $sServCrowdStrikeStatus & @CRLF & ' • Splunk Universal Forwarder: ' & $sServSplunkForwarderStatus & @CRLF & ' • BeyondTrust PowerBroker: ' & $sServBeyondTrustStatus & @CRLF & ' • BeyondTrust Monitor: ' & $sServBeyondTrustMonitorStatus & @CRLF & @CRLF & 'Hardware:' & @CRLF & ' • Manufacturer: ' & $sWMIManufacturer & @CRLF & ' • Model: ' & $sWMIModel & @CRLF & ' • Serial: ' & $sWMISerialNumber & @CRLF & ' • Asset Tag: ' & $sWMISMBIOSAssetTag & @CRLF & @CRLF & 'LCM:' & @CRLF & ' • Site Code: ' & $sLCMXJCode & @CRLF & ' • CRA: ' & $sLCMCRCode & @CRLF & @CRLF & 'Drives:' & @CRLF & $sDiskDetails & @CRLF & @CRLF & 'Printers:' & @CRLF & $sPrinterDetails & @CRLF & @CRLF & 'Custom:' & @CRLF & $sFreeTextDetails_Trimmed & @CRLF & 'Helpdesk:' & @CRLF & ' • Email: ' & $sHelpdeskEmail & @CRLF & ' • Phone: ' & $sHelpdeskPhone & @CRLF & ' • Password Reset: ' & $sHelpdeskCorporatePhone & @CRLF & ' • Website: ' & $sHelpdeskURL & @CRLF & ' • LMIr URL: ' & $sHelpdeskRemoteSupportURL & @CRLF & @CRLF & 'About This Computer  •  ' & $sAppVersion & '  •  ' & @YEAR & '-' & @MON & '-' & @MDAY & ' ' & @HOUR & ':' & @MIN & ':' & @SEC & '  •  [mB7a78-' & $sAppBuild & ']'
 EndFunc
 Func UpdateSummaryFile()
 Global $sSummaryFilePath = $sAppTempPath & '\AboutThisComputerSummary.txt'
@@ -25540,7 +25540,7 @@ Func CopySummaryToClipboard()
 ClipPut($sSummaryString)
 EndFunc
 Func MailSummary()
-$sEmailTo = $sOrgHelpdeskEmail
+$sEmailTo = $sHelpdeskEmail
 $sEmailSubject = 'Details about ' & $sComputerName & ' from ' & $sCurrentUsername
 $sEmailBody = StringReplace($sSummaryString, @CRLF, '%0D%0A')
 $sMailTo = 'mailto:' & $sEmailTo & '?subject=' & $sEmailSubject & '&body=%0D%0A%0D%0A' & $sEmailBody
@@ -25621,7 +25621,7 @@ Func LaunchInetCpl()
 StandardRunCmd('inetcpl.cpl')
 EndFunc
 Func LaunchAppCatalog()
-ShellExecute('iexplore.exe', $sOrgAppCatalogURL, 'C:\Windows\System32')
+ShellExecute('iexplore.exe', $sSCCMAppCatalogURL, 'C:\Windows\System32')
 EndFunc
 Func LaunchAppWiz()
 StandardRunCmd('appwiz.cpl')
@@ -25662,13 +25662,13 @@ Func LaunchSysInfo()
 StandardRunCmd('msinfo32.exe')
 EndFunc
 Func LaunchRemoteSupportApp()
-ShellExecute('iexplore.exe', $sOrgHelpdeskRemoteSupportURL, 'C:\Windows\System32')
+ShellExecute('iexplore.exe', $sHelpdeskRemoteSupportURL, 'C:\Windows\System32')
 EndFunc
 Func LaunchIntranet()
-ShellExecute('iexplore.exe', $sOrgIntranetURL, 'C:\Windows\System32')
+ShellExecute('iexplore.exe', $sIntranetURL, 'C:\Windows\System32')
 EndFunc
 Func LaunchITHelpdesk()
-ShellExecute('iexplore.exe', $sOrgHelpdeskURL, 'C:\Windows\System32')
+ShellExecute('iexplore.exe', $sHelpdeskURL, 'C:\Windows\System32')
 EndFunc
 Func LaunchPaswordManagement()
 ShellExecute('iexplore.exe', 'http://pwm.' & $sOrgDomain, 'C:\Windows\System32')
@@ -25873,7 +25873,7 @@ Global $sContactFormScreenshotPath = ''
 Global $sContactFormScreenshotName = ''
 Global $sContactFormAttachments = ''
 Global $bContactFormSubmitSuccess = False
-Global $idGUIContact = GUICreate('Create an ' & $sOrgHelpdeskName & ' Request', $columnContactBounds, $rowContactBounds, -1, -1, -1, $WS_EX_TOPMOST)
+Global $idGUIContact = GUICreate('Create an ' & $sHelpdeskName & ' Request', $columnContactBounds, $rowContactBounds, -1, -1, -1, $WS_EX_TOPMOST)
 $idGraphicContact = GUICtrlCreateIcon($sAppInstallPath & '\Support\BeOS_Customize_wrench.ico', -1, $columnContactLeft01, $rowContactLeft01, 96, 96, -1, $GUI_WS_EX_PARENTDRAG)
 Global $idButtonContactLeftSend = GUICtrlCreateButton('Submit Request', $columnContactLeft_01, $rowContactLeft_01, $columnContactLeft_01Width, $rowContactLeft_01Height, BitOR($BS_MULTILINE, $BS_CENTER, $BS_VCENTER))
 $sLabelTemplate   = 'Template:  '
@@ -25884,7 +25884,7 @@ $sLabelName       = 'Your Name:  '
 $sLabelEmployeeID = 'Employee ID:  '
 $sLabelPhone      = 'Phone:  '
 $sLabelLocation   = 'Location:  '
-$sLabelBody       = 'Enter a detailed description of your ' & $sOrgHelpdeskName & ' request:'
+$sLabelBody       = 'Enter a detailed description of your ' & $sHelpdeskName & ' request:'
 $sLabelAttachment = 'Attachment'
 $sLabelScreenshot = 'Screenshot'
 $sLabelIncluded   = 'All fields are required. Details from About This Computer are automatically included with this request.'
@@ -25900,7 +25900,7 @@ $idButtonContactRightPickAttachment   = GUICtrlCreateButton($sLabelAttachment,  
 $idButtonContactRightTakeScreenshot   = GUICtrlCreateButton($sLabelScreenshot,  $columnContactRight01, $rowContactRight10 - 1, $columnContactRight01Width,               $rowContactRight10Height + 2, $BS_CENTER)
 $idLabelContactRightIncluded          = GUICtrlCreateLabel($sLabelIncluded,     $columnContactRight01, $rowContactRight11, $columnContactRight03Width,                   $rowContactRight11Height+10)
 GUICtrlSetState($idLabelContactRightIncluded, $GUI_DISABLE)
-$sDefaultInputSubject    = 'Summarize your ' & $sOrgHelpdeskName & ' request'
+$sDefaultInputSubject    = 'Summarize your ' & $sHelpdeskName & ' request'
 $sDefaultInputName       = 'Enter your first and last name'
 $sDefaultInputEmployeeID = 'Enter your employee ID number'
 $sDefaultInputPhone      = 'Enter your phone number'
@@ -26116,7 +26116,7 @@ EndIf
 If StringIsSpace($sTemplateToAddress) = False Then
 $sContactFormTo = $sTemplateToAddress
 Else
-$sContactFormTo = $sOrgHelpdeskEmail
+$sContactFormTo = $sHelpdeskEmail
 EndIf
 If StringIsSpace($sTemplateCCAddress) = False Then
 $sContactFormCC = $sTemplateCCAddress
@@ -26139,12 +26139,12 @@ EndFunc
 Func GUIContactValidateForm()
 If (_IsValidEmail($sContactFormFrom) = False) Then $bContactFormValid = False
 If $bContactFormValid = False Then
-MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Error', 'Please contact the ' & $sOrgName & ' ' & $sOrgHelpdeskName & ' by phone at ' & $sOrgHelpdeskPhone & '.' & @CRLF & @CRLF & '(About This Computer ''From'' address is misconfigured.)', 0, $idGUIContact)
+MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Error', 'Please contact the ' & $sOrgName & ' ' & $sHelpdeskName & ' by phone at ' & $sHelpdeskPhone & '.' & @CRLF & @CRLF & '(About This Computer ''From'' address is misconfigured.)', 0, $idGUIContact)
 Return
 EndIf
 If (_IsValidEmail($sContactFormTo) = False) Then $bContactFormValid = False
 If $bContactFormValid = False Then
-MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Error', 'Please contact the ' & $sOrgName & ' ' & $sOrgHelpdeskName & ' by phone at ' & $sOrgHelpdeskPhone & '.' & @CRLF & @CRLF & '(About This Computer ''To'' address is misconfigured.)', 0, $idGUIContact)
+MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Error', 'Please contact the ' & $sOrgName & ' ' & $sHelpdeskName & ' by phone at ' & $sHelpdeskPhone & '.' & @CRLF & @CRLF & '(About This Computer ''To'' address is misconfigured.)', 0, $idGUIContact)
 Return
 EndIf
 If (StringIsSpace($sContactFormSubject) = 1) Then $bContactFormValid = False
@@ -26198,7 +26198,7 @@ Return
 EndIf
 EndFunc
 Func GUIContactGenerateBody()
-Local $sEmailBody = 'Name: ' & $sContactFormName & @CRLF & 'Employee ID: ' & $sContactFormEmployeeID & @CRLF & 'Phone: ' & $sContactFormPhone & @CRLF & 'Location: ' & $sContactFormLocation & @CRLF & 'Attached File: ' & $sContactFormAttachmentName & @CRLF & 'Attached Screenshot: ' & $sContactFormScreenshotName & @CRLF & '' & @CRLF & 'Subject: ' & $sContactFormSubject & @CRLF & 'Description:' & @CRLF & $sContactFormBody & @CRLF & '' & @CRLF & 'Information about the requestor''s computer:' & @CRLF & $sSummaryString & @CRLF & 'This ' & $sOrgHelpdeskName & ' request was created using About This Computer.'
+Local $sEmailBody = 'Name: ' & $sContactFormName & @CRLF & 'Employee ID: ' & $sContactFormEmployeeID & @CRLF & 'Phone: ' & $sContactFormPhone & @CRLF & 'Location: ' & $sContactFormLocation & @CRLF & 'Attached File: ' & $sContactFormAttachmentName & @CRLF & 'Attached Screenshot: ' & $sContactFormScreenshotName & @CRLF & '' & @CRLF & 'Subject: ' & $sContactFormSubject & @CRLF & 'Description:' & @CRLF & $sContactFormBody & @CRLF & '' & @CRLF & 'Information about the requestor''s computer:' & @CRLF & $sSummaryString & @CRLF & 'This ' & $sHelpdeskName & ' request was created using About This Computer.'
 Global $sContactFormBodyComplete = $sEmailBody
 EndFunc
 Func GUIContactSubmitTicket()
@@ -26224,10 +26224,10 @@ $sErrorCode = _SMTP_SendEmail($s_SmtpServer, $s_Username, $s_Password, $s_FromNa
 Switch $sErrorCode
 Case '0'
 $bContactFormSubmitSuccess = True
-MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION, $MB_TOPMOST, $MB_SETFOREGROUND), 'Request Submitted', 'Your ' & $sOrgHelpdeskName & ' request has been submitted.' & @CRLF & @CRLF & 'Check the inbox of ' & $sContactFormFrom & ' for a confirmation email.' & @CRLF & @CRLF & 'If you do not receive a confirmation email, contact the ' & $sOrgName & ' ' & $sOrgHelpdeskName & ' by phone at ' & $sOrgHelpdeskPhone & '.', 0, $idGUIContact)
+MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION, $MB_TOPMOST, $MB_SETFOREGROUND), 'Request Submitted', 'Your ' & $sHelpdeskName & ' request has been submitted.' & @CRLF & @CRLF & 'Check the inbox of ' & $sContactFormFrom & ' for a confirmation email.' & @CRLF & @CRLF & 'If you do not receive a confirmation email, contact the ' & $sOrgName & ' ' & $sHelpdeskName & ' by phone at ' & $sHelpdeskPhone & '.', 0, $idGUIContact)
 Case Else
 $bContactFormSubmitSuccess = False
-MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Error', 'Unable to submit request. Please contact the ' & $sOrgName & ' ' & $sOrgHelpdeskName & ' by phone at ' & $sOrgHelpdeskPhone & '.' & @CRLF & @CRLF & '(' & $sErrorCode & ')', 0, $idGUIContact)
+MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Error', 'Unable to submit request. Please contact the ' & $sOrgName & ' ' & $sHelpdeskName & ' by phone at ' & $sHelpdeskPhone & '.' & @CRLF & @CRLF & '(' & $sErrorCode & ')', 0, $idGUIContact)
 EndSwitch
 EndFunc
 #EndRegion

@@ -1,26 +1,16 @@
-Network
-Network Connections
+Credential Manager
+Device Manager
+Devices and Printers
 Internet Options
-
-Software
-Application Catalog
+Mail Accounts
+Network Connections
+Print Management
 Programs and Features
+Search Active Directory
 Services
+System Properties
 Windows Update
 
-Hardware
-Print Management
-Devices and Printers
-Device Manager
-
-Accounts
-Credential Manager
-Mail Accounts
-
-System
-System Properties
-
-Active Directory
-Search Active Directory
+Application Catalog
 Login Script
 Home Drive

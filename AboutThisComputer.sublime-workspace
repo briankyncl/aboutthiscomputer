@@ -35,6 +35,15 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "AboutThisComputer_Configurator.au3",
+			"settings":
+			{
+				"buffer_size": 64313,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -100,10 +109,18 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer"
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/UDF-ATCCustomization"
 	],
 	"file_history":
 	[
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/WKS_Prep.au3",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/WKS_PrepSync.au3",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_Configurator_Text.txt",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/UDF-ATCCustomization/_ATC_Customization.au3",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_Configurator.au3",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_InstallHelper.au3",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_stripped.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer.au3",
 		"/Users/Brian/Downloads/esxi",
 		"/Users/Brian/Downloads/nginx.conf",
@@ -224,14 +241,7 @@
 		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-NWSEAFLOW02.cfg",
 		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-WADICL.cfg",
 		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-sewalbas01.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-WebCTRL.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-sdstattrax3.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-DriveSpaceD-3.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SERENWFS01.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-MemoryUsage-3.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SECWCSP01.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-DHCP.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-MariaDB-2.cfg"
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-WebCTRL.cfg"
 	],
 	"find":
 	{
@@ -242,6 +252,7 @@
 		"height": 102.0,
 		"where_history":
 		[
+			""
 		]
 	},
 	"find_state":
@@ -249,6 +260,18 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"icon",
+			"smtp",
+			"sOrgLoginScriptPath",
+			"OrgPersonalDriveName",
+			"sOrgAppCatalogURL",
+			"sOrgHelpdesk",
+			"sOrgIntranetURL",
+			"sOrgIntranetName",
+			"sAppRegistryPath",
+			"ReadCustomization()",
+			"MainGUIWait(",
+			"BuildMainGUI(",
 			"Func ReadConfig()"
 		],
 		"highlight": true,
@@ -257,6 +280,15 @@
 		"regex": false,
 		"replace_history":
 		[
+			"sLoginScriptPath",
+			"HomeFolderName",
+			"sSCCMAppCatalogURL",
+			"sHelpdesk",
+			"sIntranetURL",
+			"sIntranetName",
+			"__sAppRegistryPath",
+			"GUIWait(",
+			"GUIBuild("
 		],
 		"reverse": false,
 		"show_context": true,
@@ -267,8 +299,39 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "AboutThisComputer_Configurator.au3",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 64313,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4580,
+								4580
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/AutoItScript/AutoIt.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1859.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -349,7 +412,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 229.0,
+	"side_bar_width": 215.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

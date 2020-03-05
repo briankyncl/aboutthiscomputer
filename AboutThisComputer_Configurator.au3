@@ -137,7 +137,9 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
     ;;STAGE GUIs
     ;; Define main GUI.
-    GUIBuild()
+    GUIBuild()  ;;define grid and GUI elements, show elements in default state
+
+    GUIRefresh()  ;;refresh GUI to reflect settings from registry
 
     ;;DISPLAY GUI(s)
     ;; Display main GUI and wait for user input.

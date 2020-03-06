@@ -153,7 +153,82 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
 #Region -- BUILD INTERFACE
   Func GUIBuild()
-    ;;CREATE MAIN GUI
+    ;;DEFINE AND CREATE MAIN GUI
+    ;; All commands for defining the base existence of the main GUI
+
+    ;;GRID OVERALL
+      Global $iGUIMainWidthDefault = 900
+      Global $iGUIMainHeightDefault = 520
+
+      ;;GRID OVERALL LEFT
+        Global $iGUIMainColumnLeft00 = 0  ;;left bound of left column
+        Global $iGUIMainColumnLeft01 = $iGUIMainColumnLeft00 + 20  ;;buttons
+        Global $iGUIMainColumnLeft02 = $iGUIMainColumnLeft00 + 10  ;;image
+
+        Global $iGUIMainColumnLeft00Width = 200  ;;total width of left column holding logo and buttons
+        Global $iGUIMainColumnLeft01Width = 128  ;;width of logo image
+        Global $iGUIMainColumnLeft02Width = $iGUIMainColumnLeft00Width - 20  ;;total width minus spacing for buttons
+
+        Global $iGUIMainRowLeftHeights = 35
+
+        Global $iGUIMainRowLeft00 = 0
+        Global $iGUIMainRowLeft01 = $iGUIMainRowLeft00 + 20  ;;top bound of logo image
+        Global $iGUIMainRowLeft02 = $iGUIMainHeightDefault - $iGUIMainRowLeftHeights  ;;top bound of bottom button
+        Global $iGUIMainRowLeft03 = $iGUIMainRowLeft02 - $iGUIMainRowLeftHeights  ;;top bound of next button up
+
+        Global $iGUIMainRowLeft00Height = $iGUIMainHeightDefault
+        Global $iGUIMainRowLeft01Height = 128  ;;height of the logo image
+        Global $iGUIMainRowLeft02Height = $iGUIMainRowLeftHeights - 10  ;;height of bottom button
+        Global $iGUIMainRowLeft03Height = $iGUIMainRowLeftHeights - 10  ;;height of next button up
+
+      ;;GRID OVERALL RIGHT
+        Global $iGUIMainColumnRight00 = $iGUIMainColumnLeft00Width  ;;left bound of right column
+        Global $iGUIMainColumnRight01 = $iGUIMainColumnLeft00Width + 10  ;;left bound of tab control
+
+        Global $iGUIMainColumnRight00Width = $iGUIMainWidthDefault - $iGUIMainColumnLeft00Width  ;;total width of right column holding tab control
+        Global $iGUIMainColumnRight01Width = $iGUIMainColumnRight00Width - 20  ;;width of tab control minus spacers
+
+        Global $iGUIMainRowRight00 = 0
+        Global $iGUIMainRowRight01 = $iGUIMainRowRight00 + 10  ;;top bound of tab control plus spacer
+
+        Global $iGUIMainRowRight00Height = $iGUIMainHeightDefault
+        Global $iGUIMainRowRight01Height = $iGUIMainRowRight00Height - 20  ;;height of tab control minus spacers
+
+    ;;GRID ALL TABS
+      Global $iGUIMainTabAllChromeTop = 24  ;;offset of top part of tab control chrome (the tabs themselves)
+      Global $iGUIMainTabAllChromeBottom = 1  ;;offset of bottom part of tab control chrome
+      Global $iGUIMainTabAllChromeLeft = 1  ;;offset of left part of tab control chrome
+      Global $iGUIMainTabAllChromeRight = 1  ;;offset of right part of tab control chrome
+
+      Global $iGUIMainTabAllWidthDefault = $iGUIMainColumnRight01Width - $iGUIMainTabAllChromeLeft - $iGUIMainTabAllChromeRight  ;;overall width of space available for tab controls (width of the tab control minus chrome spacing)
+      Global $iGUIMainTabAllHeightDefault = $iGUIMainRowRight01Height - $iGUIMainTabAllChromeTop - $iGUIMainTabAllChromeBottom  ;;overall height of space available for tab controls (height of the tab control minus chrome spacing)
+
+      ;;GRID ALL TABS LEFT
+        Global $iGUIMainTabAllCheckboxesWidth = 40  ;;standard width of the first element within a group control (usually a checkbox)
+
+        Global $iGUIMainTabAllColumnLeft00 = $iGUIMainColumnRight01 + $iGUIMainTabAllChromeLeft  ;;left bound of tab control minus chrome
+        Global $iGUIMainTabAllColumnLeft01 = $iGUIMainTabAllColumnLeft00 + 10  ;;left bound of controls in the tab (usually a group boundary)
+        Global $iGUIMainTabAllColumnLeft02 = $iGUIMainTabAllColumnLeft01 + 10  ;;left bound of controls in the group (usually a checkbox)
+        Global $iGUIMainTabAllColumnLeft03 = $iGUIMainTabAllColumnLeft02 + $iGUIMainTabAllCheckboxesWidth  ;;left bound of controls next to the checkboxes (usually an input field)
+
+        Global $iGUIMainTabAllColumnLeft00Width = $iGUIMainTabAllWidthDefault / 2  ;;total width of left column
+        Global $iGUIMainTabAllColumnLeft01Width = $iGUIMainTabAllColumnLeft00Width - 20  ;;width of group controls
+        Global $iGUIMainTabAllColumnLeft02Width = $iGUIMainTabAllCheckboxesWidth  ;;width of checkbox controls
+        Global $iGUIMainTabAllColumnLeft03Width = $iGUIMainTabAllColumnLeft01Width - $iGUIMainTabAllColumnLeft02Width - 10  ;;width of input controls. remaining width minus spacers
+
+
+
+
+
+
+
+
+
+
+      ;;GRID ALL TABS RIGHT
+        Global $iGUIMainTabAllColumnRight00 =
+
+
 
     ;;DEFINE GUI GRID
       ;;COLUMNS

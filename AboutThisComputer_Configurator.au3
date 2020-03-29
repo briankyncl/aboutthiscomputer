@@ -7,7 +7,7 @@
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Res_Comment=About This Computer Configurator
 #AutoIt3Wrapper_Res_Description=About This Computer Configurator
-#AutoIt3Wrapper_Res_Fileversion=1.0.0.1
+#AutoIt3Wrapper_Res_Fileversion=1.0.0.4
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=y
 #AutoIt3Wrapper_Res_LegalCopyright=Copyright (c) 2020 Brian Kyncl (briankyncl.com). All rights reserved.
 #AutoIt3Wrapper_Res_SaveSource=y
@@ -106,6 +106,10 @@ End()   ;;Exit app gracefully if code should ever find itself here.
   Func StartupGlobals()
     ;;DECLARE GLOBAL VARIABLES
     ;;Declare global variables not declared anywhere else.
+    Global $GUI_CHECKENABLE
+    Global $GUI_UNCHECKENABLE
+    Global $GUI_CHECKDISABLE
+    Global $GUI_UNCHECKDISABLE
 
     ;;Generic globals
     Global $hGUIMain
@@ -171,16 +175,18 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       Global $iGUIMainWidthDefault = 900
       Global $iGUIMainHeightDefault = 520
 
+    Global $iGUIMainMenuBarHeight = 20
+
       ;;GRID OVERALL LEFT (BUTTONS AND LOGO)
         Global $iGUIMainColumnLeft00 = 0  ;;left bound of left column
-        Global $iGUIMainColumnLeft01 = $iGUIMainColumnLeft00 + 20  ;;buttons
+        Global $iGUIMainColumnLeft01 = $iGUIMainColumnLeft00 + 10  ;;buttons
         Global $iGUIMainColumnLeft02 = $iGUIMainColumnLeft00 + 10  ;;image
 
-        Global $iGUIMainColumnLeft00Width = 200  ;;total width of left column holding logo and buttons
+        Global $iGUIMainColumnLeft00Width = 148  ;;total width of left column holding logo and buttons
         Global $iGUIMainColumnLeft01Width = 128  ;;width of logo image
-        Global $iGUIMainColumnLeft02Width = $iGUIMainColumnLeft00Width - 20  ;;total width minus spacing for buttons
+        Global $iGUIMainColumnLeft02Width = $iGUIMainColumnLeft00Width - 15  ;;total width minus spacing for buttons
 
-        Global $iGUIMainRowLeftHeights = 35
+        Global $iGUIMainRowLeftHeights = 50  ;;button heights
 
         Global $iGUIMainRowLeft00 = 0
         Global $iGUIMainRowLeft01 = $iGUIMainRowLeft00 + 20  ;;top bound of logo image
@@ -194,10 +200,10 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
       ;;GRID OVERALL RIGHT (TAB CONTROL BOUNDS)
         Global $iGUIMainColumnRight00 = $iGUIMainColumnLeft00Width  ;;left bound of right column
-        Global $iGUIMainColumnRight01 = $iGUIMainColumnLeft00Width + 10  ;;left bound of tab control
+        Global $iGUIMainColumnRight01 = $iGUIMainColumnLeft00Width + 5  ;;left bound of tab control
 
         Global $iGUIMainColumnRight00Width = $iGUIMainWidthDefault - $iGUIMainColumnLeft00Width  ;;total width of right column holding tab control
-        Global $iGUIMainColumnRight01Width = $iGUIMainColumnRight00Width - 20  ;;width of tab control minus spacers
+        Global $iGUIMainColumnRight01Width = $iGUIMainColumnRight00Width - 15  ;;width of tab control minus spacers
 
         Global $iGUIMainRowRight00 = 0
         Global $iGUIMainRowRight01 = $iGUIMainRowRight00 + 10  ;;top bound of tab control plus spacer
@@ -218,14 +224,16 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
       ;;GRID ALL TABS (SIZING SHARED BY ALL CONTROLS)
         ;;MISC
-        Global $iGUIMainTabAllChromeCheckboxHeight = 16  ;;Height of a checkbox control
-        Global $iGUIMainTabAllChromeCheckboxSpacer = 2  ;;Height of space between two checkbox controls
+        Global $iGUIMainTabAllChromeCheckboxHeight = 17  ;;Height of a checkbox control
+        Global $iGUIMainTabAllChromeCheckboxSpacer = 3  ;;Height of space between two checkbox controls
         ;Space after checkbox control
         ;Space between checkbox controls
 
         ;Height of an input control
         ;Space after input control
         ;Space after common input control (see helpdesk section)
+
+        Global $GUIMainTabAllPadding = 10
 
         Global $iGUIMainTabAllChromeGroupTop = 18  ;;Space between top of group and first element
         Global $iGUIMainTabAllChromeGroupBottom = 7  ;;Space from last element to bottom of group control
@@ -242,20 +250,20 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
         ;;WIDTHS
         Global $iGUIMainTabAllColumnLeft00Width = $iGUIMainTabAllWidthDefault / 2  ;;total width of left column
-        Global $iGUIMainTabAllColumnLeft01Width = $iGUIMainTabAllColumnLeft00Width - 20  ;;width of group controls minus spacing
+        Global $iGUIMainTabAllColumnLeft01Width = $iGUIMainTabAllColumnLeft00Width - 15  ;;width of group controls minus spacing
         Global $iGUIMainTabAllColumnLeft02Width = $iGUIMainTabAllCheckboxesWidth  ;;width of checkbox controls
         Global $iGUIMainTabAllColumnLeft03Width = $iGUIMainTabAllColumnLeft01Width - $iGUIMainTabAllColumnLeft02Width - 10  ;;width of input controls. remaining width minus spacers
 
       ;;GRID ALL TABS RIGHT (SIZING SHARED BY ALL RIGHT CONTROLS)
         ;;COLUMNS
         Global $iGUIMainTabAllColumnRight00 = $iGUIMainTabAllColumnLeft00 + $iGUIMainTabAllColumnLeft00Width
-        Global $iGUIMainTabAllColumnRight01 = $iGUIMainTabAllColumnRight00 + 10  ;;left bound of controls in the tab (usually a group boundary)
+        Global $iGUIMainTabAllColumnRight01 = $iGUIMainTabAllColumnRight00 + 5  ;;left bound of controls in the tab (usually a group boundary)
         Global $iGUIMainTabAllColumnRight02 = $iGUIMainTabAllColumnRight01 + 10  ;;left bound of controls in the group (usually a checkbox)
         Global $iGUIMainTabAllColumnRight03 = $iGUIMainTabAllColumnRight02 + $iGUIMainTabAllCheckboxesWidth  ;;left bound of controls next to the checkboxes (usually an input field)
 
         ;;WIDTHS
         Global $iGUIMainTabAllColumnRight00Width = $iGUIMainTabAllWidthDefault / 2  ;;total width of right column
-        Global $iGUIMainTabAllColumnRight01Width = $iGUIMainTabAllColumnRight00Width - 20  ;;width of group controls minus spacing
+        Global $iGUIMainTabAllColumnRight01Width = $iGUIMainTabAllColumnRight00Width - 15  ;;width of group controls minus spacing
         Global $iGUIMainTabAllColumnRight02Width = $iGUIMainTabAllCheckboxesWidth  ;;width of checkbox controls
         Global $iGUIMainTabAllColumnRight03Width = $iGUIMainTabAllColumnLeft01Width - $iGUIMainTabAllColumnRight02Width - 10  ;;width of input controls. remaining width minus spacers
 
@@ -267,13 +275,13 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         Global $iGUIMainTabMainGeneralColumn01      = $iGUIMainTabAllColumnLeft01  ;;left bound of controls in the tab (usually a group boundary)
         Global $iGUIMainTabMainGeneralColumn01Width = $iGUIMainTabAllColumnLeft01Width  ;;width of group controls minus spacing
         Global $iGUIMainTabMainGeneralColumn02      = $iGUIMainTabAllColumnLeft02  ;;left bound of controls in the group (usually a checkbox)
-        Global $iGUIMainTabMainGeneralColumn02Width = $iGUIMainTabMainGeneralColumn01Width - 10  ;;width of checkbox controls minus spacing
+        Global $iGUIMainTabMainGeneralColumn02Width = $iGUIMainTabMainGeneralColumn01Width - 12  ;;width of checkbox controls minus spacing
 
         ;;ROWS
         Global $iGUIMainTabMainGeneralRow00       = $iGUIMainTabAllRow00  ;;top bound of region for the group box
         Global $iGUIMainTabMainGeneralRow00Height = 0  ;;height of entire region. Defined below.
         Global $iGUIMainTabMainGeneralRow01       = $iGUIMainTabMainGeneralRow00  ;;row holding space between outer region and top of group box
-        Global $iGUIMainTabMainGeneralRow01Height = 10  ;;row between region and group box
+        Global $iGUIMainTabMainGeneralRow01Height = $GUIMainTabAllPadding  ;;row between region and group box
         Global $iGUIMainTabMainGeneralRow02       = $iGUIMainTabMainGeneralRow01 + $iGUIMainTabMainGeneralRow01Height  ;;top bound of the group box
         Global $iGUIMainTabMainGeneralRow02Height = 0  ;;height of group box. Defined below.
         Global $iGUIMainTabMainGeneralRow03       = $iGUIMainTabMainGeneralRow02  ;;top bound of the row between group box and first checkbox
@@ -305,7 +313,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         Global $iGUIMainTabMainTrayIconColumn02Width = $iGUIMainTabMainTrayIconColumn01Width - 10  ;;width of checkbox controls minus spacing
 
         ;;ROWS
-        Global $iGUIMainTabMainTrayIconRow00       = $iGUIMainTabMainGeneralRow00 + $iGUIMainTabMainGeneralRow00Height
+        Global $iGUIMainTabMainTrayIconRow00       = $iGUIMainTabMainGeneralRow00 + $iGUIMainTabMainGeneralRow00Height + $GUIMainTabAllPadding
         Global $iGUIMainTabMainTrayIconRow00Height = 0  ;;height of entire region. Defined below.
         Global $iGUIMainTabMainTrayIconRow01       = $iGUIMainTabMainTrayIconRow00  ;;row holding space between outer region and top of group box
         Global $iGUIMainTabMainTrayIconRow01Height = 10  ;;row between region and group box
@@ -320,7 +328,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
         ;;OVERALL
         $iGUIMainTabMainTrayIconRow02Height = $iGUIMainTabMainTrayIconRow03Height + _
-                                              $iGUIMainTabMainTrayIconRow04Height + _ 
+                                              $iGUIMainTabMainTrayIconRow04Height + _
                                               $iGUIMainTabMainTrayIconRow05Height
         $iGUIMainTabMainTrayIconRow00Height = $iGUIMainTabMainTrayIconRow02Height + $iGUIMainTabMainTrayIconRow01Height
   EndFunc
@@ -330,7 +338,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     ;; Requires GUIDefine() to have been ran.
 
     ;;DECLARE MAIN WINDOW
-    Global $hGUIMain = GUICreate('About This Computer Configurator', $iGUIMainWidthDefault, $iGUIMainHeightDefault, -1, -1)
+    Global $hGUIMain = GUICreate('About This Computer Configurator', $iGUIMainWidthDefault, $iGUIMainHeightDefault + $iGUIMainMenuBarHeight, -1, -1)  ;;plus menu bar adjustment
 
     ;;MENU BAR
       ;;File
@@ -356,7 +364,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         Global $idMenuItemMainHelpAbout = GUICtrlCreateMenuItem('About', $idMenuMainHelp, -1)
 
     ;;MAIN WINDOW ELEMENTS - LEFT
-      $idGraphicMainLogo = GUICtrlCreateIcon($sAppLogo, -1, $iGUIMainColumnLeft02, $iGUIMainRowLeft01, $iGUIMainColumnLeft01Width, $iGUIMainRowLeft01Height, -1, $GUI_WS_EX_PARENTDRAG)
+      $idGraphicMainLogo = GUICtrlCreateIcon($sAppLogo, -1, $iGUIMainColumnLeft02 + 12, $iGUIMainRowLeft01, $iGUIMainColumnLeft01Width, $iGUIMainRowLeft01Height, -1, $GUI_WS_EX_PARENTDRAG)
 
       Global $idButtonMainLeftApply = GUICtrlCreateButton('Apply', $iGUIMainColumnLeft01, $iGUIMainRowLeft03, $iGUIMainColumnLeft02Width, $iGUIMainRowLeft03Height)
       Global $idButtonMainLeftCancel = GUICtrlCreateButton('Cancel', $iGUIMainColumnLeft01, $iGUIMainRowLeft02, $iGUIMainColumnLeft02Width, $iGUIMainRowLeft02Height)
@@ -408,7 +416,11 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         GUICtrlCreateTabItem('Helpdesk Contact Form')
 
 
-      GUICtrlCreateTab('')  ;;terminate tab structure
+      GUICtrlCreateTabItem('')  ;;terminate tab structure
+
+
+    Global $aMainMenus
+    Global $aMainButtons
 
     GUISetState(@SW_SHOW)
   EndFunc
@@ -440,33 +452,26 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
   Func GUIRefresh()
     ;;UPDATE MAIN GUI FIELDS
+
+  EndFunc
 #EndRegion
 
 #Region -- GUI STATES
   Func GUIMainSetDefaults()
     ;;SET GUI DEFAULTS
     GUIMainSetMenuDefaults()
-    GUIMainSetMenuItemDefaults()
     GUIMainSetButtonDefaults()
   EndFunc
 
   Func GUIMainSetBusyDefaults()
     ;;SET GUI BUSY DEFAULTS
     GUIMainSetMenus($GUI_DISABLE)
-    GUIMainSetMenuItems($GUI_DISABLE)
     GUIMainSetButtons($GUI_DISABLE)
   EndFunc
 
   Func GUIMainSetMenuDefaults()
     ;;SET MENU DEFAULTS
     GUIMainSetMenus($GUI_ENABLE)
-  EndFunc
-
-  Func GUIMainSetMenuItemDefaults()
-    ;;SET MENU ITEM DEFAULTS
-    GUIMainSetMenuItems($GUI_ENABLE)
-    ToggleGUIControl($idMenuItemMainEditCut, $GUI_DISABLE)
-    ToggleGUIControl($idMenuItemMainEditPaste, $GUI_DISABLE)
   EndFunc
 
   Func GUIMainSetButtonDefaults()
@@ -481,16 +486,6 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
     For $i = 0 To UBound($aMainMenus) - 1
       ToggleGUIControl($aMainMenus[$i], $Option)
-    Next
-  EndFunc
-
-  Func GUIMainSetMenuItems($Option)
-    ;;SET ALL MENU ITEMS WITH OPTION
-    ;; $GUI_ENABLE
-    ;; $GUI_DISABLE
-
-    For $i = 0 To UBound($aMainMenuItems) - 1
-      ToggleGUIControl($aMainMenuItems[$i], $Option)
     Next
   EndFunc
 

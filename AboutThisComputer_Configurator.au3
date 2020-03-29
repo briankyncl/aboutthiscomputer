@@ -137,9 +137,11 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
     ;;STAGE GUIs
     ;; Define main GUI.
-    GUIBuild()  ;;define grid and GUI elements, show elements in default state
+    GUIDefine()  ;;declare GUI grid
+    GUIBuild()  ;;declare GUI elements (don't need to do anything with default states?)
 
     GUIRefresh()  ;;refresh GUI to reflect settings from registry
+      ;;Would require _ATC_Customization($sAppRegistryPath, 'Read') to have been ran recently
 
     ;;DISPLAY GUI(s)
     ;; Display main GUI and wait for user input.
@@ -152,15 +154,15 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 #EndRegion
 
 #Region -- BUILD INTERFACE
-  Func GUIBuild()
-    ;;DEFINE AND CREATE MAIN GUI
+  Func GUIDefine()
+    ;;DEFINE MAIN GUI
     ;; All commands for defining the base existence of the main GUI
 
-    ;;GRID OVERALL
+    ;;GRID OVERALL (ENTIRE WINDOW)
       Global $iGUIMainWidthDefault = 900
       Global $iGUIMainHeightDefault = 520
 
-      ;;GRID OVERALL LEFT
+      ;;GRID OVERALL LEFT (BUTTONS AND LOGO)
         Global $iGUIMainColumnLeft00 = 0  ;;left bound of left column
         Global $iGUIMainColumnLeft01 = $iGUIMainColumnLeft00 + 20  ;;buttons
         Global $iGUIMainColumnLeft02 = $iGUIMainColumnLeft00 + 10  ;;image
@@ -181,7 +183,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         Global $iGUIMainRowLeft02Height = $iGUIMainRowLeftHeights - 10  ;;height of bottom button
         Global $iGUIMainRowLeft03Height = $iGUIMainRowLeftHeights - 10  ;;height of next button up
 
-      ;;GRID OVERALL RIGHT
+      ;;GRID OVERALL RIGHT (TAB CONTROL BOUNDS)
         Global $iGUIMainColumnRight00 = $iGUIMainColumnLeft00Width  ;;left bound of right column
         Global $iGUIMainColumnRight01 = $iGUIMainColumnLeft00Width + 10  ;;left bound of tab control
 
@@ -194,8 +196,8 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         Global $iGUIMainRowRight00Height = $iGUIMainHeightDefault
         Global $iGUIMainRowRight01Height = $iGUIMainRowRight00Height - 20  ;;height of tab control minus spacers
 
-    ;;GRID ALL TABS
-      Global $iGUIMainTabAllChromeTop = 24  ;;offset of top part of tab control chrome (the tabs themselves)
+    ;;GRID ALL TABS (AREA INSIDE THE TAB CONTROL)
+      Global $iGUIMainTabAllChromeTop = 25  ;;offset of top part of tab control chrome (the tabs themselves)
       Global $iGUIMainTabAllChromeBottom = 1  ;;offset of bottom part of tab control chrome
       Global $iGUIMainTabAllChromeLeft = 1  ;;offset of left part of tab control chrome
       Global $iGUIMainTabAllChromeRight = 1  ;;offset of right part of tab control chrome
@@ -203,317 +205,113 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       Global $iGUIMainTabAllWidthDefault = $iGUIMainColumnRight01Width - $iGUIMainTabAllChromeLeft - $iGUIMainTabAllChromeRight  ;;overall width of space available for tab controls (width of the tab control minus chrome spacing)
       Global $iGUIMainTabAllHeightDefault = $iGUIMainRowRight01Height - $iGUIMainTabAllChromeTop - $iGUIMainTabAllChromeBottom  ;;overall height of space available for tab controls (height of the tab control minus chrome spacing)
 
-      ;;GRID ALL TABS LEFT
-        Global $iGUIMainTabAllCheckboxesWidth = 40  ;;standard width of the first element within a group control (usually a checkbox)
+      Global $iGUIMainTabAllCheckboxesWidth = 40  ;;standard width of the left elements within a group control (usually a checkbox to the left of an input field)
 
+      ;;GRID ALL TABS (SIZING SHARED BY ALL CONTROLS)
+        ;;MISC
+        Global $iGUIMainTabAllChromeCheckboxHeight = 16  ;;Height of a checkbox control
+        Global $iGUIMainTabAllChromeCheckboxSpacer = 2  ;;Height of space between two checkbox controls
+        ;Space after checkbox control
+        ;Space between checkbox controls
+
+        ;Height of an input control
+        ;Space after input control
+        ;Space after common input control (see helpdesk section)
+
+        Global $iGUIMainTabAllChromeGroupTop = 18  ;;Space between top of group and first element
+        Global $iGUIMainTabAllChromeGroupBottom = 7  ;;Space from last element to bottom of group control
+
+        Global $iGUIMainTabAllRow00 = $iGUIMainRowRight01 + $iGUIMainTabAllChromeTop  ;;top bound of inside of tab control. usable area beneath tabs.
+        Global $iGUIMainTabAllRow01 = $iGUIMainTabAllRow00 + 10  ;;top bound of the first control inside the usable tab area.
+
+      ;;GRID ALL TABS LEFT (SIZING SHARED BY ALL LEFT CONTROLS)
+        ;;COLUMNS
         Global $iGUIMainTabAllColumnLeft00 = $iGUIMainColumnRight01 + $iGUIMainTabAllChromeLeft  ;;left bound of tab control minus chrome
         Global $iGUIMainTabAllColumnLeft01 = $iGUIMainTabAllColumnLeft00 + 10  ;;left bound of controls in the tab (usually a group boundary)
         Global $iGUIMainTabAllColumnLeft02 = $iGUIMainTabAllColumnLeft01 + 10  ;;left bound of controls in the group (usually a checkbox)
         Global $iGUIMainTabAllColumnLeft03 = $iGUIMainTabAllColumnLeft02 + $iGUIMainTabAllCheckboxesWidth  ;;left bound of controls next to the checkboxes (usually an input field)
 
+        ;;WIDTHS
         Global $iGUIMainTabAllColumnLeft00Width = $iGUIMainTabAllWidthDefault / 2  ;;total width of left column
-        Global $iGUIMainTabAllColumnLeft01Width = $iGUIMainTabAllColumnLeft00Width - 20  ;;width of group controls
+        Global $iGUIMainTabAllColumnLeft01Width = $iGUIMainTabAllColumnLeft00Width - 20  ;;width of group controls minus spacing
         Global $iGUIMainTabAllColumnLeft02Width = $iGUIMainTabAllCheckboxesWidth  ;;width of checkbox controls
         Global $iGUIMainTabAllColumnLeft03Width = $iGUIMainTabAllColumnLeft01Width - $iGUIMainTabAllColumnLeft02Width - 10  ;;width of input controls. remaining width minus spacers
 
+      ;;GRID ALL TABS RIGHT (SIZING SHARED BY ALL RIGHT CONTROLS)
+        ;;COLUMNS
+        Global $iGUIMainTabAllColumnRight00 = $iGUIMainTabAllColumnLeft00 + $iGUIMainTabAllColumnLeft00Width
+        Global $iGUIMainTabAllColumnRight01 = $iGUIMainTabAllColumnRight00 + 10  ;;left bound of controls in the tab (usually a group boundary)
+        Global $iGUIMainTabAllColumnRight02 = $iGUIMainTabAllColumnRight01 + 10  ;;left bound of controls in the group (usually a checkbox)
+        Global $iGUIMainTabAllColumnRight03 = $iGUIMainTabAllColumnRight02 + $iGUIMainTabAllCheckboxesWidth  ;;left bound of controls next to the checkboxes (usually an input field)
 
+        ;;WIDTHS
+        Global $iGUIMainTabAllColumnRight00Width = $iGUIMainTabAllWidthDefault / 2  ;;total width of right column
+        Global $iGUIMainTabAllColumnRight01Width = $iGUIMainTabAllColumnRight00Width - 20  ;;width of group controls minus spacing
+        Global $iGUIMainTabAllColumnRight02Width = $iGUIMainTabAllCheckboxesWidth  ;;width of checkbox controls
+        Global $iGUIMainTabAllColumnRight03Width = $iGUIMainTabAllColumnLeft01Width - $iGUIMainTabAllColumnRight02Width - 10  ;;width of input controls. remaining width minus spacers
 
+    ;;GRID TAB MAIN (CONTROLS INSIDE THE MAIN TAB)
+      ;;GRID GROUP GENERAL (CONTROLS IN THE GENERAL GROUP IN THE MAIN TAB)
+        ;;COLUMNS
+        Global $iGUIMainTabMainGeneralColumn00      = $iGUIMainTabAllColumnLeft00  ;;left bound of tab control minus chrome
+        Global $iGUIMainTabMainGeneralColumn00Width = $iGUIMainTabAllColumnLeft00Width  ;;total width of left column
+        Global $iGUIMainTabMainGeneralColumn01      = $iGUIMainTabAllColumnLeft01  ;;left bound of controls in the tab (usually a group boundary)
+        Global $iGUIMainTabMainGeneralColumn01Width = $iGUIMainTabAllColumnLeft01Width  ;;width of group controls minus spacing
+        Global $iGUIMainTabMainGeneralColumn02      = $iGUIMainTabAllColumnLeft02  ;;left bound of controls in the group (usually a checkbox)
+        Global $iGUIMainTabMainGeneralColumn02Width = $iGUIMainTabMainGeneralColumn01Width - 10  ;;width of checkbox controls minus spacing
 
+        ;;ROWS
+        Global $iGUIMainTabMainGeneralRow00       = $iGUIMainTabAllRow00  ;;top bound of region for the group box
+        Global $iGUIMainTabMainGeneralRow00Height = 0  ;;height of entire region. Defined below.
+        Global $iGUIMainTabMainGeneralRow01       = $iGUIMainTabMainGeneralRow00  ;;row holding space between outer region and top of group box
+        Global $iGUIMainTabMainGeneralRow01Height = 10  ;;row between region and group box
+        Global $iGUIMainTabMainGeneralRow02       = $iGUIMainTabMainGeneralRow01 + $iGUIMainTabMainGeneralRow01Height  ;;top bound of the group box
+        Global $iGUIMainTabMainGeneralRow02Height = 0  ;;height of group box. Defined below.
+        Global $iGUIMainTabMainGeneralRow03       = $iGUIMainTabMainGeneralRow02 + $iGUIMainTabMainGeneralRow02Height  ;;top bound of the row between group box and first checkbox
+        Global $iGUIMainTabMainGeneralRow03Height = $iGUIMainTabAllChromeGroupTop  ;;row between top of group and first checkbbox
+        Global $iGUIMainTabMainGeneralRow04       = $iGUIMainTabMainGeneralRow03 + $iGUIMainTabMainGeneralRow03Height  ;;first checkbox row
+        Global $iGUIMainTabMainGeneralRow04Height = $iGUIMainTabAllChromeCheckboxHeight  ;;first checkbox
+        Global $iGUIMainTabMainGeneralRow05       = $iGUIMainTabMainGeneralRow04 + $iGUIMainTabMainGeneralRow04Height  ;;row between first and second checkbox
+        Global $iGUIMainTabMainGeneralRow05Height = $iGUIMainTabAllChromeCheckboxSpacer  ;;space between first and second checkbox
+        Global $iGUIMainTabMainGeneralRow06       = $iGUIMainTabMainGeneralRow05 + $iGUIMainTabMainGeneralRow05Height  ;;second checkbox row
+        Global $iGUIMainTabMainGeneralRow06Height = $iGUIMainTabAllChromeCheckboxHeight  ;;second checkbox
+        Global $iGUIMainTabMainGeneralRow07       = $iGUIMainTabMainGeneralRow06 + $iGUIMainTabMainGeneralRow07  ;;row after second checkbox
+        Global $iGUIMainTabMainGeneralRow07Height = $iGUIMainTabAllChromeGroupBottom  ;;row between last checkbox and bottom of group
 
+        ;;OVERALL
+        $iGUIMainTabMainGeneralRow02Height = $iGUIMainTabMainGeneralRow03Height + _
+                                             $iGUIMainTabMainGeneralRow04Height + _
+                                             $iGUIMainTabMainGeneralRow05Height + _
+                                             $iGUIMainTabMainGeneralRow06Height + _
+                                             $iGUIMainTabMainGeneralRow07Height
+        $iGUIMainTabMainGeneralRow00Height = $iGUIMainTabMainGeneralRow02Height + $iGUIMainTabMainGeneralRow01Height
 
+      ;;GRID GROUP TRAY ICON (CONTROLS IN THE TRAY ICON GROUP OF THE MAIN TAB)
+        Global $iGUIMainTabMainTrayIconColumn00 = $iGUIMainTabAllColumnLeft00  ;;left bound of tab control minus chrome
+        Global $iGUIMainTabMainTrayIconColumn01 = $iGUIMainTabAllColumnLeft01  ;;left bound of controls in the tab (usually a group boundary)
+        Global $iGUIMainTabMainTrayIconColumn02 = $iGUIMainTabAllColumnLeft02  ;;left bound of controls in the group (usually a checkbox)
 
+        Global $iGUIMainTabMainTrayIconColumn00Width = $iGUIMainTabAllColumnLeft00Width  ;;total width of left column
+        Global $iGUIMainTabMainTrayIconColumn01Width = $iGUIMainTabAllColumnLeft01Width  ;;width of checkbox 
+        Global $iGUIMainTabMainTrayIconColumn02Width = $iGUIMainTabMainTrayIconColumn01Width - 10  ;;width of checkbox controls minus spacing
 
+  EndFunc
 
-
-      ;;GRID ALL TABS RIGHT
-        Global $iGUIMainTabAllColumnRight00 =
-
-
-
-    ;;DEFINE GUI GRID
-      ;;COLUMNS
-        ;;columns, left
-        $columnMainLeft00 = 0
-        $columnMainLeft01 = 20  ;image
-
-        ;;columns, left, widths
-        $columnMainLeft00Width = 140
-        $columnMainLeft01Width = $columnMainLeft00Width - 36    ;total width of column minus spacing left and right
-
-        ;;columns, right
-        $columnMainRight00 = $columnMainLeft00Width
-        $columnMainRight01 = $columnMainRight00    ;group line
-        $columnMainRight02 = $columnMainRight01 + 10    ;label title
-        $columnMainRight03 = $columnMainRight02 + 90    ;label info
-        $columnMainRight04 = $columnMainRight03 + 200
-
-        ;;columns, right, widths
-        $columnMainRight00Width = 300
-        $columnMainRight01Width = 10
-        $columnMainRight02Width = 90
-        $columnMainRight03Width = 200
-        $columnMainRight04Width = 0
-
-        ;;window boundary
-        $columnMainBounds = $columnMainLeft00Width + $columnMainRight00Width + 12   ;right edge of window
-
-      ;;ROWS
-        ;;rows, left
-        $rowMainLeft00 = 0
-        $rowMainLeft01 = 10
-
-        ;;rows, left, heights
-        $rowMainLeft00Height = 400
-        $rowMainLeft01Height = 128
-
-        ;;rows, right
-        $rowMainRightSpacing = 16   ;height of columns of text
-        $rowMainRightSpacers = 6    ;lower number means more space between groups
-        $rowMainRight00 = 0 - $rowMainRightSpacers                                        ;spacer
-        $rowMainRight01 = $rowMainRight00 + $rowMainRightSpacing
-        $rowMainRight02 = $rowMainRight01 + $rowMainRightSpacing
-        $rowMainRight03 = $rowMainRight02 + $rowMainRightSpacing
-        $rowMainRight03a = $rowMainRight03 + $rowMainRightSpacing
-        $rowMainRight04 = $rowMainRight03a + $rowMainRightSpacing
-        $rowMainRight05 = $rowMainRight04 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
-        $rowMainRight06 = $rowMainRight05 + $rowMainRightSpacing
-        $rowMainRight07 = $rowMainRight06 + $rowMainRightSpacing
-        If $bNetAdapter01Exists = True Then
-          $rowMainRight08 = $rowMainRight07 + $rowMainRightSpacing    ; IP address 1
-        Else
-          $rowMainRight08 = $rowMainRight07
-        EndIf
-        If $bNetAdapter02Exists = True Then
-          $rowMainRight09 = $rowMainRight08 + $rowMainRightSpacing    ; IP address 2
-        Else
-          $rowMainRight09 = $rowMainRight08
-        EndIf
-        If $bNetAdapter03Exists = True Then
-          $rowMainRight10 = $rowMainRight09 + $rowMainRightSpacing    ; IP address 3
-        Else
-          $rowMainRight10 = $rowMainRight09
-        EndIf
-        If $bNetAdapter04Exists = True Then
-          $rowMainRight11 = $rowMainRight10 + $rowMainRightSpacing    ; IP address 4
-        Else
-          $rowMainRight11 = $rowMainRight10
-        EndIf
-        If $bNetAdapter05Exists = True Then
-          $rowMainRight12 = $rowMainRight11 + $rowMainRightSpacing    ; IP address 5
-        Else
-          $rowMainRight12 = $rowMainRight11
-        EndIf
-        $rowMainRight13 = $rowMainRight12 + $rowMainRightSpacing
-        $rowMainRight14 = $rowMainRight13 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
-        $rowMainRight15 = $rowMainRight14 + $rowMainRightSpacing
-        $rowMainRight16 = $rowMainRight15 + $rowMainRightSpacing
-        $rowMainRight17 = $rowMainRight16 + $rowMainRightSpacing
-        $rowMainRight18 = $rowMainRight17 + $rowMainRightSpacing
-        $rowMainRight19 = $rowMainRight18 + $rowMainRightSpacing
-        $rowMainRight20 = $rowMainRight19 + $rowMainRightSpacing
-        $rowMainRight21 = $rowMainRight20 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
-        $rowMainRight22 = $rowMainRight21 + $rowMainRightSpacing
-        $rowMainRight23 = $rowMainRight22 + $rowMainRightSpacing
-        $rowMainRight24 = $rowMainRight23 + $rowMainRightSpacing
-        If $bAssetTagExists = True Then
-          $rowMainRight25 = $rowMainRight24 + $rowMainRightSpacing
-        Else
-          $rowMainRight25 = $rowMainRight24
-        EndIf
-        If $bLCMInfoExists = True Then
-          $rowMainRight26 = $rowMainRight25 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
-          $rowMainRight27 = $rowMainRight26 + $rowMainRightSpacing
-          $rowMainRight28 = $rowMainRight27 + $rowMainRightSpacing
-          $rowMainRight29 = $rowMainRight28 + $rowMainRightSpacing
-        Else
-          ;; set these rows to increase by 0 if no LCM info section exists
-          $rowMainRight26 = $rowMainRight25   ;spacer
-          $rowMainRight27 = $rowMainRight26
-          $rowMainRight28 = $rowMainRight27
-          $rowMainRight29 = $rowMainRight28
-        EndIf
-        If $bFreeTextDetailsExists = True Then
-          $rowMainRight30 = $rowMainRight29 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
-          $rowMainRight31 = $rowMainRight30 + $rowMainRightSpacing
-          $rowMainRight32 = $rowMainRight31 + $rowMainRightSpacing + (($rowMainRightSpacing * 3) - 7) ;height of multiline custom info box, duplicate changes in rowMainRight below
-        Else
-          ;; set these rows to increase by 0 if no custom info section exists
-          $rowMainRight30 = $rowMainRight29   ;spacer
-          $rowMainRight31 = $rowMainRight30
-          $rowMainRight32 = $rowMainRight31
-        EndIf
-        $rowMainRight33 = $rowMainRight32 + $rowMainRightSpacing
-        $rowMainRight34 = $rowMainRight33 + $rowMainRightSpacing
-        $rowMainRight35 = $rowMainRight34 + $rowMainRightSpacing
-        $rowMainRight36 = $rowMainRight35 + $rowMainRightSpacing
-        $rowMainRight37 = $rowMainRight36 + $rowMainRightSpacing
-        $rowMainRight38 = $rowMainRight37 + $rowMainRightSpacing
-        $rowMainRight39 = $rowMainRight38 + $rowMainRightSpacing
-        $rowMainRight40 = $rowMainRight39 + $rowMainRightSpacing
-        $rowMainRight41 = $rowMainRight40 + $rowMainRightSpacing
-        $rowMainRight42 = $rowMainRight41 + $rowMainRightSpacing
-        $rowMainRight43 = $rowMainRight42 + $rowMainRightSpacing
-        $rowMainRight44 = $rowMainRight43 + $rowMainRightSpacing
-        $rowMainRight45 = $rowMainRight44 + $rowMainRightSpacing
-        $rowMainRight46 = $rowMainRight45 + $rowMainRightSpacing
-        $rowMainRight47 = $rowMainRight46 + $rowMainRightSpacing
-        $rowMainRight48 = $rowMainRight47 + $rowMainRightSpacing
-        $rowMainRight49 = $rowMainRight48 + $rowMainRightSpacing
-        $rowMainRight50 = $rowMainRight49 + $rowMainRightSpacing
-
-        ;;rows, right, heights
-        $rowMainRightHeights  = $rowMainRightSpacing
-        $rowMainRight00Height = $rowMainRightHeights
-        $rowMainRight01Height = $rowMainRightHeights
-        $rowMainRight02Height = $rowMainRightHeights
-        $rowMainRight03Height = $rowMainRightHeights
-        $rowMainRight03aHeight = $rowMainRightHeights
-        $rowMainRight04Height = $rowMainRightHeights
-        $rowMainRight05Height = $rowMainRightHeights
-        $rowMainRight06Height = $rowMainRightHeights
-        $rowMainRight07Height = $rowMainRightHeights
-        If $bNetAdapter01Exists = True Then
-          $rowMainRight08Height = $rowMainRightHeights    ;IP address 1
-        Else
-          $rowMainRight08Height = 0
-        EndIf
-        If $bNetAdapter02Exists = True Then
-          $rowMainRight09Height = $rowMainRightHeights    ;IP address 2
-        Else
-          $rowMainRight09Height = 0
-        EndIf
-        If $bNetAdapter03Exists = True Then
-          $rowMainRight10Height = $rowMainRightHeights    ;IP address 3
-        Else
-          $rowMainRight10Height = 0
-        EndIf
-        If $bNetAdapter04Exists = True Then
-          $rowMainRight11Height = $rowMainRightHeights    ;IP address 4
-        Else
-          $rowMainRight11Height = 0
-        EndIf
-        If $bNetAdapter05Exists = True Then
-          $rowMainRight12Height = $rowMainRightHeights    ;IP address 5
-        Else
-          $rowMainRight12Height = 0
-        EndIf
-        $rowMainRight13Height = $rowMainRightHeights
-        $rowMainRight14Height = $rowMainRightHeights
-        $rowMainRight15Height = $rowMainRightHeights
-        $rowMainRight16Height = $rowMainRightHeights
-        $rowMainRight17Height = $rowMainRightHeights
-        $rowMainRight18Height = $rowMainRightHeights
-        $rowMainRight19Height = $rowMainRightHeights
-        $rowMainRight20Height = $rowMainRightHeights
-        $rowMainRight21Height = $rowMainRightHeights
-        $rowMainRight22Height = $rowMainRightHeights
-        $rowMainRight23Height = $rowMainRightHeights
-        $rowMainRight24Height = $rowMainRightHeights
-        If $bAssetTagExists = True Then
-          $rowMainRight25Height = $rowMainRightHeights
-        Else
-          $rowMainRight25Height = 0
-        EndIf
-        If $bLCMInfoExists = True Then
-          $rowMainRight26Height = $rowMainRightHeights
-          $rowMainRight27Height = $rowMainRightHeights
-          $rowMainRight28Height = $rowMainRightHeights
-          $rowMainRight29Height = $rowMainRightHeights
-        Else
-          ;; set these rows to 0 height if no LCM info section exists
-          $rowMainRight26Height = 0
-          $rowMainRight27Height = 0
-          $rowMainRight28Height = 0
-          $rowMainRight29Height = 0
-        EndIf
-        If $bFreeTextDetailsExists = True Then
-          $rowMainRight30Height = $rowMainRightHeights
-          $rowMainRight31Height = $rowMainRightHeights + (($rowMainRightSpacing * 3) - 7) ;height of multiline custom info box, duplicate changes in rowMainRightHeight above
-          $rowMainRight32Height = $rowMainRightHeights
-        Else
-          ;; set these rows to 0 height if no custom info section exists
-          $rowMainRight30Height = 0
-          $rowMainRight31Height = 0
-          $rowMainRight32Height = 0
-          ;; end
-        EndIf
-        $rowMainRight33Height = $rowMainRightHeights
-        $rowMainRight34Height = $rowMainRightHeights
-        $rowMainRight35Height = $rowMainRightHeights
-        $rowMainRight36Height = $rowMainRightHeights
-        $rowMainRight37Height = $rowMainRightHeights
-        $rowMainRight38Height = $rowMainRightHeights
-        $rowMainRight39Height = $rowMainRightHeights
-        $rowMainRight40Height = $rowMainRightHeights
-        $rowMainRight41Height = $rowMainRightHeights
-        $rowMainRight42Height = $rowMainRightHeights
-        $rowMainRight43Height = $rowMainRightHeights
-        $rowMainRight44Height = $rowMainRightHeights
-        $rowMainRight45Height = $rowMainRightHeights
-        $rowMainRight46Height = $rowMainRightHeights
-        $rowMainRight47Height = $rowMainRightHeights
-        $rowMainRight48Height = $rowMainRightHeights
-        $rowMainRight49Height = $rowMainRightHeights
-        $rowMainRight50Height = $rowMainRightHeights
-
-        ;;window boundary
-        $rowMainBounds = $rowMainRight33 + 17  ;;bottom edge of window, last used row in right column plus adjustment.
-
-      ;;COLUMNS, FROM BOTTOM
-        ;;columns, left, from bottom
-        $columnMainLeft_00 = 0
-        $columnMainLeft_01 = 10
-
-        ;;columns, left, widths
-        $columnMainLeft_00Width = 10
-        $columnMainLeft_01Width = $columnMainLeft00Width - 20
-
-      ;;ROWS, FROM BOTTOM
-        ;;rows, left, from bottom
-        $rowMainLeftSpacing = 35
-        $rowMainLeftSpacer = 25 ;high number means less space between, up to $rowMainLeftSpacing
-        $rowMainLeft_00 = $rowMainBounds - 24
-        $rowMainLeft_01 = $rowMainLeft_00 - $rowMainLeftSpacing
-        $rowMainLeft_02 = $rowMainLeft_01 - $rowMainLeftSpacing
-        $rowMainLeft_03 = $rowMainLeft_02 - $rowMainLeftSpacing + $rowMainLeftSpacer
-        $rowMainLeft_04 = $rowMainLeft_03 - $rowMainLeftSpacing - 10
-        $rowMainLeft_05 = $rowMainLeft_04 - $rowMainLeftSpacing
-        $rowMainLeft_06 = $rowMainLeft_05 - $rowMainLeftSpacing
-        $rowMainLeft_07 = $rowMainLeft_06 - $rowMainLeftSpacing
-        $rowMainLeft_08 = $rowMainLeft_07 - $rowMainLeftSpacing
-        $rowMainLeft_09 = $rowMainLeft_08 - $rowMainLeftSpacing
-        $rowMainLeft_10 = $rowMainLeft_09 - $rowMainLeftSpacing
-
-        ;;rows, left, from bottom heights
-        $rowMainLeftHeights = $rowMainLeftSpacing - 5
-        $rowMainLeft_00Height = 0
-        $rowMainLeft_01Height = $rowMainLeftHeights
-        $rowMainLeft_02Height = $rowMainLeftHeights
-        $rowMainLeft_03Height = $rowMainLeftHeights
-        $rowMainLeft_04Height = $rowMainLeftHeights + 10
-        $rowMainLeft_05Height = $rowMainLeftHeights
-        $rowMainLeft_06Height = $rowMainLeftHeights
-        $rowMainLeft_07Height = $rowMainLeftHeights
-        $rowMainLeft_08Height = $rowMainLeftHeights
-        $rowMainLeft_09Height = $rowMainLeftHeights
-        $rowMainLeft_10Height = $rowMainLeftHeights
+  Func GUIBuild()
+    ;;CREATE MAIN GUI
+    ;; Requires GUIDefine() to have been ran.
 
     ;;DECLARE MAIN WINDOW
-      Global $hGUIMain = GUICreate('About This Computer', $columnMainBounds, $rowMainBounds, -1, -1, -1, $WS_EX_TOPMOST)
-
-      $sCloseButtonText = 'Close'
-      If $sMainAppExeMode = 'Window' Then $sCloseButtonText = 'Exit'
+      Global $hGUIMain = GUICreate('About This Computer Configurator', $iGUIMainWidthDefault, $iGUIMainHeightDefault, -1, -1)
 
     ;;MENU BAR
       ;;File
-        Global $idMenuMainFile = GUICtrlCreateMenu("&File")
+        Global $idMenuMainFile = GUICtrlCreateMenu('&File')
 
-        Global $idMenuItemMainFileEmail = GUICtrlCreateMenuItem('Email Summary', $idMenuMainFile, -1)
-        Global $idMenuItemMainFileShow = GUICtrlCreateMenuItem('Show Summary', $idMenuMainFile, -1)
+        Global $idMenuItemMainFileImport = GUICtrlCreateMenuItem('Import configuration...', $idMenuMainFile, -1)
+        Global $idMenuItemMainFileExport = GUICtrlCreateMenuItem('Export configuration...', $idMenuMainFile, -1)
           GUICtrlCreateMenuItem('', $idMenuMainFile, -1) ; create a separator line
-        Global $idMenuItemMainFilePrint = GUICtrlCreateMenuItem('Print Summary...', $idMenuMainFile, -1)
-          GUICtrlCreateMenuItem('', $idMenuMainFile, -1) ; create a separator line
-        Global $idMenuItemMainFileClose = GUICtrlCreateMenuItem($sCloseButtonText, $idMenuMainFile, -1)
+        Global $idMenuItemMainFileClose = GUICtrlCreateMenuItem('Exit', $idMenuMainFile, -1)
 
       ;;Edit
         Global $idMenuMainEdit = GUICtrlCreateMenu('&Edit')
@@ -521,57 +319,80 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         Global $idMenuItemMainEditCut = GUICtrlCreateMenuItem('Cut', $idMenuMainEdit, -1)
         Global $idMenuItemMainEditCopy = GUICtrlCreateMenuItem('Copy', $idMenuMainEdit, -1)
         Global $idMenuItemMainEditPaste = GUICtrlCreateMenuItem('Paste', $idMenuMainEdit, -1)
-          GUICtrlCreateMenuItem('', $idMenuMainEdit, -1) ; create a separator line
-        Global $idMenuItemMainEditCopySum = GUICtrlCreateMenuItem('Copy Summary', $idMenuMainEdit, -1)
-
-      ;;Tools
-        Global $idMenuMainTools = GUICtrlCreateMenu('&Tools')
-
-        Global $idMenuItemMainToolsNetConnect = GUICtrlCreateMenuItem('Network Connections', $idMenuMainTools, -1)
-        Global $idMenuItemMainToolsInetCpl = GUICtrlCreateMenuItem('Internet Options', $idMenuMainTools, -1)
-          GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
-        Global $idMenuItemMainToolsAppCatalog = GUICtrlCreateMenuItem('Application Catalog', $idMenuMainTools, -1)
-        Global $idMenuItemMainToolsAppWiz = GUICtrlCreateMenuItem('Programs and Features', $idMenuMainTools, -1)
-        Global $idMenuItemMainToolsServices = GUICtrlCreateMenuItem('Services', $idMenuMainTools, -1)
-        Global $idMenuItemMainToolsWinUpdate = GUICtrlCreateMenuItem('Windows Update', $idMenuMainTools, -1)
-          GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
-        Global $idMenuItemMainToolsPrintMMC = GUICtrlCreateMenuItem('Print Management', $idMenuMainTools, -1)
-        Global $idMenuItemMainToolsDevNPrint = GUICtrlCreateMenuItem('Devices and Printers', $idMenuMainTools, -1)
-        Global $idMenuItemMainToolsDevMan = GUICtrlCreateMenuItem('Device Manager', $idMenuMainTools, -1)
-          GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
-        Global $idMenuItemMainToolsCredMan = GUICtrlCreateMenuItem('Credential Manager', $idMenuMainTools, -1)
-        Global $idMenuItemMainToolsMailAcct = GUICtrlCreateMenuItem('Mail Accounts', $idMenuMainTools, -1)
-          GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
-        Global $idMenuItemMainToolsSearchAD = GUICtrlCreateMenuItem('Search Active Directory', $idMenuMainTools, -1)
-        Global $idMenuItemMainToolsSysProp = GUICtrlCreateMenuItem('System Properties', $idMenuMainTools, -1)
-          GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
-        Global $idMenuItemMainToolsLoginScript = GUICtrlCreateMenuItem('Run Login Script', $idMenuMainTools, -1)
-        Global $idMenuItemMainToolsPersonalDrive = GUICtrlCreateMenuItem('Map ' & $sHomeFolderName & ' Drive', $idMenuMainTools, -1)
-        ;Global $idMenuItemMainToolsSysInfo = GUICtrlCreateMenuItem('System Information', $idMenuMainTools, -1)
 
       ;;Help
         Global $idMenuMainHelp = GUICtrlCreateMenu('&Help')
 
-        Global $idMenuItemMainHelpLaunchLMIr = GUICtrlCreateMenuItem('LogMeIn Rescue', $idMenuMainHelp, -1)  ;↗
-          GUICtrlCreateMenuItem('', $idMenuMainHelp, -1) ; create a separator line
-        Global $idMenuItemMainHelpLaunchIntranet = GUICtrlCreateMenuItem($sIntranetName, $idMenuMainHelp, -1)  ;↗
-        Global $idMenuItemMainHelpLaunchHDesk = GUICtrlCreateMenuItem($sHelpdeskName, $idMenuMainHelp, -1) ;↗
-        Global $idMenuItemMainHelpLaunchPWM = GUICtrlCreateMenuItem('Password Self-Service', $idMenuMainHelp, -1) ;↗
-          GUICtrlCreateMenuItem('', $idMenuMainHelp, -1) ; create a separator line
         Global $idMenuItemMainHelpDocumentation = GUICtrlCreateMenuItem('Documentation (' & $sAppDocsHost & ')', $idMenuMainHelp, -1)
           GUICtrlCreateMenuItem('', $idMenuMainHelp, -1) ; create a separator line
         Global $idMenuItemMainHelpAbout = GUICtrlCreateMenuItem('About', $idMenuMainHelp, -1)
 
-    ;;MAIN WINDOW ELEMENTS - LEFT COLUMN
-      $idGraphicMainAboutPC = GUICtrlCreateIcon($sAppLogo, -1, $columnMainLeft01, $rowMainLeft01, 128, 128, -1, $GUI_WS_EX_PARENTDRAG)
+    ;;MAIN WINDOW ELEMENTS - LEFT
+      $idGraphicMainLogo = GUICtrlCreateIcon($sAppLogo, -1, $iGUIMainColumnLeft02, $iGUIMainRowLeft01, iGUIMainColumnLeft01Width, iGUIMainRowLeft01Height, -1, $GUI_WS_EX_PARENTDRAG)
 
-      Global $idButtonMainLeftClose = GUICtrlCreateButton($sCloseButtonText, $columnMainLeft_01, $rowMainLeft_01, $columnMainLeft_01Width, $rowMainLeft_01Height)
-      Global $idButtonMainLeftRefresh = GUICtrlCreateButton('Refresh', $columnMainLeft_01, $rowMainLeft_02, $columnMainLeft_01Width, $rowMainLeft_02Height)
-      If $bConfigContactHelpdeskEnabled = True Then
-        Global $idButtonMainLeftContactHDesk = GUICtrlCreateButton($sHelpdeskRequestName, $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height, BitOR($BS_MULTILINE, $BS_CENTER, $BS_VCENTER))
-      Else
-        Global $idButtonMainLeftContactHDesk = GUICtrlCreateButton('Copy Summary', $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height)
-      EndIf
+      Global $idButtonMainLeftApply = GUICtrlCreateButton('Apply', $iGUIMainColumnLeft01, $iGUIMainRowLeft03, $iGUIMainColumnLeft02Width, $iGUIMainRowLeft03Height)
+      Global $idButtonMainLeftCancel = GUICtrlCreateButton('Cancel', $iGUIMainColumnLeft01, $iGUIMainRowLeft02, $iGUIMainColumnLeft02Width, $iGUIMainRowLeft02Height)
+
+    ;;MAIN WINDOW ELEMENTS - RIGHT
+      Global $idTabMain = GUICtrlCreateTab($iGUIMainColumnRight01, $iGUIMainRowRight01, $iGUIMainColumnRight01Width, $iGUIMainRowRight01Height)
+
+      ;;TAB MAIN
+        GUICtrlCreateTabItem('Main')
+
+        ;;GROUP GENERAL
+          Global $idGroupMainTabMainLeftGeneral = GUICtrlCreateGroup( _
+            'General', _
+            $iGUIMainTabMainGeneralColumn01, _
+            $iGUIMainTabMainGeneralRow02, _
+            $iGUIMainTabMainGeneralColumn01Width, _
+            $iGUIMainTabMainGeneralRow02Height)
+          Global $idCheckboxMainGeneral_StartAtLogin = GUICtrlCreateCheckbox( _
+            'Start About This Computer at user login', _
+            $iGUIMainTabMainGeneralColumn02, _
+            $iGUIMainTabMainGeneralRow04, _
+            $iGUIMainTabMainGeneralColumn02Width, _
+            $iGUIMainTabMainGeneralRow04Height)
+          Global $idCheckboxMainGeneral_DisableExit = GUICtrlCreateCheckbox( _
+            'Disable exiting About This Computer', _
+            $iGUIMainTabMainGeneralColumn02, _
+            $iGUIMainTabMainGeneralRow06, _
+            $iGUIMainTabMainGeneralColumn02Width, _
+            $iGUIMainTabMainGeneralRow06Height)
+
+        ;;GROUP TRAY ICON
+          Local $idGroupMainTabMainLeftTrayIcon = GUICtrlCreateGroup(text, left, top, [width], [height], [style], [exStyle])
+
+      ;;TAB TOOLS MENU
+        GUICtrlCreateTabItem('Tools Menu')
+
+      ;;TAB HELP MENU
+        GUICtrlCreateTabItem('Help Menu')
+
+      ;;TAB SERVICES
+        GUICtrlCreateTabItem('Services')
+
+      ;;TAB HELPDESK CONTACT FORM
+        GUICtrlCreateTabItem('Helpdesk Contact Form')
+
+
+      GUICtrlCreateTab('')  ;;terminate tab structure
+  EndFunc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     ;;MAIN WINDOW ELEMENTS - RIGHT COLUMN
       ;;Contact information

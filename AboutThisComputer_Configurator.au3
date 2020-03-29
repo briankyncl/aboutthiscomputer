@@ -304,13 +304,41 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         $iGUIMainTabMainGeneralRow00Height = $iGUIMainTabMainGeneralRow02Height + $iGUIMainTabMainGeneralRow01Height
 
       ;;GRID GROUP TRAY ICON (CONTROLS IN THE TRAY ICON GROUP OF THE MAIN TAB)
+        ;;MISC
+        Local $iGUIMainTabTrayIconRadioWidth = 10
+        Local $iGUIMainTabTrayIconImageWidth = 24
+        Local $iGUIMainTabTrayIconSpacerSmall = 5
+        Local $iGUIMainTabTrayIconSpacerLarge = 10
+
         ;;COLUMNS
         Global $iGUIMainTabMainTrayIconColumn00      = $iGUIMainTabAllColumnLeft00  ;;left bound of tab control minus chrome
         Global $iGUIMainTabMainTrayIconColumn00Width = $iGUIMainTabAllColumnLeft00Width  ;;total width of left column
         Global $iGUIMainTabMainTrayIconColumn01      = $iGUIMainTabAllColumnLeft01  ;;left bound of controls in the tab (usually a group boundary)
         Global $iGUIMainTabMainTrayIconColumn01Width = $iGUIMainTabAllColumnLeft01Width  ;;width of width of group control
-        Global $iGUIMainTabMainTrayIconColumn02      = $iGUIMainTabAllColumnLeft02  ;;left bound of controls in the group (usually a checkbox)
-        Global $iGUIMainTabMainTrayIconColumn02Width = $iGUIMainTabMainTrayIconColumn01Width - 10  ;;width of checkbox controls minus spacing
+        Global $iGUIMainTabMainTrayIconColumn02      = $iGUIMainTabAllColumnLeft02  ;;first radio button
+        Global $iGUIMainTabMainTrayIconColumn02Width = $iGUIMainTabTrayIconRadioWidth  ;;first radio button
+        Global $iGUIMainTabMainTrayIconColumn03      = $iGUIMainTabMainTrayIconColumn02 + $iGUIMainTabMainTrayIconColumn02Width  ;;space between radio button and associated image
+        Global $iGUIMainTabMainTrayIconColumn03Width = $iGUIMainTabTrayIconSpacerSmall  ;;space between radio button and associated image
+        Global $iGUIMainTabMainTrayIconColumn04      = $iGUIMainTabMainTrayIconColumn03 + $iGUIMainTabMainTrayIconColumn03Width  ;;first image
+        Global $iGUIMainTabMainTrayIconColumn04Width = $iGUIMainTabTrayIconImageWidth  ;;first image
+        Global $iGUIMainTabMainTrayIconColumn05      = $iGUIMainTabMainTrayIconColumn04 + $iGUIMainTabMainTrayIconColumn04Width  ;;space between first image and second radio button
+        Global $iGUIMainTabMainTrayIconColumn05Width = $iGUIMainTabTrayIconSpacerLarge  ;;space between first image and second radio button
+        Global $iGUIMainTabMainTrayIconColumn06      = $iGUIMainTabMainTrayIconColumn05 + $iGUIMainTabMainTrayIconColumn05Width  ;;second radio button
+        Global $iGUIMainTabMainTrayIconColumn06Width = $iGUIMainTabTrayIconRadioWidth  ;;second radio button
+        Global $iGUIMainTabMainTrayIconColumn07      = $iGUIMainTabMainTrayIconColumn06 + $iGUIMainTabMainTrayIconColumn06Width  ;;space between radio button and associated image
+        Global $iGUIMainTabMainTrayIconColumn07Width = $iGUIMainTabTrayIconSpacerSmall  ;;space between radio button and associated image
+        Global $iGUIMainTabMainTrayIconColumn08      = $iGUIMainTabMainTrayIconColumn07 + $iGUIMainTabMainTrayIconColumn07Width  ;;second image
+        Global $iGUIMainTabMainTrayIconColumn08Width = $iGUIMainTabTrayIconImageWidth  ;;second image
+        Global $iGUIMainTabMainTrayIconColumn09      = $iGUIMainTabMainTrayIconColumn08 + $iGUIMainTabMainTrayIconColumn08Width  ;;space between second image and third radio button
+        Global $iGUIMainTabMainTrayIconColumn09Width = $iGUIMainTabTrayIconSpacerLarge  ;;space between second image and third radio button
+        Global $iGUIMainTabMainTrayIconColumn10      = $iGUIMainTabMainTrayIconColumn09 + $iGUIMainTabMainTrayIconColumn09Width  ;;second radio button
+        Global $iGUIMainTabMainTrayIconColumn10Width = $iGUIMainTabTrayIconRadioWidth  ;;second radio button
+        Global $iGUIMainTabMainTrayIconColumn11      = $iGUIMainTabMainTrayIconColumn10 + $iGUIMainTabMainTrayIconColumn10Width  ;;space between radio button and associated image
+        Global $iGUIMainTabMainTrayIconColumn11Width = $iGUIMainTabTrayIconSpacerSmall  ;;space between radio button and associated image
+        Global $iGUIMainTabMainTrayIconColumn12      = $iGUIMainTabMainTrayIconColumn11 + $iGUIMainTabMainTrayIconColumn11Width  ;;second image
+        Global $iGUIMainTabMainTrayIconColumn12Width = $iGUIMainTabTrayIconImageWidth  ;;second image
+        Global $iGUIMainTabMainTrayIconColumn13      = $iGUIMainTabMainTrayIconColumn12 + $iGUIMainTabMainTrayIconColumn12Width  ;;space between second image and third radio button
+        Global $iGUIMainTabMainTrayIconColumn14Width = $iGUIMainTabTrayIconSpacerLarge  ;;space between second image and third radio button
 
         ;;ROWS
         Global $iGUIMainTabMainTrayIconRow00       = $iGUIMainTabMainGeneralRow00 + $iGUIMainTabMainGeneralRow00Height + $GUIMainTabAllPadding
@@ -322,7 +350,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         Global $iGUIMainTabMainTrayIconRow03       = $iGUIMainTabMainTrayIconRow02  ;;top bound of the row between group box and first radio button
         Global $iGUIMainTabMainTrayIconRow03Height = $iGUIMainTabAllChromeGroupTop  ;;row between top of group and first radio button
         Global $iGUIMainTabMainTrayIconRow04       = $iGUIMainTabMainTrayIconRow03 + $iGUIMainTabMainTrayIconRow03Height  ;;radio buttons and images
-        Global $iGUIMainTabMainTrayIconRow04Height = 24  ;;height of radio buttons and images
+        Global $iGUIMainTabMainTrayIconRow04Height = $iGUIMainTabTrayIconImageWidth  ;;height of radio buttons and images
         Global $iGUIMainTabMainTrayIconRow05       = $iGUIMainTabMainTrayIconRow04 + $iGUIMainTabMainTrayIconRow04Height  ;;row before bottom of group
         Global $iGUIMainTabMainTrayIconRow05Height = $iGUIMainTabAllChromeGroupBottom  ;;row before bottom of group
 
@@ -335,7 +363,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
   Func GUIBuild()
     ;;CREATE MAIN GUI
-    ;; Requires GUIDefine() to have been ran.
+    ;; Requires GUIDefine() to have been previously ran.
 
     ;;DECLARE MAIN WINDOW
     Global $hGUIMain = GUICreate('About This Computer Configurator', $iGUIMainWidthDefault, $iGUIMainHeightDefault + $iGUIMainMenuBarHeight, -1, -1)  ;;plus menu bar adjustment
@@ -396,12 +424,14 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             $iGUIMainTabMainGeneralRow06Height)
 
         ;;GROUP TRAY ICON
-          Local $idGroupMainTabMainLeftTrayIcon = GUICtrlCreateGroup( _
+          Global $idGroupMainTabMainLeftTrayIcon = GUICtrlCreateGroup( _
             'Tray Icon', _
             $iGUIMainTabMainTrayIconColumn01, _
             $iGUIMainTabMainTrayIconRow02, _
             $iGUIMainTabMainTrayIconColumn01Width, _
             $iGUIMainTabMainTrayIconRow02Height)
+
+          Global $idRadioMainTrayIcon_First = GUICtrlCreateRadio(text, left, top, [width], [height], [style], [exStyle])
 
       ;;TAB TOOLS MENU
         GUICtrlCreateTabItem('Tools Menu')

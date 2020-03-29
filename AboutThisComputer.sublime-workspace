@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"iGUIMainTabMainTrayIconRow00",
+				"iGUIMainTabMainTrayIconRow00Height"
+			],
+			[
+				"GUICtrlCreateg",
+				"GUICtrlCreateGroup()"
+			],
+			[
 				"StartupBui",
 				"StartupBuildGUI"
 			],
@@ -35,15 +43,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "AboutThisComputer_Configurator.au3",
-			"settings":
-			{
-				"buffer_size": 64313,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -57,11 +56,11 @@
 		"selected_items":
 		[
 			[
-				"al",
+				"ali",
 				"AlignTab"
 			],
 			[
-				"ali",
+				"al",
 				"AlignTab"
 			],
 			[
@@ -114,11 +113,12 @@
 	],
 	"file_history":
 	[
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_Configurator_Scratch.txt",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_Configurator.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/WKS_Prep.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/WKS_PrepSync.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_Configurator_Text.txt",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/UDF-ATCCustomization/_ATC_Customization.au3",
-		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_Configurator.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_InstallHelper.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_stripped.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer.au3",
@@ -240,12 +240,11 @@
 		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWANT04.cfg",
 		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-NWSEAFLOW02.cfg",
 		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-WADICL.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-sewalbas01.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/services/service-WebCTRL.cfg"
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-sewalbas01.cfg"
 	],
 	"find":
 	{
-		"height": 26.0
+		"height": 40.0
 	},
 	"find_in_files":
 	{
@@ -260,6 +259,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"wrench",
+			"GUIBuild(",
+			"sAppLogo",
+			"sAppDocsHost",
 			"icon",
 			"smtp",
 			"sOrgLoginScriptPath",
@@ -280,6 +283,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"GUIDefine(",
 			"sLoginScriptPath",
 			"HomeFolderName",
 			"sSCCMAppCatalogURL",
@@ -299,39 +303,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "AboutThisComputer_Configurator.au3",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 64313,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4580,
-								4580
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/AutoItScript/AutoIt.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1859.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
 			]
 		}
 	],
@@ -412,7 +385,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 215.0,
+	"side_bar_width": 290.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

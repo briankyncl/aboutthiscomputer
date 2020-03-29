@@ -4,6 +4,7 @@
 #AutoIt3Wrapper_Outfile=Compiled\Configurator.exe
 #AutoIt3Wrapper_Outfile_x64=Compiled\Configurator_x64.exe
 #AutoIt3Wrapper_Compile_Both=y
+#AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Res_Comment=About This Computer Configurator
 #AutoIt3Wrapper_Res_Description=About This Computer Configurator
 #AutoIt3Wrapper_Res_Fileversion=1.0.0.1
@@ -16,6 +17,16 @@
 #AutoIt3Wrapper_Run_Au3Stripper=y
 #Au3Stripper_Parameters=/mo
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
+; *** Start added by AutoIt3Wrapper ***
+#include <EditConstants.au3>
+#include <FileConstants.au3>
+#include <FontConstants.au3>
+#include <GUIConstantsEx.au3>
+#include <MsgBoxConstants.au3>
+#include <StaticConstants.au3>
+#include <TrayConstants.au3>
+#include <WindowsConstants.au3>
+; *** End added by AutoIt3Wrapper ***
 
 #COMMENTS-START
   AboutThisComputer_Configurator.au3
@@ -33,6 +44,14 @@
 
   ;;INCLUDES
   #include 'UDF-ATCCustomization\_ATC_Customization.au3'
+#include <EditConstants.au3>
+#include <FileConstants.au3>
+#include <FontConstants.au3>
+#include <GUIConstantsEx.au3>
+#include <MsgBoxConstants.au3>
+#include <StaticConstants.au3>
+#include <TrayConstants.au3>
+#include <WindowsConstants.au3>
 #EndRegion
 
 Main()  ;;Main application
@@ -275,7 +294,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         Global $iGUIMainTabMainGeneralRow05Height = $iGUIMainTabAllChromeCheckboxSpacer  ;;space between first and second checkbox
         Global $iGUIMainTabMainGeneralRow06       = $iGUIMainTabMainGeneralRow05 + $iGUIMainTabMainGeneralRow05Height  ;;second checkbox row
         Global $iGUIMainTabMainGeneralRow06Height = $iGUIMainTabAllChromeCheckboxHeight  ;;second checkbox
-        Global $iGUIMainTabMainGeneralRow07       = $iGUIMainTabMainGeneralRow06 + $iGUIMainTabMainGeneralRow07  ;;row after second checkbox
+        Global $iGUIMainTabMainGeneralRow07       = $iGUIMainTabMainGeneralRow06 + $iGUIMainTabMainGeneralRow06Height  ;;row after second checkbox
         Global $iGUIMainTabMainGeneralRow07Height = $iGUIMainTabAllChromeGroupBottom  ;;row between last checkbox and bottom of group
 
         ;;OVERALL
@@ -292,7 +311,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         Global $iGUIMainTabMainTrayIconColumn02 = $iGUIMainTabAllColumnLeft02  ;;left bound of controls in the group (usually a checkbox)
 
         Global $iGUIMainTabMainTrayIconColumn00Width = $iGUIMainTabAllColumnLeft00Width  ;;total width of left column
-        Global $iGUIMainTabMainTrayIconColumn01Width = $iGUIMainTabAllColumnLeft01Width  ;;width of checkbox 
+        Global $iGUIMainTabMainTrayIconColumn01Width = $iGUIMainTabAllColumnLeft01Width  ;;width of checkbox
         Global $iGUIMainTabMainTrayIconColumn02Width = $iGUIMainTabMainTrayIconColumn01Width - 10  ;;width of checkbox controls minus spacing
 
   EndFunc
@@ -328,7 +347,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         Global $idMenuItemMainHelpAbout = GUICtrlCreateMenuItem('About', $idMenuMainHelp, -1)
 
     ;;MAIN WINDOW ELEMENTS - LEFT
-      $idGraphicMainLogo = GUICtrlCreateIcon($sAppLogo, -1, $iGUIMainColumnLeft02, $iGUIMainRowLeft01, iGUIMainColumnLeft01Width, iGUIMainRowLeft01Height, -1, $GUI_WS_EX_PARENTDRAG)
+      $idGraphicMainLogo = GUICtrlCreateIcon($sAppLogo, -1, $iGUIMainColumnLeft02, $iGUIMainRowLeft01, $iGUIMainColumnLeft01Width, $iGUIMainRowLeft01Height, -1, $GUI_WS_EX_PARENTDRAG)
 
       Global $idButtonMainLeftApply = GUICtrlCreateButton('Apply', $iGUIMainColumnLeft01, $iGUIMainRowLeft03, $iGUIMainColumnLeft02Width, $iGUIMainRowLeft03Height)
       Global $idButtonMainLeftCancel = GUICtrlCreateButton('Cancel', $iGUIMainColumnLeft01, $iGUIMainRowLeft02, $iGUIMainColumnLeft02Width, $iGUIMainRowLeft02Height)

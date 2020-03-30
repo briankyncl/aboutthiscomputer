@@ -34,10 +34,12 @@
 
   ;;INCLUDES
   #include 'UDF-ATCCustomization\_ATC_Customization.au3'
+  #include <ButtonConstants.au3>
   #include <EditConstants.au3>
   #include <FileConstants.au3>
   #include <FontConstants.au3>
   #include <GUIConstantsEx.au3>
+  #include <GUIEdit.au3>
   #include <MsgBoxConstants.au3>
   #include <StaticConstants.au3>
   #include <TrayConstants.au3>
@@ -73,11 +75,13 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     Global $sAppStartMenuPath     = @ProgramsCommonDir & '\' & $sAppName
     Global $sAppRegistryPath      = 'HKEY_LOCAL_MACHINE\Software\' & $sAppOrg & '\' & $sAppName
     Global $sAppLogo              = $sAppTempPath & '\ATC-BeOS_Customize_wrench.ico'
+    Global $sAppParentLogo        = $sAppTempPath & '\ATC-BeOS_Customize_info.ico'
 
     DirCreate($sAppTempPath)
 
     ;;APP ASSETS
     FileInstall('Images\BeOS_Customize_wrench.ico', $sAppLogo, $FC_OVERWRITE)
+    FileInstall('Images\BeOS_Customize_info.ico', $sAppParentLogo, $FC_OVERWRITE)
   EndFunc
 
   Func StartupExeMode()
@@ -173,9 +177,8 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
     ;;GRID OVERALL (ENTIRE WINDOW)
       Global $iGUIMainWidthDefault = 900
-      Global $iGUIMainHeightDefault = 520
-
-    Global $iGUIMainMenuBarHeight = 20
+      Global $iGUIMainHeightDefault = 505
+      Global $iGUIMainMenuBarHeight = 20
 
       ;;GRID OVERALL LEFT (BUTTONS AND LOGO)
         Global $iGUIMainColumnLeft00 = 0  ;;left bound of left column
@@ -220,23 +223,23 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       Global $iGUIMainTabAllWidthDefault = $iGUIMainColumnRight01Width - $iGUIMainTabAllChromeLeft - $iGUIMainTabAllChromeRight  ;;overall width of space available for tab controls (width of the tab control minus chrome spacing)
       Global $iGUIMainTabAllHeightDefault = $iGUIMainRowRight01Height - $iGUIMainTabAllChromeTop - $iGUIMainTabAllChromeBottom  ;;overall height of space available for tab controls (height of the tab control minus chrome spacing)
 
-      Global $iGUIMainTabAllCheckboxesWidth = 40  ;;standard width of the left elements within a group control (usually a checkbox to the left of an input field)
+      Global $iGUIMainTabAllCheckboxesWidth = 100  ;;standard width of the left elements within a group control (usually a checkbox to the left of an input field)
 
       ;;GRID ALL TABS (SIZING SHARED BY ALL CONTROLS)
         ;;MISC
         Global $iGUIMainTabAllChromeCheckboxHeight = 17  ;;Height of a checkbox control
         Global $iGUIMainTabAllChromeCheckboxSpacer = 3  ;;Height of space between two checkbox controls
-        ;Space after checkbox control
-        ;Space between checkbox controls
+        Global $iGUIMainTabAllChromeCheckboxSpacerExterior = 5  ;;Height of space between exterior checkbox and associated group
+        Global $iGUIMainTabAllChromeCheckboxOffset = 3  ;;distance to offset checkboxes so they look vertically centered next to label control
 
-        ;Height of an input control
-        ;Space after input control
-        ;Space after common input control (see helpdesk section)
+        Global $iGUIMainTabAllChromeInputHeight = 21  ;;Height of an input control
+        Global $iGUIMainTabAllChromeInputSpacer = 9  ;;Space between unrelated input controls
+        Global $iGUIMainTabAllChromeInputSpacerSmall = 4  ;;Space between related input controls (as in helpdesk section)
 
         Global $GUIMainTabAllPadding = 10
 
-        Global $iGUIMainTabAllChromeGroupTop = 18  ;;Space between top of group and first element
-        Global $iGUIMainTabAllChromeGroupBottom = 7  ;;Space from last element to bottom of group control
+        Global $iGUIMainTabAllChromeGroupTop = 20  ;;Space between top of group and first element  ;;18
+        Global $iGUIMainTabAllChromeGroupBottom = 10  ;;Space from last element to bottom of group control  ;;7
 
         Global $iGUIMainTabAllRow00 = $iGUIMainRowRight01 + $iGUIMainTabAllChromeTop  ;;top bound of inside of tab control. usable area beneath tabs.
         Global $iGUIMainTabAllRow01 = $iGUIMainTabAllRow00 + 10  ;;top bound of the first control inside the usable tab area.
@@ -305,10 +308,10 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
       ;;GRID GROUP TRAY ICON (CONTROLS IN THE TRAY ICON GROUP OF THE MAIN TAB)
         ;;MISC
-        Local $iGUIMainTabTrayIconRadioWidth = 10
+        Local $iGUIMainTabTrayIconRadioWidth = 20
         Local $iGUIMainTabTrayIconImageWidth = 24
-        Local $iGUIMainTabTrayIconSpacerSmall = 5
-        Local $iGUIMainTabTrayIconSpacerLarge = 10
+        Local $iGUIMainTabTrayIconSpacerSmall = 0
+        Local $iGUIMainTabTrayIconSpacerLarge = 15
 
         ;;COLUMNS
         Global $iGUIMainTabMainTrayIconColumn00      = $iGUIMainTabAllColumnLeft00  ;;left bound of tab control minus chrome
@@ -331,14 +334,30 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         Global $iGUIMainTabMainTrayIconColumn08Width = $iGUIMainTabTrayIconImageWidth  ;;second image
         Global $iGUIMainTabMainTrayIconColumn09      = $iGUIMainTabMainTrayIconColumn08 + $iGUIMainTabMainTrayIconColumn08Width  ;;space between second image and third radio button
         Global $iGUIMainTabMainTrayIconColumn09Width = $iGUIMainTabTrayIconSpacerLarge  ;;space between second image and third radio button
-        Global $iGUIMainTabMainTrayIconColumn10      = $iGUIMainTabMainTrayIconColumn09 + $iGUIMainTabMainTrayIconColumn09Width  ;;second radio button
-        Global $iGUIMainTabMainTrayIconColumn10Width = $iGUIMainTabTrayIconRadioWidth  ;;second radio button
+        Global $iGUIMainTabMainTrayIconColumn10      = $iGUIMainTabMainTrayIconColumn09 + $iGUIMainTabMainTrayIconColumn09Width  ;;third radio button
+        Global $iGUIMainTabMainTrayIconColumn10Width = $iGUIMainTabTrayIconRadioWidth  ;;third radio button
         Global $iGUIMainTabMainTrayIconColumn11      = $iGUIMainTabMainTrayIconColumn10 + $iGUIMainTabMainTrayIconColumn10Width  ;;space between radio button and associated image
         Global $iGUIMainTabMainTrayIconColumn11Width = $iGUIMainTabTrayIconSpacerSmall  ;;space between radio button and associated image
-        Global $iGUIMainTabMainTrayIconColumn12      = $iGUIMainTabMainTrayIconColumn11 + $iGUIMainTabMainTrayIconColumn11Width  ;;second image
-        Global $iGUIMainTabMainTrayIconColumn12Width = $iGUIMainTabTrayIconImageWidth  ;;second image
-        Global $iGUIMainTabMainTrayIconColumn13      = $iGUIMainTabMainTrayIconColumn12 + $iGUIMainTabMainTrayIconColumn12Width  ;;space between second image and third radio button
-        Global $iGUIMainTabMainTrayIconColumn14Width = $iGUIMainTabTrayIconSpacerLarge  ;;space between second image and third radio button
+        Global $iGUIMainTabMainTrayIconColumn12      = $iGUIMainTabMainTrayIconColumn11 + $iGUIMainTabMainTrayIconColumn11Width  ;;third image
+        Global $iGUIMainTabMainTrayIconColumn12Width = $iGUIMainTabTrayIconImageWidth  ;;third image
+        Global $iGUIMainTabMainTrayIconColumn13      = $iGUIMainTabMainTrayIconColumn12 + $iGUIMainTabMainTrayIconColumn12Width  ;;space between second image and fourth radio button
+        Global $iGUIMainTabMainTrayIconColumn13Width = $iGUIMainTabTrayIconSpacerLarge  ;;space between second image and fourth radio button
+        Global $iGUIMainTabMainTrayIconColumn14      = $iGUIMainTabMainTrayIconColumn13 + $iGUIMainTabMainTrayIconColumn13Width  ;;fourth radio button
+        Global $iGUIMainTabMainTrayIconColumn14Width = $iGUIMainTabTrayIconRadioWidth  ;;fourth radio button
+        Global $iGUIMainTabMainTrayIconColumn15      = $iGUIMainTabMainTrayIconColumn14 + $iGUIMainTabMainTrayIconColumn14Width  ;;space between radio button and associated image
+        Global $iGUIMainTabMainTrayIconColumn15Width = $iGUIMainTabTrayIconSpacerSmall  ;;space between radio button and associated image
+        Global $iGUIMainTabMainTrayIconColumn16      = $iGUIMainTabMainTrayIconColumn15 + $iGUIMainTabMainTrayIconColumn15Width  ;;fourth image
+        Global $iGUIMainTabMainTrayIconColumn16Width = $iGUIMainTabTrayIconImageWidth  ;;fourth image
+        Global $iGUIMainTabMainTrayIconColumn17      = $iGUIMainTabMainTrayIconColumn16 + $iGUIMainTabMainTrayIconColumn16Width  ;;space between second image and fifth radio button
+        Global $iGUIMainTabMainTrayIconColumn17Width = $iGUIMainTabTrayIconSpacerLarge  ;;space between second image and fifth radio button
+        Global $iGUIMainTabMainTrayIconColumn18      = $iGUIMainTabMainTrayIconColumn17 + $iGUIMainTabMainTrayIconColumn17Width  ;;fifth radio button
+        Global $iGUIMainTabMainTrayIconColumn18Width = $iGUIMainTabTrayIconRadioWidth  ;;fifth radio button
+        Global $iGUIMainTabMainTrayIconColumn19      = $iGUIMainTabMainTrayIconColumn18 + $iGUIMainTabMainTrayIconColumn18Width  ;;space between radio button and associated image
+        Global $iGUIMainTabMainTrayIconColumn19Width = $iGUIMainTabTrayIconSpacerSmall  ;;space between radio button and associated image
+        Global $iGUIMainTabMainTrayIconColumn20      = $iGUIMainTabMainTrayIconColumn19 + $iGUIMainTabMainTrayIconColumn19Width  ;;fifth image
+        Global $iGUIMainTabMainTrayIconColumn20Width = $iGUIMainTabTrayIconImageWidth  ;;fifth image
+        Global $iGUIMainTabMainTrayIconColumn21      = $iGUIMainTabMainTrayIconColumn20 + $iGUIMainTabMainTrayIconColumn20Width  ;;space between second image and sixth radio button
+        Global $iGUIMainTabMainTrayIconColumn21Width = $iGUIMainTabTrayIconSpacerLarge  ;;space between second image and sixth radio button
 
         ;;ROWS
         Global $iGUIMainTabMainTrayIconRow00       = $iGUIMainTabMainGeneralRow00 + $iGUIMainTabMainGeneralRow00Height + $GUIMainTabAllPadding
@@ -359,6 +378,98 @@ End()   ;;Exit app gracefully if code should ever find itself here.
                                               $iGUIMainTabMainTrayIconRow04Height + _
                                               $iGUIMainTabMainTrayIconRow05Height
         $iGUIMainTabMainTrayIconRow00Height = $iGUIMainTabMainTrayIconRow02Height + $iGUIMainTabMainTrayIconRow01Height
+
+      ;;GRID GROUP HELPDESK (CONTROLS ASSOCIATED WITH THE HELPDESK GROUP OF THE MAIN TAB)
+        ;;MISC
+          ;asdf
+
+        ;;COLUMNS
+        Global $iGUIMainTabMainHelpdeskColumn00      = $iGUIMainTabAllColumnLeft00  ;;region
+        Global $iGUIMainTabMainHelpdeskColumn00Width = $iGUIMainTabAllColumnLeft00Width
+        Global $iGUIMainTabMainHelpdeskColumn01      = $iGUIMainTabAllColumnLeft01  ;;group
+        Global $iGUIMainTabMainHelpdeskColumn01Width = $iGUIMainTabAllColumnLeft01Width
+        Global $iGUIMainTabMainHelpdeskColumn02      = $iGUIMainTabAllColumnLeft02  ;;checkbox
+        Global $iGUIMainTabMainHelpdeskColumn02Width = $iGUIMainTabAllColumnLeft02Width
+        Global $iGUIMainTabMainHelpdeskColumn03      = $iGUIMainTabAllColumnLeft03  ;;input
+        Global $iGUIMainTabMainHelpdeskColumn03Width = $iGUIMainTabAllColumnLeft03Width - 12
+
+        ;;ROWS
+        Global $iGUIMainTabMainHelpdeskRow00       = $iGUIMainTabMainTrayIconRow00 + $iGUIMainTabMainTrayIconRow00Height  ;;top bound of region
+        Global $iGUIMainTabMainHelpdeskRow00Height = 0  ;;height of entire region. Defined below.
+        Global $iGUIMainTabMainHelpdeskRow01       = $iGUIMainTabMainHelpdeskRow00  ;;row holding space between outer region and top of group box
+        Global $iGUIMainTabMainHelpdeskRow01Height = 0  ;;row between region and exterior checkbox
+        Global $iGUIMainTabMainHelpdeskRow02       = $iGUIMainTabMainHelpdeskRow01 + $iGUIMainTabMainHelpdeskRow01Height  ;;exterior checkbox
+        Global $iGUIMainTabMainHelpdeskRow02Height = $iGUIMainTabAllChromeCheckboxHeight
+        Global $iGUIMainTabMainHelpdeskRow03       = $iGUIMainTabMainHelpdeskRow02 + $iGUIMainTabMainHelpdeskRow02Height  ;;space between exterior checkbox and group
+        Global $iGUIMainTabMainHelpdeskRow03Height = $iGUIMainTabAllChromeCheckboxSpacerExterior
+        Global $iGUIMainTabMainHelpdeskRow04       = $iGUIMainTabMainHelpdeskRow03 + $iGUIMainTabMainHelpdeskRow03Height  ;;group box
+        Global $iGUIMainTabMainHelpdeskRow04Height = 0  ;;height of group box. Defined below.
+        Global $iGUIMainTabMainHelpdeskRow05       = $iGUIMainTabMainHelpdeskRow04  ;;row between top of group and first checkbox
+        Global $iGUIMainTabMainHelpdeskRow05Height = $iGUIMainTabAllChromeGroupTop
+        Global $iGUIMainTabMainHelpdeskRow06       = $iGUIMainTabMainHelpdeskRow05 + $iGUIMainTabMainHelpdeskRow05Height  ;;"Title:"
+        Global $iGUIMainTabMainHelpdeskRow06Height = $iGUIMainTabAllChromeInputHeight
+        Global $iGUIMainTabMainHelpdeskRow07       = $iGUIMainTabMainHelpdeskRow06 + $iGUIMainTabMainHelpdeskRow06Height  ;;spacer
+        Global $iGUIMainTabMainHelpdeskRow07Height = $iGUIMainTabAllChromeInputSpacer
+        Global $iGUIMainTabMainHelpdeskRow08       = $iGUIMainTabMainHelpdeskRow07 + $iGUIMainTabMainHelpdeskRow07Height  ;;"Show Email"
+        Global $iGUIMainTabMainHelpdeskRow08Height = $iGUIMainTabAllChromeInputHeight
+        Global $iGUIMainTabMainHelpdeskRow09       = $iGUIMainTabMainHelpdeskRow08 + $iGUIMainTabMainHelpdeskRow08Height  ;;spacer
+        Global $iGUIMainTabMainHelpdeskRow09Height = $iGUIMainTabAllChromeInputSpacerSmall
+        Global $iGUIMainTabMainHelpdeskRow10       = $iGUIMainTabMainHelpdeskRow09 + $iGUIMainTabMainHelpdeskRow09Height  ;;input box
+        Global $iGUIMainTabMainHelpdeskRow10Height = $iGUIMainTabAllChromeInputHeight
+        Global $iGUIMainTabMainHelpdeskRow11       = $iGUIMainTabMainHelpdeskRow10 + $iGUIMainTabMainHelpdeskRow10Height  ;;spacer
+        Global $iGUIMainTabMainHelpdeskRow11Height = $iGUIMainTabAllChromeInputSpacer
+        Global $iGUIMainTabMainHelpdeskRow12       = $iGUIMainTabMainHelpdeskRow11 + $iGUIMainTabMainHelpdeskRow11Height  ;;"Show Phone"
+        Global $iGUIMainTabMainHelpdeskRow12Height = $iGUIMainTabAllChromeInputHeight
+        Global $iGUIMainTabMainHelpdeskRow13       = $iGUIMainTabMainHelpdeskRow12 + $iGUIMainTabMainHelpdeskRow12Height  ;;spacer
+        Global $iGUIMainTabMainHelpdeskRow13Height = $iGUIMainTabAllChromeInputSpacerSmall
+        Global $iGUIMainTabMainHelpdeskRow14       = $iGUIMainTabMainHelpdeskRow13 + $iGUIMainTabMainHelpdeskRow13Height  ;;input box
+        Global $iGUIMainTabMainHelpdeskRow14Height = $iGUIMainTabAllChromeInputHeight
+        Global $iGUIMainTabMainHelpdeskRow15       = $iGUIMainTabMainHelpdeskRow14 + $iGUIMainTabMainHelpdeskRow14Height  ;;spacer
+        Global $iGUIMainTabMainHelpdeskRow15Height = $iGUIMainTabAllChromeInputSpacer
+        Global $iGUIMainTabMainHelpdeskRow16       = $iGUIMainTabMainHelpdeskRow15 + $iGUIMainTabMainHelpdeskRow15Height  ;;"Show Website"
+        Global $iGUIMainTabMainHelpdeskRow16Height = $iGUIMainTabAllChromeInputHeight
+        Global $iGUIMainTabMainHelpdeskRow17       = $iGUIMainTabMainHelpdeskRow16 + $iGUIMainTabMainHelpdeskRow16Height  ;;spacer
+        Global $iGUIMainTabMainHelpdeskRow17Height = $iGUIMainTabAllChromeInputSpacerSmall
+        Global $iGUIMainTabMainHelpdeskRow18       = $iGUIMainTabMainHelpdeskRow17 + $iGUIMainTabMainHelpdeskRow17Height  ;;input box
+        Global $iGUIMainTabMainHelpdeskRow18Height = $iGUIMainTabAllChromeInputHeight
+        Global $iGUIMainTabMainHelpdeskRow19       = $iGUIMainTabMainHelpdeskRow18 + $iGUIMainTabMainHelpdeskRow18Height  ;;spacer
+        Global $iGUIMainTabMainHelpdeskRow19Height = $iGUIMainTabAllChromeInputSpacer
+        Global $iGUIMainTabMainHelpdeskRow20       = $iGUIMainTabMainHelpdeskRow19 + $iGUIMainTabMainHelpdeskRow19Height  ;;"Show Alternate"
+        Global $iGUIMainTabMainHelpdeskRow20Height = $iGUIMainTabAllChromeInputHeight
+        Global $iGUIMainTabMainHelpdeskRow21       = $iGUIMainTabMainHelpdeskRow20 + $iGUIMainTabMainHelpdeskRow20Height  ;;spacer
+        Global $iGUIMainTabMainHelpdeskRow21Height = $iGUIMainTabAllChromeInputSpacerSmall
+        Global $iGUIMainTabMainHelpdeskRow22       = $iGUIMainTabMainHelpdeskRow21 + $iGUIMainTabMainHelpdeskRow21Height  ;;input box
+        Global $iGUIMainTabMainHelpdeskRow22Height = $iGUIMainTabAllChromeInputHeight
+        Global $iGUIMainTabMainHelpdeskRow23       = $iGUIMainTabMainHelpdeskRow22 + $iGUIMainTabMainHelpdeskRow22Height  ;;final spacer
+        Global $iGUIMainTabMainHelpdeskRow23Height = $iGUIMainTabAllChromeGroupBottom
+
+        ;;OVERALL
+        $iGUIMainTabMainHelpdeskRow04Height = $iGUIMainTabMainHelpdeskRow05Height + _
+                                              $iGUIMainTabMainHelpdeskRow06Height + _
+                                              $iGUIMainTabMainHelpdeskRow07Height + _
+                                              $iGUIMainTabMainHelpdeskRow08Height + _
+                                              $iGUIMainTabMainHelpdeskRow09Height + _
+                                              $iGUIMainTabMainHelpdeskRow10Height + _
+                                              $iGUIMainTabMainHelpdeskRow11Height + _
+                                              $iGUIMainTabMainHelpdeskRow12Height + _
+                                              $iGUIMainTabMainHelpdeskRow13Height + _
+                                              $iGUIMainTabMainHelpdeskRow14Height + _
+                                              $iGUIMainTabMainHelpdeskRow15Height + _
+                                              $iGUIMainTabMainHelpdeskRow16Height + _
+                                              $iGUIMainTabMainHelpdeskRow17Height + _
+                                              $iGUIMainTabMainHelpdeskRow18Height + _
+                                              $iGUIMainTabMainHelpdeskRow19Height + _
+                                              $iGUIMainTabMainHelpdeskRow20Height + _
+                                              $iGUIMainTabMainHelpdeskRow21Height + _
+                                              $iGUIMainTabMainHelpdeskRow22Height + _
+                                              $iGUIMainTabMainHelpdeskRow23Height
+        $iGUIMainTabMainHelpdeskRow00Height = $iGUIMainTabMainHelpdeskRow04Height + _
+                                              $iGUIMainTabMainHelpdeskRow01Height + _
+                                              $iGUIMainTabMainHelpdeskRow02Height + _
+                                              $iGUIMainTabMainHelpdeskRow03Height
+  
+    ;;ADJUSTMENTS
+
   EndFunc
 
   Func GUIBuild()
@@ -404,34 +515,107 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         GUICtrlCreateTabItem('Main')
 
         ;;GROUP GENERAL
-          Global $idGroupMainTabMainLeftGeneral = GUICtrlCreateGroup( _
-            'General', _
-            $iGUIMainTabMainGeneralColumn01, _
-            $iGUIMainTabMainGeneralRow02, _
-            $iGUIMainTabMainGeneralColumn01Width, _
-            $iGUIMainTabMainGeneralRow02Height)
-          Global $idCheckboxMainGeneral_StartAtLogin = GUICtrlCreateCheckbox( _
-            'Start About This Computer at user login', _
-            $iGUIMainTabMainGeneralColumn02, _
-            $iGUIMainTabMainGeneralRow04, _
-            $iGUIMainTabMainGeneralColumn02Width, _
-            $iGUIMainTabMainGeneralRow04Height)
-          Global $idCheckboxMainGeneral_DisableExit = GUICtrlCreateCheckbox( _
-            'Disable exiting About This Computer', _
-            $iGUIMainTabMainGeneralColumn02, _
-            $iGUIMainTabMainGeneralRow06, _
-            $iGUIMainTabMainGeneralColumn02Width, _
-            $iGUIMainTabMainGeneralRow06Height)
+          Global $idGroupMainTabMainLeftGeneral = GUICtrlCreateGroup('General', _
+            $iGUIMainTabMainGeneralColumn01, $iGUIMainTabMainGeneralRow02, $iGUIMainTabMainGeneralColumn01Width, $iGUIMainTabMainGeneralRow02Height)
+          Global $idCheckboxMainGeneral_StartAtLogin = GUICtrlCreateCheckbox('Start About This Computer at user login', _
+            $iGUIMainTabMainGeneralColumn02, $iGUIMainTabMainGeneralRow04, $iGUIMainTabMainGeneralColumn02Width, $iGUIMainTabMainGeneralRow04Height, _
+            BitOR($BS_MULTILINE, $BS_TOP))
+          Global $idCheckboxMainGeneral_DisableExit = GUICtrlCreateCheckbox('Disable exiting About This Computer', _
+            $iGUIMainTabMainGeneralColumn02, $iGUIMainTabMainGeneralRow06, $iGUIMainTabMainGeneralColumn02Width, $iGUIMainTabMainGeneralRow06Height, _
+            BitOR($BS_MULTILINE, $BS_TOP))
 
         ;;GROUP TRAY ICON
-          Global $idGroupMainTabMainLeftTrayIcon = GUICtrlCreateGroup( _
-            'Tray Icon', _
-            $iGUIMainTabMainTrayIconColumn01, _
-            $iGUIMainTabMainTrayIconRow02, _
-            $iGUIMainTabMainTrayIconColumn01Width, _
-            $iGUIMainTabMainTrayIconRow02Height)
+          Global $idGroupMainTabMainLeftTrayIcon = GUICtrlCreateGroup('Tray Icon', _
+            $iGUIMainTabMainTrayIconColumn01, $iGUIMainTabMainTrayIconRow02, $iGUIMainTabMainTrayIconColumn01Width, $iGUIMainTabMainTrayIconRow02Height)
 
-          Global $idRadioMainTrayIcon_First = GUICtrlCreateRadio(text, left, top, [width], [height], [style], [exStyle])
+          ;;gold star icon
+          Global $idRadioMainTrayIcon_First = GUICtrlCreateRadio('', _
+            $iGUIMainTabMainTrayIconColumn02, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn02Width, $iGUIMainTabMainTrayIconRow04Height, _
+            BitOR($BS_MULTILINE, $BS_TOP))
+          GUICtrlCreateIcon('shell32.dll', 44, _
+            $iGUIMainTabMainTrayIconColumn04, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn04Width, $iGUIMainTabMainTrayIconRow04Height)
+
+          ;;BeOS info icon
+          Global $idRadioMainTrayIcon_Second = GUICtrlCreateRadio('', _
+            $iGUIMainTabMainTrayIconColumn06, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn06Width, $iGUIMainTabMainTrayIconRow04Height, _
+            BitOR($BS_MULTILINE, $BS_TOP))
+          GUICtrlCreateIcon($sAppParentLogo, -1, _
+            $iGUIMainTabMainTrayIconColumn08, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn08Width, $iGUIMainTabMainTrayIconRow04Height)
+
+          ;;system info icon
+          Global $idRadioMainTrayIcon_Third = GUICtrlCreateRadio('', _
+            $iGUIMainTabMainTrayIconColumn10, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn10Width, $iGUIMainTabMainTrayIconRow04Height, _
+            BitOR($BS_MULTILINE, $BS_TOP))
+          GUICtrlCreateIcon('shell32.dll', 6783, _
+            $iGUIMainTabMainTrayIconColumn12, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn12Width, $iGUIMainTabMainTrayIconRow04Height)
+
+          ;;system question mark icon
+          Global $idRadioMainTrayIcon_Fourth = GUICtrlCreateRadio('', _
+            $iGUIMainTabMainTrayIconColumn14, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn14Width, $iGUIMainTabMainTrayIconRow04Height, _
+            BitOR($BS_MULTILINE, $BS_TOP))
+          GUICtrlCreateIcon('shell32.dll', 24, _
+            $iGUIMainTabMainTrayIconColumn16, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn16Width, $iGUIMainTabMainTrayIconRow04Height)
+
+          ;;system info bubble
+          Global $idRadioMainTrayIcon_Fifth = GUICtrlCreateRadio('', _
+            $iGUIMainTabMainTrayIconColumn18, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn18Width, $iGUIMainTabMainTrayIconRow04Height, _
+            BitOR($BS_MULTILINE, $BS_TOP))
+          GUICtrlCreateIcon('shell32.dll', 1001, _
+            $iGUIMainTabMainTrayIconColumn20, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn20Width, $iGUIMainTabMainTrayIconRow04Height)
+
+        ;;GROUP HELPDESK
+          Global $idCheckboxMainHelpdesk_ShowHelpdesk = GUICtrlCreateCheckbox('Show helpdesk section', _
+            $iGUIMainTabMainHelpdeskColumn01, $iGUIMainTabMainHelpdeskRow02, $iGUIMainTabMainHelpdeskColumn01Width, $iGUIMainTabMainHelpdeskRow02Height, _
+            BitOR($BS_MULTILINE, $BS_TOP))
+
+          Global $idGroupMainTabMainLeftHelpdesk = GUICtrlCreateGroup('Helpdesk', _
+            $iGUIMainTabMainHelpdeskColumn01, $iGUIMainTabMainHelpdeskRow04, $iGUIMainTabMainHelpdeskColumn01Width, $iGUIMainTabMainHelpdeskRow04Height)
+
+          GUICtrlCreateLabel('Title:', _
+            $iGUIMainTabMainHelpdeskColumn02, $iGUIMainTabMainHelpdeskRow06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabMainHelpdeskColumn02Width, $iGUIMainTabMainHelpdeskRow06Height - $iGUIMainTabAllChromeCheckboxOffset)
+          Global $idInputMainHelpdesk_Title = GUICtrlCreateInput('', _
+            $iGUIMainTabMainHelpdeskColumn03, $iGUIMainTabMainHelpdeskRow06, $iGUIMainTabMainHelpdeskColumn03Width, $iGUIMainTabMainHelpdeskRow06Height)
+            _GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_Title, 'Contoso IT Helpdesk', True)
+
+          Global $idCheckboxMainHelpdesk_ShowEmail = GUICtrlCreateCheckbox('Show email', _
+            $iGUIMainTabMainHelpdeskColumn02, $iGUIMainTabMainHelpdeskRow08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabMainHelpdeskColumn02Width, $iGUIMainTabMainHelpdeskRow08Height - $iGUIMainTabAllChromeCheckboxOffset, _
+            BitOR($BS_MULTILINE, $BS_TOP))
+          Global $idInputMainHeldpesk_EmailTitle = GUICtrlCreateInput('', _
+            $iGUIMainTabMainHelpdeskColumn03, $iGUIMainTabMainHelpdeskRow08, $iGUIMainTabMainHelpdeskColumn03Width, $iGUIMainTabMainHelpdeskRow08Height)
+            _GUICtrlEdit_SetCueBanner($idInputMainHeldpesk_EmailTitle, 'Email', True)
+          Global $idInputMainHelpdesk_EmailAddress = GUICtrlCreateInput('', _
+            $iGUIMainTabMainHelpdeskColumn03, $iGUIMainTabMainHelpdeskRow10, $iGUIMainTabMainHelpdeskColumn03Width, $iGUIMainTabMainHelpdeskRow10Height)
+            _GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_EmailAddress, 'helpdesk@contoso.org', True)
+
+          Global $idCheckboxMainHelpdesk_ShowPhone = GUICtrlCreateCheckbox('Show phone', _
+            $iGUIMainTabMainHelpdeskColumn02, $iGUIMainTabMainHelpdeskRow12 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabMainHelpdeskColumn02Width, $iGUIMainTabMainHelpdeskRow12Height - $iGUIMainTabAllChromeCheckboxOffset, _
+            BitOR($BS_MULTILINE, $BS_TOP))
+          Global $idInputMainHeldpesk_PhoneTitle = GUICtrlCreateInput('', _
+            $iGUIMainTabMainHelpdeskColumn03, $iGUIMainTabMainHelpdeskRow12, $iGUIMainTabMainHelpdeskColumn03Width, $iGUIMainTabMainHelpdeskRow12Height)
+            _GUICtrlEdit_SetCueBanner($idInputMainHeldpesk_PhoneTitle, 'Phone', True)
+          Global $idInputMainHelpdesk_PhoneNumber = GUICtrlCreateInput('', _
+            $iGUIMainTabMainHelpdeskColumn03, $iGUIMainTabMainHelpdeskRow14, $iGUIMainTabMainHelpdeskColumn03Width, $iGUIMainTabMainHelpdeskRow14Height)
+            _GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_PhoneNumber, '1-800-555-HELP', True)
+
+          Global $idCheckboxMainHelpdesk_ShowWebsite = GUICtrlCreateCheckbox('Show website', _
+            $iGUIMainTabMainHelpdeskColumn02, $iGUIMainTabMainHelpdeskRow16 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabMainHelpdeskColumn02Width, $iGUIMainTabMainHelpdeskRow16Height - $iGUIMainTabAllChromeCheckboxOffset, _
+            BitOR($BS_MULTILINE, $BS_TOP))
+          Global $idInputMainHeldpesk_WebsiteTitle = GUICtrlCreateInput('', _
+            $iGUIMainTabMainHelpdeskColumn03, $iGUIMainTabMainHelpdeskRow16, $iGUIMainTabMainHelpdeskColumn03Width, $iGUIMainTabMainHelpdeskRow16Height)
+            _GUICtrlEdit_SetCueBanner($idInputMainHeldpesk_WebsiteTitle, 'Website', True)
+          Global $idInputMainHelpdesk_WebsiteAddress = GUICtrlCreateInput('', _
+            $iGUIMainTabMainHelpdeskColumn03, $iGUIMainTabMainHelpdeskRow18, $iGUIMainTabMainHelpdeskColumn03Width, $iGUIMainTabMainHelpdeskRow18Height)
+            _GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_WebsiteAddress, 'helpdesk.contoso.org', True)
+
+          Global $idCheckboxMainHelpdesk_ShowAlternate = GUICtrlCreateCheckbox('Show alternate contact information', _
+            $iGUIMainTabMainHelpdeskColumn02, $iGUIMainTabMainHelpdeskRow20 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabMainHelpdeskColumn02Width, $iGUIMainTabMainHelpdeskRow20Height - $iGUIMainTabAllChromeCheckboxOffset + $iGUIMainTabMainHelpdeskRow21Height + $iGUIMainTabMainHelpdeskRow22Height, _
+            BitOR($BS_MULTILINE, $BS_TOP))
+          Global $idInputMainHeldpesk_AlternateTitle = GUICtrlCreateInput('', _
+            $iGUIMainTabMainHelpdeskColumn03, $iGUIMainTabMainHelpdeskRow20, $iGUIMainTabMainHelpdeskColumn03Width, $iGUIMainTabMainHelpdeskRow20Height)
+            _GUICtrlEdit_SetCueBanner($idInputMainHeldpesk_AlternateTitle, 'Password Resets', True)
+          Global $idInputMainHelpdesk_AlternateAddress = GUICtrlCreateInput('', _
+            $iGUIMainTabMainHelpdeskColumn03, $iGUIMainTabMainHelpdeskRow22, $iGUIMainTabMainHelpdeskColumn03Width, $iGUIMainTabMainHelpdeskRow22Height)
+            _GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_AlternateAddress, '1-800-555-5555', True)
 
       ;;TAB TOOLS MENU
         GUICtrlCreateTabItem('Tools Menu')

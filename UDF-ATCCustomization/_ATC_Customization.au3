@@ -29,11 +29,11 @@ Func _ATC_Customization($__sAppRegistryPath = 'HKEY_LOCAL_MACHINE\Software\com.b
     Global $sOrgFQDomain              = 'corp.' & $sOrgDomain
 
     ;;Intranet
-    Global $sIntranetName             = 'Intranet'
-    Global $sIntranetURL              = 'intranet.' & $sOrgDomain
+    Global $sIntranetName             = $sOrgName & ' Intranet'
+    Global $sIntranetURL              = 'https://intranet.' & $sOrgDomain & '/'
 
     ;;Helpdesk
-    Global $sHelpdeskName             = 'IT Helpdesk'
+    Global $sHelpdeskName             = $sOrgName & ' IT Helpdesk'
     Global $sHelpdeskPhone            = '1-800-555-5555'
     Global $sHelpdeskRegionalPhone    = $sHelpdeskPhone
     Global $sHelpdeskCorporatePhone   = $sHelpdeskPhone

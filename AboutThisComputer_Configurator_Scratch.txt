@@ -1,0 +1,284 @@
+Credential Manager
+Device Manager
+Devices and Printers
+Internet Options
+Mail Accounts
+Network Connections
+Print Management
+Programs and Features
+Search Active Directory
+Services
+System Properties
+Windows Update
+
+Application Catalog
+Login Script
+Home Drive
+
+    ;;DEFINE GUI GRID
+      ;;COLUMNS
+        ;;columns, left
+        $columnMainLeft00 = 0
+        $columnMainLeft01 = 20  ;image
+
+        ;;columns, left, widths
+        $columnMainLeft00Width = 140
+        $columnMainLeft01Width = $columnMainLeft00Width - 36    ;total width of column minus spacing left and right
+
+        ;;columns, right
+        $columnMainRight00 = $columnMainLeft00Width
+        $columnMainRight01 = $columnMainRight00    ;group line
+        $columnMainRight02 = $columnMainRight01 + 10    ;label title
+        $columnMainRight03 = $columnMainRight02 + 90    ;label info
+        $columnMainRight04 = $columnMainRight03 + 200
+
+        ;;columns, right, widths
+        $columnMainRight00Width = 300
+        $columnMainRight01Width = 10
+        $columnMainRight02Width = 90
+        $columnMainRight03Width = 200
+        $columnMainRight04Width = 0
+
+        ;;window boundary
+        $columnMainBounds = $columnMainLeft00Width + $columnMainRight00Width + 12   ;right edge of window
+
+      ;;ROWS
+        ;;rows, left
+        $rowMainLeft00 = 0
+        $rowMainLeft01 = 10
+
+        ;;rows, left, heights
+        $rowMainLeft00Height = 400
+        $rowMainLeft01Height = 128
+
+        ;;rows, right
+        $rowMainRightSpacing = 16   ;height of columns of text
+        $rowMainRightSpacers = 6    ;lower number means more space between groups
+        $rowMainRight00 = 0 - $rowMainRightSpacers                                        ;spacer
+        $rowMainRight01 = $rowMainRight00 + $rowMainRightSpacing
+        $rowMainRight02 = $rowMainRight01 + $rowMainRightSpacing
+        $rowMainRight03 = $rowMainRight02 + $rowMainRightSpacing
+        $rowMainRight03a = $rowMainRight03 + $rowMainRightSpacing
+        $rowMainRight04 = $rowMainRight03a + $rowMainRightSpacing
+        $rowMainRight05 = $rowMainRight04 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
+        $rowMainRight06 = $rowMainRight05 + $rowMainRightSpacing
+        $rowMainRight07 = $rowMainRight06 + $rowMainRightSpacing
+        If $bNetAdapter01Exists = True Then
+          $rowMainRight08 = $rowMainRight07 + $rowMainRightSpacing    ; IP address 1
+        Else
+          $rowMainRight08 = $rowMainRight07
+        EndIf
+        If $bNetAdapter02Exists = True Then
+          $rowMainRight09 = $rowMainRight08 + $rowMainRightSpacing    ; IP address 2
+        Else
+          $rowMainRight09 = $rowMainRight08
+        EndIf
+        If $bNetAdapter03Exists = True Then
+          $rowMainRight10 = $rowMainRight09 + $rowMainRightSpacing    ; IP address 3
+        Else
+          $rowMainRight10 = $rowMainRight09
+        EndIf
+        If $bNetAdapter04Exists = True Then
+          $rowMainRight11 = $rowMainRight10 + $rowMainRightSpacing    ; IP address 4
+        Else
+          $rowMainRight11 = $rowMainRight10
+        EndIf
+        If $bNetAdapter05Exists = True Then
+          $rowMainRight12 = $rowMainRight11 + $rowMainRightSpacing    ; IP address 5
+        Else
+          $rowMainRight12 = $rowMainRight11
+        EndIf
+        $rowMainRight13 = $rowMainRight12 + $rowMainRightSpacing
+        $rowMainRight14 = $rowMainRight13 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
+        $rowMainRight15 = $rowMainRight14 + $rowMainRightSpacing
+        $rowMainRight16 = $rowMainRight15 + $rowMainRightSpacing
+        $rowMainRight17 = $rowMainRight16 + $rowMainRightSpacing
+        $rowMainRight18 = $rowMainRight17 + $rowMainRightSpacing
+        $rowMainRight19 = $rowMainRight18 + $rowMainRightSpacing
+        $rowMainRight20 = $rowMainRight19 + $rowMainRightSpacing
+        $rowMainRight21 = $rowMainRight20 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
+        $rowMainRight22 = $rowMainRight21 + $rowMainRightSpacing
+        $rowMainRight23 = $rowMainRight22 + $rowMainRightSpacing
+        $rowMainRight24 = $rowMainRight23 + $rowMainRightSpacing
+        If $bAssetTagExists = True Then
+          $rowMainRight25 = $rowMainRight24 + $rowMainRightSpacing
+        Else
+          $rowMainRight25 = $rowMainRight24
+        EndIf
+        If $bLCMInfoExists = True Then
+          $rowMainRight26 = $rowMainRight25 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
+          $rowMainRight27 = $rowMainRight26 + $rowMainRightSpacing
+          $rowMainRight28 = $rowMainRight27 + $rowMainRightSpacing
+          $rowMainRight29 = $rowMainRight28 + $rowMainRightSpacing
+        Else
+          ;; set these rows to increase by 0 if no LCM info section exists
+          $rowMainRight26 = $rowMainRight25   ;spacer
+          $rowMainRight27 = $rowMainRight26
+          $rowMainRight28 = $rowMainRight27
+          $rowMainRight29 = $rowMainRight28
+        EndIf
+        If $bFreeTextDetailsExists = True Then
+          $rowMainRight30 = $rowMainRight29 + $rowMainRightSpacing - $rowMainRightSpacers   ;spacer
+          $rowMainRight31 = $rowMainRight30 + $rowMainRightSpacing
+          $rowMainRight32 = $rowMainRight31 + $rowMainRightSpacing + (($rowMainRightSpacing * 3) - 7) ;height of multiline custom info box, duplicate changes in rowMainRight below
+        Else
+          ;; set these rows to increase by 0 if no custom info section exists
+          $rowMainRight30 = $rowMainRight29   ;spacer
+          $rowMainRight31 = $rowMainRight30
+          $rowMainRight32 = $rowMainRight31
+        EndIf
+        $rowMainRight33 = $rowMainRight32 + $rowMainRightSpacing
+        $rowMainRight34 = $rowMainRight33 + $rowMainRightSpacing
+        $rowMainRight35 = $rowMainRight34 + $rowMainRightSpacing
+        $rowMainRight36 = $rowMainRight35 + $rowMainRightSpacing
+        $rowMainRight37 = $rowMainRight36 + $rowMainRightSpacing
+        $rowMainRight38 = $rowMainRight37 + $rowMainRightSpacing
+        $rowMainRight39 = $rowMainRight38 + $rowMainRightSpacing
+        $rowMainRight40 = $rowMainRight39 + $rowMainRightSpacing
+        $rowMainRight41 = $rowMainRight40 + $rowMainRightSpacing
+        $rowMainRight42 = $rowMainRight41 + $rowMainRightSpacing
+        $rowMainRight43 = $rowMainRight42 + $rowMainRightSpacing
+        $rowMainRight44 = $rowMainRight43 + $rowMainRightSpacing
+        $rowMainRight45 = $rowMainRight44 + $rowMainRightSpacing
+        $rowMainRight46 = $rowMainRight45 + $rowMainRightSpacing
+        $rowMainRight47 = $rowMainRight46 + $rowMainRightSpacing
+        $rowMainRight48 = $rowMainRight47 + $rowMainRightSpacing
+        $rowMainRight49 = $rowMainRight48 + $rowMainRightSpacing
+        $rowMainRight50 = $rowMainRight49 + $rowMainRightSpacing
+
+        ;;rows, right, heights
+        $rowMainRightHeights  = $rowMainRightSpacing
+        $rowMainRight00Height = $rowMainRightHeights
+        $rowMainRight01Height = $rowMainRightHeights
+        $rowMainRight02Height = $rowMainRightHeights
+        $rowMainRight03Height = $rowMainRightHeights
+        $rowMainRight03aHeight = $rowMainRightHeights
+        $rowMainRight04Height = $rowMainRightHeights
+        $rowMainRight05Height = $rowMainRightHeights
+        $rowMainRight06Height = $rowMainRightHeights
+        $rowMainRight07Height = $rowMainRightHeights
+        If $bNetAdapter01Exists = True Then
+          $rowMainRight08Height = $rowMainRightHeights    ;IP address 1
+        Else
+          $rowMainRight08Height = 0
+        EndIf
+        If $bNetAdapter02Exists = True Then
+          $rowMainRight09Height = $rowMainRightHeights    ;IP address 2
+        Else
+          $rowMainRight09Height = 0
+        EndIf
+        If $bNetAdapter03Exists = True Then
+          $rowMainRight10Height = $rowMainRightHeights    ;IP address 3
+        Else
+          $rowMainRight10Height = 0
+        EndIf
+        If $bNetAdapter04Exists = True Then
+          $rowMainRight11Height = $rowMainRightHeights    ;IP address 4
+        Else
+          $rowMainRight11Height = 0
+        EndIf
+        If $bNetAdapter05Exists = True Then
+          $rowMainRight12Height = $rowMainRightHeights    ;IP address 5
+        Else
+          $rowMainRight12Height = 0
+        EndIf
+        $rowMainRight13Height = $rowMainRightHeights
+        $rowMainRight14Height = $rowMainRightHeights
+        $rowMainRight15Height = $rowMainRightHeights
+        $rowMainRight16Height = $rowMainRightHeights
+        $rowMainRight17Height = $rowMainRightHeights
+        $rowMainRight18Height = $rowMainRightHeights
+        $rowMainRight19Height = $rowMainRightHeights
+        $rowMainRight20Height = $rowMainRightHeights
+        $rowMainRight21Height = $rowMainRightHeights
+        $rowMainRight22Height = $rowMainRightHeights
+        $rowMainRight23Height = $rowMainRightHeights
+        $rowMainRight24Height = $rowMainRightHeights
+        If $bAssetTagExists = True Then
+          $rowMainRight25Height = $rowMainRightHeights
+        Else
+          $rowMainRight25Height = 0
+        EndIf
+        If $bLCMInfoExists = True Then
+          $rowMainRight26Height = $rowMainRightHeights
+          $rowMainRight27Height = $rowMainRightHeights
+          $rowMainRight28Height = $rowMainRightHeights
+          $rowMainRight29Height = $rowMainRightHeights
+        Else
+          ;; set these rows to 0 height if no LCM info section exists
+          $rowMainRight26Height = 0
+          $rowMainRight27Height = 0
+          $rowMainRight28Height = 0
+          $rowMainRight29Height = 0
+        EndIf
+        If $bFreeTextDetailsExists = True Then
+          $rowMainRight30Height = $rowMainRightHeights
+          $rowMainRight31Height = $rowMainRightHeights + (($rowMainRightSpacing * 3) - 7) ;height of multiline custom info box, duplicate changes in rowMainRightHeight above
+          $rowMainRight32Height = $rowMainRightHeights
+        Else
+          ;; set these rows to 0 height if no custom info section exists
+          $rowMainRight30Height = 0
+          $rowMainRight31Height = 0
+          $rowMainRight32Height = 0
+          ;; end
+        EndIf
+        $rowMainRight33Height = $rowMainRightHeights
+        $rowMainRight34Height = $rowMainRightHeights
+        $rowMainRight35Height = $rowMainRightHeights
+        $rowMainRight36Height = $rowMainRightHeights
+        $rowMainRight37Height = $rowMainRightHeights
+        $rowMainRight38Height = $rowMainRightHeights
+        $rowMainRight39Height = $rowMainRightHeights
+        $rowMainRight40Height = $rowMainRightHeights
+        $rowMainRight41Height = $rowMainRightHeights
+        $rowMainRight42Height = $rowMainRightHeights
+        $rowMainRight43Height = $rowMainRightHeights
+        $rowMainRight44Height = $rowMainRightHeights
+        $rowMainRight45Height = $rowMainRightHeights
+        $rowMainRight46Height = $rowMainRightHeights
+        $rowMainRight47Height = $rowMainRightHeights
+        $rowMainRight48Height = $rowMainRightHeights
+        $rowMainRight49Height = $rowMainRightHeights
+        $rowMainRight50Height = $rowMainRightHeights
+
+        ;;window boundary
+        $rowMainBounds = $rowMainRight33 + 17  ;;bottom edge of window, last used row in right column plus adjustment.
+
+      ;;COLUMNS, FROM BOTTOM
+        ;;columns, left, from bottom
+        $columnMainLeft_00 = 0
+        $columnMainLeft_01 = 10
+
+        ;;columns, left, widths
+        $columnMainLeft_00Width = 10
+        $columnMainLeft_01Width = $columnMainLeft00Width - 20
+
+      ;;ROWS, FROM BOTTOM
+        ;;rows, left, from bottom
+        $rowMainLeftSpacing = 35
+        $rowMainLeftSpacer = 25 ;high number means less space between, up to $rowMainLeftSpacing
+        $rowMainLeft_00 = $rowMainBounds - 24
+        $rowMainLeft_01 = $rowMainLeft_00 - $rowMainLeftSpacing
+        $rowMainLeft_02 = $rowMainLeft_01 - $rowMainLeftSpacing
+        $rowMainLeft_03 = $rowMainLeft_02 - $rowMainLeftSpacing + $rowMainLeftSpacer
+        $rowMainLeft_04 = $rowMainLeft_03 - $rowMainLeftSpacing - 10
+        $rowMainLeft_05 = $rowMainLeft_04 - $rowMainLeftSpacing
+        $rowMainLeft_06 = $rowMainLeft_05 - $rowMainLeftSpacing
+        $rowMainLeft_07 = $rowMainLeft_06 - $rowMainLeftSpacing
+        $rowMainLeft_08 = $rowMainLeft_07 - $rowMainLeftSpacing
+        $rowMainLeft_09 = $rowMainLeft_08 - $rowMainLeftSpacing
+        $rowMainLeft_10 = $rowMainLeft_09 - $rowMainLeftSpacing
+
+        ;;rows, left, from bottom heights
+        $rowMainLeftHeights = $rowMainLeftSpacing - 5
+        $rowMainLeft_00Height = 0
+        $rowMainLeft_01Height = $rowMainLeftHeights
+        $rowMainLeft_02Height = $rowMainLeftHeights
+        $rowMainLeft_03Height = $rowMainLeftHeights
+        $rowMainLeft_04Height = $rowMainLeftHeights + 10
+        $rowMainLeft_05Height = $rowMainLeftHeights
+        $rowMainLeft_06Height = $rowMainLeftHeights
+        $rowMainLeft_07Height = $rowMainLeftHeights
+        $rowMainLeft_08Height = $rowMainLeftHeights
+        $rowMainLeft_09Height = $rowMainLeftHeights
+        $rowMainLeft_10Height = $rowMainLeftHeights

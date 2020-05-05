@@ -7,7 +7,7 @@
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Res_Comment=About This Computer Configurator
 #AutoIt3Wrapper_Res_Description=About This Computer Configurator
-#AutoIt3Wrapper_Res_Fileversion=1.0.0.8
+#AutoIt3Wrapper_Res_Fileversion=1.0.0.9
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=y
 #AutoIt3Wrapper_Res_LegalCopyright=Copyright (c) 2020 Brian Kyncl (briankyncl.com). All rights reserved.
 #AutoIt3Wrapper_Res_SaveSource=y
@@ -4316,7 +4316,6 @@ Case Else
 EndSwitch
 GUIDefine()
 GUIBuild()
-GUIRefresh()
 GUIWait()
 End()
 EndFunc
@@ -4326,6 +4325,7 @@ Func GUIDefine()
 Global $iGUIMainWidthDefault = 840
 Global $iGUIMainHeightDefault = 455
 Global $iGUIMainMenuBarHeight = 20
+Global $iGUIMainStatusBarHeight = 20
 Global $iGUIMainTabAllButtonHeight = 29
 Global $iGUIMainTabAllButtonHeightLarge = 40
 Global $iGUIMainColumnLeft00 = 0
@@ -5306,7 +5306,7 @@ $iGUIMainTabContactTestRow02Height = $iGUIMainTabContactTestRow03Height + $iGUIM
 $iGUIMainTabContactTestRow00Height = $iGUIMainTabContactTestRow02Height + $iGUIMainTabContactTestRow01Height
 EndFunc
 Func GUIBuild()
-Global $hGUIMain = GUICreate('About This Computer Configurator', $iGUIMainWidthDefault, $iGUIMainHeightDefault + $iGUIMainMenuBarHeight, -1, -1)
+Global $hGUIMain = GUICreate('About This Computer Configurator', $iGUIMainWidthDefault, $iGUIMainHeightDefault + $iGUIMainMenuBarHeight + $iGUIMainStatusBarHeight, -1, -1)
 Global $idMenuMainFile = GUICtrlCreateMenu('&File')
 Global $idMenuItemMainFileImportEdit = GUICtrlCreateMenuItem('Import configuration and edit...', $idMenuMainFile, -1)
 Global $idMenuItemMainFileImportSave = GUICtrlCreateMenuItem('Import configuration and save...', $idMenuMainFile, -1)
@@ -5322,6 +5322,7 @@ Global $idMenuMainHelp = GUICtrlCreateMenu('&Help')
 Global $idMenuItemMainHelpDocumentation = GUICtrlCreateMenuItem('Documentation (' & $sAppDocsHost & ')', $idMenuMainHelp, -1)
 GUICtrlCreateMenuItem('', $idMenuMainHelp, -1)
 Global $idMenuItemMainHelpAbout = GUICtrlCreateMenuItem('About', $idMenuMainHelp, -1)
+$hStatusBarMain = _GUICtrlStatusBar_Create($hGUIMain, '', '', $SBARS_SIZEGRIP)
 $idGraphicMainLogo = GUICtrlCreateIcon($sAppLogo, -1, $iGUIMainColumnLeft02 + 12, $iGUIMainRowLeft01, $iGUIMainColumnLeft01Width, $iGUIMainRowLeft01Height, -1, $GUI_WS_EX_PARENTDRAG)
 Global $idButtonMainLeftApply = GUICtrlCreateButton('Apply', $iGUIMainColumnLeft01, $iGUIMainRowLeft03, $iGUIMainColumnLeft02Width, $iGUIMainRowLeft03Height)
 Global $idButtonMainLeftCancel = GUICtrlCreateButton('Cancel', $iGUIMainColumnLeft01, $iGUIMainRowLeft02, $iGUIMainColumnLeft02Width, $iGUIMainRowLeft02Height)
@@ -5414,7 +5415,7 @@ _GUICtrlEdit_SetCueBanner($idInputToolsHomeDrive_CustomName, "%USERNAME%'s Home 
 Global $idInputToolsHomeDrive_CustomPath = GUICtrlCreateInput('', $iGUIMainTabToolsHomeDriveColumn03, $iGUIMainTabToolsHomeDriveRow14, $iGUIMainTabToolsHomeDriveColumn03Width, $iGUIMainTabToolsHomeDriveRow14Height)
 _GUICtrlEdit_SetCueBanner($idInputToolsHomeDrive_CustomPath, '\\fileserver\home\%USERNAME%', True)
 GUICtrlCreateTabItem('Custom Tools')
-Global $idCheckboxCustomToolsCommand1_Show1 = GUICtrlCreateCheckbox('Show custom tool 1 in Tools menu', $iGUIMainTabCustomToolsCommand1Column01, $iGUIMainTabCustomToolsCommand1Row02, $iGUIMainTabCustomToolsCommand1Column01Width, $iGUIMainTabCustomToolsCommand1Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
+Global $idCheckboxCustomToolsCommand1_Enable = GUICtrlCreateCheckbox('Show custom tool 1 in Tools menu', $iGUIMainTabCustomToolsCommand1Column01, $iGUIMainTabCustomToolsCommand1Row02, $iGUIMainTabCustomToolsCommand1Column01Width, $iGUIMainTabCustomToolsCommand1Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupCustomTools_Command1 = GUICtrlCreateGroup('Custom Tool 1', $iGUIMainTabCustomToolsCommand1Column01, $iGUIMainTabCustomToolsCommand1Row04, $iGUIMainTabCustomToolsCommand1Column01Width, $iGUIMainTabCustomToolsCommand1Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabCustomToolsCommand1Column02, $iGUIMainTabCustomToolsCommand1Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand1Column02Width, $iGUIMainTabCustomToolsCommand1Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputCustomToolsCommand1_DisplayName = GUICtrlCreateInput('', $iGUIMainTabCustomToolsCommand1Column03, $iGUIMainTabCustomToolsCommand1Row06, $iGUIMainTabCustomToolsCommand1Column03Width, $iGUIMainTabCustomToolsCommand1Row06Height)
@@ -5422,7 +5423,7 @@ _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand1_DisplayName, 'App Catalog'
 GUICtrlCreateLabel('Command:', $iGUIMainTabCustomToolsCommand1Column02, $iGUIMainTabCustomToolsCommand1Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand1Column02Width, $iGUIMainTabCustomToolsCommand1Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputCustomToolsCommand1_Command = GUICtrlCreateInput('', $iGUIMainTabCustomToolsCommand1Column03, $iGUIMainTabCustomToolsCommand1Row08, $iGUIMainTabCustomToolsCommand1Column03Width, $iGUIMainTabCustomToolsCommand1Row08Height)
 _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand1_Command, '"iexplore.exe" https://sccmserver/CMApplicationCatalog', True)
-Global $idCheckboxCustomToolsCommand2_Show1 = GUICtrlCreateCheckbox('Show custom tool 2 in Tools menu', $iGUIMainTabCustomToolsCommand2Column01, $iGUIMainTabCustomToolsCommand2Row02, $iGUIMainTabCustomToolsCommand2Column01Width, $iGUIMainTabCustomToolsCommand2Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
+Global $idCheckboxCustomToolsCommand2_Enable = GUICtrlCreateCheckbox('Show custom tool 2 in Tools menu', $iGUIMainTabCustomToolsCommand2Column01, $iGUIMainTabCustomToolsCommand2Row02, $iGUIMainTabCustomToolsCommand2Column01Width, $iGUIMainTabCustomToolsCommand2Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupCustomTools_Command2 = GUICtrlCreateGroup('Custom Tool 2', $iGUIMainTabCustomToolsCommand2Column01, $iGUIMainTabCustomToolsCommand2Row04, $iGUIMainTabCustomToolsCommand2Column01Width, $iGUIMainTabCustomToolsCommand2Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabCustomToolsCommand2Column02, $iGUIMainTabCustomToolsCommand2Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand2Column02Width, $iGUIMainTabCustomToolsCommand2Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputCustomToolsCommand2_DisplayName = GUICtrlCreateInput('', $iGUIMainTabCustomToolsCommand2Column03, $iGUIMainTabCustomToolsCommand2Row06, $iGUIMainTabCustomToolsCommand2Column03Width, $iGUIMainTabCustomToolsCommand2Row06Height)
@@ -5430,7 +5431,7 @@ _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand2_DisplayName, '', True)
 GUICtrlCreateLabel('Command:', $iGUIMainTabCustomToolsCommand2Column02, $iGUIMainTabCustomToolsCommand2Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand2Column02Width, $iGUIMainTabCustomToolsCommand2Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputCustomToolsCommand2_Command = GUICtrlCreateInput('', $iGUIMainTabCustomToolsCommand2Column03, $iGUIMainTabCustomToolsCommand2Row08, $iGUIMainTabCustomToolsCommand2Column03Width, $iGUIMainTabCustomToolsCommand2Row08Height)
 _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand2_Command, '', True)
-Global $idCheckboxCustomToolsCommand3_Show1 = GUICtrlCreateCheckbox('Show custom tool 3 in Tools menu', $iGUIMainTabCustomToolsCommand3Column01, $iGUIMainTabCustomToolsCommand3Row02, $iGUIMainTabCustomToolsCommand3Column01Width, $iGUIMainTabCustomToolsCommand3Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
+Global $idCheckboxCustomToolsCommand3_Enable = GUICtrlCreateCheckbox('Show custom tool 3 in Tools menu', $iGUIMainTabCustomToolsCommand3Column01, $iGUIMainTabCustomToolsCommand3Row02, $iGUIMainTabCustomToolsCommand3Column01Width, $iGUIMainTabCustomToolsCommand3Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupCustomTools_Command3 = GUICtrlCreateGroup('Custom Tool 3', $iGUIMainTabCustomToolsCommand3Column01, $iGUIMainTabCustomToolsCommand3Row04, $iGUIMainTabCustomToolsCommand3Column01Width, $iGUIMainTabCustomToolsCommand3Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabCustomToolsCommand3Column02, $iGUIMainTabCustomToolsCommand3Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand3Column02Width, $iGUIMainTabCustomToolsCommand3Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputCustomToolsCommand3_DisplayName = GUICtrlCreateInput('', $iGUIMainTabCustomToolsCommand3Column03, $iGUIMainTabCustomToolsCommand3Row06, $iGUIMainTabCustomToolsCommand3Column03Width, $iGUIMainTabCustomToolsCommand3Row06Height)
@@ -5438,7 +5439,7 @@ _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand3_DisplayName, '', True)
 GUICtrlCreateLabel('Command:', $iGUIMainTabCustomToolsCommand3Column02, $iGUIMainTabCustomToolsCommand3Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand3Column02Width, $iGUIMainTabCustomToolsCommand3Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputCustomToolsCommand3_Command = GUICtrlCreateInput('', $iGUIMainTabCustomToolsCommand3Column03, $iGUIMainTabCustomToolsCommand3Row08, $iGUIMainTabCustomToolsCommand3Column03Width, $iGUIMainTabCustomToolsCommand3Row08Height)
 _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand3_Command, '', True)
-Global $idCheckboxCustomToolsCommand4_Show1 = GUICtrlCreateCheckbox('Show custom tool 4 in Tools menu', $iGUIMainTabCustomToolsCommand4Column01, $iGUIMainTabCustomToolsCommand4Row02, $iGUIMainTabCustomToolsCommand4Column01Width, $iGUIMainTabCustomToolsCommand4Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
+Global $idCheckboxCustomToolsCommand4_Enable = GUICtrlCreateCheckbox('Show custom tool 4 in Tools menu', $iGUIMainTabCustomToolsCommand4Column01, $iGUIMainTabCustomToolsCommand4Row02, $iGUIMainTabCustomToolsCommand4Column01Width, $iGUIMainTabCustomToolsCommand4Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupCustomTools_Command4 = GUICtrlCreateGroup('Custom Tool 4', $iGUIMainTabCustomToolsCommand4Column01, $iGUIMainTabCustomToolsCommand4Row04, $iGUIMainTabCustomToolsCommand4Column01Width, $iGUIMainTabCustomToolsCommand4Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabCustomToolsCommand4Column02, $iGUIMainTabCustomToolsCommand4Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand4Column02Width, $iGUIMainTabCustomToolsCommand4Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputCustomToolsCommand4_DisplayName = GUICtrlCreateInput('', $iGUIMainTabCustomToolsCommand4Column03, $iGUIMainTabCustomToolsCommand4Row06, $iGUIMainTabCustomToolsCommand4Column03Width, $iGUIMainTabCustomToolsCommand4Row06Height)
@@ -5446,7 +5447,7 @@ _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand4_DisplayName, '', True)
 GUICtrlCreateLabel('Command:', $iGUIMainTabCustomToolsCommand4Column02, $iGUIMainTabCustomToolsCommand4Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand4Column02Width, $iGUIMainTabCustomToolsCommand4Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputCustomToolsCommand4_Command = GUICtrlCreateInput('', $iGUIMainTabCustomToolsCommand4Column03, $iGUIMainTabCustomToolsCommand4Row08, $iGUIMainTabCustomToolsCommand4Column03Width, $iGUIMainTabCustomToolsCommand4Row08Height)
 _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand4_Command, '', True)
-Global $idCheckboxCustomToolsCommand5_Show1 = GUICtrlCreateCheckbox('Show custom tool 5 in Tools menu', $iGUIMainTabCustomToolsCommand5Column01, $iGUIMainTabCustomToolsCommand5Row02, $iGUIMainTabCustomToolsCommand5Column01Width, $iGUIMainTabCustomToolsCommand5Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
+Global $idCheckboxCustomToolsCommand5_Enable = GUICtrlCreateCheckbox('Show custom tool 5 in Tools menu', $iGUIMainTabCustomToolsCommand5Column01, $iGUIMainTabCustomToolsCommand5Row02, $iGUIMainTabCustomToolsCommand5Column01Width, $iGUIMainTabCustomToolsCommand5Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupCustomTools_Command5 = GUICtrlCreateGroup('Custom Tool 5', $iGUIMainTabCustomToolsCommand5Column01, $iGUIMainTabCustomToolsCommand5Row04, $iGUIMainTabCustomToolsCommand5Column01Width, $iGUIMainTabCustomToolsCommand5Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabCustomToolsCommand5Column02, $iGUIMainTabCustomToolsCommand5Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand5Column02Width, $iGUIMainTabCustomToolsCommand5Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputCustomToolsCommand5_DisplayName = GUICtrlCreateInput('', $iGUIMainTabCustomToolsCommand5Column03, $iGUIMainTabCustomToolsCommand5Row06, $iGUIMainTabCustomToolsCommand5Column03Width, $iGUIMainTabCustomToolsCommand5Row06Height)
@@ -5455,7 +5456,7 @@ GUICtrlCreateLabel('Command:', $iGUIMainTabCustomToolsCommand5Column02, $iGUIMai
 Global $idInputCustomToolsCommand5_Command = GUICtrlCreateInput('', $iGUIMainTabCustomToolsCommand5Column03, $iGUIMainTabCustomToolsCommand5Row08, $iGUIMainTabCustomToolsCommand5Column03Width, $iGUIMainTabCustomToolsCommand5Row08Height)
 _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand5_Command, '', True)
 GUICtrlCreateTabItem('Help Menu')
-Global $idCheckboxHelpLink1_Show1 = GUICtrlCreateCheckbox('Show link 1 in Help menu', $iGUIMainTabHelpLink1Column01, $iGUIMainTabHelpLink1Row02, $iGUIMainTabHelpLink1Column01Width, $iGUIMainTabHelpLink1Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
+Global $idCheckboxHelpLink1_Enable = GUICtrlCreateCheckbox('Show link 1 in Help menu', $iGUIMainTabHelpLink1Column01, $iGUIMainTabHelpLink1Row02, $iGUIMainTabHelpLink1Column01Width, $iGUIMainTabHelpLink1Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupHelp_Link1 = GUICtrlCreateGroup('Link 1', $iGUIMainTabHelpLink1Column01, $iGUIMainTabHelpLink1Row04, $iGUIMainTabHelpLink1Column01Width, $iGUIMainTabHelpLink1Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabHelpLink1Column02, $iGUIMainTabHelpLink1Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink1Column02Width, $iGUIMainTabHelpLink1Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputHelpLink1_DisplayName = GUICtrlCreateInput('', $iGUIMainTabHelpLink1Column03, $iGUIMainTabHelpLink1Row06, $iGUIMainTabHelpLink1Column03Width, $iGUIMainTabHelpLink1Row06Height)
@@ -5463,7 +5464,7 @@ _GUICtrlEdit_SetCueBanner($idInputHelpLink1_DisplayName, 'LogMeIn Rescue', True)
 GUICtrlCreateLabel('URL:', $iGUIMainTabHelpLink1Column02, $iGUIMainTabHelpLink1Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink1Column02Width, $iGUIMainTabHelpLink1Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputHelpLink1_Command = GUICtrlCreateInput('', $iGUIMainTabHelpLink1Column03, $iGUIMainTabHelpLink1Row08, $iGUIMainTabHelpLink1Column03Width, $iGUIMainTabHelpLink1Row08Height)
 _GUICtrlEdit_SetCueBanner($idInputHelpLink1_Command, 'https://logmein123.com/', True)
-Global $idCheckboxHelpLink2_Show1 = GUICtrlCreateCheckbox('Show link 2 in Help menu', $iGUIMainTabHelpLink2Column01, $iGUIMainTabHelpLink2Row02, $iGUIMainTabHelpLink2Column01Width, $iGUIMainTabHelpLink2Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
+Global $idCheckboxHelpLink2_Enable = GUICtrlCreateCheckbox('Show link 2 in Help menu', $iGUIMainTabHelpLink2Column01, $iGUIMainTabHelpLink2Row02, $iGUIMainTabHelpLink2Column01Width, $iGUIMainTabHelpLink2Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupHelp_Link2 = GUICtrlCreateGroup('Link 2', $iGUIMainTabHelpLink2Column01, $iGUIMainTabHelpLink2Row04, $iGUIMainTabHelpLink2Column01Width, $iGUIMainTabHelpLink2Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabHelpLink2Column02, $iGUIMainTabHelpLink2Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink2Column02Width, $iGUIMainTabHelpLink2Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputHelpLink2_DisplayName = GUICtrlCreateInput('', $iGUIMainTabHelpLink2Column03, $iGUIMainTabHelpLink2Row06, $iGUIMainTabHelpLink2Column03Width, $iGUIMainTabHelpLink2Row06Height)
@@ -5471,7 +5472,7 @@ _GUICtrlEdit_SetCueBanner($idInputHelpLink2_DisplayName, $sIntranetName, True)
 GUICtrlCreateLabel('URL:', $iGUIMainTabHelpLink2Column02, $iGUIMainTabHelpLink2Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink2Column02Width, $iGUIMainTabHelpLink2Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputHelpLink2_Command = GUICtrlCreateInput('', $iGUIMainTabHelpLink2Column03, $iGUIMainTabHelpLink2Row08, $iGUIMainTabHelpLink2Column03Width, $iGUIMainTabHelpLink2Row08Height)
 _GUICtrlEdit_SetCueBanner($idInputHelpLink2_Command, $sIntranetURL, True)
-Global $idCheckboxHelpLink3_Show1 = GUICtrlCreateCheckbox('Show link 3 in Help menu', $iGUIMainTabHelpLink3Column01, $iGUIMainTabHelpLink3Row02, $iGUIMainTabHelpLink3Column01Width, $iGUIMainTabHelpLink3Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
+Global $idCheckboxHelpLink3_Enable = GUICtrlCreateCheckbox('Show link 3 in Help menu', $iGUIMainTabHelpLink3Column01, $iGUIMainTabHelpLink3Row02, $iGUIMainTabHelpLink3Column01Width, $iGUIMainTabHelpLink3Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupHelp_Link3 = GUICtrlCreateGroup('Link 3', $iGUIMainTabHelpLink3Column01, $iGUIMainTabHelpLink3Row04, $iGUIMainTabHelpLink3Column01Width, $iGUIMainTabHelpLink3Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabHelpLink3Column02, $iGUIMainTabHelpLink3Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink3Column02Width, $iGUIMainTabHelpLink3Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputHelpLink3_DisplayName = GUICtrlCreateInput('', $iGUIMainTabHelpLink3Column03, $iGUIMainTabHelpLink3Row06, $iGUIMainTabHelpLink3Column03Width, $iGUIMainTabHelpLink3Row06Height)
@@ -5479,7 +5480,7 @@ _GUICtrlEdit_SetCueBanner($idInputHelpLink3_DisplayName, $sHelpdeskName, True)
 GUICtrlCreateLabel('URL:', $iGUIMainTabHelpLink3Column02, $iGUIMainTabHelpLink3Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink3Column02Width, $iGUIMainTabHelpLink3Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputHelpLink3_Command = GUICtrlCreateInput('', $iGUIMainTabHelpLink3Column03, $iGUIMainTabHelpLink3Row08, $iGUIMainTabHelpLink3Column03Width, $iGUIMainTabHelpLink3Row08Height)
 _GUICtrlEdit_SetCueBanner($idInputHelpLink3_Command, 'https://' & $sHelpdeskURL & '/', True)
-Global $idCheckboxHelpLink4_Show1 = GUICtrlCreateCheckbox('Show link 4 in Help menu', $iGUIMainTabHelpLink4Column01, $iGUIMainTabHelpLink4Row02, $iGUIMainTabHelpLink4Column01Width, $iGUIMainTabHelpLink4Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
+Global $idCheckboxHelpLink4_Enable = GUICtrlCreateCheckbox('Show link 4 in Help menu', $iGUIMainTabHelpLink4Column01, $iGUIMainTabHelpLink4Row02, $iGUIMainTabHelpLink4Column01Width, $iGUIMainTabHelpLink4Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupHelp_Link4 = GUICtrlCreateGroup('Link 4', $iGUIMainTabHelpLink4Column01, $iGUIMainTabHelpLink4Row04, $iGUIMainTabHelpLink4Column01Width, $iGUIMainTabHelpLink4Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabHelpLink4Column02, $iGUIMainTabHelpLink4Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink4Column02Width, $iGUIMainTabHelpLink4Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputHelpLink4_DisplayName = GUICtrlCreateInput('', $iGUIMainTabHelpLink4Column03, $iGUIMainTabHelpLink4Row06, $iGUIMainTabHelpLink4Column03Width, $iGUIMainTabHelpLink4Row06Height)
@@ -5487,7 +5488,7 @@ _GUICtrlEdit_SetCueBanner($idInputHelpLink4_DisplayName, 'Password Self-Service'
 GUICtrlCreateLabel('URL:', $iGUIMainTabHelpLink4Column02, $iGUIMainTabHelpLink4Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink4Column02Width, $iGUIMainTabHelpLink4Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputHelpLink4_Command = GUICtrlCreateInput('', $iGUIMainTabHelpLink4Column03, $iGUIMainTabHelpLink4Row08, $iGUIMainTabHelpLink4Column03Width, $iGUIMainTabHelpLink4Row08Height)
 _GUICtrlEdit_SetCueBanner($idInputHelpLink4_Command, 'https://passwords.' & $sOrgDomain & '/', True)
-Global $idCheckboxHelpLink5_Show1 = GUICtrlCreateCheckbox('Show link 5 in Help menu', $iGUIMainTabHelpLink5Column01, $iGUIMainTabHelpLink5Row02, $iGUIMainTabHelpLink5Column01Width, $iGUIMainTabHelpLink5Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
+Global $idCheckboxHelpLink5_Enable = GUICtrlCreateCheckbox('Show link 5 in Help menu', $iGUIMainTabHelpLink5Column01, $iGUIMainTabHelpLink5Row02, $iGUIMainTabHelpLink5Column01Width, $iGUIMainTabHelpLink5Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupHelp_Link5 = GUICtrlCreateGroup('Link 5', $iGUIMainTabHelpLink5Column01, $iGUIMainTabHelpLink5Row04, $iGUIMainTabHelpLink5Column01Width, $iGUIMainTabHelpLink5Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabHelpLink5Column02, $iGUIMainTabHelpLink5Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink5Column02Width, $iGUIMainTabHelpLink5Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputHelpLink5_DisplayName = GUICtrlCreateInput('', $iGUIMainTabHelpLink5Column03, $iGUIMainTabHelpLink5Row06, $iGUIMainTabHelpLink5Column03Width, $iGUIMainTabHelpLink5Row06Height)
@@ -5496,7 +5497,7 @@ GUICtrlCreateLabel('URL:', $iGUIMainTabHelpLink5Column02, $iGUIMainTabHelpLink5R
 Global $idInputHelpLink5_Command = GUICtrlCreateInput('', $iGUIMainTabHelpLink5Column03, $iGUIMainTabHelpLink5Row08, $iGUIMainTabHelpLink5Column03Width, $iGUIMainTabHelpLink5Row08Height)
 _GUICtrlEdit_SetCueBanner($idInputHelpLink5_Command, '', True)
 GUICtrlCreateTabItem('Services')
-Global $idCheckboxServicesService1_Show1 = GUICtrlCreateCheckbox('Show service 1 status in summary text', $iGUIMainTabServicesService1Column01, $iGUIMainTabServicesService1Row02, $iGUIMainTabServicesService1Column01Width, $iGUIMainTabServicesService1Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
+Global $idCheckboxServicesService1_Enable = GUICtrlCreateCheckbox('Show service 1 status in summary text', $iGUIMainTabServicesService1Column01, $iGUIMainTabServicesService1Row02, $iGUIMainTabServicesService1Column01Width, $iGUIMainTabServicesService1Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupServices_Service1 = GUICtrlCreateGroup('Service 1', $iGUIMainTabServicesService1Column01, $iGUIMainTabServicesService1Row04, $iGUIMainTabServicesService1Column01Width, $iGUIMainTabServicesService1Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabServicesService1Column02, $iGUIMainTabServicesService1Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabServicesService1Column02Width, $iGUIMainTabServicesService1Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputServicesService1_DisplayName = GUICtrlCreateInput('', $iGUIMainTabServicesService1Column03, $iGUIMainTabServicesService1Row06, $iGUIMainTabServicesService1Column03Width, $iGUIMainTabServicesService1Row06Height)
@@ -5504,7 +5505,7 @@ _GUICtrlEdit_SetCueBanner($idInputServicesService1_DisplayName, 'Windows Update'
 GUICtrlCreateLabel('Service Name:', $iGUIMainTabServicesService1Column02, $iGUIMainTabServicesService1Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabServicesService1Column02Width, $iGUIMainTabServicesService1Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputServicesService1_Name = GUICtrlCreateInput('', $iGUIMainTabServicesService1Column03, $iGUIMainTabServicesService1Row08, $iGUIMainTabServicesService1Column03Width, $iGUIMainTabServicesService1Row08Height)
 _GUICtrlEdit_SetCueBanner($idInputServicesService1_Name, 'wuauserv', True)
-Global $idCheckboxServicesService2_Show1 = GUICtrlCreateCheckbox('Show service 2 status in summary text', $iGUIMainTabServicesService2Column01, $iGUIMainTabServicesService2Row02, $iGUIMainTabServicesService2Column01Width, $iGUIMainTabServicesService2Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
+Global $idCheckboxServicesService2_Enable = GUICtrlCreateCheckbox('Show service 2 status in summary text', $iGUIMainTabServicesService2Column01, $iGUIMainTabServicesService2Row02, $iGUIMainTabServicesService2Column01Width, $iGUIMainTabServicesService2Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupServices_Service2 = GUICtrlCreateGroup('Service 2', $iGUIMainTabServicesService2Column01, $iGUIMainTabServicesService2Row04, $iGUIMainTabServicesService2Column01Width, $iGUIMainTabServicesService2Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabServicesService2Column02, $iGUIMainTabServicesService2Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabServicesService2Column02Width, $iGUIMainTabServicesService2Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputServicesService2_DisplayName = GUICtrlCreateInput('', $iGUIMainTabServicesService2Column03, $iGUIMainTabServicesService2Row06, $iGUIMainTabServicesService2Column03Width, $iGUIMainTabServicesService2Row06Height)
@@ -5512,7 +5513,7 @@ _GUICtrlEdit_SetCueBanner($idInputServicesService2_DisplayName, 'SCCM Client (SM
 GUICtrlCreateLabel('Service Name:', $iGUIMainTabServicesService2Column02, $iGUIMainTabServicesService2Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabServicesService2Column02Width, $iGUIMainTabServicesService2Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputServicesService2_Name = GUICtrlCreateInput('', $iGUIMainTabServicesService2Column03, $iGUIMainTabServicesService2Row08, $iGUIMainTabServicesService2Column03Width, $iGUIMainTabServicesService2Row08Height)
 _GUICtrlEdit_SetCueBanner($idInputServicesService2_Name, 'CcmExec', True)
-Global $idCheckboxServicesService3_Show1 = GUICtrlCreateCheckbox('Show service 3 status in summary text', $iGUIMainTabServicesService3Column01, $iGUIMainTabServicesService3Row02, $iGUIMainTabServicesService3Column01Width, $iGUIMainTabServicesService3Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
+Global $idCheckboxServicesService3_Enable = GUICtrlCreateCheckbox('Show service 3 status in summary text', $iGUIMainTabServicesService3Column01, $iGUIMainTabServicesService3Row02, $iGUIMainTabServicesService3Column01Width, $iGUIMainTabServicesService3Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupServices_Service3 = GUICtrlCreateGroup('Service 3', $iGUIMainTabServicesService3Column01, $iGUIMainTabServicesService3Row04, $iGUIMainTabServicesService3Column01Width, $iGUIMainTabServicesService3Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabServicesService3Column02, $iGUIMainTabServicesService3Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabServicesService3Column02Width, $iGUIMainTabServicesService3Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputServicesService3_DisplayName = GUICtrlCreateInput('', $iGUIMainTabServicesService3Column03, $iGUIMainTabServicesService3Row06, $iGUIMainTabServicesService3Column03Width, $iGUIMainTabServicesService3Row06Height)
@@ -5520,7 +5521,7 @@ _GUICtrlEdit_SetCueBanner($idInputServicesService3_DisplayName, 'CrowdStrike Win
 GUICtrlCreateLabel('Service Name:', $iGUIMainTabServicesService3Column02, $iGUIMainTabServicesService3Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabServicesService3Column02Width, $iGUIMainTabServicesService3Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputServicesService3_Name = GUICtrlCreateInput('', $iGUIMainTabServicesService3Column03, $iGUIMainTabServicesService3Row08, $iGUIMainTabServicesService3Column03Width, $iGUIMainTabServicesService3Row08Height)
 _GUICtrlEdit_SetCueBanner($idInputServicesService3_Name, 'CSFalconService', True)
-Global $idCheckboxServicesService4_Show1 = GUICtrlCreateCheckbox('Show service 4 status in summary text', $iGUIMainTabServicesService4Column01, $iGUIMainTabServicesService4Row02, $iGUIMainTabServicesService4Column01Width, $iGUIMainTabServicesService4Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
+Global $idCheckboxServicesService4_Enable = GUICtrlCreateCheckbox('Show service 4 status in summary text', $iGUIMainTabServicesService4Column01, $iGUIMainTabServicesService4Row02, $iGUIMainTabServicesService4Column01Width, $iGUIMainTabServicesService4Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupServices_Service4 = GUICtrlCreateGroup('Service 4', $iGUIMainTabServicesService4Column01, $iGUIMainTabServicesService4Row04, $iGUIMainTabServicesService4Column01Width, $iGUIMainTabServicesService4Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabServicesService4Column02, $iGUIMainTabServicesService4Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabServicesService4Column02Width, $iGUIMainTabServicesService4Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputServicesService4_DisplayName = GUICtrlCreateInput('', $iGUIMainTabServicesService4Column03, $iGUIMainTabServicesService4Row06, $iGUIMainTabServicesService4Column03Width, $iGUIMainTabServicesService4Row06Height)
@@ -5528,7 +5529,7 @@ _GUICtrlEdit_SetCueBanner($idInputServicesService4_DisplayName, 'BeyondTrust Pow
 GUICtrlCreateLabel('Service Name:', $iGUIMainTabServicesService4Column02, $iGUIMainTabServicesService4Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabServicesService4Column02Width, $iGUIMainTabServicesService4Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputServicesService4_Name = GUICtrlCreateInput('', $iGUIMainTabServicesService4Column03, $iGUIMainTabServicesService4Row08, $iGUIMainTabServicesService4Column03Width, $iGUIMainTabServicesService4Row08Height)
 _GUICtrlEdit_SetCueBanner($idInputServicesService4_Name, 'BTService', True)
-Global $idCheckboxServicesService5_Show1 = GUICtrlCreateCheckbox('Show service 5 status in summary text', $iGUIMainTabServicesService5Column01, $iGUIMainTabServicesService5Row02, $iGUIMainTabServicesService5Column01Width, $iGUIMainTabServicesService5Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
+Global $idCheckboxServicesService5_Enable = GUICtrlCreateCheckbox('Show service 5 status in summary text', $iGUIMainTabServicesService5Column01, $iGUIMainTabServicesService5Row02, $iGUIMainTabServicesService5Column01Width, $iGUIMainTabServicesService5Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupServices_Service5 = GUICtrlCreateGroup('Service 5', $iGUIMainTabServicesService5Column01, $iGUIMainTabServicesService5Row04, $iGUIMainTabServicesService5Column01Width, $iGUIMainTabServicesService5Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabServicesService5Column02, $iGUIMainTabServicesService5Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabServicesService5Column02Width, $iGUIMainTabServicesService5Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputServicesService5_DisplayName = GUICtrlCreateInput('', $iGUIMainTabServicesService5Column03, $iGUIMainTabServicesService5Row06, $iGUIMainTabServicesService5Column03Width, $iGUIMainTabServicesService5Row06Height)
@@ -5560,7 +5561,7 @@ Global $idInputContactSMTP_Server = GUICtrlCreateInput('', $iGUIMainTabContactSM
 _GUICtrlEdit_SetCueBanner($idInputContactSMTP_Server, 'smtp.' & $sOrgDomain, True)
 GUICtrlCreateLabel('Port:', $iGUIMainTabContactSMTPColumn02, $iGUIMainTabContactSMTPRow06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabContactSMTPColumn02Width, $iGUIMainTabContactSMTPRow06Height - $iGUIMainTabAllChromeCheckboxOffset, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idInputContactSMTP_Port = GUICtrlCreateInput('', $iGUIMainTabContactSMTPColumn03, $iGUIMainTabContactSMTPRow06, $iGUIMainTabContactSMTPColumn03Width, $iGUIMainTabContactSMTPRow06Height)
-_GUICtrlEdit_SetCueBanner($idInputContactSMTP_Port, '25 / 465, 587', True)
+_GUICtrlEdit_SetCueBanner($idInputContactSMTP_Port, '25, 465, 587', True)
 Global $idCheckboxContactSMTP_EnableSSL = GUICtrlCreateCheckbox('Enable secure connection (SSL/TLS)', $iGUIMainTabContactSMTPColumn02, $iGUIMainTabContactSMTPRow08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabContactSMTPColumn02Width + $iGUIMainTabContactSMTPColumn03Width, $iGUIMainTabContactSMTPRow08Height - $iGUIMainTabAllChromeCheckboxOffset, BitOR($BS_MULTILINE, $BS_TOP))
 GUICtrlCreateLabel('Username:', $iGUIMainTabContactSMTPColumn02, $iGUIMainTabContactSMTPRow10 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabContactSMTPColumn02Width, $iGUIMainTabContactSMTPRow10Height - $iGUIMainTabAllChromeCheckboxOffset, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idInputContactSMTP_Username = GUICtrlCreateInput('', $iGUIMainTabContactSMTPColumn03, $iGUIMainTabContactSMTPRow10, $iGUIMainTabContactSMTPColumn03Width, $iGUIMainTabContactSMTPRow10Height)
@@ -5573,8 +5574,135 @@ GUICtrlCreateLabel('Result:', $iGUIMainTabContactTestColumn02, $iGUIMainTabConta
 Global $idInputContactTest_Result = GUICtrlCreateEdit('', $iGUIMainTabContactTestColumn03, $iGUIMainTabContactTestRow04, $iGUIMainTabContactTestColumn03Width, $iGUIMainTabContactTestRow04Height, BitOR($ES_MULTILINE, $ES_WANTRETURN, $WS_VSCROLL, $ES_AUTOVSCROLL, $ES_READONLY))
 Global $idGroupContact_SendTestEmail = GUICtrlCreateButton('Send Test Email', $iGUIMainTabContactTestColumn03, $iGUIMainTabContactTestRow06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabContactTestColumn03Width, $iGUIMainTabContactTestRow06Height - $iGUIMainTabAllChromeCheckboxOffset)
 GUICtrlCreateTabItem('')
-Global $aMainMenus
-Global $aMainButtons
+Global $aMenusMain[3]
+$aMenusMain[0] = $idMenuMainFile
+$aMenusMain[1] = $idMenuMainEdit
+$aMenusMain[2] = $idMenuMainHelp
+Global $aButtonsMain[3]
+$aButtonsMain[0] = $idButtonMainLeftApply
+$aButtonsMain[1] = $idButtonMainLeftCancel
+$aButtonsMain[2] = $idGroupContact_SendTestEmail
+Global $aCheckboxesMain[42]
+$aCheckboxesMain[00] = $idCheckboxMainGeneral_StartAtLogin
+$aCheckboxesMain[01] = $idCheckboxMainGeneral_DisableExit
+$aCheckboxesMain[02] = $idCheckboxMainAssetTag_ShowAssetTag
+$aCheckboxesMain[03] = $idCheckboxMainCustomDetails_ShowCustomDetails
+$aCheckboxesMain[04] = $idCheckboxMainHelpdesk_ShowHelpdesk
+$aCheckboxesMain[05] = $idCheckboxMainHelpdesk_ShowEmail
+$aCheckboxesMain[06] = $idCheckboxMainHelpdesk_ShowPhone
+$aCheckboxesMain[07] = $idCheckboxMainHelpdesk_ShowWebsite
+$aCheckboxesMain[08] = $idCheckboxMainHelpdesk_ShowAlternate
+$aCheckboxesMain[09] = $idCheckboxTools_EnableToolsMenu
+$aCheckboxesMain[10] = $idCheckboxToolsGeneral_CredentialManager
+$aCheckboxesMain[11] = $idCheckboxToolsGeneral_DeviceManager
+$aCheckboxesMain[12] = $idCheckboxToolsGeneral_DevicesAndPrinters
+$aCheckboxesMain[13] = $idCheckboxToolsGeneral_InternetOptions
+$aCheckboxesMain[14] = $idCheckboxToolsGeneral_MailAccounts
+$aCheckboxesMain[15] = $idCheckboxToolsGeneral_NetworkConnections
+$aCheckboxesMain[16] = $idCheckboxToolsGeneral_PrintManagement
+$aCheckboxesMain[17] = $idCheckboxToolsGeneral_ProgramsAndFeatures
+$aCheckboxesMain[18] = $idCheckboxToolsGeneral_SearchDirectory
+$aCheckboxesMain[19] = $idCheckboxToolsGeneral_Services
+$aCheckboxesMain[20] = $idCheckboxToolsGeneral_SystemProperties
+$aCheckboxesMain[21] = $idCheckboxToolsGeneral_WindowsUpdate
+$aCheckboxesMain[22] = $idCheckboxToolsLoginScript_ShowLoginScript
+$aCheckboxesMain[23] = $idCheckboxToolsHomeDrive_ShowHomeDrive
+$aCheckboxesMain[24] = $idCheckboxCustomToolsCommand1_Enable
+$aCheckboxesMain[25] = $idCheckboxCustomToolsCommand2_Enable
+$aCheckboxesMain[26] = $idCheckboxCustomToolsCommand3_Enable
+$aCheckboxesMain[27] = $idCheckboxCustomToolsCommand4_Enable
+$aCheckboxesMain[28] = $idCheckboxCustomToolsCommand5_Enable
+$aCheckboxesMain[29] = $idCheckboxHelpLink1_Enable
+$aCheckboxesMain[30] = $idCheckboxHelpLink2_Enable
+$aCheckboxesMain[31] = $idCheckboxHelpLink3_Enable
+$aCheckboxesMain[32] = $idCheckboxHelpLink4_Enable
+$aCheckboxesMain[33] = $idCheckboxHelpLink5_Enable
+$aCheckboxesMain[34] = $idCheckboxServicesService1_Enable
+$aCheckboxesMain[35] = $idCheckboxServicesService2_Enable
+$aCheckboxesMain[36] = $idCheckboxServicesService3_Enable
+$aCheckboxesMain[37] = $idCheckboxServicesService4_Enable
+$aCheckboxesMain[38] = $idCheckboxServicesService5_Enable
+$aCheckboxesMain[39] = $idCheckboxContact_EnableContactForm
+$aCheckboxesMain[40] = $idCheckboxContactGeneral_ShowEmployeeIDField
+$aCheckboxesMain[41] = $idCheckboxContactSMTP_EnableSSL
+Global $aRadiosMain[17]
+$aRadiosMain[00] = $idRadioMainTrayIcon_First
+$aRadiosMain[01] = $idRadioMainTrayIcon_Second
+$aRadiosMain[02] = $idRadioMainTrayIcon_Third
+$aRadiosMain[03] = $idRadioMainTrayIcon_Fourth
+$aRadiosMain[04] = $idRadioMainTrayIcon_Fifth
+$aRadiosMain[05] = $idRadioMainAssetTag_ReadFromBIOS
+$aRadiosMain[06] = $idRadioMainAssetTag_Custom
+$aRadiosMain[07] = $idRadioToolsLoginScript_ReadFromActiveDirectory
+$aRadiosMain[08] = $idRadioToolsLoginScript_Custom
+$aRadiosMain[09] = $idRadioToolsHomeDrive_ReadFromActiveDirectory
+$aRadiosMain[10] = $idRadioToolsHomeDrive_MapDrive
+$aRadiosMain[11] = $idRadioToolsHomeDrive_Custom
+$aRadiosMain[12] = $idRadioContactRecipient_UseHelpdeskEmail
+$aRadiosMain[13] = $idRadioContactRecipient_Custom
+$aRadiosMain[14] = $idRadioContactSender_ReadFromAD
+$aRadiosMain[15] = $idRadioContactSender_Custom
+$aRadiosMain[16] = $idRadioContactSender_EnableEmailField
+Global $aInputsMain[52]
+$aInputsMain[00] = $idInputMainAssetTag_Custom
+$aInputsMain[01] = $idInputMainHelpdesk_Title
+$aInputsMain[02] = $idInputMainHelpdesk_EmailTitle
+$aInputsMain[03] = $idInputMainHelpdesk_EmailAddress
+$aInputsMain[04] = $idInputMainHelpdesk_PhoneTitle
+$aInputsMain[05] = $idInputMainHelpdesk_PhoneNumber
+$aInputsMain[06] = $idInputMainHelpdesk_WebsiteTitle
+$aInputsMain[07] = $idInputMainHelpdesk_WebsiteAddress
+$aInputsMain[08] = $idInputMainHelpdesk_AlternateTitle
+$aInputsMain[09] = $idInputMainHelpdesk_AlternateAddress
+$aInputsMain[10] = $idInputToolsLoginScript_Custom
+$aInputsMain[11] = $idInputToolsHomeDrive_Title
+$aInputsMain[12] = $idInputToolsHomeDrive_MapDrive
+$aInputsMain[13] = $idInputToolsHomeDrive_CustomName
+$aInputsMain[14] = $idInputToolsHomeDrive_CustomPath
+$aInputsMain[15] = $idInputCustomToolsCommand1_DisplayName
+$aInputsMain[16] = $idInputCustomToolsCommand1_Command
+$aInputsMain[17] = $idInputCustomToolsCommand2_DisplayName
+$aInputsMain[18] = $idInputCustomToolsCommand2_Command
+$aInputsMain[19] = $idInputCustomToolsCommand3_DisplayName
+$aInputsMain[20] = $idInputCustomToolsCommand3_Command
+$aInputsMain[21] = $idInputCustomToolsCommand4_DisplayName
+$aInputsMain[22] = $idInputCustomToolsCommand4_Command
+$aInputsMain[23] = $idInputCustomToolsCommand5_DisplayName
+$aInputsMain[24] = $idInputCustomToolsCommand5_Command
+$aInputsMain[25] = $idInputHelpLink1_DisplayName
+$aInputsMain[26] = $idInputHelpLink1_Command
+$aInputsMain[27] = $idInputHelpLink2_DisplayName
+$aInputsMain[28] = $idInputHelpLink2_Command
+$aInputsMain[29] = $idInputHelpLink3_DisplayName
+$aInputsMain[30] = $idInputHelpLink3_Command
+$aInputsMain[31] = $idInputHelpLink4_DisplayName
+$aInputsMain[32] = $idInputHelpLink4_Command
+$aInputsMain[33] = $idInputHelpLink5_DisplayName
+$aInputsMain[34] = $idInputHelpLink5_Command
+$aInputsMain[35] = $idInputServicesService1_DisplayName
+$aInputsMain[36] = $idInputServicesService1_Name
+$aInputsMain[37] = $idInputServicesService2_DisplayName
+$aInputsMain[38] = $idInputServicesService2_Name
+$aInputsMain[39] = $idInputServicesService3_DisplayName
+$aInputsMain[40] = $idInputServicesService3_Name
+$aInputsMain[41] = $idInputServicesService4_DisplayName
+$aInputsMain[42] = $idInputServicesService4_Name
+$aInputsMain[43] = $idInputServicesService5_DisplayName
+$aInputsMain[44] = $idInputServicesService5_Name
+$aInputsMain[45] = $idInputContactGeneral_ButtonText
+$aInputsMain[46] = $idInputContactRecipient_Custom
+$aInputsMain[47] = $idInputContactSender_Custom
+$aInputsMain[48] = $idInputContactSMTP_Server
+$aInputsMain[49] = $idInputContactSMTP_Port
+$aInputsMain[50] = $idInputContactSMTP_Username
+$aInputsMain[51] = $idInputContactSMTP_Password
+Global $aEditsMain[2]
+$aEditsMain[0] = $idEditMainCustomDetails_FreeText
+$aEditsMain[1] = $idInputContactTest_Result
+Global $aCombosMain[1]
+$aCombosMain[0] = $idComboToolsHomeDrive_MapDrive
+Global $aStatusBarsMain[1]
+$aStatusBarsMain[0] = $hStatusBarMain
 GUISetState(@SW_SHOW)
 EndFunc
 #EndRegion
@@ -5607,13 +5735,13 @@ Func GUIMainSetButtonDefaults()
 GUIMainSetButtons($GUI_ENABLE)
 EndFunc
 Func GUIMainSetMenus($Option)
-For $i = 0 To UBound($aMainMenus) - 1
-ToggleGUIControl($aMainMenus[$i], $Option)
+For $i = 0 To UBound($aMenusMain) - 1
+ToggleGUIControl($aMenusMain[$i], $Option)
 Next
 EndFunc
 Func GUIMainSetButtons($Option)
-For $i = 0 To UBound($aMainButtons) - 1
-ToggleGUIControl($aMainButtons[$i], $Option)
+For $i = 0 To UBound($aButtonsMain) - 1
+ToggleGUIControl($aButtonsMain[$i], $Option)
 Next
 EndFunc
 #EndRegion

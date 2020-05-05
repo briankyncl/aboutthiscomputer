@@ -7,7 +7,7 @@
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Res_Comment=About This Computer Configurator
 #AutoIt3Wrapper_Res_Description=About This Computer Configurator
-#AutoIt3Wrapper_Res_Fileversion=1.0.0.9
+#AutoIt3Wrapper_Res_Fileversion=1.0.0.10
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=y
 #AutoIt3Wrapper_Res_LegalCopyright=Copyright (c) 2020 Brian Kyncl (briankyncl.com). All rights reserved.
 #AutoIt3Wrapper_Res_SaveSource=y
@@ -40,8 +40,10 @@
   #include <FontConstants.au3>
   #include <GUIConstantsEx.au3>
   #include <GUIEdit.au3>
+  #include <GUIStatusBar.au3>
   #include <MsgBoxConstants.au3>
   #include <StaticConstants.au3>
+  #include <StatusBarConstants.au3>
   #include <TrayConstants.au3>
   #include <WindowsConstants.au3>
 #EndRegion
@@ -114,8 +116,6 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     Global $GUI_UNCHECKENABLE
     Global $GUI_CHECKDISABLE
     Global $GUI_UNCHECKDISABLE
-
-    ;;Generic globals
     Global $hGUIMain
   EndFunc
 #EndRegion
@@ -157,11 +157,16 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     GUIDefine()  ;;declare GUI grid
     GUIBuild()  ;;declare GUI elements (don't need to do anything with default states?)
 
-    GUIRefresh()  ;;refresh GUI to reflect settings from registry
+    ;GUIRefresh('FromRegistry')  ;;refresh GUI to reflect settings from registry
+    ;GUIRefresh('TabGeneral')
       ;;Would require _ATC_Customization($sAppRegistryPath, 'Read') to have been ran recently
 
     ;;DISPLAY GUI(s)
     ;; Display main GUI and wait for user input.
+    ;GUIState('Ready')
+    ;GUIState('Busy')
+    ;  --> maybe each section of the GUI should have a function for applying a state (busy, ready, disabled?)
+    ;_ATC_Customization($sAppRegistryPath, 'Write')
     GUIWait()
 
     ;;GRACEFUL EXIT
@@ -179,6 +184,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       Global $iGUIMainWidthDefault = 840  ;;900
       Global $iGUIMainHeightDefault = 455
       Global $iGUIMainMenuBarHeight = 20
+      Global $iGUIMainStatusBarHeight = 23
 
       Global $iGUIMainTabAllButtonHeight = 29  ;;height of a standard button
       Global $iGUIMainTabAllButtonHeightLarge = 40  ;;height of a big button
@@ -189,7 +195,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         Global $iGUIMainColumnLeft02 = $iGUIMainColumnLeft00 + 10  ;;image
 
         Global $iGUIMainColumnLeft00Width = 148  ;;total width of left column holding logo and buttons
-        Global $iGUIMainColumnLeft01Width = 128  ;;width of logo image
+        Global $iGUIMainColumnLeft01Width = 128  ;;width of logo image  ;;128
         Global $iGUIMainColumnLeft02Width = $iGUIMainColumnLeft00Width - 15  ;;total width minus spacing for buttons
 
         Global $iGUIMainRowLeft00 = 0
@@ -1695,7 +1701,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     ;; Requires GUIDefine() to have been previously ran.
 
     ;;DECLARE MAIN WINDOW
-    Global $hGUIMain = GUICreate('About This Computer Configurator', $iGUIMainWidthDefault, $iGUIMainHeightDefault + $iGUIMainMenuBarHeight, -1, -1)  ;;plus menu bar adjustment
+    Global $hGUIMain = GUICreate('About This Computer Configurator', $iGUIMainWidthDefault, $iGUIMainHeightDefault + $iGUIMainMenuBarHeight + $iGUIMainStatusBarHeight, -1, -1)
 
     ;;MENU BAR
       ;;File
@@ -1721,6 +1727,10 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         Global $idMenuItemMainHelpDocumentation = GUICtrlCreateMenuItem('Documentation (' & $sAppDocsHost & ')', $idMenuMainHelp, -1)
           GUICtrlCreateMenuItem('', $idMenuMainHelp, -1) ; create a separator line
         Global $idMenuItemMainHelpAbout = GUICtrlCreateMenuItem('About', $idMenuMainHelp, -1)
+
+    ;;STATUS BAR
+      $hStatusBarMain = _GUICtrlStatusBar_Create($hGUIMain, '', '', $SBARS_SIZEGRIP)
+      _GUICtrlStatusBar_SetText($hStatusBarMain, '')
 
     ;;MAIN WINDOW ELEMENTS - LEFT
       $idGraphicMainLogo = GUICtrlCreateIcon($sAppLogo, -1, $iGUIMainColumnLeft02 + 12, $iGUIMainRowLeft01, $iGUIMainColumnLeft01Width, $iGUIMainRowLeft01Height, -1, $GUI_WS_EX_PARENTDRAG)
@@ -1962,13 +1972,13 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idRadioToolsHomeDrive_MapDrive = GUICtrlCreateRadio('Map drive', _
             $iGUIMainTabToolsHomeDriveColumn02, $iGUIMainTabToolsHomeDriveRow10 + $iGUIMainTabAllChromeCheckboxOffset, 68, $iGUIMainTabToolsHomeDriveRow10Height - $iGUIMainTabAllChromeCheckboxOffset, _
             BitOR($BS_MULTILINE, $BS_TOP))
-          Global $idComboToolsHomeDrive_MapDrive = GUICtrlCreateCombo('W:', _
+          Global $idComboToolsHomeDrive_MapDriveLetter = GUICtrlCreateCombo('W:', _
             $iGUIMainTabToolsHomeDriveColumn02 + 68, $iGUIMainTabToolsHomeDriveRow10, 40, $iGUIMainTabToolsHomeDriveRow10Height)
           GUICtrlCreateLabel('to', _
             $iGUIMainTabToolsHomeDriveColumn02 + 68 + 40 + 5, $iGUIMainTabToolsHomeDriveRow10 + $iGUIMainTabAllChromeCheckboxOffset, 15, $iGUIMainTabToolsHomeDriveRow10Height - $iGUIMainTabAllChromeCheckboxOffset)
-          Global $idInputToolsHomeDrive_MapDrive = GUICtrlCreateInput('', _
+          Global $idInputToolsHomeDrive_MapDrivePath = GUICtrlCreateInput('', _
             $iGUIMainTabToolsHomeDriveColumn03, $iGUIMainTabToolsHomeDriveRow10, $iGUIMainTabToolsHomeDriveColumn03Width, $iGUIMainTabToolsHomeDriveRow10Height)
-            _GUICtrlEdit_SetCueBanner($idInputToolsHomeDrive_MapDrive, '\\fileserver\home\%USERNAME%', True)
+            _GUICtrlEdit_SetCueBanner($idInputToolsHomeDrive_MapDrivePath, '\\fileserver\home\%USERNAME%', True)
 
           Global $idRadioToolsHomeDrive_Custom = GUICtrlCreateRadio('Create and open Network Places shortcut to:', _
             $iGUIMainTabToolsHomeDriveColumn02, $iGUIMainTabToolsHomeDriveRow12 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabToolsHomeDriveColumn02Width, $iGUIMainTabToolsHomeDriveRow12Height + $iGUIMainTabToolsHomeDriveRow14Height - $iGUIMainTabAllChromeCheckboxOffset, _
@@ -1984,7 +1994,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         GUICtrlCreateTabItem('Custom Tools')
 
         ;;GROUP CUSTOM TOOL 1
-          Global $idCheckboxCustomToolsCommand1_Show1 = GUICtrlCreateCheckbox('Show custom tool 1 in Tools menu', _
+          Global $idCheckboxCustomToolsCommand1_Enable = GUICtrlCreateCheckbox('Show custom tool 1 in Tools menu', _
             $iGUIMainTabCustomToolsCommand1Column01, $iGUIMainTabCustomToolsCommand1Row02, $iGUIMainTabCustomToolsCommand1Column01Width, $iGUIMainTabCustomToolsCommand1Row02Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
 
@@ -2004,7 +2014,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand1_Command, '"iexplore.exe" https://sccmserver/CMApplicationCatalog', True)
 
         ;;GROUP CUSTOM TOOL 2
-          Global $idCheckboxCustomToolsCommand2_Show1 = GUICtrlCreateCheckbox('Show custom tool 2 in Tools menu', _
+          Global $idCheckboxCustomToolsCommand2_Enable = GUICtrlCreateCheckbox('Show custom tool 2 in Tools menu', _
             $iGUIMainTabCustomToolsCommand2Column01, $iGUIMainTabCustomToolsCommand2Row02, $iGUIMainTabCustomToolsCommand2Column01Width, $iGUIMainTabCustomToolsCommand2Row02Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
 
@@ -2024,7 +2034,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand2_Command, '', True)
 
         ;;GROUP CUSTOM TOOL 3
-          Global $idCheckboxCustomToolsCommand3_Show1 = GUICtrlCreateCheckbox('Show custom tool 3 in Tools menu', _
+          Global $idCheckboxCustomToolsCommand3_Enable = GUICtrlCreateCheckbox('Show custom tool 3 in Tools menu', _
             $iGUIMainTabCustomToolsCommand3Column01, $iGUIMainTabCustomToolsCommand3Row02, $iGUIMainTabCustomToolsCommand3Column01Width, $iGUIMainTabCustomToolsCommand3Row02Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
 
@@ -2044,7 +2054,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand3_Command, '', True)
 
         ;;GROUP CUSTOM TOOL 4
-          Global $idCheckboxCustomToolsCommand4_Show1 = GUICtrlCreateCheckbox('Show custom tool 4 in Tools menu', _
+          Global $idCheckboxCustomToolsCommand4_Enable = GUICtrlCreateCheckbox('Show custom tool 4 in Tools menu', _
             $iGUIMainTabCustomToolsCommand4Column01, $iGUIMainTabCustomToolsCommand4Row02, $iGUIMainTabCustomToolsCommand4Column01Width, $iGUIMainTabCustomToolsCommand4Row02Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
 
@@ -2064,7 +2074,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand4_Command, '', True)
 
         ;;GROUP CUSTOM TOOL 5
-          Global $idCheckboxCustomToolsCommand5_Show1 = GUICtrlCreateCheckbox('Show custom tool 5 in Tools menu', _
+          Global $idCheckboxCustomToolsCommand5_Enable = GUICtrlCreateCheckbox('Show custom tool 5 in Tools menu', _
             $iGUIMainTabCustomToolsCommand5Column01, $iGUIMainTabCustomToolsCommand5Row02, $iGUIMainTabCustomToolsCommand5Column01Width, $iGUIMainTabCustomToolsCommand5Row02Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
 
@@ -2087,7 +2097,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         GUICtrlCreateTabItem('Help Menu')
 
         ;;GROUP LINK 1
-          Global $idCheckboxHelpLink1_Show1 = GUICtrlCreateCheckbox('Show link 1 in Help menu', _
+          Global $idCheckboxHelpLink1_Enable = GUICtrlCreateCheckbox('Show link 1 in Help menu', _
             $iGUIMainTabHelpLink1Column01, $iGUIMainTabHelpLink1Row02, $iGUIMainTabHelpLink1Column01Width, $iGUIMainTabHelpLink1Row02Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
 
@@ -2107,7 +2117,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             _GUICtrlEdit_SetCueBanner($idInputHelpLink1_Command, 'https://logmein123.com/', True)
 
         ;;GROUP LINK 2
-          Global $idCheckboxHelpLink2_Show1 = GUICtrlCreateCheckbox('Show link 2 in Help menu', _
+          Global $idCheckboxHelpLink2_Enable = GUICtrlCreateCheckbox('Show link 2 in Help menu', _
             $iGUIMainTabHelpLink2Column01, $iGUIMainTabHelpLink2Row02, $iGUIMainTabHelpLink2Column01Width, $iGUIMainTabHelpLink2Row02Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
 
@@ -2127,7 +2137,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             _GUICtrlEdit_SetCueBanner($idInputHelpLink2_Command, $sIntranetURL, True)
 
         ;;GROUP LINK 3
-          Global $idCheckboxHelpLink3_Show1 = GUICtrlCreateCheckbox('Show link 3 in Help menu', _
+          Global $idCheckboxHelpLink3_Enable = GUICtrlCreateCheckbox('Show link 3 in Help menu', _
             $iGUIMainTabHelpLink3Column01, $iGUIMainTabHelpLink3Row02, $iGUIMainTabHelpLink3Column01Width, $iGUIMainTabHelpLink3Row02Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
 
@@ -2147,7 +2157,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             _GUICtrlEdit_SetCueBanner($idInputHelpLink3_Command, 'https://' & $sHelpdeskURL & '/', True)
 
         ;;GROUP LINK 4
-          Global $idCheckboxHelpLink4_Show1 = GUICtrlCreateCheckbox('Show link 4 in Help menu', _
+          Global $idCheckboxHelpLink4_Enable = GUICtrlCreateCheckbox('Show link 4 in Help menu', _
             $iGUIMainTabHelpLink4Column01, $iGUIMainTabHelpLink4Row02, $iGUIMainTabHelpLink4Column01Width, $iGUIMainTabHelpLink4Row02Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
 
@@ -2167,7 +2177,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             _GUICtrlEdit_SetCueBanner($idInputHelpLink4_Command, 'https://passwords.' & $sOrgDomain & '/', True)
 
         ;;GROUP LINK 5
-          Global $idCheckboxHelpLink5_Show1 = GUICtrlCreateCheckbox('Show link 5 in Help menu', _
+          Global $idCheckboxHelpLink5_Enable = GUICtrlCreateCheckbox('Show link 5 in Help menu', _
             $iGUIMainTabHelpLink5Column01, $iGUIMainTabHelpLink5Row02, $iGUIMainTabHelpLink5Column01Width, $iGUIMainTabHelpLink5Row02Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
 
@@ -2190,7 +2200,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         GUICtrlCreateTabItem('Services')
 
         ;;GROUP SERVICE 1
-          Global $idCheckboxServicesService1_Show1 = GUICtrlCreateCheckbox('Show service 1 status in summary text', _
+          Global $idCheckboxServicesService1_Enable = GUICtrlCreateCheckbox('Show service 1 status in summary text', _
             $iGUIMainTabServicesService1Column01, $iGUIMainTabServicesService1Row02, $iGUIMainTabServicesService1Column01Width, $iGUIMainTabServicesService1Row02Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
 
@@ -2210,7 +2220,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             _GUICtrlEdit_SetCueBanner($idInputServicesService1_Name, 'wuauserv', True)
 
         ;;GROUP SERVICE 2
-          Global $idCheckboxServicesService2_Show1 = GUICtrlCreateCheckbox('Show service 2 status in summary text', _
+          Global $idCheckboxServicesService2_Enable = GUICtrlCreateCheckbox('Show service 2 status in summary text', _
             $iGUIMainTabServicesService2Column01, $iGUIMainTabServicesService2Row02, $iGUIMainTabServicesService2Column01Width, $iGUIMainTabServicesService2Row02Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
 
@@ -2230,7 +2240,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             _GUICtrlEdit_SetCueBanner($idInputServicesService2_Name, 'CcmExec', True)
 
         ;;GROUP SERVICE 3
-          Global $idCheckboxServicesService3_Show1 = GUICtrlCreateCheckbox('Show service 3 status in summary text', _
+          Global $idCheckboxServicesService3_Enable = GUICtrlCreateCheckbox('Show service 3 status in summary text', _
             $iGUIMainTabServicesService3Column01, $iGUIMainTabServicesService3Row02, $iGUIMainTabServicesService3Column01Width, $iGUIMainTabServicesService3Row02Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
 
@@ -2250,7 +2260,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             _GUICtrlEdit_SetCueBanner($idInputServicesService3_Name, 'CSFalconService', True)
 
         ;;GROUP SERVICE 4
-          Global $idCheckboxServicesService4_Show1 = GUICtrlCreateCheckbox('Show service 4 status in summary text', _
+          Global $idCheckboxServicesService4_Enable = GUICtrlCreateCheckbox('Show service 4 status in summary text', _
             $iGUIMainTabServicesService4Column01, $iGUIMainTabServicesService4Row02, $iGUIMainTabServicesService4Column01Width, $iGUIMainTabServicesService4Row02Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
 
@@ -2270,7 +2280,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             _GUICtrlEdit_SetCueBanner($idInputServicesService4_Name, 'BTService', True)
 
         ;;GROUP SERVICE 5
-          Global $idCheckboxServicesService5_Show1 = GUICtrlCreateCheckbox('Show service 5 status in summary text', _
+          Global $idCheckboxServicesService5_Enable = GUICtrlCreateCheckbox('Show service 5 status in summary text', _
             $iGUIMainTabServicesService5Column01, $iGUIMainTabServicesService5Row02, $iGUIMainTabServicesService5Column01Width, $iGUIMainTabServicesService5Row02Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
 
@@ -2396,10 +2406,153 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
       GUICtrlCreateTabItem('')  ;;terminate tab structure
 
-    Global $aMainMenus
-    Global $aMainButtons
+    ;;GATHER GUI ELEMENTS
+      ;;Menus
+        Global $aMenusMain[3]
+          $aMenusMain[0] = $idMenuMainFile
+          $aMenusMain[1] = $idMenuMainEdit
+          $aMenusMain[2] = $idMenuMainHelp
 
-    GUISetState(@SW_SHOW)
+      ;;Buttons
+        Global $aButtonsMain[3]
+          $aButtonsMain[0] = $idButtonMainLeftApply
+          $aButtonsMain[1] = $idButtonMainLeftCancel
+          $aButtonsMain[2] = $idGroupContact_SendTestEmail
+
+      ;;Checkboxes
+        Global $aCheckboxesMain[42]
+          $aCheckboxesMain[00] = $idCheckboxMainGeneral_StartAtLogin
+          $aCheckboxesMain[01] = $idCheckboxMainGeneral_DisableExit
+          $aCheckboxesMain[02] = $idCheckboxMainAssetTag_ShowAssetTag
+          $aCheckboxesMain[03] = $idCheckboxMainCustomDetails_ShowCustomDetails
+          $aCheckboxesMain[04] = $idCheckboxMainHelpdesk_ShowHelpdesk
+          $aCheckboxesMain[05] = $idCheckboxMainHelpdesk_ShowEmail
+          $aCheckboxesMain[06] = $idCheckboxMainHelpdesk_ShowPhone
+          $aCheckboxesMain[07] = $idCheckboxMainHelpdesk_ShowWebsite
+          $aCheckboxesMain[08] = $idCheckboxMainHelpdesk_ShowAlternate
+          $aCheckboxesMain[09] = $idCheckboxTools_EnableToolsMenu
+          $aCheckboxesMain[10] = $idCheckboxToolsGeneral_CredentialManager
+          $aCheckboxesMain[11] = $idCheckboxToolsGeneral_DeviceManager
+          $aCheckboxesMain[12] = $idCheckboxToolsGeneral_DevicesAndPrinters
+          $aCheckboxesMain[13] = $idCheckboxToolsGeneral_InternetOptions
+          $aCheckboxesMain[14] = $idCheckboxToolsGeneral_MailAccounts
+          $aCheckboxesMain[15] = $idCheckboxToolsGeneral_NetworkConnections
+          $aCheckboxesMain[16] = $idCheckboxToolsGeneral_PrintManagement
+          $aCheckboxesMain[17] = $idCheckboxToolsGeneral_ProgramsAndFeatures
+          $aCheckboxesMain[18] = $idCheckboxToolsGeneral_SearchDirectory
+          $aCheckboxesMain[19] = $idCheckboxToolsGeneral_Services
+          $aCheckboxesMain[20] = $idCheckboxToolsGeneral_SystemProperties
+          $aCheckboxesMain[21] = $idCheckboxToolsGeneral_WindowsUpdate
+          $aCheckboxesMain[22] = $idCheckboxToolsLoginScript_ShowLoginScript
+          $aCheckboxesMain[23] = $idCheckboxToolsHomeDrive_ShowHomeDrive
+          $aCheckboxesMain[24] = $idCheckboxCustomToolsCommand1_Enable
+          $aCheckboxesMain[25] = $idCheckboxCustomToolsCommand2_Enable
+          $aCheckboxesMain[26] = $idCheckboxCustomToolsCommand3_Enable
+          $aCheckboxesMain[27] = $idCheckboxCustomToolsCommand4_Enable
+          $aCheckboxesMain[28] = $idCheckboxCustomToolsCommand5_Enable
+          $aCheckboxesMain[29] = $idCheckboxHelpLink1_Enable
+          $aCheckboxesMain[30] = $idCheckboxHelpLink2_Enable
+          $aCheckboxesMain[31] = $idCheckboxHelpLink3_Enable
+          $aCheckboxesMain[32] = $idCheckboxHelpLink4_Enable
+          $aCheckboxesMain[33] = $idCheckboxHelpLink5_Enable
+          $aCheckboxesMain[34] = $idCheckboxServicesService1_Enable
+          $aCheckboxesMain[35] = $idCheckboxServicesService2_Enable
+          $aCheckboxesMain[36] = $idCheckboxServicesService3_Enable
+          $aCheckboxesMain[37] = $idCheckboxServicesService4_Enable
+          $aCheckboxesMain[38] = $idCheckboxServicesService5_Enable
+          $aCheckboxesMain[39] = $idCheckboxContact_EnableContactForm
+          $aCheckboxesMain[40] = $idCheckboxContactGeneral_ShowEmployeeIDField
+          $aCheckboxesMain[41] = $idCheckboxContactSMTP_EnableSSL
+
+      ;;Radios
+        Global $aRadiosMain[17]
+          $aRadiosMain[00] = $idRadioMainTrayIcon_First
+          $aRadiosMain[01] = $idRadioMainTrayIcon_Second
+          $aRadiosMain[02] = $idRadioMainTrayIcon_Third
+          $aRadiosMain[03] = $idRadioMainTrayIcon_Fourth
+          $aRadiosMain[04] = $idRadioMainTrayIcon_Fifth
+          $aRadiosMain[05] = $idRadioMainAssetTag_ReadFromBIOS
+          $aRadiosMain[06] = $idRadioMainAssetTag_Custom
+          $aRadiosMain[07] = $idRadioToolsLoginScript_ReadFromActiveDirectory
+          $aRadiosMain[08] = $idRadioToolsLoginScript_Custom
+          $aRadiosMain[09] = $idRadioToolsHomeDrive_ReadFromActiveDirectory
+          $aRadiosMain[10] = $idRadioToolsHomeDrive_MapDrive
+          $aRadiosMain[11] = $idRadioToolsHomeDrive_Custom
+          $aRadiosMain[12] = $idRadioContactRecipient_UseHelpdeskEmail
+          $aRadiosMain[13] = $idRadioContactRecipient_Custom
+          $aRadiosMain[14] = $idRadioContactSender_ReadFromAD
+          $aRadiosMain[15] = $idRadioContactSender_Custom
+          $aRadiosMain[16] = $idRadioContactSender_EnableEmailField
+
+      ;;Inputs
+        Global $aInputsMain[52]
+          $aInputsMain[00] = $idInputMainAssetTag_Custom
+          $aInputsMain[01] = $idInputMainHelpdesk_Title
+          $aInputsMain[02] = $idInputMainHelpdesk_EmailTitle
+          $aInputsMain[03] = $idInputMainHelpdesk_EmailAddress
+          $aInputsMain[04] = $idInputMainHelpdesk_PhoneTitle
+          $aInputsMain[05] = $idInputMainHelpdesk_PhoneNumber
+          $aInputsMain[06] = $idInputMainHelpdesk_WebsiteTitle
+          $aInputsMain[07] = $idInputMainHelpdesk_WebsiteAddress
+          $aInputsMain[08] = $idInputMainHelpdesk_AlternateTitle
+          $aInputsMain[09] = $idInputMainHelpdesk_AlternateAddress
+          $aInputsMain[10] = $idInputToolsLoginScript_Custom
+          $aInputsMain[11] = $idInputToolsHomeDrive_Title
+          $aInputsMain[12] = $idInputToolsHomeDrive_MapDrivePath
+          $aInputsMain[13] = $idInputToolsHomeDrive_CustomName
+          $aInputsMain[14] = $idInputToolsHomeDrive_CustomPath
+          $aInputsMain[15] = $idInputCustomToolsCommand1_DisplayName
+          $aInputsMain[16] = $idInputCustomToolsCommand1_Command
+          $aInputsMain[17] = $idInputCustomToolsCommand2_DisplayName
+          $aInputsMain[18] = $idInputCustomToolsCommand2_Command
+          $aInputsMain[19] = $idInputCustomToolsCommand3_DisplayName
+          $aInputsMain[20] = $idInputCustomToolsCommand3_Command
+          $aInputsMain[21] = $idInputCustomToolsCommand4_DisplayName
+          $aInputsMain[22] = $idInputCustomToolsCommand4_Command
+          $aInputsMain[23] = $idInputCustomToolsCommand5_DisplayName
+          $aInputsMain[24] = $idInputCustomToolsCommand5_Command
+          $aInputsMain[25] = $idInputHelpLink1_DisplayName
+          $aInputsMain[26] = $idInputHelpLink1_Command
+          $aInputsMain[27] = $idInputHelpLink2_DisplayName
+          $aInputsMain[28] = $idInputHelpLink2_Command
+          $aInputsMain[29] = $idInputHelpLink3_DisplayName
+          $aInputsMain[30] = $idInputHelpLink3_Command
+          $aInputsMain[31] = $idInputHelpLink4_DisplayName
+          $aInputsMain[32] = $idInputHelpLink4_Command
+          $aInputsMain[33] = $idInputHelpLink5_DisplayName
+          $aInputsMain[34] = $idInputHelpLink5_Command
+          $aInputsMain[35] = $idInputServicesService1_DisplayName
+          $aInputsMain[36] = $idInputServicesService1_Name
+          $aInputsMain[37] = $idInputServicesService2_DisplayName
+          $aInputsMain[38] = $idInputServicesService2_Name
+          $aInputsMain[39] = $idInputServicesService3_DisplayName
+          $aInputsMain[40] = $idInputServicesService3_Name
+          $aInputsMain[41] = $idInputServicesService4_DisplayName
+          $aInputsMain[42] = $idInputServicesService4_Name
+          $aInputsMain[43] = $idInputServicesService5_DisplayName
+          $aInputsMain[44] = $idInputServicesService5_Name
+          $aInputsMain[45] = $idInputContactGeneral_ButtonText
+          $aInputsMain[46] = $idInputContactRecipient_Custom
+          $aInputsMain[47] = $idInputContactSender_Custom
+          $aInputsMain[48] = $idInputContactSMTP_Server
+          $aInputsMain[49] = $idInputContactSMTP_Port
+          $aInputsMain[50] = $idInputContactSMTP_Username
+          $aInputsMain[51] = $idInputContactSMTP_Password
+
+      ;;Edits
+        Global $aEditsMain[2]
+          $aEditsMain[0] = $idEditMainCustomDetails_FreeText
+          $aEditsMain[1] = $idInputContactTest_Result
+
+      ;;Combos (Dropdowns)
+        Global $aCombosMain[1]
+          $aCombosMain[0] = $idComboToolsHomeDrive_MapDriveLetter
+
+      ;;Status Bars
+        Global $aStatusBarsMain[1]
+          $aStatusBarsMain[0] = $hStatusBarMain
+
+    GUISetState(@SW_SHOW)  ;;TODO: remove
   EndFunc
 #EndRegion
 
@@ -2461,8 +2614,8 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     ;; $GUI_ENABLE
     ;; $GUI_DISABLE
 
-    For $i = 0 To UBound($aMainMenus) - 1
-      ToggleGUIControl($aMainMenus[$i], $Option)
+    For $i = 0 To UBound($aMenusMain) - 1
+      ToggleGUIControl($aMenusMain[$i], $Option)
     Next
   EndFunc
 
@@ -2471,8 +2624,8 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     ;; $GUI_ENABLE
     ;; $GUI_DISABLE
 
-    For $i = 0 To UBound($aMainButtons) - 1
-      ToggleGUIControl($aMainButtons[$i], $Option)
+    For $i = 0 To UBound($aButtonsMain) - 1
+      ToggleGUIControl($aButtonsMain[$i], $Option)
     Next
   EndFunc
 #EndRegion
@@ -2601,7 +2754,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
   Func ToggleGUIControl($idGUIControl, $Option)
     ;;TOGGLE GUI CONTROL STATE
     ;; Change a GUI control's state only if the desired state is different than the current state.
-    ;; This is an attempt to prevent a flickering GUI when states change
+    ;; This is an attempt to prevent a flickering GUI when states change.
     ;;
     ;; $GUI_ENABLE
     ;; $GUI_DISABLE

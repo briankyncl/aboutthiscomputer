@@ -208,7 +208,12 @@
       If FileExists($sCustomHelpdeskEmailFilePath) Then
         Local $hFileOpen = FileOpen($sCustomHelpdeskEmailFilePath,  $FO_READ)
         If (StringIsSpace(FileReadLine($hFileOpen, 1)) = 0) Then
-          RegWrite($sAppRegistryPath, 'sHelpdeskEmail', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'sMainHelpdesk_EmailAddress', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'bMainHelpdesk_ShowEmail', 'REG_DWORD', 1)
+          RegWrite($sAppRegistryPath, 'sMainHelpdesk_EmailTitle', 'REG_SZ', 'Email')
+
+          RegWrite($sAppRegistryPath, 'bMainHelpdesk_ShowHelpdesk', 'REG_DWORD', 1)
+          RegWrite($sAppRegistryPath, 'sMainHelpdesk_Title', 'REG_SZ', $sOrgName & ' IT Helpdesk')
         EndIf
         FileClose($hFileOpen)
         FileDelete($sCustomHelpdeskEmailFilePath)
@@ -219,7 +224,12 @@
       If FileExists($sCustomHelpdeskPhoneFilePath) Then
         Local $hFileOpen = FileOpen($sCustomHelpdeskPhoneFilePath,  $FO_READ)
         If (StringIsSpace(FileReadLine($hFileOpen, 1)) = 0) Then
-          RegWrite($sAppRegistryPath, 'sHelpdeskPhone', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'sMainHelpdesk_PhoneNumber', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'bMainHelpdesk_ShowPhone', 'REG_DWORD', 1)
+          RegWrite($sAppRegistryPath, 'sMainHelpdesk_PhoneTitle', 'REG_SZ', 'Phone')
+
+          RegWrite($sAppRegistryPath, 'bMainHelpdesk_ShowHelpdesk', 'REG_DWORD', 1)
+          RegWrite($sAppRegistryPath, 'sMainHelpdesk_Title', 'REG_SZ', $sOrgName & ' IT Helpdesk')
         EndIf
         FileClose($hFileOpen)
         FileDelete($sCustomHelpdeskPhoneFilePath)
@@ -230,7 +240,12 @@
       If FileExists($sCustomHelpdeskPasswordResetsFilePath) Then
         Local $hFileOpen = FileOpen($sCustomHelpdeskPasswordResetsFilePath,  $FO_READ)
         If (StringIsSpace(FileReadLine($hFileOpen, 1)) = 0) Then
-          RegWrite($sAppRegistryPath, 'sHelpdeskCorporatePhone', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'sMainHelpdesk_AlternateAddress', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'bMainHelpdesk_ShowAlternate', 'REG_DWORD', 1)
+          RegWrite($sAppRegistryPath, 'sMainHelpdesk_AlternateTitle', 'REG_SZ', 'Reset a Password')
+
+          RegWrite($sAppRegistryPath, 'bMainHelpdesk_ShowHelpdesk', 'REG_DWORD', 1)
+          RegWrite($sAppRegistryPath, 'sMainHelpdesk_Title', 'REG_SZ', $sOrgName & ' IT Helpdesk')
         EndIf
         FileClose($hFileOpen)
         FileDelete($sCustomHelpdeskPasswordResetsFilePath)
@@ -241,7 +256,12 @@
       If FileExists($sCustomHelpdeskAddressFilePath) Then
         Local $hFileOpen = FileOpen($sCustomHelpdeskAddressFilePath,  $FO_READ)
         If (StringIsSpace(FileReadLine($hFileOpen, 1)) = 0) Then
-          RegWrite($sAppRegistryPath, 'sHelpdeskURL', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'sMainHelpdesk_WebsiteAddress', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'bMainHelpdesk_ShowWebsite', 'REG_DWORD', 1)
+          RegWrite($sAppRegistryPath, 'sMainHelpdesk_WebsiteTitle', 'REG_SZ', 'Website')
+
+          RegWrite($sAppRegistryPath, 'bMainHelpdesk_ShowHelpdesk', 'REG_DWORD', 1)
+          RegWrite($sAppRegistryPath, 'sMainHelpdesk_Title', 'REG_SZ', $sOrgName & ' IT Helpdesk')
         EndIf
         FileClose($hFileOpen)
         FileDelete($sCustomHelpdeskAddressFilePath)
@@ -252,7 +272,9 @@
       If FileExists($sCustomHelpdeskLMIrAddressFilePath) Then
         Local $hFileOpen = FileOpen($sCustomHelpdeskLMIrAddressFilePath,  $FO_READ)
         If (StringIsSpace(FileReadLine($hFileOpen, 1)) = 0) Then
-          RegWrite($sAppRegistryPath, 'sHelpdeskRemoteSupportURL', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'sHelpLink1_Command', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'bHelpLink1_Enable', 'REG_SZ', 'REG_DWORD', 1)
+          RegWrite($sAppRegistryPath, 'sHelpLink1_DisplayName', 'REG_SZ', 'LogMeIn Rescue')
         EndIf
         FileClose($hFileOpen)
         FileDelete($sCustomHelpdeskLMIrAddressFilePath)
@@ -263,7 +285,8 @@
       If FileExists($sFreeTextDetailsFilePath) Then
         Local $hFileOpen = FileOpen($sFreeTextDetailsFilePath,  $FO_READ)
         If (StringIsSpace(FileReadLine($hFileOpen, 1)) = 0) Then
-          RegWrite($sAppRegistryPath, 'sFreeTextDetails', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'sMainCustomDetails_FreeText', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'bMainCustomDetails_ShowCustomDetails', 'REG_DWORD', 1)
         EndIf
         FileClose($hFileOpen)
         FileDelete($sFreeTextDetailsFilePath)
@@ -274,7 +297,9 @@
       If FileExists($sCustomLCMXJCodeFilePath) Then
         Local $hFileOpen = FileOpen($sCustomLCMXJCodeFilePath,  $FO_READ)
         If (StringIsSpace(FileReadLine($hFileOpen, 1)) = 0) Then
-          RegWrite($sAppRegistryPath, 'sCustomLCMXJCode', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'sMainLCM_CustomXJCode', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'bMainLCM_CustomXJCode', 'REG_DWORD', 1)
+          RegWrite($sAppRegistryPath, 'bMainLCM_ShowLCMInfo', 'REG_DWORD', 1)
         EndIf
         FileClose($hFileOpen)
         FileDelete($sCustomLCMXJCodeFilePath)
@@ -285,7 +310,9 @@
       If FileExists($sCustomLCMCRCodeFilePath) Then
         Local $hFileOpen = FileOpen($sCustomLCMCRCodeFilePath,  $FO_READ)
         If (StringIsSpace(FileReadLine($hFileOpen, 1)) = 0) Then
-          RegWrite($sAppRegistryPath, 'sCustomLCMCRCode', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'sMainLCM_CustomRCRCode', 'REG_SZ', FileReadLine($hFileOpen, 1))
+          RegWrite($sAppRegistryPath, 'bMainLCM_CustomRCRCode', 'REG_DWORD', 1)
+          RegWrite($sAppRegistryPath, 'bMainLCM_ShowLCMInfo', 'REG_DWORD', 1)
         EndIf
         FileClose($hFileOpen)
         FileDelete($sCustomLCMCRCodeFilePath)
@@ -294,14 +321,14 @@
       ;;LEGACY ExitDisabled.txt
       $sExitDisabledFilePath = $sAppInstallPathLegacy & '\Support\ExitDisabled.txt'
       If Not FileExists($sExitDisabledFilePath) Then
-        RegWrite($sAppRegistryPath, 'bConfigExitEnabled', 'REG_DWORD', 1)
+        RegWrite($sAppRegistryPath, 'bMainGeneral_DisableExit', 'REG_DWORD', 0)
         FileDelete($sExitDisabledFilePath)
       EndIf
 
       ;;LEGACY ContactHelpdeskDisabled.txt
       $sContactHelpdeskDisabledFilePath = $sAppInstallPathLegacy & '\Support\ContactHelpdeskDisabled.txt'
       If Not FileExists($sContactHelpdeskDisabledFilePath) Then
-        RegWrite($sAppRegistryPath, 'bConfigContactHelpdeskEnabled', 'REG_DWORD', 1)
+        RegWrite($sAppRegistryPath, 'bContact_EnableContactForm', 'REG_DWORD', 1)
         FileDelete($sContactHelpdeskDisabledFilePath)
       EndIf
 

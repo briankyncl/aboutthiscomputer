@@ -4,7 +4,7 @@
 #AutoIt3Wrapper_Outfile=Compiled\Support\AboutThisComputerInstallHelper.exe
 #AutoIt3Wrapper_Outfile_x64=Compiled\Support\AboutThisComputerInstallHelper_x64.exe
 #AutoIt3Wrapper_Compile_Both=y
-#AutoIt3Wrapper_Res_Fileversion=1.0.0.49
+#AutoIt3Wrapper_Res_Fileversion=1.0.0.50
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=y
 #AutoIt3Wrapper_Res_LegalCopyright=Copyright (c) 2020 Brian Kyncl (www.briankyncl.com). All rights reserved.
 #AutoIt3Wrapper_Res_SaveSource=y
@@ -54,34 +54,34 @@
   EndIf
 
   ;;ENVIRONMENT
-  Global $sDirScript         = @scriptDir
-  Global $systemDrive        = EnvGet("systemdrive") ;Ex: 'C:'
+  Global $sDirScript  = @scriptDir
+  Global $systemDrive = EnvGet("systemdrive") ;Ex: 'C:'
 
-  Global $aVerBuildNum       = StringSplit(FileGetVersion(@AutoItExe), '.')
-  Global $sBuildNum          = $aVerBuildNum[4]
-  Global $sVersionNum        = $aVerBuildNum[1] & '.' & $aVerBuildNum[2] & '.' & $aVerBuildNum[3]
+  Global $aVerBuildNum = StringSplit(FileGetVersion(@AutoItExe), '.')
+  Global $sBuildNum    = $aVerBuildNum[4]
+  Global $sVersionNum  = $aVerBuildNum[1] & '.' & $aVerBuildNum[2] & '.' & $aVerBuildNum[3]
 
   Global $bDebug             = False  ;;True or False
 
   ;;GLOBAL DECLARATIONS
-  Global $sTempDirRoot       = @TempDir & '\com.briankyncl'
-  Global $sTempDir           = $sTempDirRoot & '\About This Computer'
-  Global $sSupportTempDir    = $sTempDir & '\Support'
-  Global $sTemplatesTempDir  = $sSupportTempDir & '\Templates'
+  Global $sTempDirRoot      = @TempDir & '\briankyncl.com'
+  Global $sTempDir          = $sTempDirRoot & '\About This Computer'
+  Global $sSupportTempDir   = $sTempDir & '\Support'
+  Global $sTemplatesTempDir = $sSupportTempDir & '\Templates'
 
   ;;APP INFO
-  Global $sAppOrg        = 'com.briankyncl'
-  Global $sAppName       = 'About This Computer'
+  Global $sAppOrg  = 'briankyncl.com'
+  Global $sAppName = 'About This Computer'
 
   ;;APP PATHS
-  Global $sAppInstallPath       = @ProgramFilesDir & '\' & $sAppOrg & '\' & $sAppName
-  Global $sAppSupportDir        = $sAppInstallPath & '\Support'
-  Global $sAppRegistryPath      = 'HKEY_LOCAL_MACHINE\Software\' & $sAppOrg & '\' & $sAppName
-  Global $sAppTemplatesDir      = $sAppSupportDir & '\Templates'
+  Global $sAppInstallPath  = @ProgramFilesDir & '\' & $sAppOrg & '\' & $sAppName
+  Global $sAppSupportDir   = $sAppInstallPath & '\Support'
+  Global $sAppRegistryPath = 'HKEY_LOCAL_MACHINE\Software\' & $sAppOrg & '\' & $sAppName
+  Global $sAppTemplatesDir = $sAppSupportDir & '\Templates'
 
-  Global $sAppInstallPathLegacy = @AppDataCommonDir & '\' & $sAppOrg & '\' & $sAppName
-  Global $sSupportDirLegacy        = $sAppInstallPathLegacy & '\Support'
-  Global $sTemplatesDirLegacy      = $sSupportDirLegacy & '\Templates'
+  Global $sAppInstallPathLegacy = @AppDataCommonDir & '\com.briankyncl\' & $sAppName
+  Global $sSupportDirLegacy     = $sAppInstallPathLegacy & '\Support'
+  Global $sTemplatesDirLegacy   = $sSupportDirLegacy & '\Templates'
 #EndRegion
 
 #Region -- START
@@ -130,7 +130,7 @@
     FileCopy($sSupportDirLegacy & '\*.txt', $sSupportTempDir & '\', BitOR($FC_OVERWRITE, $FC_CREATEPATH)) ;;backup user-created config files
 
     ;;CLEANUP WHAT INNO SETUP WON'T REMOVE
-    DirRemove(@AppDataCommonDir & '\com.briankyncl\About This Computer\Support', 1)
+    DirRemove($sAppInstallPathLegacy & '\Support', 1)
     DirRemove($sAppSupportDir, 1)
     RegDelete('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run', 'About This Computer')
 
@@ -157,47 +157,6 @@
       FileDelete($sSupportDirLegacy & '\*.txt')
       FileCopy($sSupportTempDir & '\*.txt', $sSupportDirLegacy & '\', BitOR($FC_OVERWRITE, $FC_CREATEPATH)) ;;restore user-created config files
     EndIf
-
-    ;;STAGE CONFIGURATION REGISTRY ENTRIES
-    ;; Test if registry key exists, if not, create it.
-    Local $aRegistryConfiguration[2]
-      $aRegistryConfiguration[00] = 'bConfigExitEnabled'
-      $aRegistryConfiguration[01] = 'bConfigContactHelpdeskEnabled'
-    For $i = 0 to UBound($aRegistryConfiguration) - 1
-      RegRead($sAppRegistryPath, $aRegistryConfiguration[$i])
-      If @error <> 0 Then
-        RegWrite($sAppRegistryPath, $aRegistryConfiguration[$i], 'REG_DWORD', '0')
-      EndIf
-    Next
-
-    ;;;STAGE CUSTOMIZATION REGISTRY ENTRIES
-    ;;; Test if registry key exists, if not, create it.
-    ;Local $aRegistryCustomization[17]
-    ;  $aRegistryCustomization[00] = 'sOrgName'
-    ;  $aRegistryCustomization[01] = 'sOrgDomain'
-    ;  $aRegistryCustomization[02] = 'sOrgFQDomain'
-    ;  $aRegistryCustomization[03] = 'sIntranetName'
-    ;  $aRegistryCustomization[04] = 'sIntranetURL'
-    ;  $aRegistryCustomization[05] = 'sHelpdeskName'
-    ;  $aRegistryCustomization[06] = 'sHelpdeskPhone'
-    ;  $aRegistryCustomization[07] = 'sHelpdeskRegionalPhone'
-    ;  $aRegistryCustomization[08] = 'sHelpdeskCorporatePhone'
-    ;  $aRegistryCustomization[09] = 'sHelpdeskEmail'
-    ;  $aRegistryCustomization[10] = 'sHelpdeskURL'
-    ;  $aRegistryCustomization[11] = 'sHelpdeskRemoteSupportURL'
-    ;  $aRegistryCustomization[12] = 'sHelpdeskRequestName'
-    ;  $aRegistryCustomization[13] = 'sSCCMAppCatalogURL'
-    ;  $aRegistryCustomization[14] = 'sHomeFolderName'
-    ;  $aRegistryCustomization[15] = 'sLoginScriptPath'
-    ;  $aRegistryCustomization[16] = 'sFreeTextDetails'
-    ;For $i = 0 to UBound($aRegistryCustomization) - 1
-    ;  RegRead($sAppRegistryPath, $aRegistryCustomization[$i])
-    ;  If @error <> 0 Then
-    ;    RegWrite($sAppRegistryPath, $aRegistryCustomization[$i], 'REG_SZ', '')
-    ;  EndIf
-    ;Next
-
-    _ATC_Customization($sAppRegistryPath, 'Stage')
 
     ;;MIGRATE CONFIGURATION
     If FileExists($sAppInstallPathLegacy) Then
@@ -273,7 +232,7 @@
         Local $hFileOpen = FileOpen($sCustomHelpdeskLMIrAddressFilePath,  $FO_READ)
         If (StringIsSpace(FileReadLine($hFileOpen, 1)) = 0) Then
           RegWrite($sAppRegistryPath, 'sHelpLink1_Command', 'REG_SZ', FileReadLine($hFileOpen, 1))
-          RegWrite($sAppRegistryPath, 'bHelpLink1_Enable', 'REG_SZ', 'REG_DWORD', 1)
+          RegWrite($sAppRegistryPath, 'bHelpLink1_Enable', 'REG_DWORD', 1)
           RegWrite($sAppRegistryPath, 'sHelpLink1_DisplayName', 'REG_SZ', 'LogMeIn Rescue')
         EndIf
         FileClose($hFileOpen)

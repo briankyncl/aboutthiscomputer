@@ -7,7 +7,7 @@
 #AutoIt3Wrapper_UseX64=y
 #AutoIt3Wrapper_Res_Comment=About This Computer Configurator
 #AutoIt3Wrapper_Res_Description=About This Computer Configurator
-#AutoIt3Wrapper_Res_Fileversion=1.0.0.9
+#AutoIt3Wrapper_Res_Fileversion=1.0.0.12
 #AutoIt3Wrapper_Res_Fileversion_AutoIncrement=y
 #AutoIt3Wrapper_Res_LegalCopyright=Copyright (c) 2020 Brian Kyncl (briankyncl.com). All rights reserved.
 #AutoIt3Wrapper_Res_SaveSource=y
@@ -18,70 +18,360 @@
 #Au3Stripper_Parameters=/mo
 #EndRegion
 #Region -- PRE-FLIGHT
-Func _ATC_Customization($__sAppRegistryPath = 'HKEY_LOCAL_MACHINE\Software\com.briankyncl\About This Computer', $iOption = 'Default')
+Func _ATC_Customization($__sAppRegistryPath = 'HKEY_LOCAL_MACHINE\Software\briankyncl.com\About This Computer', $iOption = 'Default')
 If $iOption = 'Default' Or $iOption = 'Declare' Then
-Global $sOrgName                  = 'Contoso'
-Global $sOrgDomain                = 'contoso.com'
-Global $sOrgFQDomain              = 'corp.' & $sOrgDomain
-Global $sIntranetName             = $sOrgName & ' Intranet'
-Global $sIntranetURL              = 'https://intranet.' & $sOrgDomain & '/'
-Global $sHelpdeskName             = $sOrgName & ' IT Helpdesk'
-Global $sHelpdeskPhone            = '1-800-555-5555'
-Global $sHelpdeskRegionalPhone    = $sHelpdeskPhone
-Global $sHelpdeskCorporatePhone   = $sHelpdeskPhone
-Global $sHelpdeskEmail            = 'helpdesk@' & $sOrgDomain
-Global $sHelpdeskURL              = 'helpdesk.' & $sOrgDomain
-Global $sHelpdeskRemoteSupportURL = 'remotesupport.' & $sOrgDomain
-Global $sHelpdeskRequestName      = 'Create an IT' & @CRLF & 'Helpdesk Request'
-Global $sSCCMAppCatalogURL        = 'https://sccmserver.' & $sOrgFQDomain & '/CMApplicationCatalog'
-Global $sHomeFolderName           = 'Home Drive'
-Global $sLoginScriptPath          = '\\' & $sOrgFQDomain & '\NETLOGON'
+Global $sOrgName = 'Contoso'
+Global $sOrgDomain = 'contoso.com'
+Global $sOrgFQDomain = 'corp.' & $sOrgDomain
+Global $bMainGeneral_StartAtLogin = 1
+Global $bMainGeneral_DisableExit = 1
+Global $iMainTray_Icon = 1
+Global $bMainAssetTag_ShowAssetTag = 0
+Global $bMainAssetTag_ReadFromBIOS = 1
+Global $bMainAssetTag_Custom = 0
+Global $sMainAssetTag_Custom = '100123'
+Global $bMainCustomDetails_ShowCustomDetails = 0
+Global $sMainCustomDetails_FreeText = ''
+Global $bMainHelpdesk_ShowHelpdesk = 0
+Global $sMainHelpdesk_Title = ''
+Global $bMainHelpdesk_ShowEmail = 1
+Global $sMainHelpdesk_EmailTitle = 'Email'
+Global $sMainHelpdesk_EmailAddress = ''
+Global $bMainHelpdesk_ShowPhone = 1
+Global $sMainHelpdesk_PhoneTitle = 'Phone'
+Global $sMainHelpdesk_PhoneNumber = ''
+Global $bMainHelpdesk_ShowWebsite = 0
+Global $sMainHelpdesk_WebsiteTitle = 'Website'
+Global $sMainHelpdesk_WebsiteAddress = ''
+Global $bMainHelpdesk_ShowAlternate = 0
+Global $sMainHelpdesk_AlternateTitle = ''
+Global $sMainHelpdesk_AlternateAddress = ''
+Global $bMainLCM_ShowLCMInfo = 0
+Global $bMainLCM_ReadFromFileSystem = 1
+Global $bMainLCM_CustomXJCode = 0
+Global $sMainLCM_CustomXJCode = ''
+Global $bMainLCM_CustomRCRCode = 0
+Global $sMainLCM_CustomRCRCode = ''
+Global $bTools_EnableToolsMenu = 1
+Global $bToolsGeneral_CredentialManager = 1
+Global $bToolsGeneral_DeviceManager = 1
+Global $bToolsGeneral_DevicesAndPrinters = 1
+Global $bToolsGeneral_InternetOptions = 1
+Global $bToolsGeneral_MailAccounts = 1
+Global $bToolsGeneral_NetworkConnections = 1
+Global $bToolsGeneral_PrintManagement = 1
+Global $bToolsGeneral_ProgramsAndFeatures = 1
+Global $bToolsGeneral_SearchDirectory = 0
+Global $bToolsGeneral_Services = 1
+Global $bToolsGeneral_SystemProperties = 1
+Global $bToolsGeneral_WindowsUpdate = 1
+Global $bToolsHomeDrive_ShowHomeDrive = 0
+Global $sToolsHomeDrive_Title = ''
+Global $bToolsHomeDrive_ReadFromActiveDirectory = 1
+Global $bToolsHomeDrive_MapDrive = 0
+Global $sToolsHomeDrive_MapDrivePath = ''
+Global $sToolsHomeDrive_DriveLetter = ''
+Global $bToolsHomeDrive_Custom = 0
+Global $sToolsHomeDrive_CustomName = ''
+Global $sToolsHomeDrive_CustomPath = ''
+Global $bToolsLoginScript_ShowLoginScript = 0
+Global $bToolsLoginScript_ReadFromActiveDirectory = 1
+Global $bToolsLoginScript_Custom = 0
+Global $sToolsLoginScript_Custom = ''
+Global $bCustomToolsCommand1_Enable = 0
+Global $sCustomToolsCommand1_DisplayName = ''
+Global $sCustomToolsCommand1_Command = ''
+Global $bCustomToolsCommand2_Enable = 0
+Global $sCustomToolsCommand2_DisplayName = ''
+Global $sCustomToolsCommand2_Command = ''
+Global $bCustomToolsCommand3_Enable = 0
+Global $sCustomToolsCommand3_DisplayName = ''
+Global $sCustomToolsCommand3_Command = ''
+Global $bCustomToolsCommand4_Enable = 0
+Global $sCustomToolsCommand4_DisplayName = ''
+Global $sCustomToolsCommand4_Command = ''
+Global $bCustomToolsCommand5_Enable = 0
+Global $sCustomToolsCommand5_DisplayName = ''
+Global $sCustomToolsCommand5_Command = ''
+Global $bHelpLink1_Enable = 0
+Global $sHelpLink1_DisplayName = ''
+Global $sHelpLink1_Command = ''
+Global $bHelpLink2_Enable = 0
+Global $sHelpLink2_DisplayName = ''
+Global $sHelpLink2_Command = ''
+Global $bHelpLink3_Enable = 0
+Global $sHelpLink3_DisplayName = ''
+Global $sHelpLink3_Command = ''
+Global $bHelpLink4_Enable = 0
+Global $sHelpLink4_DisplayName = ''
+Global $sHelpLink4_Command = ''
+Global $bHelpLink5_Enable = 0
+Global $sHelpLink5_DisplayName = ''
+Global $sHelpLink5_Command = ''
+Global $bServicesService1_Enable = 0
+Global $sServicesService1_DisplayName = ''
+Global $sServicesService1_Name = ''
+Global $bServicesService2_Enable = 0
+Global $sServicesService2_DisplayName = ''
+Global $sServicesService2_Name = ''
+Global $bServicesService3_Enable = 0
+Global $sServicesService3_DisplayName = ''
+Global $sServicesService3_Name = ''
+Global $bServicesService4_Enable = 0
+Global $sServicesService4_DisplayName = ''
+Global $sServicesService4_Name = ''
+Global $bServicesService5_Enable = 0
+Global $sServicesService5_DisplayName = ''
+Global $sServicesService5_Name = ''
+Global $bContact_EnableContactForm = 0
+Global $sContactGeneral_ButtonText = ''
+Global $bContactGeneral_ShowEmployeeIDField = 0
+Global $bContactRecipient_UseHelpdeskEmail = 1
+Global $bContactRecipient_Custom = 0
+Global $sContactRecipient_Custom = ''
+Global $bContactSender_ReadFromAD = 1
+Global $bContactSender_Custom = 0
+Global $sContactSender_Custom = ''
+Global $bContactSender_EnableEmailField = 0
+Global $sContactSMTP_Server = ''
+Global $sContactSMTP_Port = ''
+Global $bContactSMTP_EnableSSL = 0
+Global $sContactSMTP_Username = ''
+Global $sContactSMTP_Password = ''
 EndIf
 If $iOption = 'Default' Or $iOption = 'Read' Then
-If RegRead($__sAppRegistryPath, 'sOrgName')                  Then $sOrgName = RegRead($__sAppRegistryPath, 'sOrgName')
-If RegRead($__sAppRegistryPath, 'sOrgDomain')                Then $sOrgDomain = RegRead($__sAppRegistryPath, 'sOrgDomain')
-If RegRead($__sAppRegistryPath, 'sOrgFQDomain')              Then $sOrgFQDomain = RegRead($__sAppRegistryPath, 'sOrgFQDomain')
-If RegRead($__sAppRegistryPath, 'sIntranetName')             Then $sIntranetName = RegRead($__sAppRegistryPath, 'sIntranetName')
-If RegRead($__sAppRegistryPath, 'sIntranetURL')              Then $sIntranetURL = RegRead($__sAppRegistryPath, 'sIntranetURL')
-If RegRead($__sAppRegistryPath, 'sHelpdeskName')             Then $sHelpdeskName = RegRead($__sAppRegistryPath, 'sHelpdeskName')
-If RegRead($__sAppRegistryPath, 'sHelpdeskPhone')            Then $sHelpdeskPhone = RegRead($__sAppRegistryPath, 'sHelpdeskPhone')
-If RegRead($__sAppRegistryPath, 'sHelpdeskRegionalPhone')    Then $sHelpdeskRegionalPhone = RegRead($__sAppRegistryPath, 'sHelpdeskRegionalPhone')
-If RegRead($__sAppRegistryPath, 'sHelpdeskCorporatePhone')   Then $sHelpdeskCorporatePhone = RegRead($__sAppRegistryPath, 'sHelpdeskCorporatePhone')
-If RegRead($__sAppRegistryPath, 'sHelpdeskEmail')            Then $sHelpdeskEmail = RegRead($__sAppRegistryPath, 'sHelpdeskEmail')
-If RegRead($__sAppRegistryPath, 'sHelpdeskURL')              Then $sHelpdeskURL = RegRead($__sAppRegistryPath, 'sHelpdeskURL')
-If RegRead($__sAppRegistryPath, 'sHelpdeskRemoteSupportURL') Then $sHelpdeskRemoteSupportURL = RegRead($__sAppRegistryPath, 'sHelpdeskRemoteSupportURL')
-If RegRead($__sAppRegistryPath, 'sHelpdeskRequestName')      Then $sHelpdeskRequestName = RegRead($__sAppRegistryPath, 'sHelpdeskRequestName')
-If RegRead($__sAppRegistryPath, 'sSCCMAppCatalogURL')        Then $sSCCMAppCatalogURL = RegRead($__sAppRegistryPath, 'sSCCMAppCatalogURL')
-If RegRead($__sAppRegistryPath, 'sHomeFolderName')           Then $sHomeFolderName = RegRead($__sAppRegistryPath, 'sHomeFolderName')
-If RegRead($__sAppRegistryPath, 'sLoginScriptPath')          Then $sLoginScriptPath = RegRead($__sAppRegistryPath, 'sLoginScriptPath')
-Global $sFreeTextDetails = ''
-If RegRead($__sAppRegistryPath, 'sFreeTextDetails')          Then $sFreeTextDetails = RegRead($__sAppRegistryPath, 'sFreeTextDetails')
+If RegRead($__sAppRegistryPath, 'bMainGeneral_StartAtLogin')                 Then $bMainGeneral_StartAtLogin                 = RegRead($__sAppRegistryPath, 'bMainGeneral_StartAtLogin')
+If RegRead($__sAppRegistryPath, 'bMainGeneral_DisableExit')                  Then $bMainGeneral_DisableExit                  = RegRead($__sAppRegistryPath, 'bMainGeneral_DisableExit')
+If RegRead($__sAppRegistryPath, 'iMainTray_Icon')                            Then $iMainTray_Icon                            = RegRead($__sAppRegistryPath, 'iMainTray_Icon')
+If RegRead($__sAppRegistryPath, 'bMainAssetTag_ShowAssetTag')                Then $bMainAssetTag_ShowAssetTag                = RegRead($__sAppRegistryPath, 'bMainAssetTag_ShowAssetTag')
+If RegRead($__sAppRegistryPath, 'bMainAssetTag_ReadFromBIOS')                Then $bMainAssetTag_ReadFromBIOS                = RegRead($__sAppRegistryPath, 'bMainAssetTag_ReadFromBIOS')
+If RegRead($__sAppRegistryPath, 'bMainAssetTag_Custom')                      Then $bMainAssetTag_Custom                      = RegRead($__sAppRegistryPath, 'bMainAssetTag_Custom')
+If RegRead($__sAppRegistryPath, 'sMainAssetTag_Custom')                      Then $sMainAssetTag_Custom                      = RegRead($__sAppRegistryPath, 'sMainAssetTag_Custom')
+If RegRead($__sAppRegistryPath, 'bMainCustomDetails_ShowCustomDetails')      Then $bMainCustomDetails_ShowCustomDetails      = RegRead($__sAppRegistryPath, 'bMainCustomDetails_ShowCustomDetails')
+If RegRead($__sAppRegistryPath, 'sMainCustomDetails_FreeText')               Then $sMainCustomDetails_FreeText               = RegRead($__sAppRegistryPath, 'sMainCustomDetails_FreeText')
+If RegRead($__sAppRegistryPath, 'bMainHelpdesk_ShowHelpdesk')                Then $bMainHelpdesk_ShowHelpdesk                = RegRead($__sAppRegistryPath, 'bMainHelpdesk_ShowHelpdesk')
+If RegRead($__sAppRegistryPath, 'sMainHelpdesk_Title')                       Then $sMainHelpdesk_Title                       = RegRead($__sAppRegistryPath, 'sMainHelpdesk_Title')
+If RegRead($__sAppRegistryPath, 'bMainHelpdesk_ShowEmail')                   Then $bMainHelpdesk_ShowEmail                   = RegRead($__sAppRegistryPath, 'bMainHelpdesk_ShowEmail')
+If RegRead($__sAppRegistryPath, 'sMainHelpdesk_EmailTitle')                  Then $sMainHelpdesk_EmailTitle                  = RegRead($__sAppRegistryPath, 'sMainHelpdesk_EmailTitle')
+If RegRead($__sAppRegistryPath, 'sMainHelpdesk_EmailAddress')                Then $sMainHelpdesk_EmailAddress                = RegRead($__sAppRegistryPath, 'sMainHelpdesk_EmailAddress')
+If RegRead($__sAppRegistryPath, 'bMainHelpdesk_ShowPhone')                   Then $bMainHelpdesk_ShowPhone                   = RegRead($__sAppRegistryPath, 'bMainHelpdesk_ShowPhone')
+If RegRead($__sAppRegistryPath, 'sMainHelpdesk_PhoneTitle')                  Then $sMainHelpdesk_PhoneTitle                  = RegRead($__sAppRegistryPath, 'sMainHelpdesk_PhoneTitle')
+If RegRead($__sAppRegistryPath, 'sMainHelpdesk_PhoneNumber')                 Then $sMainHelpdesk_PhoneNumber                 = RegRead($__sAppRegistryPath, 'sMainHelpdesk_PhoneNumber')
+If RegRead($__sAppRegistryPath, 'bMainHelpdesk_ShowWebsite')                 Then $bMainHelpdesk_ShowWebsite                 = RegRead($__sAppRegistryPath, 'bMainHelpdesk_ShowWebsite')
+If RegRead($__sAppRegistryPath, 'sMainHelpdesk_WebsiteTitle')                Then $sMainHelpdesk_WebsiteTitle                = RegRead($__sAppRegistryPath, 'sMainHelpdesk_WebsiteTitle')
+If RegRead($__sAppRegistryPath, 'sMainHelpdesk_WebsiteAddress')              Then $sMainHelpdesk_WebsiteAddress              = RegRead($__sAppRegistryPath, 'sMainHelpdesk_WebsiteAddress')
+If RegRead($__sAppRegistryPath, 'bMainHelpdesk_ShowAlternate')               Then $bMainHelpdesk_ShowAlternate               = RegRead($__sAppRegistryPath, 'bMainHelpdesk_ShowAlternate')
+If RegRead($__sAppRegistryPath, 'sMainHelpdesk_AlternateTitle')              Then $sMainHelpdesk_AlternateTitle              = RegRead($__sAppRegistryPath, 'sMainHelpdesk_AlternateTitle')
+If RegRead($__sAppRegistryPath, 'sMainHelpdesk_AlternateAddress')            Then $sMainHelpdesk_AlternateAddress            = RegRead($__sAppRegistryPath, 'sMainHelpdesk_AlternateAddress')
+If RegRead($__sAppRegistryPath, 'bMainLCM_ShowLCMInfo')                      Then $bMainLCM_ShowLCMInfo                      = RegRead($__sAppRegistryPath, 'bMainLCM_ShowLCMInfo')
+If RegRead($__sAppRegistryPath, 'bMainLCM_ReadFromFileSystem')               Then $bMainLCM_ReadFromFileSystem               = RegRead($__sAppRegistryPath, 'bMainLCM_ReadFromFileSystem')
+If RegRead($__sAppRegistryPath, 'bMainLCM_CustomXJCode')                     Then $bMainLCM_CustomXJCode                     = RegRead($__sAppRegistryPath, 'bMainLCM_CustomXJCode')
+If RegRead($__sAppRegistryPath, 'sMainLCM_CustomXJCode')                     Then $sMainLCM_CustomXJCode                     = RegRead($__sAppRegistryPath, 'sMainLCM_CustomXJCode')
+If RegRead($__sAppRegistryPath, 'bMainLCM_CustomRCRCode')                    Then $bMainLCM_CustomRCRCode                    = RegRead($__sAppRegistryPath, 'bMainLCM_CustomRCRCode')
+If RegRead($__sAppRegistryPath, 'sMainLCM_CustomRCRCode')                    Then $sMainLCM_CustomRCRCode                    = RegRead($__sAppRegistryPath, 'sMainLCM_CustomRCRCode')
+If RegRead($__sAppRegistryPath, 'bTools_EnableToolsMenu')                    Then $bTools_EnableToolsMenu                    = RegRead($__sAppRegistryPath, 'bTools_EnableToolsMenu')
+If RegRead($__sAppRegistryPath, 'bToolsGeneral_CredentialManager')           Then $bToolsGeneral_CredentialManager           = RegRead($__sAppRegistryPath, 'bToolsGeneral_CredentialManager')
+If RegRead($__sAppRegistryPath, 'bToolsGeneral_DeviceManager')               Then $bToolsGeneral_DeviceManager               = RegRead($__sAppRegistryPath, 'bToolsGeneral_DeviceManager')
+If RegRead($__sAppRegistryPath, 'bToolsGeneral_DevicesAndPrinters')          Then $bToolsGeneral_DevicesAndPrinters          = RegRead($__sAppRegistryPath, 'bToolsGeneral_DevicesAndPrinters')
+If RegRead($__sAppRegistryPath, 'bToolsGeneral_InternetOptions')             Then $bToolsGeneral_InternetOptions             = RegRead($__sAppRegistryPath, 'bToolsGeneral_InternetOptions')
+If RegRead($__sAppRegistryPath, 'bToolsGeneral_MailAccounts')                Then $bToolsGeneral_MailAccounts                = RegRead($__sAppRegistryPath, 'bToolsGeneral_MailAccounts')
+If RegRead($__sAppRegistryPath, 'bToolsGeneral_NetworkConnections')          Then $bToolsGeneral_NetworkConnections          = RegRead($__sAppRegistryPath, 'bToolsGeneral_NetworkConnections')
+If RegRead($__sAppRegistryPath, 'bToolsGeneral_PrintManagement')             Then $bToolsGeneral_PrintManagement             = RegRead($__sAppRegistryPath, 'bToolsGeneral_PrintManagement')
+If RegRead($__sAppRegistryPath, 'bToolsGeneral_ProgramsAndFeatures')         Then $bToolsGeneral_ProgramsAndFeatures         = RegRead($__sAppRegistryPath, 'bToolsGeneral_ProgramsAndFeatures')
+If RegRead($__sAppRegistryPath, 'bToolsGeneral_SearchDirectory')             Then $bToolsGeneral_SearchDirectory             = RegRead($__sAppRegistryPath, 'bToolsGeneral_SearchDirectory')
+If RegRead($__sAppRegistryPath, 'bToolsGeneral_Services')                    Then $bToolsGeneral_Services                    = RegRead($__sAppRegistryPath, 'bToolsGeneral_Services')
+If RegRead($__sAppRegistryPath, 'bToolsGeneral_SystemProperties')            Then $bToolsGeneral_SystemProperties            = RegRead($__sAppRegistryPath, 'bToolsGeneral_SystemProperties')
+If RegRead($__sAppRegistryPath, 'bToolsGeneral_WindowsUpdate')               Then $bToolsGeneral_WindowsUpdate               = RegRead($__sAppRegistryPath, 'bToolsGeneral_WindowsUpdate')
+If RegRead($__sAppRegistryPath, 'bToolsHomeDrive_ShowHomeDrive')             Then $bToolsHomeDrive_ShowHomeDrive             = RegRead($__sAppRegistryPath, 'bToolsHomeDrive_ShowHomeDrive')
+If RegRead($__sAppRegistryPath, 'sToolsHomeDrive_Title')                     Then $sToolsHomeDrive_Title                     = RegRead($__sAppRegistryPath, 'sToolsHomeDrive_Title')
+If RegRead($__sAppRegistryPath, 'bToolsHomeDrive_ReadFromActiveDirectory')   Then $bToolsHomeDrive_ReadFromActiveDirectory   = RegRead($__sAppRegistryPath, 'bToolsHomeDrive_ReadFromActiveDirectory')
+If RegRead($__sAppRegistryPath, 'bToolsHomeDrive_MapDrive')                  Then $bToolsHomeDrive_MapDrive                  = RegRead($__sAppRegistryPath, 'bToolsHomeDrive_MapDrive')
+If RegRead($__sAppRegistryPath, 'sToolsHomeDrive_MapDrivePath')              Then $sToolsHomeDrive_MapDrivePath              = RegRead($__sAppRegistryPath, 'sToolsHomeDrive_MapDrivePath')
+If RegRead($__sAppRegistryPath, 'sToolsHomeDrive_DriveLetter')               Then $sToolsHomeDrive_DriveLetter               = RegRead($__sAppRegistryPath, 'sToolsHomeDrive_DriveLetter')
+If RegRead($__sAppRegistryPath, 'bToolsHomeDrive_Custom')                    Then $bToolsHomeDrive_Custom                    = RegRead($__sAppRegistryPath, 'bToolsHomeDrive_Custom')
+If RegRead($__sAppRegistryPath, 'sToolsHomeDrive_CustomName')                Then $sToolsHomeDrive_CustomName                = RegRead($__sAppRegistryPath, 'sToolsHomeDrive_CustomName')
+If RegRead($__sAppRegistryPath, 'sToolsHomeDrive_CustomPath')                Then $sToolsHomeDrive_CustomPath                = RegRead($__sAppRegistryPath, 'sToolsHomeDrive_CustomPath')
+If RegRead($__sAppRegistryPath, 'bToolsLoginScript_ShowLoginScript')         Then $bToolsLoginScript_ShowLoginScript         = RegRead($__sAppRegistryPath, 'bToolsLoginScript_ShowLoginScript')
+If RegRead($__sAppRegistryPath, 'bToolsLoginScript_ReadFromActiveDirectory') Then $bToolsLoginScript_ReadFromActiveDirectory = RegRead($__sAppRegistryPath, 'bToolsLoginScript_ReadFromActiveDirectory')
+If RegRead($__sAppRegistryPath, 'bToolsLoginScript_Custom')                  Then $bToolsLoginScript_Custom                  = RegRead($__sAppRegistryPath, 'bToolsLoginScript_Custom')
+If RegRead($__sAppRegistryPath, 'sToolsLoginScript_Custom')                  Then $sToolsLoginScript_Custom                  = RegRead($__sAppRegistryPath, 'sToolsLoginScript_Custom')
+If RegRead($__sAppRegistryPath, 'bCustomToolsCommand1_Enable')               Then $bCustomToolsCommand1_Enable               = RegRead($__sAppRegistryPath, 'bCustomToolsCommand1_Enable')
+If RegRead($__sAppRegistryPath, 'sCustomToolsCommand1_DisplayName')          Then $sCustomToolsCommand1_DisplayName          = RegRead($__sAppRegistryPath, 'sCustomToolsCommand1_DisplayName')
+If RegRead($__sAppRegistryPath, 'sCustomToolsCommand1_Command')              Then $sCustomToolsCommand1_Command              = RegRead($__sAppRegistryPath, 'sCustomToolsCommand1_Command')
+If RegRead($__sAppRegistryPath, 'bCustomToolsCommand2_Enable')               Then $bCustomToolsCommand2_Enable               = RegRead($__sAppRegistryPath, 'bCustomToolsCommand2_Enable')
+If RegRead($__sAppRegistryPath, 'sCustomToolsCommand2_DisplayName')          Then $sCustomToolsCommand2_DisplayName          = RegRead($__sAppRegistryPath, 'sCustomToolsCommand2_DisplayName')
+If RegRead($__sAppRegistryPath, 'sCustomToolsCommand2_Command')              Then $sCustomToolsCommand2_Command              = RegRead($__sAppRegistryPath, 'sCustomToolsCommand2_Command')
+If RegRead($__sAppRegistryPath, 'bCustomToolsCommand3_Enable')               Then $bCustomToolsCommand3_Enable               = RegRead($__sAppRegistryPath, 'bCustomToolsCommand3_Enable')
+If RegRead($__sAppRegistryPath, 'sCustomToolsCommand3_DisplayName')          Then $sCustomToolsCommand3_DisplayName          = RegRead($__sAppRegistryPath, 'sCustomToolsCommand3_DisplayName')
+If RegRead($__sAppRegistryPath, 'sCustomToolsCommand3_Command')              Then $sCustomToolsCommand3_Command              = RegRead($__sAppRegistryPath, 'sCustomToolsCommand3_Command')
+If RegRead($__sAppRegistryPath, 'bCustomToolsCommand4_Enable')               Then $bCustomToolsCommand4_Enable               = RegRead($__sAppRegistryPath, 'bCustomToolsCommand4_Enable')
+If RegRead($__sAppRegistryPath, 'sCustomToolsCommand4_DisplayName')          Then $sCustomToolsCommand4_DisplayName          = RegRead($__sAppRegistryPath, 'sCustomToolsCommand4_DisplayName')
+If RegRead($__sAppRegistryPath, 'sCustomToolsCommand4_Command')              Then $sCustomToolsCommand4_Command              = RegRead($__sAppRegistryPath, 'sCustomToolsCommand4_Command')
+If RegRead($__sAppRegistryPath, 'bCustomToolsCommand5_Enable')               Then $bCustomToolsCommand5_Enable               = RegRead($__sAppRegistryPath, 'bCustomToolsCommand5_Enable')
+If RegRead($__sAppRegistryPath, 'sCustomToolsCommand5_DisplayName')          Then $sCustomToolsCommand5_DisplayName          = RegRead($__sAppRegistryPath, 'sCustomToolsCommand5_DisplayName')
+If RegRead($__sAppRegistryPath, 'sCustomToolsCommand5_Command')              Then $sCustomToolsCommand5_Command              = RegRead($__sAppRegistryPath, 'sCustomToolsCommand5_Command')
+If RegRead($__sAppRegistryPath, 'bHelpLink1_Enable')                         Then $bHelpLink1_Enable                         = RegRead($__sAppRegistryPath, 'bHelpLink1_Enable')
+If RegRead($__sAppRegistryPath, 'sHelpLink1_DisplayName')                    Then $sHelpLink1_DisplayName                    = RegRead($__sAppRegistryPath, 'sHelpLink1_DisplayName')
+If RegRead($__sAppRegistryPath, 'sHelpLink1_Command')                        Then $sHelpLink1_Command                        = RegRead($__sAppRegistryPath, 'sHelpLink1_Command')
+If RegRead($__sAppRegistryPath, 'bHelpLink2_Enable')                         Then $bHelpLink2_Enable                         = RegRead($__sAppRegistryPath, 'bHelpLink2_Enable')
+If RegRead($__sAppRegistryPath, 'sHelpLink2_DisplayName')                    Then $sHelpLink2_DisplayName                    = RegRead($__sAppRegistryPath, 'sHelpLink2_DisplayName')
+If RegRead($__sAppRegistryPath, 'sHelpLink2_Command')                        Then $sHelpLink2_Command                        = RegRead($__sAppRegistryPath, 'sHelpLink2_Command')
+If RegRead($__sAppRegistryPath, 'bHelpLink3_Enable')                         Then $bHelpLink3_Enable                         = RegRead($__sAppRegistryPath, 'bHelpLink3_Enable')
+If RegRead($__sAppRegistryPath, 'sHelpLink3_DisplayName')                    Then $sHelpLink3_DisplayName                    = RegRead($__sAppRegistryPath, 'sHelpLink3_DisplayName')
+If RegRead($__sAppRegistryPath, 'sHelpLink3_Command')                        Then $sHelpLink3_Command                        = RegRead($__sAppRegistryPath, 'sHelpLink3_Command')
+If RegRead($__sAppRegistryPath, 'bHelpLink4_Enable')                         Then $bHelpLink4_Enable                         = RegRead($__sAppRegistryPath, 'bHelpLink4_Enable')
+If RegRead($__sAppRegistryPath, 'sHelpLink4_DisplayName')                    Then $sHelpLink4_DisplayName                    = RegRead($__sAppRegistryPath, 'sHelpLink4_DisplayName')
+If RegRead($__sAppRegistryPath, 'sHelpLink4_Command')                        Then $sHelpLink4_Command                        = RegRead($__sAppRegistryPath, 'sHelpLink4_Command')
+If RegRead($__sAppRegistryPath, 'bHelpLink5_Enable')                         Then $bHelpLink5_Enable                         = RegRead($__sAppRegistryPath, 'bHelpLink5_Enable')
+If RegRead($__sAppRegistryPath, 'sHelpLink5_DisplayName')                    Then $sHelpLink5_DisplayName                    = RegRead($__sAppRegistryPath, 'sHelpLink5_DisplayName')
+If RegRead($__sAppRegistryPath, 'sHelpLink5_Command')                        Then $sHelpLink5_Command                        = RegRead($__sAppRegistryPath, 'sHelpLink5_Command')
+If RegRead($__sAppRegistryPath, 'bServicesService1_Enable')                  Then $bServicesService1_Enable                  = RegRead($__sAppRegistryPath, 'bServicesService1_Enable')
+If RegRead($__sAppRegistryPath, 'sServicesService1_DisplayName')             Then $sServicesService1_DisplayName             = RegRead($__sAppRegistryPath, 'sServicesService1_DisplayName')
+If RegRead($__sAppRegistryPath, 'sServicesService1_Name')                    Then $sServicesService1_Name                    = RegRead($__sAppRegistryPath, 'sServicesService1_Name')
+If RegRead($__sAppRegistryPath, 'bServicesService2_Enable')                  Then $bServicesService2_Enable                  = RegRead($__sAppRegistryPath, 'bServicesService2_Enable')
+If RegRead($__sAppRegistryPath, 'sServicesService2_DisplayName')             Then $sServicesService2_DisplayName             = RegRead($__sAppRegistryPath, 'sServicesService2_DisplayName')
+If RegRead($__sAppRegistryPath, 'sServicesService2_Name')                    Then $sServicesService2_Name                    = RegRead($__sAppRegistryPath, 'sServicesService2_Name')
+If RegRead($__sAppRegistryPath, 'bServicesService3_Enable')                  Then $bServicesService3_Enable                  = RegRead($__sAppRegistryPath, 'bServicesService3_Enable')
+If RegRead($__sAppRegistryPath, 'sServicesService3_DisplayName')             Then $sServicesService3_DisplayName             = RegRead($__sAppRegistryPath, 'sServicesService3_DisplayName')
+If RegRead($__sAppRegistryPath, 'sServicesService3_Name')                    Then $sServicesService3_Name                    = RegRead($__sAppRegistryPath, 'sServicesService3_Name')
+If RegRead($__sAppRegistryPath, 'bServicesService4_Enable')                  Then $bServicesService4_Enable                  = RegRead($__sAppRegistryPath, 'bServicesService4_Enable')
+If RegRead($__sAppRegistryPath, 'sServicesService4_DisplayName')             Then $sServicesService4_DisplayName             = RegRead($__sAppRegistryPath, 'sServicesService4_DisplayName')
+If RegRead($__sAppRegistryPath, 'sServicesService4_Name')                    Then $sServicesService4_Name                    = RegRead($__sAppRegistryPath, 'sServicesService4_Name')
+If RegRead($__sAppRegistryPath, 'bServicesService5_Enable')                  Then $bServicesService5_Enable                  = RegRead($__sAppRegistryPath, 'bServicesService5_Enable')
+If RegRead($__sAppRegistryPath, 'sServicesService5_DisplayName')             Then $sServicesService5_DisplayName             = RegRead($__sAppRegistryPath, 'sServicesService5_DisplayName')
+If RegRead($__sAppRegistryPath, 'sServicesService5_Name')                    Then $sServicesService5_Name                    = RegRead($__sAppRegistryPath, 'sServicesService5_Name')
+If RegRead($__sAppRegistryPath, 'bContact_EnableContactForm')                Then $bContact_EnableContactForm                = RegRead($__sAppRegistryPath, 'bContact_EnableContactForm')
+If RegRead($__sAppRegistryPath, 'sContactGeneral_ButtonText')                Then $sContactGeneral_ButtonText                = RegRead($__sAppRegistryPath, 'sContactGeneral_ButtonText')
+If RegRead($__sAppRegistryPath, 'bContactGeneral_ShowEmployeeIDField')       Then $bContactGeneral_ShowEmployeeIDField       = RegRead($__sAppRegistryPath, 'bContactGeneral_ShowEmployeeIDField')
+If RegRead($__sAppRegistryPath, 'bContactRecipient_UseHelpdeskEmail')        Then $bContactRecipient_UseHelpdeskEmail        = RegRead($__sAppRegistryPath, 'bContactRecipient_UseHelpdeskEmail')
+If RegRead($__sAppRegistryPath, 'bContactRecipient_Custom')                  Then $bContactRecipient_Custom                  = RegRead($__sAppRegistryPath, 'bContactRecipient_Custom')
+If RegRead($__sAppRegistryPath, 'sContactRecipient_Custom')                  Then $sContactRecipient_Custom                  = RegRead($__sAppRegistryPath, 'sContactRecipient_Custom')
+If RegRead($__sAppRegistryPath, 'bContactSender_ReadFromAD')                 Then $bContactSender_ReadFromAD                 = RegRead($__sAppRegistryPath, 'bContactSender_ReadFromAD')
+If RegRead($__sAppRegistryPath, 'bContactSender_Custom')                     Then $bContactSender_Custom                     = RegRead($__sAppRegistryPath, 'bContactSender_Custom')
+If RegRead($__sAppRegistryPath, 'sContactSender_Custom')                     Then $sContactSender_Custom                     = RegRead($__sAppRegistryPath, 'sContactSender_Custom')
+If RegRead($__sAppRegistryPath, 'bContactSender_EnableEmailField')           Then $bContactSender_EnableEmailField           = RegRead($__sAppRegistryPath, 'bContactSender_EnableEmailField')
+If RegRead($__sAppRegistryPath, 'sContactSMTP_Server')                       Then $sContactSMTP_Server                       = RegRead($__sAppRegistryPath, 'sContactSMTP_Server')
+If RegRead($__sAppRegistryPath, 'sContactSMTP_Port')                         Then $sContactSMTP_Port                         = RegRead($__sAppRegistryPath, 'sContactSMTP_Port')
+If RegRead($__sAppRegistryPath, 'bContactSMTP_EnableSSL')                    Then $bContactSMTP_EnableSSL                    = RegRead($__sAppRegistryPath, 'bContactSMTP_EnableSSL')
+If RegRead($__sAppRegistryPath, 'sContactSMTP_Username')                     Then $sContactSMTP_Username                     = RegRead($__sAppRegistryPath, 'sContactSMTP_Username')
+If RegRead($__sAppRegistryPath, 'sContactSMTP_Password')                     Then $sContactSMTP_Password                     = RegRead($__sAppRegistryPath, 'sContactSMTP_Password')
 EndIf
 If $iOption = 'Stage' Then
-Local $aRegistryCustomization[17]
-$aRegistryCustomization[00] = 'sOrgName'
-$aRegistryCustomization[01] = 'sOrgDomain'
-$aRegistryCustomization[02] = 'sOrgFQDomain'
-$aRegistryCustomization[03] = 'sIntranetName'
-$aRegistryCustomization[04] = 'sIntranetURL'
-$aRegistryCustomization[05] = 'sHelpdeskName'
-$aRegistryCustomization[06] = 'sHelpdeskPhone'
-$aRegistryCustomization[07] = 'sHelpdeskRegionalPhone'
-$aRegistryCustomization[08] = 'sHelpdeskCorporatePhone'
-$aRegistryCustomization[09] = 'sHelpdeskEmail'
-$aRegistryCustomization[10] = 'sHelpdeskURL'
-$aRegistryCustomization[11] = 'sHelpdeskRemoteSupportURL'
-$aRegistryCustomization[12] = 'sHelpdeskRequestName'
-$aRegistryCustomization[13] = 'sSCCMAppCatalogURL'
-$aRegistryCustomization[14] = 'sHomeFolderName'
-$aRegistryCustomization[15] = 'sLoginScriptPath'
-$aRegistryCustomization[16] = 'sFreeTextDetails'
-For $i = 0 to UBound($aRegistryCustomization) - 1
-RegRead($__sAppRegistryPath, $aRegistryCustomization[$i])
-If @error <> 0 Then
-RegWrite($__sAppRegistryPath, $aRegistryCustomization[$i], 'REG_SZ', '')
-EndIf
-Next
+RegWrite($__sAppRegistryPath, 'bMainGeneral_StartAtLogin',                 'REG_DWORD', $bMainGeneral_StartAtLogin)
+RegWrite($__sAppRegistryPath, 'bMainGeneral_DisableExit',                  'REG_DWORD', $bMainGeneral_DisableExit)
+RegWrite($__sAppRegistryPath, 'iMainTray_Icon',                            'REG_DWORD', $iMainTray_Icon)
+RegWrite($__sAppRegistryPath, 'bMainAssetTag_ShowAssetTag',                'REG_DWORD', $bMainAssetTag_ShowAssetTag)
+RegWrite($__sAppRegistryPath, 'bMainAssetTag_ReadFromBIOS',                'REG_DWORD', $bMainAssetTag_ReadFromBIOS)
+RegWrite($__sAppRegistryPath, 'bMainAssetTag_Custom',                      'REG_DWORD', $bMainAssetTag_Custom)
+RegWrite($__sAppRegistryPath, 'sMainAssetTag_Custom',                      'REG_SZ',    $sMainAssetTag_Custom)
+RegWrite($__sAppRegistryPath, 'bMainCustomDetails_ShowCustomDetails',      'REG_DWORD', $bMainCustomDetails_ShowCustomDetails)
+RegWrite($__sAppRegistryPath, 'sMainCustomDetails_FreeText',               'REG_SZ',    $sMainCustomDetails_FreeText)
+RegWrite($__sAppRegistryPath, 'bMainLCM_ShowLCMInfo',                      'REG_DWORD', $bMainLCM_ShowLCMInfo)
+RegWrite($__sAppRegistryPath, 'bMainLCM_ReadFromFileSystem',               'REG_DWORD', $bMainLCM_ReadFromFileSystem)
+RegWrite($__sAppRegistryPath, 'bMainLCM_CustomXJCode',                     'REG_DWORD', $bMainLCM_CustomXJCode)
+RegWrite($__sAppRegistryPath, 'sMainLCM_CustomXJCode',                     'REG_SZ',    $sMainLCM_CustomXJCode)
+RegWrite($__sAppRegistryPath, 'bMainLCM_CustomRCRCode',                    'REG_DWORD', $bMainLCM_CustomRCRCode)
+RegWrite($__sAppRegistryPath, 'sMainLCM_CustomRCRCode',                    'REG_SZ',    $sMainLCM_CustomRCRCode)
+RegWrite($__sAppRegistryPath, 'bMainHelpdesk_ShowHelpdesk',                'REG_DWORD', $bMainHelpdesk_ShowHelpdesk)
+RegWrite($__sAppRegistryPath, 'sMainHelpdesk_Title',                       'REG_SZ',    $sMainHelpdesk_Title)
+RegWrite($__sAppRegistryPath, 'bMainHelpdesk_ShowEmail',                   'REG_DWORD', $bMainHelpdesk_ShowEmail)
+RegWrite($__sAppRegistryPath, 'sMainHelpdesk_EmailTitle',                  'REG_SZ',    $sMainHelpdesk_EmailTitle)
+RegWrite($__sAppRegistryPath, 'sMainHelpdesk_EmailAddress',                'REG_SZ',    $sMainHelpdesk_EmailAddress)
+RegWrite($__sAppRegistryPath, 'bMainHelpdesk_ShowPhone',                   'REG_DWORD', $bMainHelpdesk_ShowPhone)
+RegWrite($__sAppRegistryPath, 'sMainHelpdesk_PhoneTitle',                  'REG_SZ',    $sMainHelpdesk_PhoneTitle)
+RegWrite($__sAppRegistryPath, 'sMainHelpdesk_PhoneNumber',                 'REG_SZ',    $sMainHelpdesk_PhoneNumber)
+RegWrite($__sAppRegistryPath, 'bMainHelpdesk_ShowWebsite',                 'REG_DWORD', $bMainHelpdesk_ShowWebsite)
+RegWrite($__sAppRegistryPath, 'sMainHelpdesk_WebsiteTitle',                'REG_SZ',    $sMainHelpdesk_WebsiteTitle)
+RegWrite($__sAppRegistryPath, 'sMainHelpdesk_WebsiteAddress',              'REG_SZ',    $sMainHelpdesk_WebsiteAddress)
+RegWrite($__sAppRegistryPath, 'bMainHelpdesk_ShowAlternate',               'REG_DWORD', $bMainHelpdesk_ShowAlternate)
+RegWrite($__sAppRegistryPath, 'sMainHelpdesk_AlternateTitle',              'REG_SZ',    $sMainHelpdesk_AlternateTitle)
+RegWrite($__sAppRegistryPath, 'sMainHelpdesk_AlternateAddress',            'REG_SZ',    $sMainHelpdesk_AlternateAddress)
+RegWrite($__sAppRegistryPath, 'bTools_EnableToolsMenu',                    'REG_DWORD', $bTools_EnableToolsMenu)
+RegWrite($__sAppRegistryPath, 'bToolsGeneral_CredentialManager',           'REG_DWORD', $bToolsGeneral_CredentialManager)
+RegWrite($__sAppRegistryPath, 'bToolsGeneral_DeviceManager',               'REG_DWORD', $bToolsGeneral_DeviceManager)
+RegWrite($__sAppRegistryPath, 'bToolsGeneral_DevicesAndPrinters',          'REG_DWORD', $bToolsGeneral_DevicesAndPrinters)
+RegWrite($__sAppRegistryPath, 'bToolsGeneral_InternetOptions',             'REG_DWORD', $bToolsGeneral_InternetOptions)
+RegWrite($__sAppRegistryPath, 'bToolsGeneral_MailAccounts',                'REG_DWORD', $bToolsGeneral_MailAccounts)
+RegWrite($__sAppRegistryPath, 'bToolsGeneral_NetworkConnections',          'REG_DWORD', $bToolsGeneral_NetworkConnections)
+RegWrite($__sAppRegistryPath, 'bToolsGeneral_PrintManagement',             'REG_DWORD', $bToolsGeneral_PrintManagement)
+RegWrite($__sAppRegistryPath, 'bToolsGeneral_ProgramsAndFeatures',         'REG_DWORD', $bToolsGeneral_ProgramsAndFeatures)
+RegWrite($__sAppRegistryPath, 'bToolsGeneral_SearchDirectory',             'REG_DWORD', $bToolsGeneral_SearchDirectory)
+RegWrite($__sAppRegistryPath, 'bToolsGeneral_Services',                    'REG_DWORD', $bToolsGeneral_Services)
+RegWrite($__sAppRegistryPath, 'bToolsGeneral_SystemProperties',            'REG_DWORD', $bToolsGeneral_SystemProperties)
+RegWrite($__sAppRegistryPath, 'bToolsGeneral_WindowsUpdate',               'REG_DWORD', $bToolsGeneral_WindowsUpdate)
+RegWrite($__sAppRegistryPath, 'bToolsHomeDrive_ShowHomeDrive',             'REG_DWORD', $bToolsHomeDrive_ShowHomeDrive)
+RegWrite($__sAppRegistryPath, 'sToolsHomeDrive_Title',                     'REG_SZ',    $sToolsHomeDrive_Title)
+RegWrite($__sAppRegistryPath, 'bToolsHomeDrive_ReadFromActiveDirectory',   'REG_DWORD', $bToolsHomeDrive_ReadFromActiveDirectory)
+RegWrite($__sAppRegistryPath, 'bToolsHomeDrive_MapDrive',                  'REG_DWORD', $bToolsHomeDrive_MapDrive)
+RegWrite($__sAppRegistryPath, 'sToolsHomeDrive_MapDrivePath',              'REG_SZ',    $sToolsHomeDrive_MapDrivePath)
+RegWrite($__sAppRegistryPath, 'sToolsHomeDrive_DriveLetter',               'REG_SZ',    $sToolsHomeDrive_DriveLetter)
+RegWrite($__sAppRegistryPath, 'bToolsHomeDrive_Custom',                    'REG_DWORD', $bToolsHomeDrive_Custom)
+RegWrite($__sAppRegistryPath, 'sToolsHomeDrive_CustomName',                'REG_SZ',    $sToolsHomeDrive_CustomName)
+RegWrite($__sAppRegistryPath, 'sToolsHomeDrive_CustomPath',                'REG_SZ',    $sToolsHomeDrive_CustomPath)
+RegWrite($__sAppRegistryPath, 'bToolsLoginScript_ShowLoginScript',         'REG_DWORD', $bToolsLoginScript_ShowLoginScript)
+RegWrite($__sAppRegistryPath, 'bToolsLoginScript_ReadFromActiveDirectory', 'REG_DWORD', $bToolsLoginScript_ReadFromActiveDirectory)
+RegWrite($__sAppRegistryPath, 'bToolsLoginScript_Custom',                  'REG_DWORD', $bToolsLoginScript_Custom)
+RegWrite($__sAppRegistryPath, 'sToolsLoginScript_Custom',                  'REG_SZ',    $sToolsLoginScript_Custom)
+RegWrite($__sAppRegistryPath, 'bCustomToolsCommand1_Enable',               'REG_DWORD', $bCustomToolsCommand1_Enable)
+RegWrite($__sAppRegistryPath, 'sCustomToolsCommand1_DisplayName',          'REG_SZ',    $sCustomToolsCommand1_DisplayName)
+RegWrite($__sAppRegistryPath, 'sCustomToolsCommand1_Command',              'REG_SZ',    $sCustomToolsCommand1_Command)
+RegWrite($__sAppRegistryPath, 'bCustomToolsCommand2_Enable',               'REG_DWORD', $bCustomToolsCommand2_Enable)
+RegWrite($__sAppRegistryPath, 'sCustomToolsCommand2_DisplayName',          'REG_SZ',    $sCustomToolsCommand2_DisplayName)
+RegWrite($__sAppRegistryPath, 'sCustomToolsCommand2_Command',              'REG_SZ',    $sCustomToolsCommand2_Command)
+RegWrite($__sAppRegistryPath, 'bCustomToolsCommand3_Enable',               'REG_DWORD', $bCustomToolsCommand3_Enable)
+RegWrite($__sAppRegistryPath, 'sCustomToolsCommand3_DisplayName',          'REG_SZ',    $sCustomToolsCommand3_DisplayName)
+RegWrite($__sAppRegistryPath, 'sCustomToolsCommand3_Command',              'REG_SZ',    $sCustomToolsCommand3_Command)
+RegWrite($__sAppRegistryPath, 'bCustomToolsCommand4_Enable',               'REG_DWORD', $bCustomToolsCommand4_Enable)
+RegWrite($__sAppRegistryPath, 'sCustomToolsCommand4_DisplayName',          'REG_SZ',    $sCustomToolsCommand4_DisplayName)
+RegWrite($__sAppRegistryPath, 'sCustomToolsCommand4_Command',              'REG_SZ',    $sCustomToolsCommand4_Command)
+RegWrite($__sAppRegistryPath, 'bCustomToolsCommand5_Enable',               'REG_DWORD', $bCustomToolsCommand5_Enable)
+RegWrite($__sAppRegistryPath, 'sCustomToolsCommand5_DisplayName',          'REG_SZ',    $sCustomToolsCommand5_DisplayName)
+RegWrite($__sAppRegistryPath, 'sCustomToolsCommand5_Command',              'REG_SZ',    $sCustomToolsCommand5_Command)
+RegWrite($__sAppRegistryPath, 'bHelpLink1_Enable',                         'REG_DWORD', $bHelpLink1_Enable)
+RegWrite($__sAppRegistryPath, 'sHelpLink1_DisplayName',                    'REG_SZ',    $sHelpLink1_DisplayName)
+RegWrite($__sAppRegistryPath, 'sHelpLink1_Command',                        'REG_SZ',    $sHelpLink1_Command)
+RegWrite($__sAppRegistryPath, 'bHelpLink2_Enable',                         'REG_DWORD', $bHelpLink2_Enable)
+RegWrite($__sAppRegistryPath, 'sHelpLink2_DisplayName',                    'REG_SZ',    $sHelpLink2_DisplayName)
+RegWrite($__sAppRegistryPath, 'sHelpLink2_Command',                        'REG_SZ',    $sHelpLink2_Command)
+RegWrite($__sAppRegistryPath, 'bHelpLink3_Enable',                         'REG_DWORD', $bHelpLink3_Enable)
+RegWrite($__sAppRegistryPath, 'sHelpLink3_DisplayName',                    'REG_SZ',    $sHelpLink3_DisplayName)
+RegWrite($__sAppRegistryPath, 'sHelpLink3_Command',                        'REG_SZ',    $sHelpLink3_Command)
+RegWrite($__sAppRegistryPath, 'bHelpLink4_Enable',                         'REG_DWORD', $bHelpLink4_Enable)
+RegWrite($__sAppRegistryPath, 'sHelpLink4_DisplayName',                    'REG_SZ',    $sHelpLink4_DisplayName)
+RegWrite($__sAppRegistryPath, 'sHelpLink4_Command',                        'REG_SZ',    $sHelpLink4_Command)
+RegWrite($__sAppRegistryPath, 'bHelpLink5_Enable',                         'REG_DWORD', $bHelpLink5_Enable)
+RegWrite($__sAppRegistryPath, 'sHelpLink5_DisplayName',                    'REG_SZ',    $sHelpLink5_DisplayName)
+RegWrite($__sAppRegistryPath, 'sHelpLink5_Command',                        'REG_SZ',    $sHelpLink5_Command)
+RegWrite($__sAppRegistryPath, 'bServicesService1_Enable',                  'REG_DWORD', $bServicesService1_Enable)
+RegWrite($__sAppRegistryPath, 'sServicesService1_DisplayName',             'REG_SZ',    $sServicesService1_DisplayName)
+RegWrite($__sAppRegistryPath, 'sServicesService1_Name',                    'REG_SZ',    $sServicesService1_Name)
+RegWrite($__sAppRegistryPath, 'bServicesService2_Enable',                  'REG_DWORD', $bServicesService2_Enable)
+RegWrite($__sAppRegistryPath, 'sServicesService2_DisplayName',             'REG_SZ',    $sServicesService2_DisplayName)
+RegWrite($__sAppRegistryPath, 'sServicesService2_Name',                    'REG_SZ',    $sServicesService2_Name)
+RegWrite($__sAppRegistryPath, 'bServicesService3_Enable',                  'REG_DWORD', $bServicesService3_Enable)
+RegWrite($__sAppRegistryPath, 'sServicesService3_DisplayName',             'REG_SZ',    $sServicesService3_DisplayName)
+RegWrite($__sAppRegistryPath, 'sServicesService3_Name',                    'REG_SZ',    $sServicesService3_Name)
+RegWrite($__sAppRegistryPath, 'bServicesService4_Enable',                  'REG_DWORD', $bServicesService4_Enable)
+RegWrite($__sAppRegistryPath, 'sServicesService4_DisplayName',             'REG_SZ',    $sServicesService4_DisplayName)
+RegWrite($__sAppRegistryPath, 'sServicesService4_Name',                    'REG_SZ',    $sServicesService4_Name)
+RegWrite($__sAppRegistryPath, 'bServicesService5_Enable',                  'REG_DWORD', $bServicesService5_Enable)
+RegWrite($__sAppRegistryPath, 'sServicesService5_DisplayName',             'REG_SZ',    $sServicesService5_DisplayName)
+RegWrite($__sAppRegistryPath, 'sServicesService5_Name',                    'REG_SZ',    $sServicesService5_Name)
+RegWrite($__sAppRegistryPath, 'bContact_EnableContactForm',                'REG_DWORD', $bContact_EnableContactForm)
+RegWrite($__sAppRegistryPath, 'sContactGeneral_ButtonText',                'REG_SZ',    $sContactGeneral_ButtonText)
+RegWrite($__sAppRegistryPath, 'bContactGeneral_ShowEmployeeIDField',       'REG_DWORD', $bContactGeneral_ShowEmployeeIDField)
+RegWrite($__sAppRegistryPath, 'bContactRecipient_UseHelpdeskEmail',        'REG_DWORD', $bContactRecipient_UseHelpdeskEmail)
+RegWrite($__sAppRegistryPath, 'bContactRecipient_Custom',                  'REG_DWORD', $bContactRecipient_Custom)
+RegWrite($__sAppRegistryPath, 'sContactRecipient_Custom',                  'REG_SZ',    $sContactRecipient_Custom)
+RegWrite($__sAppRegistryPath, 'bContactSender_ReadFromAD',                 'REG_DWORD', $bContactSender_ReadFromAD)
+RegWrite($__sAppRegistryPath, 'bContactSender_Custom',                     'REG_DWORD', $bContactSender_Custom)
+RegWrite($__sAppRegistryPath, 'sContactSender_Custom',                     'REG_SZ',    $sContactSender_Custom)
+RegWrite($__sAppRegistryPath, 'bContactSender_EnableEmailField',           'REG_DWORD', $bContactSender_EnableEmailField)
+RegWrite($__sAppRegistryPath, 'sContactSMTP_Server',                       'REG_SZ',    $sContactSMTP_Server)
+RegWrite($__sAppRegistryPath, 'sContactSMTP_Port',                         'REG_SZ',    $sContactSMTP_Port)
+RegWrite($__sAppRegistryPath, 'bContactSMTP_EnableSSL',                    'REG_DWORD', $bContactSMTP_EnableSSL)
+RegWrite($__sAppRegistryPath, 'sContactSMTP_Username',                     'REG_SZ',    $sContactSMTP_Username)
+RegWrite($__sAppRegistryPath, 'sContactSMTP_Password',                     'REG_SZ',    $sContactSMTP_Password)
 EndIf
 EndFunc
 Global Const $BS_GROUPBOX = 0x0007
@@ -4254,7 +4544,7 @@ Main()
 End()
 #Region -- STARTUP
 Func StartupCoreGlobals()
-Global $sAppOrg         = 'com.briankyncl'
+Global $sAppOrg         = 'briankyncl.com'
 Global $sAppName        = 'About This Computer'
 Global $sAppDisplayName = 'About This Computer Configurator'
 Global $sAppShortName   = 'ATC'
@@ -4295,10 +4585,10 @@ $sMainAppExeMode = 'gui'
 EndIf
 EndFunc
 Func StartupGlobals()
-Global $GUI_CHECKENABLE
-Global $GUI_UNCHECKENABLE
-Global $GUI_CHECKDISABLE
-Global $GUI_UNCHECKDISABLE
+Global $GUI_CHECKENABLE = $GUI_CHECKED + $GUI_ENABLE
+Global $GUI_UNCHECKENABLE = $GUI_UNCHECKED + $GUI_ENABLE
+Global $GUI_CHECKDISABLE = $GUI_CHECKED + $GUI_DISABLE
+Global $GUI_UNCHECKDISABLE = $GUI_UNCHECKED + $GUI_DISABLE
 Global $hGUIMain
 EndFunc
 #EndRegion
@@ -4316,6 +4606,8 @@ Case Else
 EndSwitch
 GUIDefine()
 GUIBuild()
+GUILoad('Default')
+GUIState('Ready')
 GUIWait()
 End()
 EndFunc
@@ -4325,7 +4617,7 @@ Func GUIDefine()
 Global $iGUIMainWidthDefault = 840
 Global $iGUIMainHeightDefault = 455
 Global $iGUIMainMenuBarHeight = 20
-Global $iGUIMainStatusBarHeight = 20
+Global $iGUIMainStatusBarHeight = 23
 Global $iGUIMainTabAllButtonHeight = 29
 Global $iGUIMainTabAllButtonHeightLarge = 40
 Global $iGUIMainColumnLeft00 = 0
@@ -5323,6 +5615,7 @@ Global $idMenuItemMainHelpDocumentation = GUICtrlCreateMenuItem('Documentation (
 GUICtrlCreateMenuItem('', $idMenuMainHelp, -1)
 Global $idMenuItemMainHelpAbout = GUICtrlCreateMenuItem('About', $idMenuMainHelp, -1)
 $hStatusBarMain = _GUICtrlStatusBar_Create($hGUIMain, '', '', $SBARS_SIZEGRIP)
+_GUICtrlStatusBar_SetText($hStatusBarMain, '')
 $idGraphicMainLogo = GUICtrlCreateIcon($sAppLogo, -1, $iGUIMainColumnLeft02 + 12, $iGUIMainRowLeft01, $iGUIMainColumnLeft01Width, $iGUIMainRowLeft01Height, -1, $GUI_WS_EX_PARENTDRAG)
 Global $idButtonMainLeftApply = GUICtrlCreateButton('Apply', $iGUIMainColumnLeft01, $iGUIMainRowLeft03, $iGUIMainColumnLeft02Width, $iGUIMainRowLeft03Height)
 Global $idButtonMainLeftCancel = GUICtrlCreateButton('Cancel', $iGUIMainColumnLeft01, $iGUIMainRowLeft02, $iGUIMainColumnLeft02Width, $iGUIMainRowLeft02Height)
@@ -5354,29 +5647,29 @@ Local $sCustomDetailsTestText = 'Line 1' & @CRLF & 'Line 2' & @CRLF & 'Line 3' &
 Global $idEditMainCustomDetails_FreeText = GUICtrlCreateEdit($sCustomDetailsTestText, $iGUIMainTabMainCustomDetailsColumn02 + $iGUIMainTabMainCustomDetailsColumn02Offset, $iGUIMainTabMainCustomDetailsRow06, 296, $iGUIMainTabMainCustomDetailsRow06Height, BitOR($ES_MULTILINE, $ES_WANTRETURN, $WS_VSCROLL, $ES_AUTOVSCROLL))
 Global $idCheckboxMainHelpdesk_ShowHelpdesk = GUICtrlCreateCheckbox('Show Helpdesk section', $iGUIMainTabMainHelpdeskColumn01, $iGUIMainTabMainHelpdeskRow02, $iGUIMainTabMainHelpdeskColumn01Width, $iGUIMainTabMainHelpdeskRow02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupMain_Helpdesk = GUICtrlCreateGroup('Helpdesk', $iGUIMainTabMainHelpdeskColumn01, $iGUIMainTabMainHelpdeskRow04, $iGUIMainTabMainHelpdeskColumn01Width, $iGUIMainTabMainHelpdeskRow04Height)
-GUICtrlCreateLabel('Header:', $iGUIMainTabMainHelpdeskColumn02, $iGUIMainTabMainHelpdeskRow06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabMainHelpdeskColumn02Width, $iGUIMainTabMainHelpdeskRow06Height - $iGUIMainTabAllChromeCheckboxOffset)
+GUICtrlCreateLabel('Section Header:', $iGUIMainTabMainHelpdeskColumn02, $iGUIMainTabMainHelpdeskRow06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabMainHelpdeskColumn02Width, $iGUIMainTabMainHelpdeskRow06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputMainHelpdesk_Title = GUICtrlCreateInput('', $iGUIMainTabMainHelpdeskColumn03, $iGUIMainTabMainHelpdeskRow06, $iGUIMainTabMainHelpdeskColumn03Width, $iGUIMainTabMainHelpdeskRow06Height)
-_GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_Title, $sHelpdeskName, True)
+_GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_Title, $sOrgName & ' IT Helpdesk', True)
 Global $idCheckboxMainHelpdesk_ShowEmail = GUICtrlCreateCheckbox('Show email', $iGUIMainTabMainHelpdeskColumn02, $iGUIMainTabMainHelpdeskRow08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabMainHelpdeskColumn02Width, $iGUIMainTabMainHelpdeskRow08Height - $iGUIMainTabAllChromeCheckboxOffset, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idInputMainHelpdesk_EmailTitle = GUICtrlCreateInput('', $iGUIMainTabMainHelpdeskColumn03, $iGUIMainTabMainHelpdeskRow08, $iGUIMainTabMainHelpdeskColumn03Width, $iGUIMainTabMainHelpdeskRow08Height)
 _GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_EmailTitle, 'Email', True)
 Global $idInputMainHelpdesk_EmailAddress = GUICtrlCreateInput('', $iGUIMainTabMainHelpdeskColumn03, $iGUIMainTabMainHelpdeskRow10, $iGUIMainTabMainHelpdeskColumn03Width, $iGUIMainTabMainHelpdeskRow10Height)
-_GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_EmailAddress, $sHelpdeskEmail, True)
+_GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_EmailAddress, 'helpdesk@' & $sOrgDomain, True)
 Global $idCheckboxMainHelpdesk_ShowPhone = GUICtrlCreateCheckbox('Show phone', $iGUIMainTabMainHelpdeskColumn02, $iGUIMainTabMainHelpdeskRow12 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabMainHelpdeskColumn02Width, $iGUIMainTabMainHelpdeskRow12Height - $iGUIMainTabAllChromeCheckboxOffset, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idInputMainHelpdesk_PhoneTitle = GUICtrlCreateInput('', $iGUIMainTabMainHelpdeskColumn03, $iGUIMainTabMainHelpdeskRow12, $iGUIMainTabMainHelpdeskColumn03Width, $iGUIMainTabMainHelpdeskRow12Height)
 _GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_PhoneTitle, 'Phone', True)
 Global $idInputMainHelpdesk_PhoneNumber = GUICtrlCreateInput('', $iGUIMainTabMainHelpdeskColumn03, $iGUIMainTabMainHelpdeskRow14, $iGUIMainTabMainHelpdeskColumn03Width, $iGUIMainTabMainHelpdeskRow14Height)
-_GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_PhoneNumber, $sHelpdeskPhone, True)
+_GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_PhoneNumber, '1-888-555-5555', True)
 Global $idCheckboxMainHelpdesk_ShowWebsite = GUICtrlCreateCheckbox('Show website', $iGUIMainTabMainHelpdeskColumn02, $iGUIMainTabMainHelpdeskRow16 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabMainHelpdeskColumn02Width, $iGUIMainTabMainHelpdeskRow16Height - $iGUIMainTabAllChromeCheckboxOffset, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idInputMainHelpdesk_WebsiteTitle = GUICtrlCreateInput('', $iGUIMainTabMainHelpdeskColumn03, $iGUIMainTabMainHelpdeskRow16, $iGUIMainTabMainHelpdeskColumn03Width, $iGUIMainTabMainHelpdeskRow16Height)
 _GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_WebsiteTitle, 'Website', True)
 Global $idInputMainHelpdesk_WebsiteAddress = GUICtrlCreateInput('', $iGUIMainTabMainHelpdeskColumn03, $iGUIMainTabMainHelpdeskRow18, $iGUIMainTabMainHelpdeskColumn03Width, $iGUIMainTabMainHelpdeskRow18Height)
-_GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_WebsiteAddress, $sHelpdeskURL, True)
+_GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_WebsiteAddress, 'https://helpdesk.' & $sOrgDomain & '/', True)
 Global $idCheckboxMainHelpdesk_ShowAlternate = GUICtrlCreateCheckbox('Show alternate contact information', $iGUIMainTabMainHelpdeskColumn02, $iGUIMainTabMainHelpdeskRow20 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabMainHelpdeskColumn02Width, $iGUIMainTabMainHelpdeskRow20Height - $iGUIMainTabAllChromeCheckboxOffset + $iGUIMainTabMainHelpdeskRow21Height + $iGUIMainTabMainHelpdeskRow22Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idInputMainHelpdesk_AlternateTitle = GUICtrlCreateInput('', $iGUIMainTabMainHelpdeskColumn03, $iGUIMainTabMainHelpdeskRow20, $iGUIMainTabMainHelpdeskColumn03Width, $iGUIMainTabMainHelpdeskRow20Height)
 _GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_AlternateTitle, 'Reset a Password', True)
 Global $idInputMainHelpdesk_AlternateAddress = GUICtrlCreateInput('', $iGUIMainTabMainHelpdeskColumn03, $iGUIMainTabMainHelpdeskRow22, $iGUIMainTabMainHelpdeskColumn03Width, $iGUIMainTabMainHelpdeskRow22Height)
-_GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_AlternateAddress, $sHelpdeskCorporatePhone, True)
+_GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_AlternateAddress, '1-800-555-1234', True)
 GUICtrlCreateTabItem('Tools Menu')
 Global $idCheckboxTools_EnableToolsMenu = GUICtrlCreateCheckbox('Enable Tools menu', $iGUIMainTabToolsGeneralColumn01, $iGUIMainTabToolsGeneralRow02, $iGUIMainTabToolsGeneralColumn01Width, $iGUIMainTabToolsGeneralRow02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupTools_General = GUICtrlCreateGroup('General', $iGUIMainTabToolsGeneralColumn01, $iGUIMainTabToolsGeneralRow04, $iGUIMainTabToolsGeneralColumn01Width, $iGUIMainTabToolsGeneralRow04Height)
@@ -5397,18 +5690,18 @@ Global $idGroupTools_LoginScript = GUICtrlCreateGroup('Login Script', $iGUIMainT
 Global $idRadioToolsLoginScript_ReadFromActiveDirectory = GUICtrlCreateRadio("Read user's login script from Active Directory", $iGUIMainTabToolsLoginScriptColumn02, $iGUIMainTabToolsLoginScriptRow06, $iGUIMainTabToolsLoginScriptColumn02Width + $iGUIMainTabToolsLoginScriptColumn03Width, $iGUIMainTabToolsLoginScriptRow06Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idRadioToolsLoginScript_Custom = GUICtrlCreateRadio('Path to script:', $iGUIMainTabToolsLoginScriptColumn02, $iGUIMainTabToolsLoginScriptRow08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabToolsLoginScriptColumn02Width, $iGUIMainTabToolsLoginScriptRow08Height - $iGUIMainTabAllChromeCheckboxOffset, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idInputToolsLoginScript_Custom = GUICtrlCreateInput('', $iGUIMainTabToolsLoginScriptColumn03, $iGUIMainTabToolsLoginScriptRow08, $iGUIMainTabToolsLoginScriptColumn03Width, $iGUIMainTabToolsLoginScriptRow08Height)
-_GUICtrlEdit_SetCueBanner($idInputToolsLoginScript_Custom, $sLoginScriptPath & '\login.vbs', True)
+_GUICtrlEdit_SetCueBanner($idInputToolsLoginScript_Custom, '\\' & $sOrgFQDomain & '\NETLOGON\login.vbs', True)
 Global $idCheckboxToolsHomeDrive_ShowHomeDrive = GUICtrlCreateCheckbox('Show home drive in Tools menu', $iGUIMainTabToolsHomeDriveColumn01, $iGUIMainTabToolsHomeDriveRow02, $iGUIMainTabToolsHomeDriveColumn01Width, $iGUIMainTabToolsHomeDriveRow02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupTools_HomeDrive = GUICtrlCreateGroup('Home Drive', $iGUIMainTabToolsHomeDriveColumn01, $iGUIMainTabToolsHomeDriveRow04, $iGUIMainTabToolsHomeDriveColumn01Width, $iGUIMainTabToolsHomeDriveRow04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabToolsHomeDriveColumn02, $iGUIMainTabToolsHomeDriveRow06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabToolsHomeDriveColumn02Width, $iGUIMainTabToolsHomeDriveRow06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputToolsHomeDrive_Title = GUICtrlCreateInput('', $iGUIMainTabToolsHomeDriveColumn03, $iGUIMainTabToolsHomeDriveRow06, $iGUIMainTabToolsHomeDriveColumn03Width, $iGUIMainTabToolsHomeDriveRow06Height)
-_GUICtrlEdit_SetCueBanner($idInputToolsHomeDrive_Title, 'Map Home (I:) Drive', True)
+_GUICtrlEdit_SetCueBanner($idInputToolsHomeDrive_Title, 'Map Home (Z:) Drive', True)
 Global $idRadioToolsHomeDrive_ReadFromActiveDirectory = GUICtrlCreateRadio("Read user's home drive from Active Directory", $iGUIMainTabToolsHomeDriveColumn02, $iGUIMainTabToolsHomeDriveRow08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabToolsHomeDriveColumn02Width + $iGUIMainTabToolsHomeDriveColumn03Width, $iGUIMainTabToolsHomeDriveRow08Height - $iGUIMainTabAllChromeCheckboxOffset, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idRadioToolsHomeDrive_MapDrive = GUICtrlCreateRadio('Map drive', $iGUIMainTabToolsHomeDriveColumn02, $iGUIMainTabToolsHomeDriveRow10 + $iGUIMainTabAllChromeCheckboxOffset, 68, $iGUIMainTabToolsHomeDriveRow10Height - $iGUIMainTabAllChromeCheckboxOffset, BitOR($BS_MULTILINE, $BS_TOP))
-Global $idComboToolsHomeDrive_MapDrive = GUICtrlCreateCombo('W:', $iGUIMainTabToolsHomeDriveColumn02 + 68, $iGUIMainTabToolsHomeDriveRow10, 40, $iGUIMainTabToolsHomeDriveRow10Height)
+Global $idComboToolsHomeDrive_MapDriveLetter = GUICtrlCreateCombo('W:', $iGUIMainTabToolsHomeDriveColumn02 + 68, $iGUIMainTabToolsHomeDriveRow10, 40, $iGUIMainTabToolsHomeDriveRow10Height)
 GUICtrlCreateLabel('to', $iGUIMainTabToolsHomeDriveColumn02 + 68 + 40 + 5, $iGUIMainTabToolsHomeDriveRow10 + $iGUIMainTabAllChromeCheckboxOffset, 15, $iGUIMainTabToolsHomeDriveRow10Height - $iGUIMainTabAllChromeCheckboxOffset)
-Global $idInputToolsHomeDrive_MapDrive = GUICtrlCreateInput('', $iGUIMainTabToolsHomeDriveColumn03, $iGUIMainTabToolsHomeDriveRow10, $iGUIMainTabToolsHomeDriveColumn03Width, $iGUIMainTabToolsHomeDriveRow10Height)
-_GUICtrlEdit_SetCueBanner($idInputToolsHomeDrive_MapDrive, '\\fileserver\home\%USERNAME%', True)
+Global $idInputToolsHomeDrive_MapDrivePath = GUICtrlCreateInput('', $iGUIMainTabToolsHomeDriveColumn03, $iGUIMainTabToolsHomeDriveRow10, $iGUIMainTabToolsHomeDriveColumn03Width, $iGUIMainTabToolsHomeDriveRow10Height)
+_GUICtrlEdit_SetCueBanner($idInputToolsHomeDrive_MapDrivePath, '\\fileserver\home\%USERNAME%', True)
 Global $idRadioToolsHomeDrive_Custom = GUICtrlCreateRadio('Create and open Network Places shortcut to:', $iGUIMainTabToolsHomeDriveColumn02, $iGUIMainTabToolsHomeDriveRow12 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabToolsHomeDriveColumn02Width, $iGUIMainTabToolsHomeDriveRow12Height + $iGUIMainTabToolsHomeDriveRow14Height - $iGUIMainTabAllChromeCheckboxOffset, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idInputToolsHomeDrive_CustomName = GUICtrlCreateInput('', $iGUIMainTabToolsHomeDriveColumn03, $iGUIMainTabToolsHomeDriveRow12, $iGUIMainTabToolsHomeDriveColumn03Width, $iGUIMainTabToolsHomeDriveRow12Height)
 _GUICtrlEdit_SetCueBanner($idInputToolsHomeDrive_CustomName, "%USERNAME%'s Home Folder", True)
@@ -5427,10 +5720,10 @@ Global $idCheckboxCustomToolsCommand2_Enable = GUICtrlCreateCheckbox('Show custo
 Global $idGroupCustomTools_Command2 = GUICtrlCreateGroup('Custom Tool 2', $iGUIMainTabCustomToolsCommand2Column01, $iGUIMainTabCustomToolsCommand2Row04, $iGUIMainTabCustomToolsCommand2Column01Width, $iGUIMainTabCustomToolsCommand2Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabCustomToolsCommand2Column02, $iGUIMainTabCustomToolsCommand2Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand2Column02Width, $iGUIMainTabCustomToolsCommand2Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputCustomToolsCommand2_DisplayName = GUICtrlCreateInput('', $iGUIMainTabCustomToolsCommand2Column03, $iGUIMainTabCustomToolsCommand2Row06, $iGUIMainTabCustomToolsCommand2Column03Width, $iGUIMainTabCustomToolsCommand2Row06Height)
-_GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand2_DisplayName, '', True)
+_GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand2_DisplayName, 'Close All Network Shares', True)
 GUICtrlCreateLabel('Command:', $iGUIMainTabCustomToolsCommand2Column02, $iGUIMainTabCustomToolsCommand2Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand2Column02Width, $iGUIMainTabCustomToolsCommand2Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputCustomToolsCommand2_Command = GUICtrlCreateInput('', $iGUIMainTabCustomToolsCommand2Column03, $iGUIMainTabCustomToolsCommand2Row08, $iGUIMainTabCustomToolsCommand2Column03Width, $iGUIMainTabCustomToolsCommand2Row08Height)
-_GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand2_Command, '', True)
+_GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand2_Command, 'net use /delete *', True)
 Global $idCheckboxCustomToolsCommand3_Enable = GUICtrlCreateCheckbox('Show custom tool 3 in Tools menu', $iGUIMainTabCustomToolsCommand3Column01, $iGUIMainTabCustomToolsCommand3Row02, $iGUIMainTabCustomToolsCommand3Column01Width, $iGUIMainTabCustomToolsCommand3Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupCustomTools_Command3 = GUICtrlCreateGroup('Custom Tool 3', $iGUIMainTabCustomToolsCommand3Column01, $iGUIMainTabCustomToolsCommand3Row04, $iGUIMainTabCustomToolsCommand3Column01Width, $iGUIMainTabCustomToolsCommand3Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabCustomToolsCommand3Column02, $iGUIMainTabCustomToolsCommand3Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand3Column02Width, $iGUIMainTabCustomToolsCommand3Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
@@ -5468,18 +5761,18 @@ Global $idCheckboxHelpLink2_Enable = GUICtrlCreateCheckbox('Show link 2 in Help 
 Global $idGroupHelp_Link2 = GUICtrlCreateGroup('Link 2', $iGUIMainTabHelpLink2Column01, $iGUIMainTabHelpLink2Row04, $iGUIMainTabHelpLink2Column01Width, $iGUIMainTabHelpLink2Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabHelpLink2Column02, $iGUIMainTabHelpLink2Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink2Column02Width, $iGUIMainTabHelpLink2Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputHelpLink2_DisplayName = GUICtrlCreateInput('', $iGUIMainTabHelpLink2Column03, $iGUIMainTabHelpLink2Row06, $iGUIMainTabHelpLink2Column03Width, $iGUIMainTabHelpLink2Row06Height)
-_GUICtrlEdit_SetCueBanner($idInputHelpLink2_DisplayName, $sIntranetName, True)
+_GUICtrlEdit_SetCueBanner($idInputHelpLink2_DisplayName, $sOrgName & ' Intranet', True)
 GUICtrlCreateLabel('URL:', $iGUIMainTabHelpLink2Column02, $iGUIMainTabHelpLink2Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink2Column02Width, $iGUIMainTabHelpLink2Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputHelpLink2_Command = GUICtrlCreateInput('', $iGUIMainTabHelpLink2Column03, $iGUIMainTabHelpLink2Row08, $iGUIMainTabHelpLink2Column03Width, $iGUIMainTabHelpLink2Row08Height)
-_GUICtrlEdit_SetCueBanner($idInputHelpLink2_Command, $sIntranetURL, True)
+_GUICtrlEdit_SetCueBanner($idInputHelpLink2_Command, 'https://intranet.' & $sOrgDomain & '/', True)
 Global $idCheckboxHelpLink3_Enable = GUICtrlCreateCheckbox('Show link 3 in Help menu', $iGUIMainTabHelpLink3Column01, $iGUIMainTabHelpLink3Row02, $iGUIMainTabHelpLink3Column01Width, $iGUIMainTabHelpLink3Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupHelp_Link3 = GUICtrlCreateGroup('Link 3', $iGUIMainTabHelpLink3Column01, $iGUIMainTabHelpLink3Row04, $iGUIMainTabHelpLink3Column01Width, $iGUIMainTabHelpLink3Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabHelpLink3Column02, $iGUIMainTabHelpLink3Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink3Column02Width, $iGUIMainTabHelpLink3Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputHelpLink3_DisplayName = GUICtrlCreateInput('', $iGUIMainTabHelpLink3Column03, $iGUIMainTabHelpLink3Row06, $iGUIMainTabHelpLink3Column03Width, $iGUIMainTabHelpLink3Row06Height)
-_GUICtrlEdit_SetCueBanner($idInputHelpLink3_DisplayName, $sHelpdeskName, True)
+_GUICtrlEdit_SetCueBanner($idInputHelpLink3_DisplayName, $sOrgName & ' IT Helpdesk', True)
 GUICtrlCreateLabel('URL:', $iGUIMainTabHelpLink3Column02, $iGUIMainTabHelpLink3Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink3Column02Width, $iGUIMainTabHelpLink3Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputHelpLink3_Command = GUICtrlCreateInput('', $iGUIMainTabHelpLink3Column03, $iGUIMainTabHelpLink3Row08, $iGUIMainTabHelpLink3Column03Width, $iGUIMainTabHelpLink3Row08Height)
-_GUICtrlEdit_SetCueBanner($idInputHelpLink3_Command, 'https://' & $sHelpdeskURL & '/', True)
+_GUICtrlEdit_SetCueBanner($idInputHelpLink3_Command, 'https://helpdesk.' & $sOrgDomain & '/', True)
 Global $idCheckboxHelpLink4_Enable = GUICtrlCreateCheckbox('Show link 4 in Help menu', $iGUIMainTabHelpLink4Column01, $iGUIMainTabHelpLink4Row02, $iGUIMainTabHelpLink4Column01Width, $iGUIMainTabHelpLink4Row02Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupHelp_Link4 = GUICtrlCreateGroup('Link 4', $iGUIMainTabHelpLink4Column01, $iGUIMainTabHelpLink4Row04, $iGUIMainTabHelpLink4Column01Width, $iGUIMainTabHelpLink4Row04Height)
 GUICtrlCreateLabel('Display Name:', $iGUIMainTabHelpLink4Column02, $iGUIMainTabHelpLink4Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink4Column02Width, $iGUIMainTabHelpLink4Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
@@ -5542,13 +5835,13 @@ Global $idCheckboxContact_EnableContactForm = GUICtrlCreateCheckbox('Enable help
 Global $idGroupContact_General = GUICtrlCreateGroup('General', $iGUIMainTabContactGeneralColumn01, $iGUIMainTabContactGeneralRow04, $iGUIMainTabContactGeneralColumn01Width, $iGUIMainTabContactGeneralRow04Height)
 GUICtrlCreateLabel('Button text:', $iGUIMainTabContactGeneralColumn02, $iGUIMainTabContactGeneralRow06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabContactGeneralColumn02Width, $iGUIMainTabContactGeneralRow06Height - $iGUIMainTabAllChromeCheckboxOffset)
 Global $idInputContactGeneral_ButtonText = GUICtrlCreateInput('', $iGUIMainTabContactGeneralColumn03, $iGUIMainTabContactGeneralRow06, $iGUIMainTabContactGeneralColumn03Width, $iGUIMainTabContactGeneralRow06Height)
-_GUICtrlEdit_SetCueBanner($idInputContactGeneral_ButtonText, $sHelpdeskRequestName, True)
+_GUICtrlEdit_SetCueBanner($idInputContactGeneral_ButtonText, 'Create an IT Helpdesk Request', True)
 Global $idCheckboxContactGeneral_ShowEmployeeIDField = GUICtrlCreateCheckbox('Show Employee ID field in contact form', $iGUIMainTabContactGeneralColumn02, $iGUIMainTabContactGeneralRow08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabContactGeneralColumn02Width + $iGUIMainTabContactGeneralColumn03Width, $iGUIMainTabContactGeneralRow08Height - $iGUIMainTabAllChromeCheckboxOffset, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idGroupContact_Recipient = GUICtrlCreateGroup('Recipient', $iGUIMainTabContactRecipientColumn01, $iGUIMainTabContactRecipientRow02, $iGUIMainTabContactRecipientColumn01Width, $iGUIMainTabContactRecipientRow02Height)
 Global $idRadioContactRecipient_UseHelpdeskEmail = GUICtrlCreateRadio('Read helpdesk email from About This Computer', $iGUIMainTabContactRecipientColumn02, $iGUIMainTabContactRecipientRow04, $iGUIMainTabContactRecipientColumn02Width + $iGUIMainTabContactRecipientColumn03Width, $iGUIMainTabContactRecipientRow04Height, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idRadioContactRecipient_Custom = GUICtrlCreateRadio('Custom:', $iGUIMainTabContactRecipientColumn02, $iGUIMainTabContactRecipientRow06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabContactRecipientColumn02Width, $iGUIMainTabContactRecipientRow06Height - $iGUIMainTabAllChromeCheckboxOffset, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idInputContactRecipient_Custom = GUICtrlCreateInput('', $iGUIMainTabContactRecipientColumn03, $iGUIMainTabContactRecipientRow06, $iGUIMainTabContactRecipientColumn03Width, $iGUIMainTabContactRecipientRow06Height)
-_GUICtrlEdit_SetCueBanner($idInputContactRecipient_Custom, $sHelpdeskEmail, True)
+_GUICtrlEdit_SetCueBanner($idInputContactRecipient_Custom, 'helpdesk@' & $sOrgDomain, True)
 Global $idGroupContact_Sender = GUICtrlCreateGroup('Sender', $iGUIMainTabContactSenderColumn01, $iGUIMainTabContactSenderRow02, $iGUIMainTabContactSenderColumn01Width, $iGUIMainTabContactSenderRow02Height)
 Global $idRadioContactSender_ReadFromAD = GUICtrlCreateRadio("Read user's email address from Active Directory", $iGUIMainTabContactSenderColumn02, $iGUIMainTabContactSenderRow04 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabContactSenderColumn02Width + $iGUIMainTabContactSenderColumn03Width, $iGUIMainTabContactSenderRow04Height - $iGUIMainTabAllChromeCheckboxOffset, BitOR($BS_MULTILINE, $BS_TOP))
 Global $idRadioContactSender_Custom = GUICtrlCreateRadio('Current username @', $iGUIMainTabContactSenderColumn02, $iGUIMainTabContactSenderRow06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabContactSenderColumn02Width, $iGUIMainTabContactSenderRow06Height - $iGUIMainTabAllChromeCheckboxOffset, BitOR($BS_MULTILINE, $BS_TOP))
@@ -5656,7 +5949,7 @@ $aInputsMain[08] = $idInputMainHelpdesk_AlternateTitle
 $aInputsMain[09] = $idInputMainHelpdesk_AlternateAddress
 $aInputsMain[10] = $idInputToolsLoginScript_Custom
 $aInputsMain[11] = $idInputToolsHomeDrive_Title
-$aInputsMain[12] = $idInputToolsHomeDrive_MapDrive
+$aInputsMain[12] = $idInputToolsHomeDrive_MapDrivePath
 $aInputsMain[13] = $idInputToolsHomeDrive_CustomName
 $aInputsMain[14] = $idInputToolsHomeDrive_CustomPath
 $aInputsMain[15] = $idInputCustomToolsCommand1_DisplayName
@@ -5700,13 +5993,107 @@ Global $aEditsMain[2]
 $aEditsMain[0] = $idEditMainCustomDetails_FreeText
 $aEditsMain[1] = $idInputContactTest_Result
 Global $aCombosMain[1]
-$aCombosMain[0] = $idComboToolsHomeDrive_MapDrive
+$aCombosMain[0] = $idComboToolsHomeDrive_MapDriveLetter
 Global $aStatusBarsMain[1]
 $aStatusBarsMain[0] = $hStatusBarMain
 GUISetState(@SW_SHOW)
 EndFunc
 #EndRegion
-#Region -- OPERATIONS
+#Region -- GUI OPERATIONS
+Func GUILoad($sGUILoadSource = 'Default', $sGUITabName = 'All')
+Switch $sGUILoadSource
+Case 'Default'
+_ATC_Customization('','Declare')
+Case 'Registry'
+_ATC_Customization('','Read')
+EndSwitch
+GUITabLoad($sGUITabName)
+EndFunc
+Func GUITabLoad($sGUITabName = 'All')
+Switch $sGUITabName
+Case 'General', 'All'
+ToggleGUIControl($idCheckboxMainGeneral_StartAtLogin, $bMainGeneral_StartAtLogin)
+ToggleGUIControl($idCheckboxMainGeneral_DisableExit, $bMainGeneral_DisableExit)
+Switch $iMainTray_Icon
+Case 1
+ToggleGUIControl($idRadioMainTrayIcon_First, $GUI_CHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Second, $GUI_UNCHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Third, $GUI_UNCHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Fourth, $GUI_UNCHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Fifth, $GUI_UNCHECKED)
+Case 2
+ToggleGUIControl($idRadioMainTrayIcon_First, $GUI_UNCHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Second, $GUI_CHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Third, $GUI_UNCHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Fourth, $GUI_UNCHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Fifth, $GUI_UNCHECKED)
+Case 3
+ToggleGUIControl($idRadioMainTrayIcon_First, $GUI_UNCHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Second, $GUI_UNCHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Third, $GUI_CHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Fourth, $GUI_UNCHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Fifth, $GUI_UNCHECKED)
+Case 4
+ToggleGUIControl($idRadioMainTrayIcon_First, $GUI_UNCHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Second, $GUI_UNCHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Third, $GUI_UNCHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Fourth, $GUI_CHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Fifth, $GUI_UNCHECKED)
+Case 5
+ToggleGUIControl($idRadioMainTrayIcon_First, $GUI_UNCHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Second, $GUI_UNCHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Third, $GUI_UNCHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Fourth, $GUI_UNCHECKED)
+ToggleGUIControl($idRadioMainTrayIcon_Fifth, $GUI_CHECKED)
+EndSwitch
+ToggleGUIControl($idCheckboxMainAssetTag_ShowAssetTag, $bMainAssetTag_ShowAssetTag)
+ToggleGUIControl($idRadioMainAssetTag_ReadFromBIOS, $bMainAssetTag_ReadFromBIOS)
+ToggleGUIControl($idRadioMainAssetTag_Custom, $bMainAssetTag_Custom)
+GUICtrlSetData($idInputMainAssetTag_Custom, $sMainAssetTag_Custom)
+Case 'ToolsMenu', 'All'
+Case 'CustomTools', 'All'
+Case 'HelpMenu', 'All'
+Case 'Services', 'All'
+Case 'ContactForm', 'All'
+EndSwitch
+EndFunc
+Func GUIState($sGUIDesiredState = 'Ready', $sGUITabName = 'All')
+GUITabState($sGUITabName, $sGUIDesiredState)
+EndFunc
+Func GUITabState($sGUITabName = 'All', $sGUITabDesiredState = 'Ready')
+Switch $sGUITabDesiredState
+Case 'Ready'
+Switch $sGUITabName
+Case 'General', 'All'
+ToggleGUIControl($idCheckboxMainGeneral_StartAtLogin, $GUI_ENABLE)
+ToggleGUIControl($idCheckboxMainGeneral_DisableExit, $GUI_ENABLE)
+ToggleGUIControl($idRadioMainTrayIcon_First, $GUI_ENABLE)
+ToggleGUIControl($idRadioMainTrayIcon_Second, $GUI_ENABLE)
+ToggleGUIControl($idRadioMainTrayIcon_Third, $GUI_ENABLE)
+ToggleGUIControl($idRadioMainTrayIcon_Fourth, $GUI_ENABLE)
+ToggleGUIControl($idRadioMainTrayIcon_Fifth, $GUI_ENABLE)
+ToggleGUIControl($idCheckboxMainAssetTag_ShowAssetTag, $GUI_ENABLE)
+If GUICtrlRead($idCheckboxMainAssetTag_ShowAssetTag) = $GUI_CHECKED Then
+ToggleGUIControl($idRadioMainAssetTag_ReadFromBIOS, $GUI_ENABLE)
+ToggleGUIControl($idRadioMainAssetTag_Custom, $GUI_ENABLE)
+If GUICtrlRead($idRadioMainAssetTag_Custom) = $GUI_CHECKED Then
+ToggleGUIControl($idInputMainAssetTag_Custom, $GUI_ENABLE)
+Else
+ToggleGUIControl($idInputMainAssetTag_Custom, $GUI_DISABLE)
+EndIf
+Else
+ToggleGUIControl($idRadioMainAssetTag_ReadFromBIOS, $GUI_DISABLE)
+ToggleGUIControl($idRadioMainAssetTag_Custom, $GUI_DISABLE)
+ToggleGUIControl($idInputMainAssetTag_Custom, $GUI_DISABLE)
+EndIf
+Case 'ToolsMenu', 'All'
+Case 'CustomTools', 'All'
+Case 'HelpMenu', 'All'
+Case 'Services', 'All'
+Case 'ContactForm', 'All'
+EndSwitch
+EndSwitch
+EndFunc
 Func GUIWait()
 Local $idMsg
 While 1
@@ -5819,6 +6206,8 @@ EndFunc
 #EndRegion
 #Region -- TOOLS
 Func ToggleGUIControl($idGUIControl, $Option)
+If $Option = 0 Then $Option = $GUI_UNCHECKED
+If $Option = 1 Then $Option = $GUI_CHECKED
 Switch $Option
 Case $GUI_ENABLE, $GUI_DISABLE
 If Not BitAND(GUICtrlGetState($idGUIControl), $Option) Then GUICtrlSetState($idGUIControl, $Option)

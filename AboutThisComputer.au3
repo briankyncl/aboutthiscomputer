@@ -18,7 +18,7 @@
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #COMMENTS-START
-  com.briankyncl.AboutThisComputer.au3
+  AboutThisComputer.au3
   Application for quickly displaying common computer information.
 
   Created by Brian Kyncl on 2017-11-29
@@ -91,7 +91,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     ;;DECLARE CORE GLOBALS
 
     ;;APP INFO
-    Global $sAppOrg        = 'com.briankyncl'
+    Global $sAppOrg        = 'briankyncl.com'
     Global $sAppName       = 'About This Computer'
     Global $sAppShortName  = 'ATC'
     Global $sAppDocsHost   = 'GitHub'

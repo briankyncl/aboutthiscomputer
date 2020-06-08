@@ -3,22 +3,22 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: _ATC_Customization
 ; Description ...: Declares, reads, and/or sets defaults for all About This Computer customization items.
-; Syntax ........: _ATC_Customization([$__sAppRegistryPath = ...], [$iOption = 0])
+; Syntax ........: _ATC_Customization([$__sAppRegistryPath = ...], [$iOption = 'Default'])
 ; Parameters ....: $__sAppRegistryPath - [optional] Path to registry key with values to be modified.
 ;                  $iOption            - [optional] Specify which options to perform. Default is 'Default'.
 ;                    'Default' = Perform default options ('Declare' and 'Read').
 ;                    'Declare' = Declare global vairables.
 ;                    'Read'    = Read configuration from registry.
 ;                    'Write'   = Write configuration to registry. Requires elevation.
-; Return values .: Success - 
-;                  Failure - 
+; Return values .: Success - None
+;                  Failure - None
 ; Author ........: briankyncl.com
 ; Modified ......: 2020-02-17
 ; Remarks .......: None
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func _ATC_Customization($__sAppRegistryPath = 'HKEY_LOCAL_MACHINE\Software\com.briankyncl\About This Computer', $iOption = 'Default')
+Func _ATC_Customization($__sAppRegistryPath = 'HKEY_LOCAL_MACHINE\Software\briankyncl.com\About This Computer', $iOption = 'Default')
   ;;READ AND/OR WRITE ABOUT THIS COMPUTER CUSTOMIZATION
 
   ;;Declare global customization variables
@@ -32,12 +32,17 @@ Func _ATC_Customization($__sAppRegistryPath = 'HKEY_LOCAL_MACHINE\Software\com.b
       Global $bMainGeneral_StartAtLogin = 1
       Global $bMainGeneral_DisableExit = 1
 
+      Global $iMainTray_Icon = 1
+
       Global $bMainAssetTag_ShowAssetTag = 0
-      Global $bMainAssetTag_ReadFromBIOS = 0
+      Global $bMainAssetTag_ReadFromBIOS = 1
       Global $bMainAssetTag_Custom = 0
       Global $sMainAssetTag_Custom = ''
 
       Global $bMainCustomDetails_ShowCustomDetails = 0
+      Local  $sCustomDetailsTestText = 'Line 1' & @CRLF & 'Line 2' & @CRLF & 'Line 3' & @CRLF & 'Line 4' & @CRLF & 'Line 5' & @CRLF & @CRLF & _
+                                       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.'
+      ;Global $sMainCustomDetails_FreeText = $sCustomDetailsTestText
       Global $sMainCustomDetails_FreeText = ''
 
       Global $bMainHelpdesk_ShowHelpdesk = 0
@@ -58,8 +63,8 @@ Func _ATC_Customization($__sAppRegistryPath = 'HKEY_LOCAL_MACHINE\Software\com.b
       Global $bMainLCM_ShowLCMInfo = 0
       Global $bMainLCM_ReadFromFileSystem = 1
       Global $bMainLCM_CustomXJCode = 0
-      Global $sMainLCM_CustomXJCode = 0
-      Global $bMainLCM_CustomRCRCode = ''
+      Global $sMainLCM_CustomXJCode = ''
+      Global $bMainLCM_CustomRCRCode = 0
       Global $sMainLCM_CustomRCRCode = ''
 
     ;;Tools
@@ -78,20 +83,20 @@ Func _ATC_Customization($__sAppRegistryPath = 'HKEY_LOCAL_MACHINE\Software\com.b
       Global $bToolsGeneral_SystemProperties = 1
       Global $bToolsGeneral_WindowsUpdate = 1
 
-      Global $bToolsHomeDrive_ShowHomeDrive = 0
-      Global $sToolsHomeDrive_Title = ''
-      Global $bToolsHomeDrive_ReadFromActiveDirectory = 1
-      Global $bToolsHomeDrive_MapDrive = 0
-      Global $sToolsHomeDrive_MapDrivePath = ''
-      Global $sToolsHomeDrive_DriveLetter = ''
-      Global $bToolsHomeDrive_Custom = 0
-      Global $sToolsHomeDrive_CustomName = ''
-      Global $sToolsHomeDrive_CustomPath = ''
-
       Global $bToolsLoginScript_ShowLoginScript = 0
       Global $bToolsLoginScript_ReadFromActiveDirectory = 1
       Global $bToolsLoginScript_Custom = 0
       Global $sToolsLoginScript_Custom = ''
+
+      Global $bToolsHomeDrive_ShowHomeDrive = 0
+      Global $sToolsHomeDrive_Title = ''
+      Global $bToolsHomeDrive_ReadFromActiveDirectory = 1
+      Global $bToolsHomeDrive_MapDrive = 0
+      Global $sToolsHomeDrive_DriveLetter = 'I:'
+      Global $sToolsHomeDrive_MapDrivePath = ''
+      Global $bToolsHomeDrive_Custom = 0
+      Global $sToolsHomeDrive_CustomName = ''
+      Global $sToolsHomeDrive_CustomPath = ''
 
       Global $bCustomToolsCommand1_Enable = 0
       Global $sCustomToolsCommand1_DisplayName = ''
@@ -144,7 +149,7 @@ Func _ATC_Customization($__sAppRegistryPath = 'HKEY_LOCAL_MACHINE\Software\com.b
       Global $sServicesService5_Name = ''
 
     ;;Contact Form
-      Global $bContact_EnableContactForm 0
+      Global $bContact_EnableContactForm = 0
       Global $sContactGeneral_ButtonText = ''
       Global $bContactGeneral_ShowEmployeeIDField = 0
 
@@ -168,6 +173,7 @@ Func _ATC_Customization($__sAppRegistryPath = 'HKEY_LOCAL_MACHINE\Software\com.b
   If $iOption = 'Default' Or $iOption = 'Read' Then
     If RegRead($__sAppRegistryPath, 'bMainGeneral_StartAtLogin')                 Then $bMainGeneral_StartAtLogin                 = RegRead($__sAppRegistryPath, 'bMainGeneral_StartAtLogin')
     If RegRead($__sAppRegistryPath, 'bMainGeneral_DisableExit')                  Then $bMainGeneral_DisableExit                  = RegRead($__sAppRegistryPath, 'bMainGeneral_DisableExit')
+    If RegRead($__sAppRegistryPath, 'iMainTray_Icon')                            Then $iMainTray_Icon                            = RegRead($__sAppRegistryPath, 'iMainTray_Icon')
     If RegRead($__sAppRegistryPath, 'bMainAssetTag_ShowAssetTag')                Then $bMainAssetTag_ShowAssetTag                = RegRead($__sAppRegistryPath, 'bMainAssetTag_ShowAssetTag')
     If RegRead($__sAppRegistryPath, 'bMainAssetTag_ReadFromBIOS')                Then $bMainAssetTag_ReadFromBIOS                = RegRead($__sAppRegistryPath, 'bMainAssetTag_ReadFromBIOS')
     If RegRead($__sAppRegistryPath, 'bMainAssetTag_Custom')                      Then $bMainAssetTag_Custom                      = RegRead($__sAppRegistryPath, 'bMainAssetTag_Custom')
@@ -286,6 +292,7 @@ Func _ATC_Customization($__sAppRegistryPath = 'HKEY_LOCAL_MACHINE\Software\com.b
   If $iOption = 'Stage' Then
     RegWrite($__sAppRegistryPath, 'bMainGeneral_StartAtLogin',                 'REG_DWORD', $bMainGeneral_StartAtLogin)
     RegWrite($__sAppRegistryPath, 'bMainGeneral_DisableExit',                  'REG_DWORD', $bMainGeneral_DisableExit)
+    RegWrite($__sAppRegistryPath, 'iMainTray_Icon',                            'REG_DWORD', $iMainTray_Icon)
     RegWrite($__sAppRegistryPath, 'bMainAssetTag_ShowAssetTag',                'REG_DWORD', $bMainAssetTag_ShowAssetTag)
     RegWrite($__sAppRegistryPath, 'bMainAssetTag_ReadFromBIOS',                'REG_DWORD', $bMainAssetTag_ReadFromBIOS)
     RegWrite($__sAppRegistryPath, 'bMainAssetTag_Custom',                      'REG_DWORD', $bMainAssetTag_Custom)

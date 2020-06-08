@@ -80,10 +80,28 @@
 	"buffers":
 	[
 		{
+			"file": "UDF-ATCCustomization/_ATC_Customization.au3",
+			"settings":
+			{
+				"buffer_size": 42352,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "AboutThisComputer_Configurator.au3",
 			"settings":
 			{
-				"buffer_size": 207269,
+				"buffer_size": 216672,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "AboutThisComputer.au3",
+			"settings":
+			{
+				"buffer_size": 175870,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -101,11 +119,23 @@
 		"selected_items":
 		[
 			[
-				"ali",
+				"al",
 				"AlignTab"
 			],
 			[
-				"al",
+				"align",
+				"AlignTab"
+			],
+			[
+				"a",
+				"AlignTab"
+			],
+			[
+				"te",
+				"Text Pastry: Command-Line"
+			],
+			[
+				"ali",
 				"AlignTab"
 			],
 			[
@@ -159,14 +189,16 @@
 	],
 	"file_history":
 	[
-		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/UDF-ATCCustomization/_ATC_Customization.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer.au3",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_InstallHelper.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_Configurator.au3",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/UDF-ATCCustomization/_ATC_Customization.au3",
+		"/Users/briankyncl/Downloads/WKS_Prep.au3",
+		"/Users/briankyncl/Downloads/WKS_Prep-Tools.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_Configurator_Scratch.txt",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/WKS_Prep.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/WKS_PrepSync.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_Configurator_Text.txt",
-		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_InstallHelper.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_stripped.au3",
 		"/Users/Brian/Downloads/esxi",
 		"/Users/Brian/Downloads/nginx.conf",
@@ -284,13 +316,11 @@
 		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWANT05.cfg",
 		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-sewbiorad01.cfg",
 		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWANT04.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-NWSEAFLOW02.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-WADICL.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-sewalbas01.cfg"
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-NWSEAFLOW02.cfg"
 	],
 	"find":
 	{
-		"height": 40.0
+		"height": 26.0
 	},
 	"find_in_files":
 	{
@@ -305,6 +335,52 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"custom tool 2",
+			"sMainLCM_ShowLCMInfo",
+			"sCustomLCMXJCode",
+			"sCustomLCMCRCode",
+			"$sLCMCRCode",
+			"$sLCMXJCode",
+			"code",
+			"rcr",
+			"'REG_DWORD', 1))",
+			"'b",
+			"$sLoginScriptPath",
+			"$sHomeFolderName",
+			"$sSCCMAppCatalogURL",
+			"$sHelpdeskRequestName",
+			"$sHelpdeskRemoteSupportURL",
+			"$sHelpdeskURL",
+			"$sHelpdeskEmail",
+			"$sHelpdeskCorporatePhone",
+			"sHelpdeskRegionalPhone",
+			"$sHelpdeskPhone",
+			"$sHelpdeskName",
+			"$sIntranetURL",
+			"ShellExe",
+			"$sIntranetName",
+			"Intranet",
+			"ToolsHomeDrive_DriveLetter",
+			"idInputToolsHomeDrive_MapDrive",
+			"idComboToolsHomeDrive_MapDrive",
+			"com.bri",
+			"sHelpdeskEmail",
+			"Func ProgressSetStatusBar",
+			"Ready",
+			"idStatusbarMain",
+			"status",
+			"iGUIMainMenuBarHeight",
+			"hGUIMain",
+			"statusbar",
+			"_Show1",
+			"GUICtrlCreateCheckbox",
+			"GUICtrlCreateButton",
+			"$aMainButtons",
+			"GUICtrlCreateButton",
+			"button",
+			"$aMainMenus",
+			"gather",
+			"write",
 			" in summary text",
 			"Read from",
 			" Tools menu",
@@ -386,28 +462,7 @@
 			"GUIMainTabMainAssetTag",
 			"GUIMainTabMainGeneral",
 			"group controls",
-			"Heldpesk",
-			"iGUIMainTabMainHelpdeskRow",
-			"iGUIMainTabAllChromeCheckboxExteriorSpacer",
-			".dll",
-			"icon",
-			"wrench",
-			"GUIBuild(",
-			"sAppLogo",
-			"sAppDocsHost",
-			"icon",
-			"smtp",
-			"sOrgLoginScriptPath",
-			"OrgPersonalDriveName",
-			"sOrgAppCatalogURL",
-			"sOrgHelpdesk",
-			"sOrgIntranetURL",
-			"sOrgIntranetName",
-			"sAppRegistryPath",
-			"ReadCustomization()",
-			"MainGUIWait(",
-			"BuildMainGUI(",
-			"Func ReadConfig()"
+			"Heldpesk"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -415,6 +470,31 @@
 		"regex": false,
 		"replace_history":
 		[
+			"bMainLCM_ShowLCMInfo",
+			"sMainLCM_CustomXJCode",
+			"sMainLCM_CustomRCRCode",
+			"$sMainLCM_CustomRCRCode",
+			"$sMainLCM_CustomXJCode",
+			"'REG_DWORD', 1)",
+			"$sToolsLoginScript_Custom",
+			"$sToolsHomeDrive_Title",
+			"$sCustomToolsCommand1_Command",
+			"$sContactGeneral_ButtonText",
+			"$sHelpLink1_Command",
+			"$sMainHelpdesk_WebsiteAddress",
+			"$sMainHelpdesk_EmailAddress",
+			"$sMainHelpdesk_AlternateAddress",
+			"$sMainHelpdesk_PhoneNumber",
+			"$sMainHelpdesk_Title",
+			"$sHelpLink2_Command",
+			"$sHelpLink2_DisplayName",
+			"ToolsHomeDrive_MapDriveLetter",
+			"idInputToolsHomeDrive_MapDrivePath",
+			"idComboToolsHomeDrive_DriveLetter",
+			"_Enable",
+			"_Show",
+			"$aButtonsMain",
+			"$aMenusMain",
 			" status in summary text",
 			" in Tools menu",
 			"in Tools menu",
@@ -511,54 +591,24 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "AboutThisComputer_Configurator.au3",
+					"file": "UDF-ATCCustomization/_ATC_Customization.au3",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 207269,
+						"buffer_size": 42352,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6498,
-								6498
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/AutoItScript/AutoIt.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2739.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 0,
-					"file": "AboutThisComputer_Configurator.au3",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 207269,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								135713,
-								135713
+								2822,
+								2822
 							]
 						],
 						"settings":
@@ -575,20 +625,51 @@
 					"type": "text"
 				},
 				{
-					"buffer": 0,
+					"buffer": 1,
 					"file": "AboutThisComputer_Configurator.au3",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 207269,
+						"buffer_size": 216672,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5988,
-								5988
+								207852,
+								207852
+							]
+						],
+						"settings":
+						{
+							"spell_check": false,
+							"syntax": "Packages/AutoItScript/AutoIt.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1666.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "AboutThisComputer.au3",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 175870,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4954,
+								4958
 							]
 						],
 						"settings":
@@ -684,7 +765,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 290.0,
+	"side_bar_width": 329.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

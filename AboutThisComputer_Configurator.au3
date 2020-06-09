@@ -1755,7 +1755,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       Global $idTabMain = GUICtrlCreateTab($iGUIMainColumnRight01, $iGUIMainRowRight01, $iGUIMainColumnRight01Width, $iGUIMainRowRight01Height)
 
       ;;TAB MAIN
-        GUICtrlCreateTabItem('Main')
+        $idTabMain = GUICtrlCreateTabItem('Main')
 
         ;;GROUP GENERAL
           Global $idGroupMain_General = GUICtrlCreateGroup('General', _
@@ -1892,7 +1892,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             _GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_AlternateAddress, '1-800-555-1234', True)
 
       ;;TAB TOOLS MENU
-        GUICtrlCreateTabItem('Tools Menu')
+        $idTabToolsMenu = GUICtrlCreateTabItem('Tools Menu')
 
         ;;GROUP GENERAL
           Global $idCheckboxTools_EnableToolsMenu = GUICtrlCreateCheckbox('Enable Tools menu', _
@@ -2001,7 +2001,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             _GUICtrlEdit_SetCueBanner($idInputToolsHomeDrive_CustomPath, '\\fileserver\home\%USERNAME%', True)
 
       ;;TAB CUSTOM TOOL MENU
-        GUICtrlCreateTabItem('Custom Tools')
+        $idTabCustomTools = GUICtrlCreateTabItem('Custom Tools')
 
         ;;GROUP CUSTOM TOOL 1
           Global $idCheckboxCustomToolsCommand1_Enable = GUICtrlCreateCheckbox('Show custom tool 1 in Tools menu', _
@@ -2011,13 +2011,13 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idGroupCustomTools_Command1 = GUICtrlCreateGroup('Custom Tool 1', _
             $iGUIMainTabCustomToolsCommand1Column01, $iGUIMainTabCustomToolsCommand1Row04, $iGUIMainTabCustomToolsCommand1Column01Width, $iGUIMainTabCustomToolsCommand1Row04Height)
 
-          GUICtrlCreateLabel('Display Name:', _
+          Global $idLabelCustomToolsCommand1_DisplayName = GUICtrlCreateLabel('Display Name:', _
             $iGUIMainTabCustomToolsCommand1Column02, $iGUIMainTabCustomToolsCommand1Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand1Column02Width, $iGUIMainTabCustomToolsCommand1Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputCustomToolsCommand1_DisplayName = GUICtrlCreateInput('', _
             $iGUIMainTabCustomToolsCommand1Column03, $iGUIMainTabCustomToolsCommand1Row06, $iGUIMainTabCustomToolsCommand1Column03Width, $iGUIMainTabCustomToolsCommand1Row06Height)
             _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand1_DisplayName, 'App Catalog', True)
 
-          GUICtrlCreateLabel('Command:', _
+          Global $idLabelCustomToolsCommand1_Command = GUICtrlCreateLabel('Command:', _
             $iGUIMainTabCustomToolsCommand1Column02, $iGUIMainTabCustomToolsCommand1Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand1Column02Width, $iGUIMainTabCustomToolsCommand1Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputCustomToolsCommand1_Command = GUICtrlCreateInput('', _
             $iGUIMainTabCustomToolsCommand1Column03, $iGUIMainTabCustomToolsCommand1Row08, $iGUIMainTabCustomToolsCommand1Column03Width, $iGUIMainTabCustomToolsCommand1Row08Height)
@@ -2031,13 +2031,13 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idGroupCustomTools_Command2 = GUICtrlCreateGroup('Custom Tool 2', _
             $iGUIMainTabCustomToolsCommand2Column01, $iGUIMainTabCustomToolsCommand2Row04, $iGUIMainTabCustomToolsCommand2Column01Width, $iGUIMainTabCustomToolsCommand2Row04Height)
 
-          GUICtrlCreateLabel('Display Name:', _
+          Global $idLabelCustomToolsCommand2_DisplayName = GUICtrlCreateLabel('Display Name:', _
             $iGUIMainTabCustomToolsCommand2Column02, $iGUIMainTabCustomToolsCommand2Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand2Column02Width, $iGUIMainTabCustomToolsCommand2Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputCustomToolsCommand2_DisplayName = GUICtrlCreateInput('', _
             $iGUIMainTabCustomToolsCommand2Column03, $iGUIMainTabCustomToolsCommand2Row06, $iGUIMainTabCustomToolsCommand2Column03Width, $iGUIMainTabCustomToolsCommand2Row06Height)
             _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand2_DisplayName, 'Close All Network Shares', True)
 
-          GUICtrlCreateLabel('Command:', _
+          Global $idLabelCustomToolsCommand2_Command = GUICtrlCreateLabel('Command:', _
             $iGUIMainTabCustomToolsCommand2Column02, $iGUIMainTabCustomToolsCommand2Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand2Column02Width, $iGUIMainTabCustomToolsCommand2Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputCustomToolsCommand2_Command = GUICtrlCreateInput('', _
             $iGUIMainTabCustomToolsCommand2Column03, $iGUIMainTabCustomToolsCommand2Row08, $iGUIMainTabCustomToolsCommand2Column03Width, $iGUIMainTabCustomToolsCommand2Row08Height)
@@ -2051,13 +2051,13 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idGroupCustomTools_Command3 = GUICtrlCreateGroup('Custom Tool 3', _
             $iGUIMainTabCustomToolsCommand3Column01, $iGUIMainTabCustomToolsCommand3Row04, $iGUIMainTabCustomToolsCommand3Column01Width, $iGUIMainTabCustomToolsCommand3Row04Height)
 
-          GUICtrlCreateLabel('Display Name:', _
+          Global $idLabelCustomToolsCommand3_DisplayName = GUICtrlCreateLabel('Display Name:', _
             $iGUIMainTabCustomToolsCommand3Column02, $iGUIMainTabCustomToolsCommand3Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand3Column02Width, $iGUIMainTabCustomToolsCommand3Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputCustomToolsCommand3_DisplayName = GUICtrlCreateInput('', _
             $iGUIMainTabCustomToolsCommand3Column03, $iGUIMainTabCustomToolsCommand3Row06, $iGUIMainTabCustomToolsCommand3Column03Width, $iGUIMainTabCustomToolsCommand3Row06Height)
             _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand3_DisplayName, '', True)
 
-          GUICtrlCreateLabel('Command:', _
+          Global $idLabelCustomToolsCommand3_Command = GUICtrlCreateLabel('Command:', _
             $iGUIMainTabCustomToolsCommand3Column02, $iGUIMainTabCustomToolsCommand3Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand3Column02Width, $iGUIMainTabCustomToolsCommand3Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputCustomToolsCommand3_Command = GUICtrlCreateInput('', _
             $iGUIMainTabCustomToolsCommand3Column03, $iGUIMainTabCustomToolsCommand3Row08, $iGUIMainTabCustomToolsCommand3Column03Width, $iGUIMainTabCustomToolsCommand3Row08Height)
@@ -2071,13 +2071,13 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idGroupCustomTools_Command4 = GUICtrlCreateGroup('Custom Tool 4', _
             $iGUIMainTabCustomToolsCommand4Column01, $iGUIMainTabCustomToolsCommand4Row04, $iGUIMainTabCustomToolsCommand4Column01Width, $iGUIMainTabCustomToolsCommand4Row04Height)
 
-          GUICtrlCreateLabel('Display Name:', _
+          Global $idLabelCustomToolsCommand4_DisplayName = GUICtrlCreateLabel('Display Name:', _
             $iGUIMainTabCustomToolsCommand4Column02, $iGUIMainTabCustomToolsCommand4Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand4Column02Width, $iGUIMainTabCustomToolsCommand4Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputCustomToolsCommand4_DisplayName = GUICtrlCreateInput('', _
             $iGUIMainTabCustomToolsCommand4Column03, $iGUIMainTabCustomToolsCommand4Row06, $iGUIMainTabCustomToolsCommand4Column03Width, $iGUIMainTabCustomToolsCommand4Row06Height)
             _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand4_DisplayName, '', True)
 
-          GUICtrlCreateLabel('Command:', _
+          Global $idLabelCustomToolsCommand4_Command = GUICtrlCreateLabel('Command:', _
             $iGUIMainTabCustomToolsCommand4Column02, $iGUIMainTabCustomToolsCommand4Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand4Column02Width, $iGUIMainTabCustomToolsCommand4Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputCustomToolsCommand4_Command = GUICtrlCreateInput('', _
             $iGUIMainTabCustomToolsCommand4Column03, $iGUIMainTabCustomToolsCommand4Row08, $iGUIMainTabCustomToolsCommand4Column03Width, $iGUIMainTabCustomToolsCommand4Row08Height)
@@ -2091,20 +2091,20 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idGroupCustomTools_Command5 = GUICtrlCreateGroup('Custom Tool 5', _
             $iGUIMainTabCustomToolsCommand5Column01, $iGUIMainTabCustomToolsCommand5Row04, $iGUIMainTabCustomToolsCommand5Column01Width, $iGUIMainTabCustomToolsCommand5Row04Height)
 
-          GUICtrlCreateLabel('Display Name:', _
+          Global $idLabelCustomToolsCommand5_DisplayName = GUICtrlCreateLabel('Display Name:', _
             $iGUIMainTabCustomToolsCommand5Column02, $iGUIMainTabCustomToolsCommand5Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand5Column02Width, $iGUIMainTabCustomToolsCommand5Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputCustomToolsCommand5_DisplayName = GUICtrlCreateInput('', _
             $iGUIMainTabCustomToolsCommand5Column03, $iGUIMainTabCustomToolsCommand5Row06, $iGUIMainTabCustomToolsCommand5Column03Width, $iGUIMainTabCustomToolsCommand5Row06Height)
             _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand5_DisplayName, '', True)
 
-          GUICtrlCreateLabel('Command:', _
+          Global $idLabelCustomToolsCommand5_Command = GUICtrlCreateLabel('Command:', _
             $iGUIMainTabCustomToolsCommand5Column02, $iGUIMainTabCustomToolsCommand5Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabCustomToolsCommand5Column02Width, $iGUIMainTabCustomToolsCommand5Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputCustomToolsCommand5_Command = GUICtrlCreateInput('', _
             $iGUIMainTabCustomToolsCommand5Column03, $iGUIMainTabCustomToolsCommand5Row08, $iGUIMainTabCustomToolsCommand5Column03Width, $iGUIMainTabCustomToolsCommand5Row08Height)
             _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand5_Command, '', True)
 
       ;;TAB HELP MENU
-        GUICtrlCreateTabItem('Help Menu')
+        $idTabHelpMenu = GUICtrlCreateTabItem('Help Menu')
 
         ;;GROUP LINK 1
           Global $idCheckboxHelpLink1_Enable = GUICtrlCreateCheckbox('Show link 1 in Help menu', _
@@ -2114,13 +2114,13 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idGroupHelp_Link1 = GUICtrlCreateGroup('Link 1', _
             $iGUIMainTabHelpLink1Column01, $iGUIMainTabHelpLink1Row04, $iGUIMainTabHelpLink1Column01Width, $iGUIMainTabHelpLink1Row04Height)
 
-          GUICtrlCreateLabel('Display Name:', _
+          Global $idLabelHelpLink1_DisplayName = GUICtrlCreateLabel('Display Name:', _
             $iGUIMainTabHelpLink1Column02, $iGUIMainTabHelpLink1Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink1Column02Width, $iGUIMainTabHelpLink1Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputHelpLink1_DisplayName = GUICtrlCreateInput('', _
             $iGUIMainTabHelpLink1Column03, $iGUIMainTabHelpLink1Row06, $iGUIMainTabHelpLink1Column03Width, $iGUIMainTabHelpLink1Row06Height)
             _GUICtrlEdit_SetCueBanner($idInputHelpLink1_DisplayName, 'LogMeIn Rescue', True)
 
-          GUICtrlCreateLabel('URL:', _
+          Global $idLabelHelpLink1_Command = GUICtrlCreateLabel('URL:', _
             $iGUIMainTabHelpLink1Column02, $iGUIMainTabHelpLink1Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink1Column02Width, $iGUIMainTabHelpLink1Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputHelpLink1_Command = GUICtrlCreateInput('', _
             $iGUIMainTabHelpLink1Column03, $iGUIMainTabHelpLink1Row08, $iGUIMainTabHelpLink1Column03Width, $iGUIMainTabHelpLink1Row08Height)
@@ -2134,13 +2134,13 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idGroupHelp_Link2 = GUICtrlCreateGroup('Link 2', _
             $iGUIMainTabHelpLink2Column01, $iGUIMainTabHelpLink2Row04, $iGUIMainTabHelpLink2Column01Width, $iGUIMainTabHelpLink2Row04Height)
 
-          GUICtrlCreateLabel('Display Name:', _
+          Global $idLabelHelpLink2_DisplayName = GUICtrlCreateLabel('Display Name:', _
             $iGUIMainTabHelpLink2Column02, $iGUIMainTabHelpLink2Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink2Column02Width, $iGUIMainTabHelpLink2Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputHelpLink2_DisplayName = GUICtrlCreateInput('', _
             $iGUIMainTabHelpLink2Column03, $iGUIMainTabHelpLink2Row06, $iGUIMainTabHelpLink2Column03Width, $iGUIMainTabHelpLink2Row06Height)
             _GUICtrlEdit_SetCueBanner($idInputHelpLink2_DisplayName, $sOrgName & ' Intranet', True)
 
-          GUICtrlCreateLabel('URL:', _
+          Global $idLabelHelpLink2_Command = GUICtrlCreateLabel('URL:', _
             $iGUIMainTabHelpLink2Column02, $iGUIMainTabHelpLink2Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink2Column02Width, $iGUIMainTabHelpLink2Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputHelpLink2_Command = GUICtrlCreateInput('', _
             $iGUIMainTabHelpLink2Column03, $iGUIMainTabHelpLink2Row08, $iGUIMainTabHelpLink2Column03Width, $iGUIMainTabHelpLink2Row08Height)
@@ -2154,13 +2154,13 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idGroupHelp_Link3 = GUICtrlCreateGroup('Link 3', _
             $iGUIMainTabHelpLink3Column01, $iGUIMainTabHelpLink3Row04, $iGUIMainTabHelpLink3Column01Width, $iGUIMainTabHelpLink3Row04Height)
 
-          GUICtrlCreateLabel('Display Name:', _
+          Global $idLabelHelpLink3_DisplayName = GUICtrlCreateLabel('Display Name:', _
             $iGUIMainTabHelpLink3Column02, $iGUIMainTabHelpLink3Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink3Column02Width, $iGUIMainTabHelpLink3Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputHelpLink3_DisplayName = GUICtrlCreateInput('', _
             $iGUIMainTabHelpLink3Column03, $iGUIMainTabHelpLink3Row06, $iGUIMainTabHelpLink3Column03Width, $iGUIMainTabHelpLink3Row06Height)
             _GUICtrlEdit_SetCueBanner($idInputHelpLink3_DisplayName, $sOrgName & ' IT Helpdesk', True)
 
-          GUICtrlCreateLabel('URL:', _
+          Global $idLabelHelpLink3_Command = GUICtrlCreateLabel('URL:', _
             $iGUIMainTabHelpLink3Column02, $iGUIMainTabHelpLink3Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink3Column02Width, $iGUIMainTabHelpLink3Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputHelpLink3_Command = GUICtrlCreateInput('', _
             $iGUIMainTabHelpLink3Column03, $iGUIMainTabHelpLink3Row08, $iGUIMainTabHelpLink3Column03Width, $iGUIMainTabHelpLink3Row08Height)
@@ -2174,13 +2174,13 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idGroupHelp_Link4 = GUICtrlCreateGroup('Link 4', _
             $iGUIMainTabHelpLink4Column01, $iGUIMainTabHelpLink4Row04, $iGUIMainTabHelpLink4Column01Width, $iGUIMainTabHelpLink4Row04Height)
 
-          GUICtrlCreateLabel('Display Name:', _
+          Global $idLabelHelpLink4_DisplayName = GUICtrlCreateLabel('Display Name:', _
             $iGUIMainTabHelpLink4Column02, $iGUIMainTabHelpLink4Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink4Column02Width, $iGUIMainTabHelpLink4Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputHelpLink4_DisplayName = GUICtrlCreateInput('', _
             $iGUIMainTabHelpLink4Column03, $iGUIMainTabHelpLink4Row06, $iGUIMainTabHelpLink4Column03Width, $iGUIMainTabHelpLink4Row06Height)
             _GUICtrlEdit_SetCueBanner($idInputHelpLink4_DisplayName, 'Password Self-Service', True)
 
-          GUICtrlCreateLabel('URL:', _
+          Global $idLabelHelpLink4_Command = GUICtrlCreateLabel('URL:', _
             $iGUIMainTabHelpLink4Column02, $iGUIMainTabHelpLink4Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink4Column02Width, $iGUIMainTabHelpLink4Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputHelpLink4_Command = GUICtrlCreateInput('', _
             $iGUIMainTabHelpLink4Column03, $iGUIMainTabHelpLink4Row08, $iGUIMainTabHelpLink4Column03Width, $iGUIMainTabHelpLink4Row08Height)
@@ -2194,20 +2194,20 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idGroupHelp_Link5 = GUICtrlCreateGroup('Link 5', _
             $iGUIMainTabHelpLink5Column01, $iGUIMainTabHelpLink5Row04, $iGUIMainTabHelpLink5Column01Width, $iGUIMainTabHelpLink5Row04Height)
 
-          GUICtrlCreateLabel('Display Name:', _
+          Global $idLabelHelpLink5_DisplayName = GUICtrlCreateLabel('Display Name:', _
             $iGUIMainTabHelpLink5Column02, $iGUIMainTabHelpLink5Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink5Column02Width, $iGUIMainTabHelpLink5Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputHelpLink5_DisplayName = GUICtrlCreateInput('', _
             $iGUIMainTabHelpLink5Column03, $iGUIMainTabHelpLink5Row06, $iGUIMainTabHelpLink5Column03Width, $iGUIMainTabHelpLink5Row06Height)
             _GUICtrlEdit_SetCueBanner($idInputHelpLink5_DisplayName, '', True)
 
-          GUICtrlCreateLabel('URL:', _
+          Global $idLabelHelpLink5_Command = GUICtrlCreateLabel('URL:', _
             $iGUIMainTabHelpLink5Column02, $iGUIMainTabHelpLink5Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabHelpLink5Column02Width, $iGUIMainTabHelpLink5Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputHelpLink5_Command = GUICtrlCreateInput('', _
             $iGUIMainTabHelpLink5Column03, $iGUIMainTabHelpLink5Row08, $iGUIMainTabHelpLink5Column03Width, $iGUIMainTabHelpLink5Row08Height)
             _GUICtrlEdit_SetCueBanner($idInputHelpLink5_Command, '', True)
 
       ;;TAB SERVICES
-        GUICtrlCreateTabItem('Services')
+        $idTabServices = GUICtrlCreateTabItem('Services')
 
         ;;GROUP SERVICE 1
           Global $idCheckboxServicesService1_Enable = GUICtrlCreateCheckbox('Show service 1 status in summary text', _
@@ -2217,13 +2217,13 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idGroupServices_Service1 = GUICtrlCreateGroup('Service 1', _
             $iGUIMainTabServicesService1Column01, $iGUIMainTabServicesService1Row04, $iGUIMainTabServicesService1Column01Width, $iGUIMainTabServicesService1Row04Height)
 
-          GUICtrlCreateLabel('Display Name:', _
+          Global $idLabelServicesService1_DisplayName = GUICtrlCreateLabel('Display Name:', _
             $iGUIMainTabServicesService1Column02, $iGUIMainTabServicesService1Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabServicesService1Column02Width, $iGUIMainTabServicesService1Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputServicesService1_DisplayName = GUICtrlCreateInput('', _
             $iGUIMainTabServicesService1Column03, $iGUIMainTabServicesService1Row06, $iGUIMainTabServicesService1Column03Width, $iGUIMainTabServicesService1Row06Height)
             _GUICtrlEdit_SetCueBanner($idInputServicesService1_DisplayName, 'Windows Update', True)
 
-          GUICtrlCreateLabel('Service Name:', _
+          Global $idLabelServicesService1_Name = GUICtrlCreateLabel('Service Name:', _
             $iGUIMainTabServicesService1Column02, $iGUIMainTabServicesService1Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabServicesService1Column02Width, $iGUIMainTabServicesService1Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputServicesService1_Name = GUICtrlCreateInput('', _
             $iGUIMainTabServicesService1Column03, $iGUIMainTabServicesService1Row08, $iGUIMainTabServicesService1Column03Width, $iGUIMainTabServicesService1Row08Height)
@@ -2237,13 +2237,13 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idGroupServices_Service2 = GUICtrlCreateGroup('Service 2', _
             $iGUIMainTabServicesService2Column01, $iGUIMainTabServicesService2Row04, $iGUIMainTabServicesService2Column01Width, $iGUIMainTabServicesService2Row04Height)
 
-          GUICtrlCreateLabel('Display Name:', _
+          Global $idLabelServicesService2_DisplayName = GUICtrlCreateLabel('Display Name:', _
             $iGUIMainTabServicesService2Column02, $iGUIMainTabServicesService2Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabServicesService2Column02Width, $iGUIMainTabServicesService2Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputServicesService2_DisplayName = GUICtrlCreateInput('', _
             $iGUIMainTabServicesService2Column03, $iGUIMainTabServicesService2Row06, $iGUIMainTabServicesService2Column03Width, $iGUIMainTabServicesService2Row06Height)
             _GUICtrlEdit_SetCueBanner($idInputServicesService2_DisplayName, 'SCCM Client (SMS Agent Host)', True)
 
-          GUICtrlCreateLabel('Service Name:', _
+          Global $idLabelServicesService2_Name = GUICtrlCreateLabel('Service Name:', _
             $iGUIMainTabServicesService2Column02, $iGUIMainTabServicesService2Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabServicesService2Column02Width, $iGUIMainTabServicesService2Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputServicesService2_Name = GUICtrlCreateInput('', _
             $iGUIMainTabServicesService2Column03, $iGUIMainTabServicesService2Row08, $iGUIMainTabServicesService2Column03Width, $iGUIMainTabServicesService2Row08Height)
@@ -2257,13 +2257,13 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idGroupServices_Service3 = GUICtrlCreateGroup('Service 3', _
             $iGUIMainTabServicesService3Column01, $iGUIMainTabServicesService3Row04, $iGUIMainTabServicesService3Column01Width, $iGUIMainTabServicesService3Row04Height)
 
-          GUICtrlCreateLabel('Display Name:', _
+          Global $idLabelServicesService3_DisplayName = GUICtrlCreateLabel('Display Name:', _
             $iGUIMainTabServicesService3Column02, $iGUIMainTabServicesService3Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabServicesService3Column02Width, $iGUIMainTabServicesService3Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputServicesService3_DisplayName = GUICtrlCreateInput('', _
             $iGUIMainTabServicesService3Column03, $iGUIMainTabServicesService3Row06, $iGUIMainTabServicesService3Column03Width, $iGUIMainTabServicesService3Row06Height)
             _GUICtrlEdit_SetCueBanner($idInputServicesService3_DisplayName, 'CrowdStrike Windows Sensor', True)
 
-          GUICtrlCreateLabel('Service Name:', _
+          Global $idLabelServicesService3_Name = GUICtrlCreateLabel('Service Name:', _
             $iGUIMainTabServicesService3Column02, $iGUIMainTabServicesService3Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabServicesService3Column02Width, $iGUIMainTabServicesService3Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputServicesService3_Name = GUICtrlCreateInput('', _
             $iGUIMainTabServicesService3Column03, $iGUIMainTabServicesService3Row08, $iGUIMainTabServicesService3Column03Width, $iGUIMainTabServicesService3Row08Height)
@@ -2277,13 +2277,13 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idGroupServices_Service4 = GUICtrlCreateGroup('Service 4', _
             $iGUIMainTabServicesService4Column01, $iGUIMainTabServicesService4Row04, $iGUIMainTabServicesService4Column01Width, $iGUIMainTabServicesService4Row04Height)
 
-          GUICtrlCreateLabel('Display Name:', _
+          Global $idLabelServicesService4_DisplayName = GUICtrlCreateLabel('Display Name:', _
             $iGUIMainTabServicesService4Column02, $iGUIMainTabServicesService4Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabServicesService4Column02Width, $iGUIMainTabServicesService4Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputServicesService4_DisplayName = GUICtrlCreateInput('', _
             $iGUIMainTabServicesService4Column03, $iGUIMainTabServicesService4Row06, $iGUIMainTabServicesService4Column03Width, $iGUIMainTabServicesService4Row06Height)
             _GUICtrlEdit_SetCueBanner($idInputServicesService4_DisplayName, 'BeyondTrust PowerBroker', True)
 
-          GUICtrlCreateLabel('Service Name:', _
+          Global $idLabelServicesService4_Name = GUICtrlCreateLabel('Service Name:', _
             $iGUIMainTabServicesService4Column02, $iGUIMainTabServicesService4Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabServicesService4Column02Width, $iGUIMainTabServicesService4Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputServicesService4_Name = GUICtrlCreateInput('', _
             $iGUIMainTabServicesService4Column03, $iGUIMainTabServicesService4Row08, $iGUIMainTabServicesService4Column03Width, $iGUIMainTabServicesService4Row08Height)
@@ -2297,20 +2297,20 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idGroupServices_Service5 = GUICtrlCreateGroup('Service 5', _
             $iGUIMainTabServicesService5Column01, $iGUIMainTabServicesService5Row04, $iGUIMainTabServicesService5Column01Width, $iGUIMainTabServicesService5Row04Height)
 
-          GUICtrlCreateLabel('Display Name:', _
+          Global $idLabelServicesService5_DisplayName = GUICtrlCreateLabel('Display Name:', _
             $iGUIMainTabServicesService5Column02, $iGUIMainTabServicesService5Row06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabServicesService5Column02Width, $iGUIMainTabServicesService5Row06Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputServicesService5_DisplayName = GUICtrlCreateInput('', _
             $iGUIMainTabServicesService5Column03, $iGUIMainTabServicesService5Row06, $iGUIMainTabServicesService5Column03Width, $iGUIMainTabServicesService5Row06Height)
             _GUICtrlEdit_SetCueBanner($idInputServicesService5_DisplayName, 'Splunk Universal Forwarder', True)
 
-          GUICtrlCreateLabel('Service Name:', _
+          Global $idLabelServicesService5_Name = GUICtrlCreateLabel('Service Name:', _
             $iGUIMainTabServicesService5Column02, $iGUIMainTabServicesService5Row08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabServicesService5Column02Width, $iGUIMainTabServicesService5Row08Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputServicesService5_Name = GUICtrlCreateInput('', _
             $iGUIMainTabServicesService5Column03, $iGUIMainTabServicesService5Row08, $iGUIMainTabServicesService5Column03Width, $iGUIMainTabServicesService5Row08Height)
             _GUICtrlEdit_SetCueBanner($idInputServicesService5_Name, 'SplunkForwarder', True)
 
       ;;TAB HELPDESK CONTACT FORM
-        GUICtrlCreateTabItem('Helpdesk Contact Form')
+        $idTabContactForm = GUICtrlCreateTabItem('Helpdesk Contact Form')
 
         ;;GROUP GENERAL
           Global $idCheckboxContact_EnableContactForm = GUICtrlCreateCheckbox('Enable helpdesk contact form', _
@@ -2320,7 +2320,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idGroupContact_General = GUICtrlCreateGroup('General', _
             $iGUIMainTabContactGeneralColumn01, $iGUIMainTabContactGeneralRow04, $iGUIMainTabContactGeneralColumn01Width, $iGUIMainTabContactGeneralRow04Height)
 
-          GUICtrlCreateLabel('Button text:', _
+          Global $idLabelContactGeneral_ButtonText = GUICtrlCreateLabel('Button text:', _
             $iGUIMainTabContactGeneralColumn02, $iGUIMainTabContactGeneralRow06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabContactGeneralColumn02Width, $iGUIMainTabContactGeneralRow06Height - $iGUIMainTabAllChromeCheckboxOffset)
           Global $idInputContactGeneral_ButtonText = GUICtrlCreateInput('', _
             $iGUIMainTabContactGeneralColumn03, $iGUIMainTabContactGeneralRow06, $iGUIMainTabContactGeneralColumn03Width, $iGUIMainTabContactGeneralRow06Height)
@@ -2368,14 +2368,14 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idGroupContact_SMTP = GUICtrlCreateGroup('SMTP Server Settings', _
             $iGUIMainTabContactSMTPColumn01, $iGUIMainTabContactSMTPRow02, $iGUIMainTabContactSMTPColumn01Width, $iGUIMainTabContactSMTPRow02Height)
 
-          GUICtrlCreateLabel('Server:', _
+          Global $idLabelContactSMTP_Server = GUICtrlCreateLabel('Server:', _
             $iGUIMainTabContactSMTPColumn02, $iGUIMainTabContactSMTPRow04 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabContactSMTPColumn02Width, $iGUIMainTabContactSMTPRow04Height - $iGUIMainTabAllChromeCheckboxOffset, _
             BitOR($BS_MULTILINE, $BS_TOP))
           Global $idInputContactSMTP_Server = GUICtrlCreateInput('', _
             $iGUIMainTabContactSMTPColumn03, $iGUIMainTabContactSMTPRow04, $iGUIMainTabContactSMTPColumn03Width, $iGUIMainTabContactSMTPRow04Height)
             _GUICtrlEdit_SetCueBanner($idInputContactSMTP_Server, 'smtp.' & $sOrgDomain, True)
 
-          GUICtrlCreateLabel('Port:', _
+          Global $idLabelContactSMTP_Port = GUICtrlCreateLabel('Port:', _
             $iGUIMainTabContactSMTPColumn02, $iGUIMainTabContactSMTPRow06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabContactSMTPColumn02Width, $iGUIMainTabContactSMTPRow06Height - $iGUIMainTabAllChromeCheckboxOffset, _
             BitOR($BS_MULTILINE, $BS_TOP))
           Global $idInputContactSMTP_Port = GUICtrlCreateInput('', _
@@ -2386,14 +2386,14 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             $iGUIMainTabContactSMTPColumn02, $iGUIMainTabContactSMTPRow08 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabContactSMTPColumn02Width + $iGUIMainTabContactSMTPColumn03Width, $iGUIMainTabContactSMTPRow08Height - $iGUIMainTabAllChromeCheckboxOffset, _
             BitOR($BS_MULTILINE, $BS_TOP))
 
-          GUICtrlCreateLabel('Username:', _
+          Global $idLabelContactSMTP_Username = GUICtrlCreateLabel('Username:', _
             $iGUIMainTabContactSMTPColumn02, $iGUIMainTabContactSMTPRow10 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabContactSMTPColumn02Width, $iGUIMainTabContactSMTPRow10Height - $iGUIMainTabAllChromeCheckboxOffset, _
             BitOR($BS_MULTILINE, $BS_TOP))
           Global $idInputContactSMTP_Username = GUICtrlCreateInput('', _
             $iGUIMainTabContactSMTPColumn03, $iGUIMainTabContactSMTPRow10, $iGUIMainTabContactSMTPColumn03Width, $iGUIMainTabContactSMTPRow10Height)
             _GUICtrlEdit_SetCueBanner($idInputContactSMTP_Username, '', True)
 
-          GUICtrlCreateLabel('Password:', _
+          Global $idLabelContactSMTP_Password = GUICtrlCreateLabel('Password:', _
             $iGUIMainTabContactSMTPColumn02, $iGUIMainTabContactSMTPRow12 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabContactSMTPColumn02Width, $iGUIMainTabContactSMTPRow12Height - $iGUIMainTabAllChromeCheckboxOffset, _
             BitOR($BS_MULTILINE, $BS_TOP))
           Global $idInputContactSMTP_Password = GUICtrlCreateInput('', _
@@ -2404,7 +2404,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idGroupContact_Test = GUICtrlCreateGroup('Test Settings', _
             $iGUIMainTabContactTestColumn01, $iGUIMainTabContactTestRow02, $iGUIMainTabContactTestColumn01Width, $iGUIMainTabContactTestRow02Height)
 
-          GUICtrlCreateLabel('Result:', _
+          Global $idLabelContactTest_Result = GUICtrlCreateLabel('Result:', _
             $iGUIMainTabContactTestColumn02, $iGUIMainTabContactTestRow04 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabContactTestColumn02Width, $iGUIMainTabContactTestRow04Height - $iGUIMainTabAllChromeCheckboxOffset, _
             BitOR($BS_MULTILINE, $BS_TOP))
           Global $idInputContactTest_Result = GUICtrlCreateEdit('', _

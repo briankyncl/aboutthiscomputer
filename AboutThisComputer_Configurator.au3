@@ -174,7 +174,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
     GUILoad('Default')
     GUIState('Ready')
-
+    GUISetState(@SW_SHOW)
 
 
 
@@ -1733,6 +1733,8 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         Global $idMenuItemMainEditCut = GUICtrlCreateMenuItem('Cut', $idMenuMainEdit, -1)
         Global $idMenuItemMainEditCopy = GUICtrlCreateMenuItem('Copy', $idMenuMainEdit, -1)
         Global $idMenuItemMainEditPaste = GUICtrlCreateMenuItem('Paste', $idMenuMainEdit, -1)
+          GUICtrlCreateMenuItem('', $idMenuMainEdit, -1) ; create a separator line
+        Global $idMenuItemMainEditSelectAll = GUICtrlCreateMenuItem('Select All', $idMenuMainEdit, -1)
 
       ;;Help
         Global $idMenuMainHelp = GUICtrlCreateMenu('&Help')
@@ -1752,10 +1754,10 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       Global $idButtonMainLeftCancel = GUICtrlCreateButton('Cancel', $iGUIMainColumnLeft01, $iGUIMainRowLeft02, $iGUIMainColumnLeft02Width, $iGUIMainRowLeft02Height)
 
     ;;MAIN WINDOW ELEMENTS - RIGHT
-      Global $idTabMain = GUICtrlCreateTab($iGUIMainColumnRight01, $iGUIMainRowRight01, $iGUIMainColumnRight01Width, $iGUIMainRowRight01Height)
+      Global $idTabRegion = GUICtrlCreateTab($iGUIMainColumnRight01, $iGUIMainRowRight01, $iGUIMainColumnRight01Width, $iGUIMainRowRight01Height)
 
       ;;TAB MAIN
-        $idTabMain = GUICtrlCreateTabItem('Main')
+        Global $idTabGeneral = GUICtrlCreateTabItem('Main')
 
         ;;GROUP GENERAL
           Global $idGroupMain_General = GUICtrlCreateGroup('General', _
@@ -1892,7 +1894,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             _GUICtrlEdit_SetCueBanner($idInputMainHelpdesk_AlternateAddress, '1-800-555-1234', True)
 
       ;;TAB TOOLS MENU
-        $idTabToolsMenu = GUICtrlCreateTabItem('Tools Menu')
+        Global $idTabToolsMenu = GUICtrlCreateTabItem('Tools Menu')
 
         ;;GROUP GENERAL
           Global $idCheckboxTools_EnableToolsMenu = GUICtrlCreateCheckbox('Enable Tools menu', _
@@ -2001,7 +2003,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             _GUICtrlEdit_SetCueBanner($idInputToolsHomeDrive_CustomPath, '\\fileserver\home\%USERNAME%', True)
 
       ;;TAB CUSTOM TOOL MENU
-        $idTabCustomTools = GUICtrlCreateTabItem('Custom Tools')
+        Global $idTabCustomTools = GUICtrlCreateTabItem('Custom Tools')
 
         ;;GROUP CUSTOM TOOL 1
           Global $idCheckboxCustomToolsCommand1_Enable = GUICtrlCreateCheckbox('Show custom tool 1 in Tools menu', _
@@ -2104,7 +2106,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             _GUICtrlEdit_SetCueBanner($idInputCustomToolsCommand5_Command, '', True)
 
       ;;TAB HELP MENU
-        $idTabHelpMenu = GUICtrlCreateTabItem('Help Menu')
+        Global $idTabHelpMenu = GUICtrlCreateTabItem('Help Menu')
 
         ;;GROUP LINK 1
           Global $idCheckboxHelpLink1_Enable = GUICtrlCreateCheckbox('Show link 1 in Help menu', _
@@ -2207,7 +2209,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             _GUICtrlEdit_SetCueBanner($idInputHelpLink5_Command, '', True)
 
       ;;TAB SERVICES
-        $idTabServices = GUICtrlCreateTabItem('Services')
+        Global $idTabServices = GUICtrlCreateTabItem('Services')
 
         ;;GROUP SERVICE 1
           Global $idCheckboxServicesService1_Enable = GUICtrlCreateCheckbox('Show service 1 status in summary text', _
@@ -2310,7 +2312,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             _GUICtrlEdit_SetCueBanner($idInputServicesService5_Name, 'SplunkForwarder', True)
 
       ;;TAB HELPDESK CONTACT FORM
-        $idTabContactForm = GUICtrlCreateTabItem('Helpdesk Contact Form')
+        Global $idTabContactForm = GUICtrlCreateTabItem('Helpdesk Contact Form')
 
         ;;GROUP GENERAL
           Global $idCheckboxContact_EnableContactForm = GUICtrlCreateCheckbox('Enable helpdesk contact form', _
@@ -2411,7 +2413,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             $iGUIMainTabContactTestColumn03, $iGUIMainTabContactTestRow04, $iGUIMainTabContactTestColumn03Width, $iGUIMainTabContactTestRow04Height, _
             BitOR($ES_MULTILINE, $ES_WANTRETURN, $WS_VSCROLL, $ES_AUTOVSCROLL, $ES_READONLY))
 
-          Global $idGroupContact_SendTestEmail = GUICtrlCreateButton('Send Test Email', _
+          Global $idButtonContact_SendTestEmail = GUICtrlCreateButton('Send Test Email', _
             $iGUIMainTabContactTestColumn03, $iGUIMainTabContactTestRow06 + $iGUIMainTabAllChromeCheckboxOffset, $iGUIMainTabContactTestColumn03Width, $iGUIMainTabContactTestRow06Height - $iGUIMainTabAllChromeCheckboxOffset)
 
       GUICtrlCreateTabItem('')  ;;terminate tab structure
@@ -2423,11 +2425,38 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           $aMenusMain[1] = $idMenuMainEdit
           $aMenusMain[2] = $idMenuMainHelp
 
+      ;;Menu Items
+        Global $aMenuItemsMain[11]
+          $aMenuItemsMain[00] = $idMenuItemMainFileImportEdit
+          $aMenuItemsMain[01] = $idMenuItemMainFileImportSave
+          $aMenuItemsMain[02] = $idMenuItemMainFileExportUnsaved
+          $aMenuItemsMain[03] = $idMenuItemMainFileExportSaved
+          $aMenuItemsMain[04] = $idMenuItemMainFileClose
+          $aMenuItemsMain[05] = $idMenuItemMainEditCut
+          $aMenuItemsMain[06] = $idMenuItemMainEditCopy
+          $aMenuItemsMain[07] = $idMenuItemMainEditPaste
+          $aMenuItemsMain[08] = $idMenuItemMainEditSelectAll
+          $aMenuItemsMain[09] = $idMenuItemMainHelpDocumentation
+          $aMenuItemsMain[10] = $idMenuItemMainHelpAbout
+
+      ;;Tabs
+        Global $aTabsMain[1]
+          $aTabsMain[00] = $idTabRegion
+
+      ;;Tab Items
+        Global $aTabItemsMain[6]
+          $aTabItemsMain[00] = $idTabGeneral
+          $aTabItemsMain[01] = $idTabToolsMenu
+          $aTabItemsMain[02] = $idTabCustomTools
+          $aTabItemsMain[03] = $idTabHelpMenu
+          $aTabItemsMain[04] = $idTabServices
+          $aTabItemsMain[05] = $idTabContactForm
+
       ;;Buttons
         Global $aButtonsMain[3]
           $aButtonsMain[0] = $idButtonMainLeftApply
           $aButtonsMain[1] = $idButtonMainLeftCancel
-          $aButtonsMain[2] = $idGroupContact_SendTestEmail
+          $aButtonsMain[2] = $idButtonContact_SendTestEmail
 
       ;;Checkboxes
         Global $aCheckboxesMain[42]
@@ -2473,6 +2502,79 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           $aCheckboxesMain[39] = $idCheckboxContact_EnableContactForm
           $aCheckboxesMain[40] = $idCheckboxContactGeneral_ShowEmployeeIDField
           $aCheckboxesMain[41] = $idCheckboxContactSMTP_EnableSSL
+
+      ;;Labels
+        Global $aLabelsMain[39]
+          $aLabelsMain[00] = $idLabelMainHelpdesk_Header
+          $aLabelsMain[01] = $idLabelToolsHomeDrive_DisplayName
+          $aLabelsMain[02] = $idLabelToolsHomeDrive_To
+          $aLabelsMain[03] = $idLabelCustomToolsCommand1_DisplayName
+          $aLabelsMain[04] = $idLabelCustomToolsCommand1_Command
+          $aLabelsMain[05] = $idLabelCustomToolsCommand2_DisplayName
+          $aLabelsMain[06] = $idLabelCustomToolsCommand2_Command
+          $aLabelsMain[07] = $idLabelCustomToolsCommand3_DisplayName
+          $aLabelsMain[08] = $idLabelCustomToolsCommand3_Command
+          $aLabelsMain[09] = $idLabelCustomToolsCommand4_DisplayName
+          $aLabelsMain[10] = $idLabelCustomToolsCommand4_Command
+          $aLabelsMain[11] = $idLabelCustomToolsCommand5_DisplayName
+          $aLabelsMain[12] = $idLabelCustomToolsCommand5_Command
+          $aLabelsMain[13] = $idLabelHelpLink1_DisplayName
+          $aLabelsMain[14] = $idLabelHelpLink1_Command
+          $aLabelsMain[15] = $idLabelHelpLink2_DisplayName
+          $aLabelsMain[16] = $idLabelHelpLink2_Command
+          $aLabelsMain[17] = $idLabelHelpLink3_DisplayName
+          $aLabelsMain[18] = $idLabelHelpLink3_Command
+          $aLabelsMain[19] = $idLabelHelpLink4_DisplayName
+          $aLabelsMain[20] = $idLabelHelpLink4_Command
+          $aLabelsMain[21] = $idLabelHelpLink5_DisplayName
+          $aLabelsMain[22] = $idLabelHelpLink5_Command
+          $aLabelsMain[23] = $idLabelServicesService1_DisplayName
+          $aLabelsMain[24] = $idLabelServicesService1_Name
+          $aLabelsMain[25] = $idLabelServicesService2_DisplayName
+          $aLabelsMain[26] = $idLabelServicesService2_Name
+          $aLabelsMain[27] = $idLabelServicesService3_DisplayName
+          $aLabelsMain[28] = $idLabelServicesService3_Name
+          $aLabelsMain[29] = $idLabelServicesService4_DisplayName
+          $aLabelsMain[30] = $idLabelServicesService4_Name
+          $aLabelsMain[31] = $idLabelServicesService5_DisplayName
+          $aLabelsMain[32] = $idLabelServicesService5_Name
+          $aLabelsMain[33] = $idLabelContactGeneral_ButtonText
+          $aLabelsMain[34] = $idLabelContactSMTP_Server
+          $aLabelsMain[35] = $idLabelContactSMTP_Port
+          $aLabelsMain[36] = $idLabelContactSMTP_Username
+          $aLabelsMain[37] = $idLabelContactSMTP_Password
+          $aLabelsMain[38] = $idLabelContactTest_Result
+
+      ;;Groups
+        Global $aGroupsMain[28]
+          $aGroupsMain[00] = $idGroupMain_General
+          $aGroupsMain[01] = $idGroupMain_TrayIcon
+          $aGroupsMain[02] = $idGroupMain_AssetTag
+          $aGroupsMain[03] = $idGroupMain_CustomDetails
+          $aGroupsMain[04] = $idGroupMain_Helpdesk
+          $aGroupsMain[05] = $idGroupTools_General
+          $aGroupsMain[06] = $idGroupTools_LoginScript
+          $aGroupsMain[07] = $idGroupTools_HomeDrive
+          $aGroupsMain[08] = $idGroupCustomTools_Command1
+          $aGroupsMain[09] = $idGroupCustomTools_Command2
+          $aGroupsMain[10] = $idGroupCustomTools_Command3
+          $aGroupsMain[11] = $idGroupCustomTools_Command4
+          $aGroupsMain[12] = $idGroupCustomTools_Command5
+          $aGroupsMain[13] = $idGroupHelp_Link1
+          $aGroupsMain[14] = $idGroupHelp_Link2
+          $aGroupsMain[15] = $idGroupHelp_Link3
+          $aGroupsMain[16] = $idGroupHelp_Link4
+          $aGroupsMain[17] = $idGroupHelp_Link5
+          $aGroupsMain[18] = $idGroupServices_Service1
+          $aGroupsMain[19] = $idGroupServices_Service2
+          $aGroupsMain[20] = $idGroupServices_Service3
+          $aGroupsMain[21] = $idGroupServices_Service4
+          $aGroupsMain[22] = $idGroupServices_Service5
+          $aGroupsMain[23] = $idGroupContact_General
+          $aGroupsMain[24] = $idGroupContact_Recipient
+          $aGroupsMain[25] = $idGroupContact_Sender
+          $aGroupsMain[26] = $idGroupContact_SMTP
+          $aGroupsMain[27] = $idGroupContact_Test
 
       ;;Radios
         Global $aRadiosMain[17]
@@ -2561,17 +2663,8 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       ;;Status Bars
         Global $aStatusBarsMain[1]
           $aStatusBarsMain[0] = $hStatusBarMain
-
-    GUISetState(@SW_SHOW)  ;;TODO: remove
   EndFunc
 #EndRegion
-
-
-
-
-
-
-
 
 #Region -- GUI OPERATIONS
   Func GUILoad($sGUILoadSource = 'Default', $sGUITabName = 'All')
@@ -2668,8 +2761,9 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
       Case 'ToolsMenu', 'All'
         ;;TOOLS MENU TAB
-        ;;General Section
           ToggleGUIControl($idCheckboxTools_EnableToolsMenu, $bTools_EnableToolsMenu)
+
+        ;;General Section
           ToggleGUIControl($idCheckboxToolsGeneral_CredentialManager, $bToolsGeneral_CredentialManager)
           ToggleGUIControl($idCheckboxToolsGeneral_DeviceManager, $bToolsGeneral_DeviceManager)
           ToggleGUIControl($idCheckboxToolsGeneral_DevicesAndPrinters, $bToolsGeneral_DevicesAndPrinters)
@@ -2704,32 +2798,122 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
       Case 'CustomTools', 'All'
         ;;CUSTOM TOOLS TAB
-        ;asdf
+        ;;Custom Tool 1 Section
+          ToggleGUIControl($idCheckboxCustomToolsCommand1_Enable, $bCustomToolsCommand1_Enable)
+          ToggleGUIControl($idInputCustomToolsCommand1_DisplayName, $sCustomToolsCommand1_DisplayName)
+          GUICtrlSetData($idInputCustomToolsCommand1_Command, $sCustomToolsCommand1_Command)
+
+        ;;Custom Tool 2 Section
+          ToggleGUIControl($idCheckboxCustomToolsCommand2_Enable, $bCustomToolsCommand2_Enable)
+          ToggleGUIControl($idInputCustomToolsCommand2_DisplayName, $sCustomToolsCommand2_DisplayName)
+          GUICtrlSetData($idInputCustomToolsCommand2_Command, $sCustomToolsCommand2_Command)
+
+        ;;Custom Tool 3 Section
+          ToggleGUIControl($idCheckboxCustomToolsCommand3_Enable, $bCustomToolsCommand3_Enable)
+          ToggleGUIControl($idInputCustomToolsCommand3_DisplayName, $sCustomToolsCommand3_DisplayName)
+          GUICtrlSetData($idInputCustomToolsCommand3_Command, $sCustomToolsCommand3_Command)
+
+        ;;Custom Tool 4 Section
+          ToggleGUIControl($idCheckboxCustomToolsCommand4_Enable, $bCustomToolsCommand4_Enable)
+          ToggleGUIControl($idInputCustomToolsCommand4_DisplayName, $sCustomToolsCommand4_DisplayName)
+          GUICtrlSetData($idInputCustomToolsCommand4_Command, $sCustomToolsCommand4_Command)
+
+        ;;Custom Tool 5 Section
+          ToggleGUIControl($idCheckboxCustomToolsCommand5_Enable, $bCustomToolsCommand5_Enable)
+          ToggleGUIControl($idInputCustomToolsCommand5_DisplayName, $sCustomToolsCommand5_DisplayName)
+          GUICtrlSetData($idInputCustomToolsCommand5_Command, $sCustomToolsCommand5_Command)
 
         ContinueCase
 
       Case 'HelpMenu', 'All'
         ;;HELP MENU TAB
-        ;asdf
+        ;;Help Link 1 Section
+          ToggleGUIControl($idCheckboxHelpLink1_Enable, $bHelpLink1_Enable)
+          ToggleGUIControl($idInputHelpLink1_DisplayName, $sHelpLink1_DisplayName)
+          GUICtrlSetData($idInputHelpLink1_Command, $sHelpLink1_Command)
+
+        ;;Help Link 2 Section
+          ToggleGUIControl($idCheckboxHelpLink2_Enable, $bHelpLink2_Enable)
+          ToggleGUIControl($idInputHelpLink2_DisplayName, $sHelpLink2_DisplayName)
+          GUICtrlSetData($idInputHelpLink2_Command, $sHelpLink2_Command)
+
+        ;;Help Link 3 Section
+          ToggleGUIControl($idCheckboxHelpLink3_Enable, $bHelpLink3_Enable)
+          ToggleGUIControl($idInputHelpLink3_DisplayName, $sHelpLink3_DisplayName)
+          GUICtrlSetData($idInputHelpLink3_Command, $sHelpLink3_Command)
+
+        ;;Help Link 4 Section
+          ToggleGUIControl($idCheckboxHelpLink4_Enable, $bHelpLink4_Enable)
+          ToggleGUIControl($idInputHelpLink4_DisplayName, $sHelpLink4_DisplayName)
+          GUICtrlSetData($idInputHelpLink4_Command, $sHelpLink4_Command)
+
+        ;;Help Link 5 Section
+          ToggleGUIControl($idCheckboxHelpLink5_Enable, $bHelpLink5_Enable)
+          ToggleGUIControl($idInputHelpLink5_DisplayName, $sHelpLink5_DisplayName)
+          GUICtrlSetData($idInputHelpLink5_Command, $sHelpLink5_Command)
 
         ContinueCase
 
       Case 'Services', 'All'
         ;;SERVICES TAB
-        ;asdf
+        ;;Service 1 Section
+          ToggleGUIControl($idCheckboxServicesService1_Enable, $bServicesService1_Enable)
+          ToggleGUIControl($idInputServicesService1_DisplayName, $sServicesService1_DisplayName)
+          GUICtrlSetData($idInputServicesService1_Name, $sServicesService1_Name)
+
+        ;;Service 2 Section
+          ToggleGUIControl($idCheckboxServicesService2_Enable, $bServicesService2_Enable)
+          ToggleGUIControl($idInputServicesService2_DisplayName, $sServicesService2_DisplayName)
+          GUICtrlSetData($idInputServicesService2_Name, $sServicesService2_Name)
+
+        ;;Service 3 Section
+          ToggleGUIControl($idCheckboxServicesService3_Enable, $bServicesService3_Enable)
+          ToggleGUIControl($idInputServicesService3_DisplayName, $sServicesService3_DisplayName)
+          GUICtrlSetData($idInputServicesService3_Name, $sServicesService3_Name)
+
+        ;;Service 4 Section
+          ToggleGUIControl($idCheckboxServicesService4_Enable, $bServicesService4_Enable)
+          ToggleGUIControl($idInputServicesService4_DisplayName, $sServicesService4_DisplayName)
+          GUICtrlSetData($idInputServicesService4_Name, $sServicesService4_Name)
+
+        ;;Service 5 Section
+          ToggleGUIControl($idCheckboxServicesService5_Enable, $bServicesService5_Enable)
+          ToggleGUIControl($idInputServicesService5_DisplayName, $sServicesService5_DisplayName)
+          GUICtrlSetData($idInputServicesService5_Name, $sServicesService5_Name)
 
         ContinueCase
 
       Case 'ContactForm', 'All'
         ;;CONTACT FORM TAB
-        ;asdf
+          ToggleGUIControl($idCheckboxContact_EnableContactForm, $bContact_EnableContactForm)
+
+        ;;General Section
+          GUICtrlSetData($idInputContactGeneral_ButtonText, $sContactGeneral_ButtonText)
+          ToggleGUIControl($idCheckboxContactGeneral_ShowEmployeeIDField, $bContactGeneral_ShowEmployeeIDField)
+
+        ;;Recipient Section
+          ToggleGUIControl($idRadioContactRecipient_UseHelpdeskEmail, $bContactRecipient_UseHelpdeskEmail)
+          ToggleGUIControl($idRadioContactRecipient_Custom, $bContactRecipient_Custom)
+          GUICtrlSetData($idInputContactRecipient_Custom, $sContactRecipient_Custom)
+
+        ;;Sender Section
+          ToggleGUIControl($idRadioContactSender_ReadFromAD, $bContactSender_ReadFromAD)
+          ToggleGUIControl($idRadioContactSender_Custom, $bContactSender_Custom)
+          GUICtrlSetData($idInputContactSender_Custom, $sContactSender_Custom)
+          ToggleGUIControl($idRadioContactSender_EnableEmailField, $bContactSender_EnableEmailField)
+
+        ;;SMTP Server Section
+          GUICtrlSetData($idInputContactSMTP_Server, $sContactSMTP_Server)
+          GUICtrlSetData($idInputContactSMTP_Port, $sContactSMTP_Port)
+          ToggleGUIControl($idCheckboxContactSMTP_EnableSSL, $bContactSMTP_EnableSSL)
+          GUICtrlSetData($idInputContactSMTP_Username, $sContactSMTP_Username)
+          GUICtrlSetData($idInputContactSMTP_Password, $sContactSMTP_Password)
+
+        ;;Test Settings Section
+          ;asdf
+
     EndSwitch
   EndFunc
-
-
-
-
-
 
   Func GUIState($sGUIDesiredState = 'Ready', $sGUITabName = 'All')
     ;;SET STATE OF GUI ELEMENTS
@@ -2747,7 +2931,30 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
     Switch $sGUITabDesiredState
       Case 'Ready'
-        ;;Set state of GUI elements based on current selections.
+        ;;Set busy state for GUI elements.
+        ;;Set all Menus
+          For $i = 0 To UBound($aMenusMain) - 1
+            ToggleGUIControl($aMenusMain[$i], $GUI_ENABLE)
+          Next
+
+        ;;Set all Menu Items
+          For $i = 0 To UBound($aMenuItemsMain) - 1
+            ToggleGUIControl($aMenuItemsMain[$i], $GUI_ENABLE)
+          Next
+
+        ;;Set all Tabs
+          For $i = 0 To UBound($aTabsMain) - 1
+            ToggleGUIControl($aTabsMain[$i], $GUI_ENABLE)
+          Next
+
+        ;;Set all Tab Items
+          For $i = 0 To UBound($aTabItemsMain) - 1
+            ToggleGUIControl($aTabItemsMain[$i], $GUI_ENABLE)
+          Next
+
+        ;;Set some Buttons
+          ToggleGUIControl($idButtonMainLeftApply, $GUI_ENABLE)
+          ToggleGUIControl($idButtonMainLeftCancel, $GUI_ENABLE)
 
         Switch $sGUITabName
           Case 'General', 'All'
@@ -2960,28 +3167,465 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
           Case 'CustomTools', 'All'
             ;;CUSTOM TOOLS TAB
-            ;asdf
+              If GUICtrlRead($idCheckboxTools_EnableToolsMenu) = $GUI_CHECKED Then
+                ToggleGUIControl($idCheckboxCustomToolsCommand1_Enable, $GUI_ENABLE)
+                ToggleGUIControl($idCheckboxCustomToolsCommand2_Enable, $GUI_ENABLE)
+                ToggleGUIControl($idCheckboxCustomToolsCommand3_Enable, $GUI_ENABLE)
+                ToggleGUIControl($idCheckboxCustomToolsCommand4_Enable, $GUI_ENABLE)
+                ToggleGUIControl($idCheckboxCustomToolsCommand5_Enable, $GUI_ENABLE)
+
+                ;;Custom Tool 1 Section
+                  If GUICtrlRead($idCheckboxCustomToolsCommand1_Enable) = $GUI_CHECKED Then
+                    ToggleGUIControl($idGroupCustomTools_Command1, $GUI_ENABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand1_DisplayName, $GUI_ENABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand1_DisplayName, $GUI_ENABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand1_Command, $GUI_ENABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand1_Command, $GUI_ENABLE)
+                  Else
+                    ToggleGUIControl($idGroupCustomTools_Command1, $GUI_DISABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand1_DisplayName, $GUI_DISABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand1_DisplayName, $GUI_DISABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand1_Command, $GUI_DISABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand1_Command, $GUI_DISABLE)
+                  EndIf
+
+                ;;Custom Tool 2 Section
+                  If GUICtrlRead($idCheckboxCustomToolsCommand2_Enable) = $GUI_CHECKED Then
+                    ToggleGUIControl($idGroupCustomTools_Command2, $GUI_ENABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand2_DisplayName, $GUI_ENABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand2_DisplayName, $GUI_ENABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand2_Command, $GUI_ENABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand2_Command, $GUI_ENABLE)
+                  Else
+                    ToggleGUIControl($idGroupCustomTools_Command2, $GUI_DISABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand2_DisplayName, $GUI_DISABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand2_DisplayName, $GUI_DISABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand2_Command, $GUI_DISABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand2_Command, $GUI_DISABLE)
+                  EndIf
+
+                ;;Custom Tool 3 Section
+                  If GUICtrlRead($idCheckboxCustomToolsCommand3_Enable) = $GUI_CHECKED Then
+                    ToggleGUIControl($idGroupCustomTools_Command3, $GUI_ENABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand3_DisplayName, $GUI_ENABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand3_DisplayName, $GUI_ENABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand3_Command, $GUI_ENABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand3_Command, $GUI_ENABLE)
+                  Else
+                    ToggleGUIControl($idGroupCustomTools_Command3, $GUI_DISABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand3_DisplayName, $GUI_DISABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand3_DisplayName, $GUI_DISABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand3_Command, $GUI_DISABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand3_Command, $GUI_DISABLE)
+                  EndIf
+
+                ;;Custom Tool 4 Section
+                  If GUICtrlRead($idCheckboxCustomToolsCommand4_Enable) = $GUI_CHECKED Then
+                    ToggleGUIControl($idGroupCustomTools_Command4, $GUI_ENABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand4_DisplayName, $GUI_ENABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand4_DisplayName, $GUI_ENABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand4_Command, $GUI_ENABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand4_Command, $GUI_ENABLE)
+                  Else
+                    ToggleGUIControl($idGroupCustomTools_Command4, $GUI_DISABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand4_DisplayName, $GUI_DISABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand4_DisplayName, $GUI_DISABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand4_Command, $GUI_DISABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand4_Command, $GUI_DISABLE)
+                  EndIf
+
+                ;;Custom Tool 5 Section
+                  If GUICtrlRead($idCheckboxCustomToolsCommand5_Enable) = $GUI_CHECKED Then
+                    ToggleGUIControl($idGroupCustomTools_Command5, $GUI_ENABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand5_DisplayName, $GUI_ENABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand5_DisplayName, $GUI_ENABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand5_Command, $GUI_ENABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand5_Command, $GUI_ENABLE)
+                  Else
+                    ToggleGUIControl($idGroupCustomTools_Command5, $GUI_DISABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand5_DisplayName, $GUI_DISABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand5_DisplayName, $GUI_DISABLE)
+                    ToggleGUIControl($idLabelCustomToolsCommand5_Command, $GUI_DISABLE)
+                    ToggleGUIControl($idInputCustomToolsCommand5_Command, $GUI_DISABLE)
+                  EndIf
+              Else
+                ;;Custom Tool 1 Section
+                  ToggleGUIControl($idCheckboxCustomToolsCommand1_Enable, $GUI_DISABLE)
+                  ToggleGUIControl($idGroupCustomTools_Command1, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelCustomToolsCommand1_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idInputCustomToolsCommand1_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelCustomToolsCommand1_Command, $GUI_DISABLE)
+                  ToggleGUIControl($idInputCustomToolsCommand1_Command, $GUI_DISABLE)
+
+                ;;Custom Tool 2 Section
+                  ToggleGUIControl($idCheckboxCustomToolsCommand2_Enable, $GUI_DISABLE)
+                  ToggleGUIControl($idGroupCustomTools_Command2, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelCustomToolsCommand2_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idInputCustomToolsCommand2_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelCustomToolsCommand2_Command, $GUI_DISABLE)
+                  ToggleGUIControl($idInputCustomToolsCommand2_Command, $GUI_DISABLE)
+
+                ;;Custom Tool 3 Section
+                  ToggleGUIControl($idCheckboxCustomToolsCommand3_Enable, $GUI_DISABLE)
+                  ToggleGUIControl($idGroupCustomTools_Command3, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelCustomToolsCommand3_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idInputCustomToolsCommand3_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelCustomToolsCommand3_Command, $GUI_DISABLE)
+                  ToggleGUIControl($idInputCustomToolsCommand3_Command, $GUI_DISABLE)
+
+                ;;Custom Tool 4 Section
+                  ToggleGUIControl($idCheckboxCustomToolsCommand4_Enable, $GUI_DISABLE)
+                  ToggleGUIControl($idGroupCustomTools_Command4, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelCustomToolsCommand4_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idInputCustomToolsCommand4_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelCustomToolsCommand4_Command, $GUI_DISABLE)
+                  ToggleGUIControl($idInputCustomToolsCommand4_Command, $GUI_DISABLE)
+
+                ;;Custom Tool 5 Section
+                  ToggleGUIControl($idCheckboxCustomToolsCommand5_Enable, $GUI_DISABLE)
+                  ToggleGUIControl($idGroupCustomTools_Command5, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelCustomToolsCommand5_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idInputCustomToolsCommand5_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelCustomToolsCommand5_Command, $GUI_DISABLE)
+                  ToggleGUIControl($idInputCustomToolsCommand5_Command, $GUI_DISABLE)
+              EndIf
 
             ContinueCase
 
           Case 'HelpMenu', 'All'
             ;;HELP MENU TAB
-            ;asdf
+              ToggleGUIControl($idCheckboxHelpLink1_Enable, $GUI_ENABLE)
+              ToggleGUIControl($idCheckboxHelpLink2_Enable, $GUI_ENABLE)
+              ToggleGUIControl($idCheckboxHelpLink3_Enable, $GUI_ENABLE)
+              ToggleGUIControl($idCheckboxHelpLink4_Enable, $GUI_ENABLE)
+              ToggleGUIControl($idCheckboxHelpLink5_Enable, $GUI_ENABLE)
+
+              ;;Help Link 1 Section
+                If GUICtrlRead($idCheckboxHelpLink1_Enable) = $GUI_CHECKED Then
+                  ToggleGUIControl($idGroupHelp_Link1, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelHelpLink1_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idInputHelpLink1_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelHelpLink1_Command, $GUI_ENABLE)
+                  ToggleGUIControl($idInputHelpLink1_Command, $GUI_ENABLE)
+                Else
+                  ToggleGUIControl($idGroupHelp_Link1, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelHelpLink1_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idInputHelpLink1_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelHelpLink1_Command, $GUI_DISABLE)
+                  ToggleGUIControl($idInputHelpLink1_Command, $GUI_DISABLE)
+                EndIf
+
+              ;;Help Link 2 Section
+                If GUICtrlRead($idCheckboxHelpLink2_Enable) = $GUI_CHECKED Then
+                  ToggleGUIControl($idGroupHelp_Link2, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelHelpLink2_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idInputHelpLink2_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelHelpLink2_Command, $GUI_ENABLE)
+                  ToggleGUIControl($idInputHelpLink2_Command, $GUI_ENABLE)
+                Else
+                  ToggleGUIControl($idGroupHelp_Link2, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelHelpLink2_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idInputHelpLink2_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelHelpLink2_Command, $GUI_DISABLE)
+                  ToggleGUIControl($idInputHelpLink2_Command, $GUI_DISABLE)
+                EndIf
+
+              ;;Help Link 3 Section
+                If GUICtrlRead($idCheckboxHelpLink3_Enable) = $GUI_CHECKED Then
+                  ToggleGUIControl($idGroupHelp_Link3, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelHelpLink3_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idInputHelpLink3_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelHelpLink3_Command, $GUI_ENABLE)
+                  ToggleGUIControl($idInputHelpLink3_Command, $GUI_ENABLE)
+                Else
+                  ToggleGUIControl($idGroupHelp_Link3, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelHelpLink3_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idInputHelpLink3_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelHelpLink3_Command, $GUI_DISABLE)
+                  ToggleGUIControl($idInputHelpLink3_Command, $GUI_DISABLE)
+                EndIf
+
+              ;;Help Link 4 Section
+                If GUICtrlRead($idCheckboxHelpLink4_Enable) = $GUI_CHECKED Then
+                  ToggleGUIControl($idGroupHelp_Link4, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelHelpLink4_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idInputHelpLink4_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelHelpLink4_Command, $GUI_ENABLE)
+                  ToggleGUIControl($idInputHelpLink4_Command, $GUI_ENABLE)
+                Else
+                  ToggleGUIControl($idGroupHelp_Link4, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelHelpLink4_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idInputHelpLink4_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelHelpLink4_Command, $GUI_DISABLE)
+                  ToggleGUIControl($idInputHelpLink4_Command, $GUI_DISABLE)
+                EndIf
+
+              ;;Help Link 5 Section
+                If GUICtrlRead($idCheckboxHelpLink5_Enable) = $GUI_CHECKED Then
+                  ToggleGUIControl($idGroupHelp_Link5, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelHelpLink5_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idInputHelpLink5_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelHelpLink5_Command, $GUI_ENABLE)
+                  ToggleGUIControl($idInputHelpLink5_Command, $GUI_ENABLE)
+                Else
+                  ToggleGUIControl($idGroupHelp_Link5, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelHelpLink5_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idInputHelpLink5_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelHelpLink5_Command, $GUI_DISABLE)
+                  ToggleGUIControl($idInputHelpLink5_Command, $GUI_DISABLE)
+                EndIf
 
             ContinueCase
 
           Case 'Services', 'All'
             ;;SERVICES TAB
-            ;asdf
+              ToggleGUIControl($idCheckboxServicesService1_Enable, $GUI_ENABLE)
+              ToggleGUIControl($idCheckboxServicesService2_Enable, $GUI_ENABLE)
+              ToggleGUIControl($idCheckboxServicesService3_Enable, $GUI_ENABLE)
+              ToggleGUIControl($idCheckboxServicesService4_Enable, $GUI_ENABLE)
+              ToggleGUIControl($idCheckboxServicesService5_Enable, $GUI_ENABLE)
+
+              ;;Service 1 Section
+                If GUICtrlRead($idCheckboxServicesService1_Enable) = $GUI_CHECKED Then
+                  ToggleGUIControl($idGroupServices_Service1, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelServicesService1_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idInputServicesService1_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelServicesService1_Name, $GUI_ENABLE)
+                  ToggleGUIControl($idInputServicesService1_Name, $GUI_ENABLE)
+                Else
+                  ToggleGUIControl($idGroupServices_Service1, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelServicesService1_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idInputServicesService1_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelServicesService1_Name, $GUI_DISABLE)
+                  ToggleGUIControl($idInputServicesService1_Name, $GUI_DISABLE)
+                EndIf
+
+              ;;Service 2 Section
+                If GUICtrlRead($idCheckboxServicesService2_Enable) = $GUI_CHECKED Then
+                  ToggleGUIControl($idGroupServices_Service2, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelServicesService2_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idInputServicesService2_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelServicesService2_Name, $GUI_ENABLE)
+                  ToggleGUIControl($idInputServicesService2_Name, $GUI_ENABLE)
+                Else
+                  ToggleGUIControl($idGroupServices_Service2, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelServicesService2_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idInputServicesService2_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelServicesService2_Name, $GUI_DISABLE)
+                  ToggleGUIControl($idInputServicesService2_Name, $GUI_DISABLE)
+                EndIf
+
+              ;;Service 3 Section
+                If GUICtrlRead($idCheckboxServicesService3_Enable) = $GUI_CHECKED Then
+                  ToggleGUIControl($idGroupServices_Service3, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelServicesService3_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idInputServicesService3_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelServicesService3_Name, $GUI_ENABLE)
+                  ToggleGUIControl($idInputServicesService3_Name, $GUI_ENABLE)
+                Else
+                  ToggleGUIControl($idGroupServices_Service3, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelServicesService3_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idInputServicesService3_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelServicesService3_Name, $GUI_DISABLE)
+                  ToggleGUIControl($idInputServicesService3_Name, $GUI_DISABLE)
+                EndIf
+
+              ;;Service 4 Section
+                If GUICtrlRead($idCheckboxServicesService4_Enable) = $GUI_CHECKED Then
+                  ToggleGUIControl($idGroupServices_Service4, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelServicesService4_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idInputServicesService4_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelServicesService4_Name, $GUI_ENABLE)
+                  ToggleGUIControl($idInputServicesService4_Name, $GUI_ENABLE)
+                Else
+                  ToggleGUIControl($idGroupServices_Service4, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelServicesService4_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idInputServicesService4_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelServicesService4_Name, $GUI_DISABLE)
+                  ToggleGUIControl($idInputServicesService4_Name, $GUI_DISABLE)
+                EndIf
+
+              ;;Service 5 Section
+                If GUICtrlRead($idCheckboxServicesService5_Enable) = $GUI_CHECKED Then
+                  ToggleGUIControl($idGroupServices_Service5, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelServicesService5_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idInputServicesService5_DisplayName, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelServicesService5_Name, $GUI_ENABLE)
+                  ToggleGUIControl($idInputServicesService5_Name, $GUI_ENABLE)
+                Else
+                  ToggleGUIControl($idGroupServices_Service5, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelServicesService5_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idInputServicesService5_DisplayName, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelServicesService5_Name, $GUI_DISABLE)
+                  ToggleGUIControl($idInputServicesService5_Name, $GUI_DISABLE)
+                EndIf
 
             ContinueCase
 
           Case 'ContactForm', 'All'
             ;;CONTACT FORM TAB
-            ;asdf
+              ToggleGUIControl($idCheckboxContact_EnableContactForm, $GUI_ENABLE)
+            
+              If GUICtrlRead($idCheckboxContact_EnableContactForm) = $GUI_CHECKED Then
+                ;;General Section
+                  ToggleGUIControl($idGroupContact_General, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelContactGeneral_ButtonText, $GUI_ENABLE)
+                  ToggleGUIControl($idInputContactGeneral_ButtonText, $GUI_ENABLE)
+                  ToggleGUIControl($idCheckboxContactGeneral_ShowEmployeeIDField, $GUI_ENABLE)
+
+                ;;Recipient Section
+                  ToggleGUIControl($idGroupContact_Recipient, $GUI_ENABLE)
+                  ToggleGUIControl($idRadioContactRecipient_UseHelpdeskEmail, $GUI_ENABLE)
+                  ToggleGUIControl($idRadioContactRecipient_Custom, $GUI_ENABLE)
+                  If GUICtrlRead($idRadioContactRecipient_Custom) = $GUI_CHECKED Then
+                    ToggleGUIControl($idInputContactRecipient_Custom, $GUI_ENABLE)
+                  Else
+                    ToggleGUIControl($idInputContactRecipient_Custom, $GUI_DISABLE)
+                  EndIf
+
+                ;;Sender Section
+                  ToggleGUIControl($idGroupContact_Sender, $GUI_ENABLE)
+                  ToggleGUIControl($idRadioContactSender_ReadFromAD, $GUI_ENABLE)
+                  ToggleGUIControl($idRadioContactSender_Custom, $GUI_ENABLE)
+                  If GUICtrlRead($idRadioContactSender_Custom) = $GUI_CHECKED Then
+                    ToggleGUIControl($idInputContactSender_Custom, $GUI_ENABLE)
+                  Else
+                    ToggleGUIControl($idInputContactSender_Custom, $GUI_DISABLE)
+                  EndIf
+                  ToggleGUIControl($idRadioContactSender_EnableEmailField, $GUI_ENABLE)
+
+                ;;SMTP Server Section
+                  ToggleGUIControl($idGroupContact_SMTP, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelContactSMTP_Server, $GUI_ENABLE)
+                  ToggleGUIControl($idInputContactSMTP_Server, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelContactSMTP_Port, $GUI_ENABLE)
+                  ToggleGUIControl($idInputContactSMTP_Port, $GUI_ENABLE)
+                  ;ToggleGUIControl($idCheckboxContactSMTP_EnableSSL, $GUI_ENABLE)  ;;TODO: Figure out how to actually support SSL.
+                  ToggleGUIControl($idCheckboxContactSMTP_EnableSSL, $GUI_UNCHECKDISABLE)  ;;TODO: Disable the ability to use SSL. Unsupported.
+                  If GUICtrlRead($idCheckboxContactSMTP_EnableSSL) = $GUI_CHECKED Then
+                    ToggleGUIControl($idLabelContactSMTP_Username, $GUI_ENABLE)
+                    ToggleGUIControl($idInputContactSMTP_Username, $GUI_ENABLE)
+                    ToggleGUIControl($idLabelContactSMTP_Password, $GUI_ENABLE)
+                    ToggleGUIControl($idInputContactSMTP_Password, $GUI_ENABLE)
+                  Else
+                    ToggleGUIControl($idLabelContactSMTP_Username, $GUI_DISABLE)
+                    ToggleGUIControl($idInputContactSMTP_Username, $GUI_DISABLE)
+                    ToggleGUIControl($idLabelContactSMTP_Password, $GUI_DISABLE)
+                    ToggleGUIControl($idInputContactSMTP_Password, $GUI_DISABLE)
+                  EndIf
+
+                ;;Test Settings Section
+                  ToggleGUIControl($idGroupContact_Test, $GUI_ENABLE)
+                  ToggleGUIControl($idLabelContactTest_Result, $GUI_ENABLE)
+                  ToggleGUIControl($idInputContactTest_Result, $GUI_ENABLE)
+                  ToggleGUIControl($idButtonContact_SendTestEmail, $GUI_ENABLE)
+              Else
+                ;;General Section
+                  ToggleGUIControl($idGroupContact_General, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelContactGeneral_ButtonText, $GUI_DISABLE)
+                  ToggleGUIControl($idInputContactGeneral_ButtonText, $GUI_DISABLE)
+                  ToggleGUIControl($idCheckboxContactGeneral_ShowEmployeeIDField, $GUI_DISABLE)
+
+                ;;Recipient Section
+                  ToggleGUIControl($idGroupContact_Recipient, $GUI_DISABLE)
+                  ToggleGUIControl($idRadioContactRecipient_UseHelpdeskEmail, $GUI_DISABLE)
+                  ToggleGUIControl($idRadioContactRecipient_Custom, $GUI_DISABLE)
+                  ToggleGUIControl($idInputContactRecipient_Custom, $GUI_DISABLE)
+
+                ;;Sender Section
+                  ToggleGUIControl($idGroupContact_Sender, $GUI_DISABLE)
+                  ToggleGUIControl($idRadioContactSender_ReadFromAD, $GUI_DISABLE)
+                  ToggleGUIControl($idRadioContactSender_Custom, $GUI_DISABLE)
+                  ToggleGUIControl($idInputContactSender_Custom, $GUI_DISABLE)
+                  ToggleGUIControl($idRadioContactSender_EnableEmailField, $GUI_DISABLE)
+
+                ;;SMTP Server Section
+                  ToggleGUIControl($idGroupContact_SMTP, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelContactSMTP_Server, $GUI_DISABLE)
+                  ToggleGUIControl($idInputContactSMTP_Server, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelContactSMTP_Port, $GUI_DISABLE)
+                  ToggleGUIControl($idInputContactSMTP_Port, $GUI_DISABLE)
+                  ToggleGUIControl($idCheckboxContactSMTP_EnableSSL, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelContactSMTP_Username, $GUI_DISABLE)
+                  ToggleGUIControl($idInputContactSMTP_Username, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelContactSMTP_Password, $GUI_DISABLE)
+                  ToggleGUIControl($idInputContactSMTP_Password, $GUI_DISABLE)
+
+                ;;Test Settings Section
+                  ToggleGUIControl($idGroupContact_Test, $GUI_DISABLE)
+                  ToggleGUIControl($idLabelContactTest_Result, $GUI_DISABLE)
+                  ToggleGUIControl($idInputContactTest_Result, $GUI_DISABLE)
+                  ToggleGUIControl($idButtonContact_SendTestEmail, $GUI_DISABLE)
+              EndIf
         EndSwitch
 
-      ContinueCase
+      Case 'Busy'
+        ;;Set busy state for GUI elements.
+        ;;Set all Menus
+          For $i = 0 To UBound($aMenusMain) - 1
+            ToggleGUIControl($aMenusMain[$i], $GUI_DISABLE)
+          Next
+
+        ;;Set all Menu Items
+          ;;Don't do this. No sense in wasting time if Menu itself is disabled.
+          ;For $i = 0 To UBound($aMenuItemsMain) - 1
+          ;  ToggleGUIControl($aMenuItemsMain[$i], $GUI_DISABLE)
+          ;Next
+
+        ;;Set all Tabs
+          For $i = 0 To UBound($aTabsMain) - 1
+            ToggleGUIControl($aTabsMain[$i], $GUI_DISABLE)
+          Next
+
+        ;;Set all Tab Items
+          For $i = 0 To UBound($aTabItemsMain) - 1
+            ToggleGUIControl($aTabItemsMain[$i], $GUI_DISABLE)
+          Next
+
+        ;;Set all Buttons
+          For $i = 0 To UBound($aButtonsMain) - 1
+            ToggleGUIControl($aButtonsMain[$i], $GUI_DISABLE)
+          Next
+
+        ;;Set all Checkboxes
+          For $i = 0 To UBound($aCheckboxesMain) - 1
+            ToggleGUIControl($aCheckboxesMain[$i], $GUI_DISABLE)
+          Next
+
+        ;;Set all Labels
+          For $i = 0 To UBound($aLabelsMain) - 1
+            ToggleGUIControl($aLabelsMain[$i], $GUI_DISABLE)
+          Next
+
+        ;;Set all Groups
+          For $i = 0 To UBound($aGroupsMain) - 1
+            ToggleGUIControl($aGroupsMain[$i], $GUI_DISABLE)
+          Next
+
+        ;;Set all Radios
+          For $i = 0 To UBound($aRadiosMain) - 1
+            ToggleGUIControl($aRadiosMain[$i], $GUI_DISABLE)
+          Next
+
+        ;;Set all Inputs
+          For $i = 0 To UBound($aInputsMain) - 1
+            ToggleGUIControl($aInputsMain[$i], $GUI_DISABLE)
+          Next
+
+        ;;Set all Edits
+          For $i = 0 To UBound($aEditsMain) - 1
+            ToggleGUIControl($aEditsMain[$i], $GUI_DISABLE)
+          Next
+
+        ;;Set all Combos (Dropdowns)
+          For $i = 0 To UBound($aCombosMain) - 1
+            ToggleGUIControl($aCombosMain[$i], $GUI_DISABLE)
+          Next
+
+        ;;Set all Status Bars
+          For $i = 0 To UBound($aStatusBarsMain) - 1
+            ToggleGUIControl($aStatusBarsMain[$i], $GUI_DISABLE)
+          Next
 
     EndSwitch
   EndFunc
@@ -2995,7 +3639,9 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       $idMsg = GUIGetMsg()
 
       If $idMsg = $GUI_EVENT_CLOSE Then ExitLoop
-      If $idMsg = $GUI_EVENT_PRIMARYUP Then GUIState('Ready')
+      If $idMsg = $idButtonMainLeftCancel Then GUIState('Busy')
+      If $idMsg = $idButtonMainLeftApply Then GUIState('Ready')
+      ;If $idMsg = $GUI_EVENT_PRIMARYUP Then GUIState('Ready')
     WEnd
   EndFunc
 

@@ -96,7 +96,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     Global $sAppShortName  = 'ATC'
     Global $sAppDocsHost   = 'GitHub'
     Global $sAppDocsFormat = 'website'
-    Global $sAppDocsURL    = 'https://github.com/briankyncl/aboutthiscomputer'
+    Global $sAppDocsURL    = 'https://github.com/briankyncl/aboutthiscomputer/wiki'
 
     ;;APP VERSION
     Local  $aFileVersion = StringSplit(FileGetVersion(@AutoItExe), '.')

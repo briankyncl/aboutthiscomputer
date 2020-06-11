@@ -29,10 +29,10 @@
 #COMMENTS-END
 
 #Region -- PRE-FLIGHT
-  ;;OPTIONS
+  ;;SCRIPT OPTIONS
   ;;none
 
-  ;;INCLUDES
+  ;;SCRIPT INCLUDES
   #include 'UDF-ATCCustomization\_ATC_Customization.au3'
   #include <ButtonConstants.au3>
   #include <EditConstants.au3>
@@ -62,7 +62,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     Global $sAppShortName   = 'ATC'
     Global $sAppDocsHost    = 'GitHub'
     Global $sAppDocsFormat  = 'website'
-    Global $sAppDocsURL     = 'https://github.com/briankyncl/aboutthiscomputer'
+    Global $sAppDocsURL     = 'https://github.com/briankyncl/aboutthiscomputer/wiki'
 
     ;;APP VERSION
     Local  $aFileVersion = StringSplit(FileGetVersion(@AutoItExe), '.')
@@ -112,12 +112,8 @@ End()   ;;Exit app gracefully if code should ever find itself here.
   Func StartupGlobals()
     ;;DECLARE GLOBAL VARIABLES
     ;;Declare global variables not declared anywhere else.
-    Global $GUI_CHECKENABLE = $GUI_CHECKED + $GUI_ENABLE
-    Global $GUI_UNCHECKENABLE = $GUI_UNCHECKED + $GUI_ENABLE
-    Global $GUI_CHECKDISABLE = $GUI_CHECKED + $GUI_DISABLE
-    Global $GUI_UNCHECKDISABLE = $GUI_UNCHECKED + $GUI_DISABLE
-    Global $hGUIMain
-    Global $lDriveLetters = 'D:|E:|F:|G:|H:|I:|J:|K:|L:|M:|N:|O:|P:|Q:|R:|S:|T:|U:|V:|W:|X:|Y:|Z:'
+
+    Global $iBusySleep = 1000
   EndFunc
 #EndRegion
 
@@ -192,6 +188,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
   Func GUIDefine()
     ;;DEFINE MAIN GUI
     ;; All commands for defining the base existence of the main GUI
+    Global $hGUIMain
 
     ;;GRID OVERALL (ENTIRE WINDOW)
       Global $iGUIMainWidthDefault = 840  ;;900
@@ -1712,6 +1709,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
   Func GUIBuild()
     ;;CREATE MAIN GUI
     ;; Requires GUIDefine() to have been previously ran.
+    Global $lDriveLetters = 'D:|E:|F:|G:|H:|I:|J:|K:|L:|M:|N:|O:|P:|Q:|R:|S:|T:|U:|V:|W:|X:|Y:|Z:'
 
     ;;DECLARE MAIN WINDOW
     Global $hGUIMain = GUICreate('About This Computer Configurator', $iGUIMainWidthDefault, $iGUIMainHeightDefault + $iGUIMainMenuBarHeight + $iGUIMainStatusBarHeight, -1, -1)
@@ -1748,7 +1746,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       _GUICtrlStatusBar_SetText($hStatusBarMain, '')
 
     ;;MAIN WINDOW ELEMENTS - LEFT
-      $idGraphicMainLogo = GUICtrlCreateIcon($sAppLogo, -1, $iGUIMainColumnLeft02 + 12, $iGUIMainRowLeft01, $iGUIMainColumnLeft01Width, $iGUIMainRowLeft01Height, -1, $GUI_WS_EX_PARENTDRAG)
+      Global $idIconMainAppLogo = GUICtrlCreateIcon($sAppLogo, -1, $iGUIMainColumnLeft02 + 12, $iGUIMainRowLeft01, $iGUIMainColumnLeft01Width, $iGUIMainRowLeft01Height, -1, $GUI_WS_EX_PARENTDRAG)
 
       Global $idButtonMainLeftApply = GUICtrlCreateButton('Apply', $iGUIMainColumnLeft01, $iGUIMainRowLeft03, $iGUIMainColumnLeft02Width, $iGUIMainRowLeft03Height)
       Global $idButtonMainLeftCancel = GUICtrlCreateButton('Cancel', $iGUIMainColumnLeft01, $iGUIMainRowLeft02, $iGUIMainColumnLeft02Width, $iGUIMainRowLeft02Height)
@@ -1777,35 +1775,35 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idRadioMainTrayIcon_First = GUICtrlCreateRadio('', _
             $iGUIMainTabMainTrayIconColumn02, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn02Width, $iGUIMainTabMainTrayIconRow04Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
-          GUICtrlCreateIcon('shell32.dll', 44, _
+          Global $idIconMainTrayIcon_First = GUICtrlCreateIcon('shell32.dll', 44, _
             $iGUIMainTabMainTrayIconColumn04, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn04Width, $iGUIMainTabMainTrayIconRow04Height)
 
           ;;BeOS info icon
           Global $idRadioMainTrayIcon_Second = GUICtrlCreateRadio('', _
             $iGUIMainTabMainTrayIconColumn06, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn06Width, $iGUIMainTabMainTrayIconRow04Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
-          GUICtrlCreateIcon($sAppParentLogo, -1, _
+          Global $idIconMainTrayIcon_Second = GUICtrlCreateIcon($sAppParentLogo, -1, _
             $iGUIMainTabMainTrayIconColumn08, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn08Width, $iGUIMainTabMainTrayIconRow04Height)
 
           ;;system info icon
           Global $idRadioMainTrayIcon_Third = GUICtrlCreateRadio('', _
             $iGUIMainTabMainTrayIconColumn10, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn10Width, $iGUIMainTabMainTrayIconRow04Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
-          GUICtrlCreateIcon('shell32.dll', 16783, _
+          Global $idIconMainTrayIcon_Third = GUICtrlCreateIcon('shell32.dll', 16783, _
             $iGUIMainTabMainTrayIconColumn12, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn12Width, $iGUIMainTabMainTrayIconRow04Height)
 
           ;;system question mark icon
           Global $idRadioMainTrayIcon_Fourth = GUICtrlCreateRadio('', _
             $iGUIMainTabMainTrayIconColumn14, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn14Width, $iGUIMainTabMainTrayIconRow04Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
-          GUICtrlCreateIcon('shell32.dll', 24, _
+          Global $idIconMainTrayIcon_Fourth = GUICtrlCreateIcon('shell32.dll', 24, _
             $iGUIMainTabMainTrayIconColumn16, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn16Width, $iGUIMainTabMainTrayIconRow04Height)
 
           ;;system info bubble
           Global $idRadioMainTrayIcon_Fifth = GUICtrlCreateRadio('', _
             $iGUIMainTabMainTrayIconColumn18, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn18Width, $iGUIMainTabMainTrayIconRow04Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
-          GUICtrlCreateIcon('shell32.dll', 1001, _
+          Global $idIconMainTrayIcon_Fifth = GUICtrlCreateIcon('shell32.dll', 1001, _
             $iGUIMainTabMainTrayIconColumn20, $iGUIMainTabMainTrayIconRow04, $iGUIMainTabMainTrayIconColumn20Width, $iGUIMainTabMainTrayIconRow04Height)
 
         ;;GROUP ASSET TAG
@@ -2454,9 +2452,18 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
       ;;Buttons
         Global $aButtonsMain[3]
-          $aButtonsMain[0] = $idButtonMainLeftApply
-          $aButtonsMain[1] = $idButtonMainLeftCancel
-          $aButtonsMain[2] = $idButtonContact_SendTestEmail
+          $aButtonsMain[00] = $idButtonMainLeftApply
+          $aButtonsMain[01] = $idButtonMainLeftCancel
+          $aButtonsMain[02] = $idButtonContact_SendTestEmail
+
+      ;;Icons
+        Global $aIconsMain[6]
+          $aIconsMain[00] = $idIconMainAppLogo
+          $aIconsMain[01] = $idIconMainTrayIcon_First
+          $aIconsMain[02] = $idIconMainTrayIcon_Second
+          $aIconsMain[03] = $idIconMainTrayIcon_Third
+          $aIconsMain[04] = $idIconMainTrayIcon_Fourth
+          $aIconsMain[05] = $idIconMainTrayIcon_Fifth
 
       ;;Checkboxes
         Global $aCheckboxesMain[42]
@@ -2920,6 +2927,15 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     ;; Set the state of GUI elements (disabled, enabled) based on current selections.
     ;; Busy, Ready
 
+    ;;Enable or disable dynamically updating the GUI based on current selection.
+    Global $bGUIDynamicUpdate = True
+    Switch $sGUIDesiredState
+      Case 'Ready'
+        $bGUIDynamicUpdate = True
+      Case 'Busy'
+        $bGUIDynamicUpdate = False
+    EndSwitch
+
     ;;Actually set GUI element states. Possibly break out per tab or state.
     GUITabState($sGUITabName, $sGUIDesiredState)
   EndFunc
@@ -2952,6 +2968,9 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             ToggleGUIControl($aTabItemsMain[$i], $GUI_ENABLE)
           Next
 
+        ;;Set some Icons
+          ToggleGUIControl($idIconMainAppLogo, $GUI_ENABLE)
+
         ;;Set some Buttons
           ToggleGUIControl($idButtonMainLeftApply, $GUI_ENABLE)
           ToggleGUIControl($idButtonMainLeftCancel, $GUI_ENABLE)
@@ -2965,10 +2984,15 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
             ;;Tray Icon Section
               ToggleGUIControl($idRadioMainTrayIcon_First, $GUI_ENABLE)
+              ToggleGUIControl($idIconMainTrayIcon_First, $GUI_ENABLE)
               ToggleGUIControl($idRadioMainTrayIcon_Second, $GUI_ENABLE)
+              ToggleGUIControl($idIconMainTrayIcon_Second, $GUI_ENABLE)
               ToggleGUIControl($idRadioMainTrayIcon_Third, $GUI_ENABLE)
+              ToggleGUIControl($idIconMainTrayIcon_Third, $GUI_ENABLE)
               ToggleGUIControl($idRadioMainTrayIcon_Fourth, $GUI_ENABLE)
+              ToggleGUIControl($idIconMainTrayIcon_Fourth, $GUI_ENABLE)
               ToggleGUIControl($idRadioMainTrayIcon_Fifth, $GUI_ENABLE)
+              ToggleGUIControl($idIconMainTrayIcon_Fifth, $GUI_ENABLE)
 
             ;;Asset Tag Section
               ToggleGUIControl($idCheckboxMainAssetTag_ShowAssetTag, $GUI_ENABLE)
@@ -3582,6 +3606,11 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             ToggleGUIControl($aTabItemsMain[$i], $GUI_DISABLE)
           Next
 
+        ;;Set all Icons
+          For $i = 0 To UBound($aIconsMain) - 1
+            ToggleGUIControl($aIconsMain[$i], $GUI_DISABLE)
+          Next
+
         ;;Set all Buttons
           For $i = 0 To UBound($aButtonsMain) - 1
             ToggleGUIControl($aButtonsMain[$i], $GUI_DISABLE)
@@ -3630,31 +3659,147 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     EndSwitch
   EndFunc
 
-
   Func GUIWait()
-    ;;WAIT FOR USER INTERACTION
-    Local $idMsg
+    ;;WAIT FOR AND REACT TO USER INTERACTION
 
+    Local $iGUIMsg = 0
     While 1
-      $idMsg = GUIGetMsg()
+      $iGUIMsg = GUIGetMsg()
+      Switch $iGUIMsg
+        Case $idMenuItemMainFileImportEdit, $idMenuItemMainFileImportSave, $idMenuItemMainFileExportUnsaved, $idMenuItemMainFileExportSaved
+          ;;IMPORT/EXPORT
+          GUIReaction('Generic')
 
-      If $idMsg = $GUI_EVENT_CLOSE Then ExitLoop
-      If $idMsg = $idButtonMainLeftCancel Then GUIState('Busy')
-      If $idMsg = $idButtonMainLeftApply Then GUIState('Ready')
-      ;If $idMsg = $GUI_EVENT_PRIMARYUP Then GUIState('Ready')
+        Case $idMenuItemMainEditCut, $idMenuItemMainEditCopy, $idMenuItemMainEditPaste, $idMenuItemMainEditSelectAll
+          ;;CUT, COPY, PASTE, SELECT ALL
+          GUIReaction('CutCopyPaste', $iGUIMsg)
+
+        Case $idMenuItemMainHelpDocumentation, $idMenuItemMainHelpAbout
+          ;;HELP MENU
+          GUIReaction('HelpMenu', $iGUIMsg)
+
+        Case $idIconMainTrayIcon_First, $idIconMainTrayIcon_Second, $idIconMainTrayIcon_Third, $idIconMainTrayIcon_Fourth, $idIconMainTrayIcon_Fifth
+          ;;SAMPLE TRAY ICON
+          GUIReaction('TrayIconSample', $iGUIMsg)
+
+        Case $idButtonMainLeftApply
+          ;;APPLY BUTTON
+          GUIReaction('Generic')
+
+        Case $GUI_EVENT_CLOSE, $idMenuItemMainFileClose, $idButtonMainLeftCancel
+          ;;EXIT EVENTS
+          ExitLoop
+
+        Case $GUI_EVENT_PRIMARYUP
+          ;;MOUSE CLICK UP
+          If $bGUIDynamicUpdate Then GUIState('Ready')  ;;Update GUI elements enabled/disabled based on current selections.
+
+      EndSwitch
     WEnd
   EndFunc
 
-  Func MainGUIClose()
-    ;;CLOSE MAIN GUI AND RETURN TO TRAY
+  Func GUIReaction($sReaction, $iGUIMsg = 0)
+    ;;EXTENDED REACTIONS TO GUIGetMsg() FROM GUIWait()
+    ;; Use this to keep GUIWait() cleaner, easier to read.
 
-  EndFunc
+    Switch $sReaction
+      Case 'Generic'
+        ;;GENERIC REACTION
+        GUIState('Busy')
+        Sleep(2000)
+        GUIState('Ready')
 
-  Func GUIRefresh()
-    ;;UPDATE MAIN GUI FIELDS
+      Case 'CutCopyPaste'
+        Switch $iGUIMsg
+          Case $idMenuItemMainEditCut
+            Send('^x')  ;;Press Ctrl + X
 
+          Case $idMenuItemMainEditCopy
+            Send('^c')  ;;Press Ctrl + C
+
+          Case $idMenuItemMainEditPaste
+            Send('^v')  ;;Press Ctrl + V
+
+          Case $idMenuItemMainEditSelectAll
+            Send('^a')  ;;Press Ctrl + A
+        EndSwitch
+
+      Case 'HelpMenu'
+        Switch $iGUIMsg
+          Case $idMenuItemMainHelpDocumentation
+            ;;LAUNCH DOCUMENTATION
+            GUIState('Busy')
+            ShellExecute($sAppDocsURL)
+            Sleep($iBusySleep)
+            GUIState('Ready')
+
+          Case $idMenuItemMainHelpAbout
+            ;;LAUNCH ABOUT WINDOW
+            GUIState('Busy')
+            LaunchAbout()
+            GUIState('Ready')
+        EndSwitch
+
+      Case 'TrayIconSample'
+        ;;TRAY ICON SAMPLE CLICKED
+        Switch $iGUIMsg
+          Case $idIconMainTrayIcon_First
+            ;;First sample icon clicked, check it and uncheck others.
+            ToggleGUIControl($idRadioMainTrayIcon_First, $GUI_CHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Second, $GUI_UNCHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Third, $GUI_UNCHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Fourth, $GUI_UNCHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Fifth, $GUI_UNCHECKED)
+
+          Case $idIconMainTrayIcon_Second
+            ;;Second sample icon clicked, check it and uncheck others.
+            ToggleGUIControl($idRadioMainTrayIcon_First, $GUI_UNCHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Second, $GUI_CHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Third, $GUI_UNCHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Fourth, $GUI_UNCHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Fifth, $GUI_UNCHECKED)
+
+          Case $idIconMainTrayIcon_Third
+            ;;Third sample icon clicked, check it and uncheck others.
+            ToggleGUIControl($idRadioMainTrayIcon_First, $GUI_UNCHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Second, $GUI_UNCHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Third, $GUI_CHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Fourth, $GUI_UNCHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Fifth, $GUI_UNCHECKED)
+
+          Case $idIconMainTrayIcon_Fourth
+            ;;Fourth sample icon clicked, check it and uncheck others.
+            ToggleGUIControl($idRadioMainTrayIcon_First, $GUI_UNCHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Second, $GUI_UNCHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Third, $GUI_UNCHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Fourth, $GUI_CHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Fifth, $GUI_UNCHECKED)
+
+          Case $idIconMainTrayIcon_Fifth
+            ;;Fifth sample icon clicked, check it and uncheck others.
+            ToggleGUIControl($idRadioMainTrayIcon_First, $GUI_UNCHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Second, $GUI_UNCHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Third, $GUI_UNCHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Fourth, $GUI_UNCHECKED)
+            ToggleGUIControl($idRadioMainTrayIcon_Fifth, $GUI_CHECKED)
+        EndSwitch
+    EndSwitch
   EndFunc
 #EndRegion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #Region -- GUI STATES
   Func GUIMainSetDefaults()
@@ -3835,6 +3980,13 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     ;; $GUI_CHECKDISABLE
     ;; $GUI_UNCHECKDISABLE
 
+    ;;Define custom GUI element states.
+    Global $GUI_CHECKENABLE = $GUI_CHECKED + $GUI_ENABLE
+    Global $GUI_UNCHECKENABLE = $GUI_UNCHECKED + $GUI_ENABLE
+    Global $GUI_CHECKDISABLE = $GUI_CHECKED + $GUI_DISABLE
+    Global $GUI_UNCHECKDISABLE = $GUI_UNCHECKED + $GUI_DISABLE
+
+    ;;Process values provided by registry entries.
     If $Option = 0 Then $Option = $GUI_UNCHECKED
     If $Option = 1 Then $Option = $GUI_CHECKED
 

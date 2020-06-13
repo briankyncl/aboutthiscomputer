@@ -40,10 +40,8 @@
   #include <FontConstants.au3>
   #include <GUIConstantsEx.au3>
   #include <GUIEdit.au3>
-  #include <GUIStatusBar.au3>
   #include <MsgBoxConstants.au3>
   #include <StaticConstants.au3>
-  #include <StatusBarConstants.au3>
   #include <TrayConstants.au3>
   #include <WindowsConstants.au3>
 #EndRegion
@@ -1712,7 +1710,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     Global $lDriveLetters = 'D:|E:|F:|G:|H:|I:|J:|K:|L:|M:|N:|O:|P:|Q:|R:|S:|T:|U:|V:|W:|X:|Y:|Z:'
 
     ;;DECLARE MAIN WINDOW
-    Global $hGUIMain = GUICreate('About This Computer Configurator', $iGUIMainWidthDefault, $iGUIMainHeightDefault + $iGUIMainMenuBarHeight + $iGUIMainStatusBarHeight, -1, -1)
+    Global $hGUIMain = GUICreate('About This Computer Configurator', $iGUIMainWidthDefault, $iGUIMainHeightDefault + $iGUIMainMenuBarHeight, -1, -1)
 
     ;;MENU BAR
       ;;File
@@ -1722,7 +1720,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         Global $idMenuItemMainFileImportSave = GUICtrlCreateMenuItem('Import configuration and save...', $idMenuMainFile, -1)
         Global $idMenuItemMainFileExportUnsaved = GUICtrlCreateMenuItem('Export unsaved configuration...', $idMenuMainFile, -1)
         Global $idMenuItemMainFileExportSaved = GUICtrlCreateMenuItem('Export existing configuration...', $idMenuMainFile, -1)
-          GUICtrlCreateMenuItem('', $idMenuMainFile, -1) ; create a separator line
+          GUICtrlCreateMenuItem('', $idMenuMainFile, -1)  ;;Create a separator line
         Global $idMenuItemMainFileClose = GUICtrlCreateMenuItem('Exit', $idMenuMainFile, -1)
 
       ;;Edit
@@ -1731,19 +1729,19 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         Global $idMenuItemMainEditCut = GUICtrlCreateMenuItem('Cut', $idMenuMainEdit, -1)
         Global $idMenuItemMainEditCopy = GUICtrlCreateMenuItem('Copy', $idMenuMainEdit, -1)
         Global $idMenuItemMainEditPaste = GUICtrlCreateMenuItem('Paste', $idMenuMainEdit, -1)
-          GUICtrlCreateMenuItem('', $idMenuMainEdit, -1) ; create a separator line
+          GUICtrlCreateMenuItem('', $idMenuMainEdit, -1)  ;;Create a separator line
         Global $idMenuItemMainEditSelectAll = GUICtrlCreateMenuItem('Select All', $idMenuMainEdit, -1)
 
       ;;Help
         Global $idMenuMainHelp = GUICtrlCreateMenu('&Help')
 
         Global $idMenuItemMainHelpDocumentation = GUICtrlCreateMenuItem('Documentation (' & $sAppDocsHost & ')', $idMenuMainHelp, -1)
-          GUICtrlCreateMenuItem('', $idMenuMainHelp, -1) ; create a separator line
+          GUICtrlCreateMenuItem('', $idMenuMainHelp, -1)  ;;Create a separator line
         Global $idMenuItemMainHelpAbout = GUICtrlCreateMenuItem('About', $idMenuMainHelp, -1)
 
     ;;STATUS BAR
-      $hStatusBarMain = _GUICtrlStatusBar_Create($hGUIMain, '', '', $SBARS_SIZEGRIP)
-      _GUICtrlStatusBar_SetText($hStatusBarMain, '')
+      ;$hStatusBarMain = _GUICtrlStatusBar_Create($hGUIMain, '', '', $SBARS_SIZEGRIP)
+      ;_GUICtrlStatusBar_SetText($hStatusBarMain, '')
 
     ;;MAIN WINDOW ELEMENTS - LEFT
       Global $idIconMainAppLogo = GUICtrlCreateIcon($sAppLogo, -1, $iGUIMainColumnLeft02 + 12, $iGUIMainRowLeft01, $iGUIMainColumnLeft01Width, $iGUIMainRowLeft01Height, -1, $GUI_WS_EX_PARENTDRAG)
@@ -1929,7 +1927,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           Global $idCheckboxToolsGeneral_ProgramsAndFeatures = GUICtrlCreateCheckbox('Programs and Features', _
             $iGUIMainTabToolsGeneralColumn03, $iGUIMainTabToolsGeneralRow08, $iGUIMainTabToolsGeneralColumn03Width, $iGUIMainTabToolsGeneralRow08Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
-          Global $idCheckboxToolsGeneral_SearchDirectory = GUICtrlCreateCheckbox('Search Directory', _
+          Global $idCheckboxToolsGeneral_SearchDirectory = GUICtrlCreateCheckbox('Search Active Directory', _
             $iGUIMainTabToolsGeneralColumn03, $iGUIMainTabToolsGeneralRow10, $iGUIMainTabToolsGeneralColumn03Width, $iGUIMainTabToolsGeneralRow10Height, _
             BitOR($BS_MULTILINE, $BS_TOP))
           Global $idCheckboxToolsGeneral_Services = GUICtrlCreateCheckbox('Services', _
@@ -2666,10 +2664,6 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       ;;Combos (Dropdowns)
         Global $aCombosMain[1]
           $aCombosMain[0] = $idComboToolsHomeDrive_MapDriveLetter
-
-      ;;Status Bars
-        Global $aStatusBarsMain[1]
-          $aStatusBarsMain[0] = $hStatusBarMain
   EndFunc
 #EndRegion
 
@@ -3651,11 +3645,6 @@ End()   ;;Exit app gracefully if code should ever find itself here.
             ToggleGUIControl($aCombosMain[$i], $GUI_DISABLE)
           Next
 
-        ;;Set all Status Bars
-          For $i = 0 To UBound($aStatusBarsMain) - 1
-            ToggleGUIControl($aStatusBarsMain[$i], $GUI_DISABLE)
-          Next
-
     EndSwitch
   EndFunc
 
@@ -3706,7 +3695,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       Case 'Generic'
         ;;GENERIC REACTION
         GUIState('Busy')
-        Sleep(2000)
+        Sleep($iBusySleep)
         GUIState('Ready')
 
       Case 'CutCopyPaste'

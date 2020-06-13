@@ -42,8 +42,7 @@ Func _ATC_Customization($__sAppRegistryPath = 'HKEY_LOCAL_MACHINE\Software\brian
       Global $bMainCustomDetails_ShowCustomDetails = 0
       Local  $sCustomDetailsTestText = 'Line 1' & @CRLF & 'Line 2' & @CRLF & 'Line 3' & @CRLF & 'Line 4' & @CRLF & 'Line 5' & @CRLF & @CRLF & _
                                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.'
-      ;Global $sMainCustomDetails_FreeText = $sCustomDetailsTestText
-      Global $sMainCustomDetails_FreeText = ''
+      Global $sMainCustomDetails_FreeText = ''  ;$sCustomDetailsTestText
 
       Global $bMainHelpdesk_ShowHelpdesk = 0
       Global $sMainHelpdesk_Title = ''

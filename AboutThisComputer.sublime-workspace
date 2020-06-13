@@ -4,6 +4,42 @@
 		"selected_items":
 		[
 			[
+				"iGUIMainTabAllChromeCh",
+				"iGUIMainTabAllChromeCheckboxHeight"
+			],
+			[
+				"GUICtrlCreate",
+				"GUICtrlCreateLabel()"
+			],
+			[
+				"iGUIMainTabAllChromeInputSpacer",
+				"iGUIMainTabAllChromeInputSpacer"
+			],
+			[
+				"iGUIMainTabAllChromeInputSpace",
+				"iGUIMainTabAllChromeInputSpacer"
+			],
+			[
+				"iGUIMainTabAllChec",
+				"iGUIMainTabAllChromeCheckboxSpacer"
+			],
+			[
+				"iGUIMainTabAllPadding",
+				"iGUIMainTabAllPaddingTop"
+			],
+			[
+				"idRadioMainAssetTag",
+				"idRadioMainAssetTag_ReadFromBIOS"
+			],
+			[
+				"iGUIMainTabMainHelpdeskRow05",
+				"iGUIMainTabMainHelpdeskRow05Height"
+			],
+			[
+				"iGUIMainTabMainHelpdeskRow04",
+				"iGUIMainTabMainHelpdeskRow04Height"
+			],
+			[
 				"iGUIMainTabMainTrayIconRow00",
 				"iGUIMainTabMainTrayIconRow00Height"
 			],
@@ -43,6 +79,24 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "UDF-ATCCustomization/_ATC_Customization.au3",
+			"settings":
+			{
+				"buffer_size": 43264,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "AboutThisComputer_Configurator.au3",
+			"settings":
+			{
+				"buffer_size": 239889,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -56,11 +110,27 @@
 		"selected_items":
 		[
 			[
-				"ali",
-				"AlignTab"
+				"insta",
+				"Package Control: Install Package"
 			],
 			[
 				"al",
+				"AlignTab"
+			],
+			[
+				"align",
+				"AlignTab"
+			],
+			[
+				"a",
+				"AlignTab"
+			],
+			[
+				"te",
+				"Text Pastry: Command-Line"
+			],
+			[
+				"ali",
 				"AlignTab"
 			],
 			[
@@ -109,19 +179,23 @@
 	"expanded_folders":
 	[
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer",
-		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/UDF-ATCCustomization"
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/UDF-ATCCustomization",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/UDF-SMTPMailer"
 	],
 	"file_history":
 	[
-		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_Configurator_Scratch.txt",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_Configurator.au3",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_InstallHelper.au3",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_Installer.iss",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer.au3",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/UDF-ATCCustomization/_ATC_Customization.au3",
+		"/Users/briankyncl/Downloads/WKS_Prep.au3",
+		"/Users/briankyncl/Downloads/WKS_Prep-Tools.au3",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_Configurator_Scratch.txt",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/WKS_Prep.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/WKS_PrepSync.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_Configurator_Text.txt",
-		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/UDF-ATCCustomization/_ATC_Customization.au3",
-		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_InstallHelper.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_stripped.au3",
-		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer.au3",
 		"/Users/Brian/Downloads/esxi",
 		"/Users/Brian/Downloads/nginx.conf",
 		"/Users/Brian/Downloads/files.sh",
@@ -237,10 +311,7 @@
 		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SECWPS01.cfg",
 		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWANT05.cfg",
 		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-sewbiorad01.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWANT04.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-NWSEAFLOW02.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-WADICL.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-sewalbas01.cfg"
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWANT04.cfg"
 	],
 	"find":
 	{
@@ -259,23 +330,134 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"wrench",
-			"GUIBuild(",
-			"sAppLogo",
-			"sAppDocsHost",
-			"icon",
+			"GUICtrlCreateLabel(",
+			"sMainHelpdesk_EmailAddress",
+			"com.brian",
+			"com.briankyncl",
+			"custom tool 2",
+			"sMainLCM_ShowLCMInfo",
+			"sCustomLCMXJCode",
+			"sCustomLCMCRCode",
+			"$sLCMCRCode",
+			"$sLCMXJCode",
+			"code",
+			"rcr",
+			"'REG_DWORD', 1))",
+			"'b",
+			"$sLoginScriptPath",
+			"$sHomeFolderName",
+			"$sSCCMAppCatalogURL",
+			"$sHelpdeskRequestName",
+			"$sHelpdeskRemoteSupportURL",
+			"$sHelpdeskURL",
+			"$sHelpdeskEmail",
+			"$sHelpdeskCorporatePhone",
+			"sHelpdeskRegionalPhone",
+			"$sHelpdeskPhone",
+			"$sHelpdeskName",
+			"$sIntranetURL",
+			"ShellExe",
+			"$sIntranetName",
+			"Intranet",
+			"ToolsHomeDrive_DriveLetter",
+			"idInputToolsHomeDrive_MapDrive",
+			"idComboToolsHomeDrive_MapDrive",
+			"com.bri",
+			"sHelpdeskEmail",
+			"Func ProgressSetStatusBar",
+			"Ready",
+			"idStatusbarMain",
+			"status",
+			"iGUIMainMenuBarHeight",
+			"hGUIMain",
+			"statusbar",
+			"_Show1",
+			"GUICtrlCreateCheckbox",
+			"GUICtrlCreateButton",
+			"$aMainButtons",
+			"GUICtrlCreateButton",
+			"button",
+			"$aMainMenus",
+			"gather",
+			"write",
+			" in summary text",
+			"Read from",
+			" Tools menu",
+			"in the Tools",
+			"URL",
+			"Left",
+			"_Link",
+			"GroupHelp",
+			"Link ",
+			"LINK",
+			"HelpLink",
+			"Tools ",
+			"link ",
+			"Help ",
+			"HELP",
+			"link",
+			"Help",
+			"HelpLink",
+			"Screenshot",
+			"Spacer",
+			"GUICtrlCreateEdit",
+			"SMTP",
+			"$iGUIMainTabAllChromeInputSpacerSmall",
+			"iGUIMainTabAllChromeInputSpacerSmall",
+			"ContactGeneral",
+			"TabContactGeneral",
+			"Left",
+			"TabContactSender",
+			"Recipient",
+			"ContactGeneral",
+			"HelpLink1",
+			"TabServicesService1",
+			"_SMTP_SendEmail",
 			"smtp",
-			"sOrgLoginScriptPath",
-			"OrgPersonalDriveName",
-			"sOrgAppCatalogURL",
-			"sOrgHelpdesk",
-			"sOrgIntranetURL",
-			"sOrgIntranetName",
-			"sAppRegistryPath",
-			"ReadCustomization()",
-			"MainGUIWait(",
-			"BuildMainGUI(",
-			"Func ReadConfig()"
+			"Command",
+			"URL",
+			"service",
+			"LINK",
+			"Services menu",
+			"Help",
+			"Link",
+			"link",
+			"HelpLink",
+			"LINK",
+			"HELP",
+			"HelpLink",
+			"Left",
+			"Link4",
+			"Link3",
+			"Link1",
+			"Left",
+			"Link2",
+			"Link3",
+			"Link2",
+			"Link1",
+			"TOOLSCUSTOM4",
+			"Right",
+			"ToolsCustom4",
+			"Custom3",
+			"Custom2",
+			"Custom1",
+			"catalog",
+			"HomeDrive",
+			"MainTabToolsHomeDrive",
+			"LoginScript",
+			"MainHelpdesk",
+			"GUIMainTabToolsLoginScript",
+			"GUIMainTabMainAssetTag",
+			"Column02",
+			"GUIMainTabMainAssetTag",
+			"GUIMainTabMainGeneral",
+			"$GUIMainTabAllPaddingVertical",
+			"$iGUIMainTabAllRow01",
+			"$GUIMainTabAllPadding",
+			"Right",
+			"Left",
+			"rowMainRightHeight",
+			"AssetTag"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -283,6 +465,107 @@
 		"regex": false,
 		"replace_history":
 		[
+			"bMainLCM_ShowLCMInfo",
+			"sMainLCM_CustomXJCode",
+			"sMainLCM_CustomRCRCode",
+			"$sMainLCM_CustomRCRCode",
+			"$sMainLCM_CustomXJCode",
+			"'REG_DWORD', 1)",
+			"$sToolsLoginScript_Custom",
+			"$sToolsHomeDrive_Title",
+			"$sCustomToolsCommand1_Command",
+			"$sContactGeneral_ButtonText",
+			"$sHelpLink1_Command",
+			"$sMainHelpdesk_WebsiteAddress",
+			"$sMainHelpdesk_EmailAddress",
+			"$sMainHelpdesk_AlternateAddress",
+			"$sMainHelpdesk_PhoneNumber",
+			"$sMainHelpdesk_Title",
+			"$sHelpLink2_Command",
+			"$sHelpLink2_DisplayName",
+			"ToolsHomeDrive_MapDriveLetter",
+			"idInputToolsHomeDrive_MapDrivePath",
+			"idComboToolsHomeDrive_DriveLetter",
+			"_Enable",
+			"_Show",
+			"$aButtonsMain",
+			"$aMenusMain",
+			" status in summary text",
+			" in Tools menu",
+			"in Tools menu",
+			"Tools",
+			"Command",
+			"Right",
+			"_Command",
+			"_CustomTool",
+			"GroupCustomTools",
+			"Custom Tool",
+			"CUSTOM TOOL",
+			"CustomToolsCommand",
+			"the Tools ",
+			" Tools ",
+			"custom tool ",
+			"custom tool",
+			"Tools ",
+			"CUSTOM TOOL",
+			"CUSTOM TOOLS",
+			"Custom Tools",
+			"CustomToolsCommand",
+			"Test",
+			"$iGUIMainTabAllChromeInputSpacer",
+			"ContactSMTP",
+			"TabContactSMTP",
+			"Right",
+			"TabContactSMTP",
+			"Sender",
+			"ContactRecipient",
+			"ContactGeneral",
+			"TabContactGeneral",
+			"Name",
+			"Service Name",
+			"SERVICE",
+			"summary text",
+			"Services",
+			"Service",
+			"service",
+			"ServicesService",
+			"SERVICE",
+			"SERVICES",
+			"ServicesService",
+			"Right",
+			"Link5",
+			"Link4",
+			"Link5",
+			"Link4",
+			"Right",
+			"Link3",
+			"Link4",
+			"Link3",
+			"Link2",
+			"HelpLink1",
+			"Left",
+			"HelpLink1",
+			"Custom4",
+			"Custom3",
+			"Custom2",
+			"Custom1",
+			"MainTabToolsCustom1",
+			"HomeDrive",
+			"ToolsHomeDrive",
+			"GUIMainTabToolsHomeDrive",
+			"GUIMainTabToolsLoginScript",
+			"Column03",
+			"GUIMainTabToolsGeneral",
+			"$iGUIMainTabAllPaddingVertical",
+			"$GUIMainTabAllPaddingVertical",
+			"Left",
+			"Right",
+			"CustomDetails",
+			"GUIMainTabMainCustomDetails",
+			"group",
+			"Helpdesk",
+			"iGUIMainTabMainAssetTagRow",
+			"iGUIMainTabAllChromeCheckboxSpacerExterior",
 			"GUIDefine(",
 			"sLoginScriptPath",
 			"HomeFolderName",
@@ -303,8 +586,132 @@
 	"groups":
 	[
 		{
+			"selected": 2,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "UDF-ATCCustomization/_ATC_Customization.au3",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 43264,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4748,
+								4774
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/AutoItScript/AutoIt.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1051.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "AboutThisComputer_Configurator.au3",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 239889,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								219082,
+								219082
+							]
+						],
+						"settings":
+						{
+							"spell_check": false,
+							"syntax": "Packages/AutoItScript/AutoIt.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 47339.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "AboutThisComputer_Configurator.au3",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 239889,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								162897,
+								162916
+							]
+						],
+						"settings":
+						{
+							"spell_check": false,
+							"syntax": "Packages/AutoItScript/AutoIt.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 33780.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "AboutThisComputer_Configurator.au3",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 239889,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4347,
+								4333
+							]
+						],
+						"settings":
+						{
+							"spell_check": false,
+							"syntax": "Packages/AutoItScript/AutoIt.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1320.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -339,6 +746,10 @@
 		]
 	},
 	"menu_visible": true,
+	"output.SublimeLinter":
+	{
+		"height": 0.0
+	},
 	"output.find_results":
 	{
 		"height": 0.0
@@ -385,7 +796,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 290.0,
+	"side_bar_width": 329.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

@@ -18,7 +18,7 @@
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #COMMENTS-START
-  com.briankyncl.AboutThisComputer.au3
+  AboutThisComputer.au3
   Application for quickly displaying common computer information.
 
   Created by Brian Kyncl on 2017-11-29
@@ -91,12 +91,12 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     ;;DECLARE CORE GLOBALS
 
     ;;APP INFO
-    Global $sAppOrg        = 'com.briankyncl'
+    Global $sAppOrg        = 'briankyncl.com'
     Global $sAppName       = 'About This Computer'
     Global $sAppShortName  = 'ATC'
     Global $sAppDocsHost   = 'GitHub'
     Global $sAppDocsFormat = 'website'
-    Global $sAppDocsURL    = 'https://github.com/briankyncl/aboutthiscomputer'
+    Global $sAppDocsURL    = 'https://github.com/briankyncl/aboutthiscomputer/wiki'
 
     ;;APP VERSION
     Local  $aFileVersion = StringSplit(FileGetVersion(@AutoItExe), '.')
@@ -1236,50 +1236,50 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       ;;READ LCM INFO
       ;; Generated variables:
       ;;
-      ;; $sLCMXJCode   ;X88868
-      ;; $sLCMCRCode   ;SE900412
+      ;; $sMainLCM_CustomXJCode   ;X88868
+      ;; $sMainLCM_CustomRCRCode   ;SE900412
 
       ;;read LCM log file, set to blank if not found
-      Global $sLCMXJCode  = ''
-      Global $sLCMCRCode  = ''
+      Global $sMainLCM_CustomXJCode  = ''
+      Global $sMainLCM_CustomRCRCode  = ''
 
       ;;declare locals
-      Local $sLCMXJCode0
-      Local $sLCMCRCode0
-      Local $sLCMXJCode1
-      Local $sLCMCRCode1
-      Local $sLCMXJCode2
-      Local $sLCMCRCode2
-      Local $sLCMXJCode3
-      Local $sLCMCRCode3
-      Local $sLCMXJCode4
-      Local $sLCMCRCode4
-      Local $sLCMXJCode5
-      Local $sLCMCRCode5
+      Local $sMainLCM_CustomXJCode0
+      Local $sMainLCM_CustomRCRCode0
+      Local $sMainLCM_CustomXJCode1
+      Local $sMainLCM_CustomRCRCode1
+      Local $sMainLCM_CustomXJCode2
+      Local $sMainLCM_CustomRCRCode2
+      Local $sMainLCM_CustomXJCode3
+      Local $sMainLCM_CustomRCRCode3
+      Local $sMainLCM_CustomXJCode4
+      Local $sMainLCM_CustomRCRCode4
+      Local $sMainLCM_CustomXJCode5
+      Local $sMainLCM_CustomRCRCode5
 
       ;;LOCATION 0 - USER OVERRIDE / CUSTOMIZATION
-      $sLCMXJCode0 = RegRead($sAppRegistryPath, 'sCustomLCMXJCode')
-      $sLCMCRCode0 = RegRead($sAppRegistryPath, 'sCustomLCMCRCode')
+      $sMainLCM_CustomXJCode0 = RegRead($sAppRegistryPath, 'sMainLCM_CustomXJCode')
+      $sMainLCM_CustomRCRCode0 = RegRead($sAppRegistryPath, 'sMainLCM_CustomRCRCode')
 
-      ;$sCustomLCMXJCodeFilePath  = $sAppInstallPath & '\Support\CustomLCMXJCode.txt'
-      ;$sCustomLCMCRCodeFilePath  = $sAppInstallPath & '\Support\CustomLCMCRCode.txt'
+      ;$sMainLCM_CustomXJCodeFilePath  = $sAppInstallPath & '\Support\CustomLCMXJCode.txt'
+      ;$sMainLCM_CustomRCRCodeFilePath  = $sAppInstallPath & '\Support\CustomLCMCRCode.txt'
       ;$sCustomLCMEditionFilePath = $sAppInstallPath & '\Support\CustomLCMEdition.txt'
 
-      ;If FileExists($sCustomLCMXJCodeFilePath) Then
-      ;  Local $hFileOpen = FileOpen($sCustomLCMXJCodeFilePath,  $FO_READ)
-      ;  $sLCMXJCode0 = FileRead($hFileOpen)
+      ;If FileExists($sMainLCM_CustomXJCodeFilePath) Then
+      ;  Local $hFileOpen = FileOpen($sMainLCM_CustomXJCodeFilePath,  $FO_READ)
+      ;  $sMainLCM_CustomXJCode0 = FileRead($hFileOpen)
       ;  FileClose($hFileOpen)
       ;EndIf
 
-      ;If FileExists($sCustomLCMCRCodeFilePath) Then
-      ;  Local $hFileOpen = FileOpen($sCustomLCMCRCodeFilePath,  $FO_READ)
-      ;  $sLCMCRCode0 = FileRead($hFileOpen)
+      ;If FileExists($sMainLCM_CustomRCRCodeFilePath) Then
+      ;  Local $hFileOpen = FileOpen($sMainLCM_CustomRCRCodeFilePath,  $FO_READ)
+      ;  $sMainLCM_CustomRCRCode0 = FileRead($hFileOpen)
       ;  FileClose($hFileOpen)
       ;EndIf
 
       ;If FileExists($sCustomLCMEditionFilePath) Then
       ;  Local $hFileOpen = FileOpen($sCustomLCMEditionFilePath,  $FO_READ)
-      ;  $sLCMCRCode0 = FileRead($hFileOpen)
+      ;  $sMainLCM_CustomRCRCode0 = FileRead($hFileOpen)
       ;  FileClose($hFileOpen)
       ;EndIf
 
@@ -1304,14 +1304,14 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
           ;; load variables
           If _elementExists($aLCMXJCode, 0) = True Then
-            $sLCMXJCode1  = StringUpper($aLCMXJCode[0])
+            $sMainLCM_CustomXJCode1  = StringUpper($aLCMXJCode[0])
           Else
-            $sLCMXJCode1  = ' '
+            $sMainLCM_CustomXJCode1  = ' '
           EndIf
           If _elementExists($aLCMCRCode, 0) = True Then
-            $sLCMCRCode1  = StringUpper($aLCMCRCode[0])
+            $sMainLCM_CustomRCRCode1  = StringUpper($aLCMCRCode[0])
           Else
-            $sLCMCRCode1  = ' '
+            $sMainLCM_CustomRCRCode1  = ' '
           EndIf
 
           FileClose($hFileOpen)
@@ -1339,14 +1339,14 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
           ;; load variables
           If _elementExists($aLCMXJCode, 0) = True Then
-            $sLCMXJCode2  = StringUpper($aLCMXJCode[0])
+            $sMainLCM_CustomXJCode2  = StringUpper($aLCMXJCode[0])
           Else
-            $sLCMXJCode2  = ' '
+            $sMainLCM_CustomXJCode2  = ' '
           EndIf
           If _elementExists($aLCMCRCode, 0) = True Then
-            $sLCMCRCode2  = StringUpper($aLCMCRCode[0])
+            $sMainLCM_CustomRCRCode2  = StringUpper($aLCMCRCode[0])
           Else
-            $sLCMCRCode2  = ' '
+            $sMainLCM_CustomRCRCode2  = ' '
           EndIf
 
           FileClose($hFileOpen)
@@ -1374,14 +1374,14 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
           ;; load variables
           If _elementExists($aLCMXJCode, 0) = True Then
-            $sLCMXJCode3  = StringUpper($aLCMXJCode[0])
+            $sMainLCM_CustomXJCode3  = StringUpper($aLCMXJCode[0])
           Else
-            $sLCMXJCode3  = ' '
+            $sMainLCM_CustomXJCode3  = ' '
           EndIf
           If _elementExists($aLCMCRCode, 0) = True Then
-            $sLCMCRCode3  = StringUpper($aLCMCRCode[0])
+            $sMainLCM_CustomRCRCode3  = StringUpper($aLCMCRCode[0])
           Else
-            $sLCMCRCode3  = ' '
+            $sMainLCM_CustomRCRCode3  = ' '
           EndIf
 
           FileClose($hFileOpen)
@@ -1409,14 +1409,14 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
           ;; load variables
           If _elementExists($aLCMXJCode, 0) = True Then
-            $sLCMXJCode4  = StringUpper($aLCMXJCode[0])
+            $sMainLCM_CustomXJCode4  = StringUpper($aLCMXJCode[0])
           Else
-            $sLCMXJCode4  = ' '
+            $sMainLCM_CustomXJCode4  = ' '
           EndIf
           If _elementExists($aLCMCRCode, 0) = True Then
-            $sLCMCRCode4  = StringUpper($aLCMCRCode[0])
+            $sMainLCM_CustomRCRCode4  = StringUpper($aLCMCRCode[0])
           Else
-            $sLCMCRCode4  = ' '
+            $sMainLCM_CustomRCRCode4  = ' '
           EndIf
 
           FileClose($hFileOpen)
@@ -1444,14 +1444,14 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
           ;; load variables
           If _elementExists($aLCMXJCode, 0) = True Then
-            $sLCMXJCode5  = StringUpper($aLCMXJCode[0])
+            $sMainLCM_CustomXJCode5  = StringUpper($aLCMXJCode[0])
           Else
-            $sLCMXJCode5  = ' '
+            $sMainLCM_CustomXJCode5  = ' '
           EndIf
           If _elementExists($aLCMCRCode, 0) = True Then
-            $sLCMCRCode5  = StringUpper($aLCMCRCode[0])
+            $sMainLCM_CustomRCRCode5  = StringUpper($aLCMCRCode[0])
           Else
-            $sLCMCRCode5  = ' '
+            $sMainLCM_CustomRCRCode5  = ' '
           EndIf
 
           FileClose($hFileOpen)
@@ -1459,21 +1459,21 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       EndIf
 
       ;;find which variables have best LCM info, override with custom if exist
-      If StringIsSpace($sLCMXJCode1) = False Then $sLCMXJCode = $sLCMXJCode1
-      If StringIsSpace($sLCMCRCode1) = False Then $sLCMCRCode = $sLCMCRCode1
-      If StringIsSpace($sLCMXJCode2) = False Then $sLCMXJCode = $sLCMXJCode2
-      If StringIsSpace($sLCMCRCode2) = False Then $sLCMCRCode = $sLCMCRCode2
-      If StringIsSpace($sLCMXJCode3) = False Then $sLCMXJCode = $sLCMXJCode3
-      If StringIsSpace($sLCMCRCode3) = False Then $sLCMCRCode = $sLCMCRCode3
-      If StringIsSpace($sLCMXJCode4) = False Then $sLCMXJCode = $sLCMXJCode4
-      If StringIsSpace($sLCMCRCode4) = False Then $sLCMCRCode = $sLCMCRCode4
-      If StringIsSpace($sLCMXJCode5) = False Then $sLCMXJCode = $sLCMXJCode5
-      If StringIsSpace($sLCMCRCode5) = False Then $sLCMCRCode = $sLCMCRCode5
-      If StringIsSpace($sLCMXJCode0) = False Then $sLCMXJCode = $sLCMXJCode0
-      If StringIsSpace($sLCMCRCode0) = False Then $sLCMCRCode = $sLCMCRCode0
+      If StringIsSpace($sMainLCM_CustomXJCode1) = False Then $sMainLCM_CustomXJCode = $sMainLCM_CustomXJCode1
+      If StringIsSpace($sMainLCM_CustomRCRCode1) = False Then $sMainLCM_CustomRCRCode = $sMainLCM_CustomRCRCode1
+      If StringIsSpace($sMainLCM_CustomXJCode2) = False Then $sMainLCM_CustomXJCode = $sMainLCM_CustomXJCode2
+      If StringIsSpace($sMainLCM_CustomRCRCode2) = False Then $sMainLCM_CustomRCRCode = $sMainLCM_CustomRCRCode2
+      If StringIsSpace($sMainLCM_CustomXJCode3) = False Then $sMainLCM_CustomXJCode = $sMainLCM_CustomXJCode3
+      If StringIsSpace($sMainLCM_CustomRCRCode3) = False Then $sMainLCM_CustomRCRCode = $sMainLCM_CustomRCRCode3
+      If StringIsSpace($sMainLCM_CustomXJCode4) = False Then $sMainLCM_CustomXJCode = $sMainLCM_CustomXJCode4
+      If StringIsSpace($sMainLCM_CustomRCRCode4) = False Then $sMainLCM_CustomRCRCode = $sMainLCM_CustomRCRCode4
+      If StringIsSpace($sMainLCM_CustomXJCode5) = False Then $sMainLCM_CustomXJCode = $sMainLCM_CustomXJCode5
+      If StringIsSpace($sMainLCM_CustomRCRCode5) = False Then $sMainLCM_CustomRCRCode = $sMainLCM_CustomRCRCode5
+      If StringIsSpace($sMainLCM_CustomXJCode0) = False Then $sMainLCM_CustomXJCode = $sMainLCM_CustomXJCode0
+      If StringIsSpace($sMainLCM_CustomRCRCode0) = False Then $sMainLCM_CustomRCRCode = $sMainLCM_CustomRCRCode0
 
       ;validate LCM info retrieved, disable section if data invalid
-      Switch (StringIsSpace($sLCMXJCode))
+      Switch (StringIsSpace($sMainLCM_CustomXJCode))
         Case 0
           Global $bLCMInfoExists = True
         Case 1
@@ -1593,7 +1593,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     Global $idTrayMainSysProp    = TrayCreateItem('System Properties')
       TrayCreateItem('')
     Global $idTrayMainSearchAD   = TrayCreateItem('Run Login Script')
-    Global $idTrayMainSysProp    = TrayCreateItem('Map ' & $sHomeFolderName)
+    Global $idTrayMainSysProp    = TrayCreateItem('Map ' & $sToolsHomeDrive_Title)
       TrayCreateItem('')
     Global $idTrayMainShowInfo   = TrayCreateItem('About This Computer')
       TrayCreateItem('')
@@ -1936,7 +1936,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         Global $idMenuItemMainToolsSysProp = GUICtrlCreateMenuItem('System Properties', $idMenuMainTools, -1)
           GUICtrlCreateMenuItem('', $idMenuMainTools, -1) ; create a separator line
         Global $idMenuItemMainToolsLoginScript = GUICtrlCreateMenuItem('Run Login Script', $idMenuMainTools, -1)
-        Global $idMenuItemMainToolsPersonalDrive = GUICtrlCreateMenuItem('Map ' & $sHomeFolderName & ' Drive', $idMenuMainTools, -1)
+        Global $idMenuItemMainToolsPersonalDrive = GUICtrlCreateMenuItem('Map ' & $sToolsHomeDrive_Title & ' Drive', $idMenuMainTools, -1)
         ;Global $idMenuItemMainToolsSysInfo = GUICtrlCreateMenuItem('System Information', $idMenuMainTools, -1)
 
       ;;Help
@@ -1944,8 +1944,8 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
         Global $idMenuItemMainHelpLaunchLMIr = GUICtrlCreateMenuItem('LogMeIn Rescue', $idMenuMainHelp, -1)  ;↗
           GUICtrlCreateMenuItem('', $idMenuMainHelp, -1) ; create a separator line
-        Global $idMenuItemMainHelpLaunchIntranet = GUICtrlCreateMenuItem($sIntranetName, $idMenuMainHelp, -1)  ;↗
-        Global $idMenuItemMainHelpLaunchHDesk = GUICtrlCreateMenuItem($sHelpdeskName, $idMenuMainHelp, -1) ;↗
+        Global $idMenuItemMainHelpLaunchIntranet = GUICtrlCreateMenuItem($sHelpLink2_DisplayName, $idMenuMainHelp, -1)  ;↗
+        Global $idMenuItemMainHelpLaunchHDesk = GUICtrlCreateMenuItem($sMainHelpdesk_Title, $idMenuMainHelp, -1) ;↗
         Global $idMenuItemMainHelpLaunchPWM = GUICtrlCreateMenuItem('Password Self-Service', $idMenuMainHelp, -1) ;↗
           GUICtrlCreateMenuItem('', $idMenuMainHelp, -1) ; create a separator line
         Global $idMenuItemMainHelpDocumentation = GUICtrlCreateMenuItem('Documentation (' & $sAppDocsHost & ')', $idMenuMainHelp, -1)
@@ -1958,21 +1958,21 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       Global $idButtonMainLeftClose = GUICtrlCreateButton($sCloseButtonText, $columnMainLeft_01, $rowMainLeft_01, $columnMainLeft_01Width, $rowMainLeft_01Height)
       Global $idButtonMainLeftRefresh = GUICtrlCreateButton('Refresh', $columnMainLeft_01, $rowMainLeft_02, $columnMainLeft_01Width, $rowMainLeft_02Height)
       If $bConfigContactHelpdeskEnabled = True Then
-        Global $idButtonMainLeftContactHDesk = GUICtrlCreateButton($sHelpdeskRequestName, $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height, BitOR($BS_MULTILINE, $BS_CENTER, $BS_VCENTER))
+        Global $idButtonMainLeftContactHDesk = GUICtrlCreateButton($sContactGeneral_ButtonText, $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height, BitOR($BS_MULTILINE, $BS_CENTER, $BS_VCENTER))
       Else
         Global $idButtonMainLeftContactHDesk = GUICtrlCreateButton('Copy Summary', $columnMainLeft_01, $rowMainLeft_04, $columnMainLeft_01Width, $rowMainLeft_04Height)
       EndIf
 
     ;;MAIN WINDOW ELEMENTS - RIGHT COLUMN
       ;;Contact information
-        $idGroupMainRightContact = GUICtrlCreateGroup($sOrgName & ' ' & $sHelpdeskName, $columnMainRight01, $rowMainRight01, $columnMainRight00Width + 1, ($rowMainRight04 - $rowMainRight01) + 4)
+        $idGroupMainRightContact = GUICtrlCreateGroup($sOrgName & ' ' & $sMainHelpdesk_Title, $columnMainRight01, $rowMainRight01, $columnMainRight00Width + 1, ($rowMainRight04 - $rowMainRight01) + 4)
         $idLabelMainRight01 = GUICtrlCreateLabel('Email: ', $columnMainRight02, $rowMainRight02, $columnMainRight02Width, $rowMainRight02Height, $SS_RIGHT)
         $idLabelMainRight02 = GUICtrlCreateLabel('Phone: ', $columnMainRight02, $rowMainRight03, $columnMainRight02Width, $rowMainRight03Height, $SS_RIGHT)
         $idLabelMainRight02b = GUICtrlCreateLabel('Password Reset: ', $columnMainRight02, $rowMainRight03a, $columnMainRight02Width, $rowMainRight03aHeight, $SS_RIGHT)
 
-        Global $idLabelMainRight01a = GUICtrlCreateEdit($sHelpdeskEmail, $columnMainRight03, $rowMainRight02, $columnMainRight03Width - 1, $rowMainRight02Height, $ES_READONLY, 0)
-        Global $idLabelMainRight02a = GUICtrlCreateEdit($sHelpdeskPhone, $columnMainRight03, $rowMainRight03, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
-        Global $idLabelMainRight02c = GUICtrlCreateEdit($sHelpdeskCorporatePhone, $columnMainRight03, $rowMainRight03a, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
+        Global $idLabelMainRight01a = GUICtrlCreateEdit($sMainHelpdesk_EmailAddress, $columnMainRight03, $rowMainRight02, $columnMainRight03Width - 1, $rowMainRight02Height, $ES_READONLY, 0)
+        Global $idLabelMainRight02a = GUICtrlCreateEdit($sMainHelpdesk_PhoneNumber, $columnMainRight03, $rowMainRight03, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
+        Global $idLabelMainRight02c = GUICtrlCreateEdit($sMainHelpdesk_AlternateAddress, $columnMainRight03, $rowMainRight03a, $columnMainRight03Width - 1, $rowMainRight03Height, $ES_READONLY, 0)
 
       ;;Session information
         $idGroupMainRightSession = GUICtrlCreateGroup('Session', $columnMainRight01, $rowMainRight05, $columnMainRight00Width + 1, ($rowMainRight13 - $rowMainRight05) + 4)
@@ -2055,8 +2055,8 @@ End()   ;;Exit app gracefully if code should ever find itself here.
           $idLabelMainRight18 = GUICtrlCreateLabel('Site Code: ', $columnMainRight02, $rowMainRight27, $columnMainRight02Width, $rowMainRight27Height, $SS_RIGHT)
           $idLabelMainRight19 = GUICtrlCreateLabel('CRA: ', $columnMainRight02, $rowMainRight28, $columnMainRight02Width, $rowMainRight28Height, $SS_RIGHT)
 
-          Global $idLabelMainRight18a = GUICtrlCreateEdit($sLCMXJCode, $columnMainRight03, $rowMainRight27, $columnMainRight03Width - 1, $rowMainRight27Height, $ES_READONLY, 0)
-          Global $idLabelMainRight19a = GUICtrlCreateEdit($sLCMCRCode, $columnMainRight03, $rowMainRight28, $columnMainRight03Width - 1, $rowMainRight28Height, $ES_READONLY, 0)
+          Global $idLabelMainRight18a = GUICtrlCreateEdit($sMainLCM_CustomXJCode, $columnMainRight03, $rowMainRight27, $columnMainRight03Width - 1, $rowMainRight27Height, $ES_READONLY, 0)
+          Global $idLabelMainRight19a = GUICtrlCreateEdit($sMainLCM_CustomRCRCode, $columnMainRight03, $rowMainRight28, $columnMainRight03Width - 1, $rowMainRight28Height, $ES_READONLY, 0)
         Else
           Local $idGroupMainRightLCM
           Local $idLabelMainRight18
@@ -2364,9 +2364,9 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
   Func UpdateMainGUI()
     ;;UPDATE MAIN GUI FIELDS
-    GUICtrlSetData($idLabelMainRight01a, $sHelpdeskEmail)
-    GUICtrlSetData($idLabelMainRight02a, $sHelpdeskPhone)
-    GUICtrlSetData($idLabelMainRight02c, $sHelpdeskCorporatePhone)
+    GUICtrlSetData($idLabelMainRight01a, $sMainHelpdesk_EmailAddress)
+    GUICtrlSetData($idLabelMainRight02a, $sMainHelpdesk_PhoneNumber)
+    GUICtrlSetData($idLabelMainRight02c, $sMainHelpdesk_AlternateAddress)
     GUICtrlSetData($idLabelMainRight03a, $sWMIUserName)
     GUICtrlSetData($idLabelMainRight04a, $sComputerName)
     GUICtrlSetData($idLabelMainRight05a, $sNetAdapter01Address)
@@ -2382,8 +2382,8 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     GUICtrlSetData($idLabelMainRight15a, $sWMIManufacturer & ' ' & $sWMIModel)
     GUICtrlSetData($idLabelMainRight16a, $sWMISerialNumber)
     GUICtrlSetData($idLabelMainRight17a, $sWMISMBIOSAssetTag)
-    GUICtrlSetData($idLabelMainRight18a, $sLCMXJCode)
-    GUICtrlSetData($idLabelMainRight19a, $sLCMCRCode)
+    GUICtrlSetData($idLabelMainRight18a, $sMainLCM_CustomXJCode)
+    GUICtrlSetData($idLabelMainRight19a, $sMainLCM_CustomRCRCode)
     GUICtrlSetData($idLabelMainRight20a, $sFreeTextDetails)
   EndFunc
 
@@ -2429,7 +2429,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       ;;No logon script defined for AD user object.
       Local $sUserLoginScript = ''
     Else
-      Local $sUserLoginScript = $sLoginScriptPath & '\' & $sADLoginScript
+      Local $sUserLoginScript = $sToolsLoginScript_Custom & '\' & $sADLoginScript
     EndIf
 
     If StringIsSpace($sADHomeDirectory) = 1 Or $sADHomeDirectory = '0' Then
@@ -2480,7 +2480,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       ' • Computer Description: ' & $sADDescription & @CRLF & _
       ' • Computer OU: ' & $sADOUPath & @CRLF & _
       ' • User Login Script: ' & $sUserLoginScript & @CRLF & _
-      ' • User ' & $sHomeFolderName & ': ' & $sUserHomeDrive & @CRLF & _
+      ' • User ' & $sToolsHomeDrive_Title & ': ' & $sUserHomeDrive & @CRLF & _
       @CRLF & _
       'Services:' & @CRLF & _
       ' • Windows Update: ' & $sServWindowsUpdateStatus & @CRLF & _
@@ -2497,8 +2497,8 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       ' • Asset Tag: ' & $sWMISMBIOSAssetTag & @CRLF & _
       @CRLF & _
       'LCM:' & @CRLF & _
-      ' • Site Code: ' & $sLCMXJCode & @CRLF & _
-      ' • CRA: ' & $sLCMCRCode & @CRLF & _
+      ' • Site Code: ' & $sMainLCM_CustomXJCode & @CRLF & _
+      ' • CRA: ' & $sMainLCM_CustomRCRCode & @CRLF & _
       @CRLF & _
       'Drives:' & @CRLF & _
       $sDiskDetails & @CRLF & _
@@ -2510,11 +2510,11 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       $sFreeTextDetails_Trimmed & _
       @CRLF & _
       'Helpdesk:' & @CRLF & _
-      ' • Email: ' & $sHelpdeskEmail & @CRLF & _
-      ' • Phone: ' & $sHelpdeskPhone & @CRLF & _
-      ' • Password Reset: ' & $sHelpdeskCorporatePhone & @CRLF & _
-      ' • Website: ' & $sHelpdeskURL & @CRLF & _
-      ' • LMIr URL: ' & $sHelpdeskRemoteSupportURL & @CRLF & _
+      ' • Email: ' & $sMainHelpdesk_EmailAddress & @CRLF & _
+      ' • Phone: ' & $sMainHelpdesk_PhoneNumber & @CRLF & _
+      ' • Password Reset: ' & $sMainHelpdesk_AlternateAddress & @CRLF & _
+      ' • Website: ' & $sMainHelpdesk_WebsiteAddress & @CRLF & _
+      ' • LMIr URL: ' & $sHelpLink1_Command & @CRLF & _
       @CRLF & _
       'About This Computer  •  ' & $sAppVersion & '  •  ' & @YEAR & '-' & @MON & '-' & @MDAY & ' ' & @HOUR & ':' & @MIN & ':' & @SEC & '  •  [mB7a78-' & $sAppBuild & ']'
   EndFunc
@@ -2533,7 +2533,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
   Func MailSummary()
     ;;PLACE SUMMARY STRING IN EMAIL BODY
-    $sEmailTo = $sHelpdeskEmail
+    $sEmailTo = $sMainHelpdesk_EmailAddress
     $sEmailSubject = 'Details about ' & $sComputerName & ' from ' & $sCurrentUsername
     $sEmailBody = StringReplace($sSummaryString, @CRLF, '%0D%0A')
     $sMailTo = 'mailto:' & $sEmailTo & '?subject=' & $sEmailSubject & '&body=%0D%0A%0D%0A' & $sEmailBody
@@ -2655,7 +2655,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
   Func LaunchAppCatalog()
     ;;LAUNCH APPLICATION CATALOG
-    ShellExecute('iexplore.exe', $sSCCMAppCatalogURL, 'C:\Windows\System32')
+    ShellExecute($sCustomToolsCommand1_Command)
   EndFunc
 
   Func LaunchAppWiz()
@@ -2728,17 +2728,17 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
   Func LaunchRemoteSupportApp()
     ;;LAUNCH REMOTE SUPPORT APPLICATION
-    ShellExecute('iexplore.exe', $sHelpdeskRemoteSupportURL, 'C:\Windows\System32')
+    ShellExecute($sHelpLink1_Command)
   EndFunc
 
   Func LaunchIntranet()
     ;;LAUNCH INTRANET
-    ShellExecute('iexplore.exe', $sIntranetURL, 'C:\Windows\System32')
+    ShellExecute($sHelpLink2_Command)
   EndFunc
 
   Func LaunchITHelpdesk()
     ;;LAUNCH IT HELPDESK
-    ShellExecute('iexplore.exe', $sHelpdeskURL, 'C:\Windows\System32')
+    ShellExecute('iexplore.exe', $sMainHelpdesk_WebsiteAddress, 'C:\Windows\System32')
   EndFunc
 
   Func LaunchPaswordManagement()
@@ -3102,7 +3102,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     Global $bContactFormSubmitSuccess = False
 
     ;;BUILD CONTACT HELPDESK WINDOW
-    Global $idGUIContact = GUICreate('Create an ' & $sHelpdeskName & ' Request', $columnContactBounds, $rowContactBounds, -1, -1, -1, $WS_EX_TOPMOST)   ;$hGUIMain
+    Global $idGUIContact = GUICreate('Create an ' & $sMainHelpdesk_Title & ' Request', $columnContactBounds, $rowContactBounds, -1, -1, -1, $WS_EX_TOPMOST)   ;$hGUIMain
 
     ;;LEFT COLUMN, TOP
     $idGraphicContact = GUICtrlCreateIcon($sAppInstallPath & '\Support\BeOS_Customize_wrench.ico', -1, $columnContactLeft01, $rowContactLeft01, 96, 96, -1, $GUI_WS_EX_PARENTDRAG)
@@ -3119,7 +3119,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     $sLabelEmployeeID = 'Employee ID:  '
     $sLabelPhone      = 'Phone:  '
     $sLabelLocation   = 'Location:  '
-    $sLabelBody       = 'Enter a detailed description of your ' & $sHelpdeskName & ' request:'
+    $sLabelBody       = 'Enter a detailed description of your ' & $sMainHelpdesk_Title & ' request:'
     $sLabelAttachment = 'Attachment'
     $sLabelScreenshot = 'Screenshot'
     $sLabelIncluded   = 'All fields are required. Details from About This Computer are automatically included with this request.'
@@ -3139,7 +3139,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       GUICtrlSetState($idLabelContactRightIncluded, $GUI_DISABLE)
 
     ;; RIGHT COLUMN, TOP, VALUES
-    $sDefaultInputSubject    = 'Summarize your ' & $sHelpdeskName & ' request'
+    $sDefaultInputSubject    = 'Summarize your ' & $sMainHelpdesk_Title & ' request'
     $sDefaultInputName       = 'Enter your first and last name'
     $sDefaultInputEmployeeID = 'Enter your employee ID number'
     $sDefaultInputPhone      = 'Enter your phone number'
@@ -3487,7 +3487,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       If StringIsSpace($sTemplateToAddress) = False Then
         $sContactFormTo = $sTemplateToAddress
       Else
-        $sContactFormTo = $sHelpdeskEmail
+        $sContactFormTo = $sMainHelpdesk_EmailAddress
       EndIf
       If StringIsSpace($sTemplateCCAddress) = False Then
         $sContactFormCC = $sTemplateCCAddress
@@ -3514,15 +3514,15 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       ;test From email format
       If (_IsValidEmail($sContactFormFrom) = False) Then $bContactFormValid = False
       If $bContactFormValid = False Then
-        MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Error', 'Please contact the ' & $sOrgName & ' ' & $sHelpdeskName & ' by phone at ' & $sHelpdeskPhone & '.' & @CRLF & @CRLF & '(About This Computer ''From'' address is misconfigured.)', 0, $idGUIContact)
-        ;MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Failure', '''From'' email address is invalid. Please contact the ' & $sOrgName & ' ' & $sHelpdeskName & ' by phone at ' & $sHelpdeskPhone & '.', 0, $idGUIContact)
+        MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Error', 'Please contact the ' & $sOrgName & ' ' & $sMainHelpdesk_Title & ' by phone at ' & $sMainHelpdesk_PhoneNumber & '.' & @CRLF & @CRLF & '(About This Computer ''From'' address is misconfigured.)', 0, $idGUIContact)
+        ;MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Failure', '''From'' email address is invalid. Please contact the ' & $sOrgName & ' ' & $sMainHelpdesk_Title & ' by phone at ' & $sMainHelpdesk_PhoneNumber & '.', 0, $idGUIContact)
         Return
       EndIf
 
       ;test To email format
       If (_IsValidEmail($sContactFormTo) = False) Then $bContactFormValid = False
       If $bContactFormValid = False Then
-        MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Error', 'Please contact the ' & $sOrgName & ' ' & $sHelpdeskName & ' by phone at ' & $sHelpdeskPhone & '.' & @CRLF & @CRLF & '(About This Computer ''To'' address is misconfigured.)', 0, $idGUIContact)
+        MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Error', 'Please contact the ' & $sOrgName & ' ' & $sMainHelpdesk_Title & ' by phone at ' & $sMainHelpdesk_PhoneNumber & '.' & @CRLF & @CRLF & '(About This Computer ''To'' address is misconfigured.)', 0, $idGUIContact)
         Return
       EndIf
 
@@ -3615,7 +3615,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
         '' & @CRLF & _
         'Information about the requestor''s computer:' & @CRLF & _
         $sSummaryString & @CRLF & _
-        'This ' & $sHelpdeskName & ' request was created using About This Computer.'
+        'This ' & $sMainHelpdesk_Title & ' request was created using About This Computer.'
 
       ;Global $sContactFormBodyComplete = StringReplace($sEmailBody, @CRLF, '%0D%0A') ;generate HTML-friendly line returns
       Global $sContactFormBodyComplete = $sEmailBody
@@ -3656,10 +3656,10 @@ End()   ;;Exit app gracefully if code should ever find itself here.
       Switch $sErrorCode
         Case '0'
           $bContactFormSubmitSuccess = True
-          MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION, $MB_TOPMOST, $MB_SETFOREGROUND), 'Request Submitted', 'Your ' & $sHelpdeskName & ' request has been submitted.' & @CRLF & @CRLF & 'Check the inbox of ' & $sContactFormFrom & ' for a confirmation email.' & @CRLF & @CRLF & 'If you do not receive a confirmation email, contact the ' & $sOrgName & ' ' & $sHelpdeskName & ' by phone at ' & $sHelpdeskPhone & '.', 0, $idGUIContact)
+          MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION, $MB_TOPMOST, $MB_SETFOREGROUND), 'Request Submitted', 'Your ' & $sMainHelpdesk_Title & ' request has been submitted.' & @CRLF & @CRLF & 'Check the inbox of ' & $sContactFormFrom & ' for a confirmation email.' & @CRLF & @CRLF & 'If you do not receive a confirmation email, contact the ' & $sOrgName & ' ' & $sMainHelpdesk_Title & ' by phone at ' & $sMainHelpdesk_PhoneNumber & '.', 0, $idGUIContact)
         Case Else
           $bContactFormSubmitSuccess = False
-          MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Error', 'Unable to submit request. Please contact the ' & $sOrgName & ' ' & $sHelpdeskName & ' by phone at ' & $sHelpdeskPhone & '.' & @CRLF & @CRLF & '(' & $sErrorCode & ')', 0, $idGUIContact)
+          MsgBox(BitOR($MB_OK, $MB_ICONERROR, $MB_TOPMOST, $MB_SETFOREGROUND), 'Error', 'Unable to submit request. Please contact the ' & $sOrgName & ' ' & $sMainHelpdesk_Title & ' by phone at ' & $sMainHelpdesk_PhoneNumber & '.' & @CRLF & @CRLF & '(' & $sErrorCode & ')', 0, $idGUIContact)
       EndSwitch
     EndFunc
   #EndRegion

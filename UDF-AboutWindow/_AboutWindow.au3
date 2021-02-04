@@ -1,186 +1,106 @@
-#NoTrayIcon
-#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_Icon=Images\BeOS_Customize_info.ico
-#AutoIt3Wrapper_Outfile=Compiled\Configurator.exe
-#AutoIt3Wrapper_Outfile_x64=Compiled\Configurator_x64.exe
-#AutoIt3Wrapper_Compile_Both=y
-#AutoIt3Wrapper_UseX64=y
-#AutoIt3Wrapper_Res_Comment=About This Computer Configurator
-#AutoIt3Wrapper_Res_Description=About This Computer Configurator
-#AutoIt3Wrapper_Res_Fileversion=1.0.0.13
-#AutoIt3Wrapper_Res_Fileversion_AutoIncrement=y
-#AutoIt3Wrapper_Res_LegalCopyright=Copyright (c) 2020 Brian Kyncl (briankyncl.com). All rights reserved.
-#AutoIt3Wrapper_Res_SaveSource=y
-#AutoIt3Wrapper_Res_Language=1033
-#AutoIt3Wrapper_Add_Constants=n
-#AutoIt3Wrapper_AU3Check_Stop_OnWarning=y
-#AutoIt3Wrapper_Run_Au3Stripper=y
-#Au3Stripper_Parameters=/mo
-#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#include-once
 
-#COMMENTS-START
-  AboutThisComputer_Configurator.au3
-  Standalone application for configuring About This Computer.
+; #FUNCTION# ====================================================================================================================
+; Name ...........: _AboutWindow
+; Description ....: Declares and displays a standardized "about" window describing the parent application.
+;                   While all parameters are optional, a decent-looking About window should manually use all parameters.
+; Syntax .........: _AboutWindow([parameters])
+; Parameters .....: $_hParentWindow       - [optional] Handle of the parent window. Default is the last declared window.
+;                   $_sAppIconPath        - [optional] Path to application icon to be shown in About window.
+;                                                      Default is the icon of the parent executable.
+;                   $_sAppTitle           - [optional] The name of the application. Default is the executable file name.
+;                   $_sAppSubtitle        - [optional] Short description of the application. Default is blank.
+;                   $_sWindowTitle        - [optional] The title of the About window. Default is "About".
+;                   $_sAppReleaseName     - [optional] The release name or friendly version number of the parent application.
+;                                                      Default is blank.
+;                   $_sAppVersionNumber   - [optional] The version and/or build number of the parent application.
+;                                                      Default is read from the parent executable.
+;                   $_sAppCredits         - [optional] A short statement giving credit to application developers, etc.
+;                                                      Default is blank.
+;                   $_sAppDisclaimer      - [optional] A short disclaimer or copyright statement of the parent application.
+;                                                      Default is blank.
+; Return values ..: Success - None
+;                   Failure - None
+; Author .........: briankyncl.com
+; Modified .......: 2020-07-12
+; Remarks ........: None
+; Example ........: No
+; ===============================================================================================================================
 
-  Created by Brian Kyncl on 2020-02-17
-  Copyright (c) 2020 Brian Kyncl (briankyncl.com). All rights reserved.
+Func _AboutWindow($_hParentWindow='', $_sAppIconPath='', $_sAppTitle='', $_sAppSubtitle='', $_sWindowTitle='', $_sAppReleaseName='', $_sAppVersionNumber='', $_sAppCredits='', $_sAppDisclaimer='')
+  ;;DISPLAY APPLICATION "ABOUT" WINDOW
+  ;; Creates and displays a standardized "about" window describing the parent application.
 
-  Run elevated.
-#COMMENTS-END
-
-#Region -- PRE-FLIGHT
-  ;;SCRIPT OPTIONS
-  ;;none
-
-  ;;SCRIPT INCLUDES
-  #include 'UDF-ATCCustomization\_ATC_Customization.au3'
-  #include <ButtonConstants.au3>
-  #include <EditConstants.au3>
-  #include <FileConstants.au3>
-  #include <FontConstants.au3>
-  #include <GUIConstantsEx.au3>
-  #include <GUIEdit.au3>
-  #include <MsgBoxConstants.au3>
-  #include <StaticConstants.au3>
-  #include <TrayConstants.au3>
-  #include <WindowsConstants.au3>
-#EndRegion
-
-Main()  ;;Main application
-End()   ;;Exit app gracefully if code should ever find itself here.
-
-#Region -- STARTUP
-  Func StartupCoreGlobals()
-    ;;DECLARE CORE GLOBALS
-
-    ;;APP INFO
-    Global $sAppOrg         = 'briankyncl.com'
-    Global $sAppName        = 'About This Computer'
-    Global $sAppDisplayName = 'About This Computer Configurator'
-    Global $sAppShortName   = 'ATC'
-    Global $sAppDocsHost    = 'GitHub'
-    Global $sAppDocsFormat  = 'website'
-    Global $sAppDocsURL     = 'https://github.com/briankyncl/aboutthiscomputer/wiki'
-
-    ;;APP VERSION
-    Local  $aFileVersion = StringSplit(FileGetVersion(@AutoItExe), '.')
-    Global $sAppBuild    = $aFileVersion[4]
-    Global $sAppVersion  = $aFileVersion[1] & '.' & $aFileVersion[2] & '.' & $aFileVersion[3]
-    Global $sAppRelease  = '2020-xx-xx'
-
-    ;;APP PATHS
-    Global $sAppInstallPath       = @ProgramFilesDir & '\' & $sAppOrg & '\' & $sAppName
-    Global $sAppSourcePath        = @ScriptDir
-    Global $sAppTempPath          = @TempDir & '\' & $sAppOrg & '\' & $sAppName
-    Global $sAppStartMenuPath     = @ProgramsCommonDir & '\' & $sAppName
-    Global $sAppRegistryPath      = 'HKEY_LOCAL_MACHINE\Software\' & $sAppOrg & '\' & $sAppName
-    Global $sAppLogo              = $sAppTempPath & '\ATC-BeOS_Customize_wrench.ico'
-    Global $sAppParentLogo        = $sAppTempPath & '\ATC-BeOS_Customize_info.ico'
-
-    DirCreate($sAppTempPath)
-
-    ;;APP ASSETS
-    FileInstall('Images\BeOS_Customize_wrench.ico', $sAppLogo, $FC_OVERWRITE)
-    FileInstall('Images\BeOS_Customize_info.ico', $sAppParentLogo, $FC_OVERWRITE)
-  EndFunc
-
-  Func StartupExeMode()
-    ;;PROCESS EXECUTABLE PARAMETERS
-    Global $sMainAppExeMode = ''
-
-    If $CmdLine[00] > 0 Then
-      ;;One or more parameters were provided.
-      Switch $CmdLine[01]
-        Case '-import'
-          $sMainAppExeMode = 'import'
-          $sConfigImportPath = $CmdLine [02]
-        Case '-export'
-          $sMainAppExeMode = 'export'
-          $sConfigExportPath = $CmdLine [02]
-        Case Else
-          MsgBox(BitOR($MB_OK, $MB_ICONERROR), $sAppDisplayName & ' Startup', 'Unsupported parameter provided. See documentation at ' & $sAppDocsURL)
-          SoftExit()
-      EndSwitch
-    Else
-      ;;No parameters provided.
-      $sMainAppExeMode = 'gui'
+  ;;PREPARE SUPPLIED PARAMETERS
+    If $_hParentWindow = '' Then $_hParentWindow = -1
+    If $_sAppIconPath = '' Then $_sAppIconPath = _WinAPI_ShellExtractIcon(@AutoItExe , 0, 128, 128)
+    If $_sAppTitle = '' Then @ScriptName
+    ;If $_sAppSubtitle = '' Then $_sAppSubtitle =
+    If $_sWindowTitle = '' Then $_sWindowTitle = 'About'
+    ;If $_sAppReleaseName = '' Then $_sAppReleaseName =
+    If $_sAppVersionNumber = '' Then 
+        Local $aFileVersion        = StringSplit(FileGetVersion(@AutoItExe), '.')
+        Local $_sAppBuildNumber    = $aFileVersion[4]
+        Local $_sAppVersionNumber  = $aFileVersion[1] & '.' & $aFileVersion[2] & '.' & $aFileVersion[3]
     EndIf
-  EndFunc
+    ;If $_sAppCredits = '' Then $_sAppCredits = 
+    ;If $_sAppDisclaimer = '' Then $_sAppDisclaimer = 
 
-  Func StartupGlobals()
-    ;;DECLARE GLOBAL VARIABLES
-    ;;Declare global variables not declared anywhere else.
+  ;;VALIDATE PARAMETERS
+    ;TODO
 
-    Global $iBusySleep = 1000
-  EndFunc
-#EndRegion
+  ;;DEFINE GUI GRID
+  ;; All declarations for defining the basics of the GUI.
+  Local $_hGUIAbout
 
-#Region -- MAIN
-  Func Main()
-    ;;Everything controlled from here.
+    ;;GRID OVERALL (ENTIRE WINDOW)
+      Local $_iGUIAboutWidthDefault = 712
+      Local $_iGUIAboutHeightDefault = 256
 
-    ;;DECLARE CORE GLOBALS
-    ;; Declare core globals needed for application startup.
-    StartupCoreGlobals()
+    ;;GRID LEFT (LOGO)
+      Local $_iGUIAboutColumnLeft00 = 0  ;;left bound of left half of window
+      Local $_iGUIAboutColumnLeft00Width = 200  ;;total width of left half of window
+      Local $_iGUIAboutColumnLeft01 = $_iGUIAboutColumnLeft00 + 36  ;;left bound of logo image
+      Local $_iGUIAboutColumnLeft01Width = 128  ;;width of logo image
 
-    ;;PROCESS EXE PARAMETERS
-    ;; Parse provided command line parameters, if any.
-    StartupExeMode()
+      Local $_iGUIAboutRowLeft00 = 0  ;;top bound of left half of window
+      Local $_iGUIAboutRowLeft00Height = $_iGUIAboutHeightDefault
+      Local $_iGUIAboutRowLeft01 = $_iGUIAboutRowLeft00 + 20  ;;top bound of logo image
+      Local $_iGUIAboutRowLeft01Height = 128  ;;height of logo image
 
-    ;;DECLARE GLOBALS
-    ;; Declare globals not declared anywhere else.
-    StartupGlobals()
+    ;;GRID RIGHT (TEXT)
+      Local $_iGUIAboutColumnRight00 = $_iGUIAboutColumnLeft00Width  ;;left bound of right half of window
+      Local $_iGUIAboutColumnRight00Width = $_iGUIAboutWidthDefault - $_iGUIAboutColumnLeft00Width  ;;total width of right half of window
+      Local $_iGUIAboutColumnRight01 = $_iGUIAboutColumnRight00 + 5  ;;left bound of text controls
+      Local $_iGUIAboutColumnRight01Width = $_iGUIAboutColumnRight01 - 15  ;;width of all text controls
 
-    ;;DECLARE AND READ CUSTOMIZATION
-    ;; Declare and read customization variables.
-    _ATC_Customization($sAppRegistryPath, 'Declare')
-    _ATC_Customization($sAppRegistryPath, 'Read')
+      Local $_iGUIAboutRowRight00 = 0  ;;top bound of right half of window
+      Local $_iGUIAboutRowRight00Height = $_iGUIAboutHeightDefault  ;;total height of right half of window
+      Local $_iGUIAboutRowRight01 = $_iGUIAboutRowRight00 + 10  ;;spacer
+      Local $_iGUIAboutRowRight01Height = 15  ;;spacer
+      Local $_iGUIAboutRowRight02 = $_iGUIAboutRowRight01 + $_iGUIAboutRowRight01Height  ;;top bound of title text
+      Local $_iGUIAboutRowRight02Height = 22  ;;height of title text
+      Local $_iGUIAboutRowRight03 = $_iGUIAboutRowRight02 + $_iGUIAboutRowRight02Height  ;;spacer
+      Local $_iGUIAboutRowRight03Height = 5  ;;spacer
+      Local $_iGUIAboutRowRight04 = $_iGUIAboutRowRight03 + $_iGUIAboutRowRight03Height  ;;subtitle
+      Local $_iGUIAboutRowRight04Height = 15  ;;subtitle
+      Local $_iGUIAboutRowRight05 = $_iGUIAboutRowRight04 + $_iGUIAboutRowRight04Height  ;;spacer
+      Local $_iGUIAboutRowRight05Height = 5  ;;spacer
+      Local $_iGUIAboutRowRight06 = $_iGUIAboutRowRight05 + $_iGUIAboutRowRight05Height  ;;version and release name
+      Local $_iGUIAboutRowRight06Height = 15  ;;version and release name
+      Local $_iGUIAboutRowRight07 = $_iGUIAboutRowRight06 + $_iGUIAboutRowRight06Height  ;;spacer
+      Local $_iGUIAboutRowRight07Height = 5  ;;spacer
+      Local $_iGUIAboutRowRight08 = $_iGUIAboutRowRight07 + $_iGUIAboutRowRight07Height  ;;credits
+      Local $_iGUIAboutRowRight08Height = 45  ;;credits
+      Local $_iGUIAboutRowRight09 = $_iGUIAboutRowRight08 + $_iGUIAboutRowRight08Height  ;;spacer
+      Local $_iGUIAboutRowRight09Height = 5  ;;spacer
 
-    ;;ALTERNATE APP MODES
-    Switch $sMainAppExeMode
-      Case 'import'
-        ;;no GUI, import settings file at path provided, return success code, quit
-      Case 'export'
-        ;;no GUI, export settings to file at path provided, return success code, quit
-      Case Else  ;;'gui'
-        ;;full GUI
-        ;continue?
-    EndSwitch
-
-    ;;STAGE GUIs
-    ;; Define main GUI.
-    GUIDefine()  ;;declare GUI grid
-    GUIBuild()  ;;declare GUI elements (don't need to do anything with default states?)
-
-    ;GUILoad('Registry')  ;;refresh GUI to reflect settings from registry
-    ;GUILoad('Default')
-      ;;Would require _ATC_Customization($sAppRegistryPath, 'Read') to have been ran recently
-    ;GUILoad('Validate') --> actually part of GUIState('Ready')
-
-    ;;DISPLAY GUI(s)
-    ;; Display main GUI and wait for user input.
-    ;GUIState('Default')  ;;Fill and set GUI based on defaults in _ATC_Customization. Otherwise GUI could have "empty" state and break functions.
-    ;GUIState('Ready','TabGeneral')  ;;Evaluate selections and enable/disable associated GUI elements.
-    ;GUIState('Busy')  ;;Disable all GUI elements
-    ;  --> maybe each section of the GUI should have a function for applying a state (busy, ready, disabled?)
-    ;_ATC_Customization($sAppRegistryPath, 'Write')
-    ;GUIValidate()  ;validate user inputs, bring invalid selections to foreground.
-
-    GUILoad('Default')
-    GUIState('Ready')
-    GUISetState(@SW_SHOW)
+    ;;GRID FOOTER
+      Local $_iGUIAboutColumnFooter00 = 0  ;;left bound of footer
+      Local $_iGUIAboutColumnFooter00Width = 
 
 
 
-
-
-    GUIWait()
-
-    ;;GRACEFUL EXIT
-    ;; Exit app gracefully if code should ever find itself here.
-    End()
-  EndFunc
-#EndRegion
 
 #Region -- BUILD INTERFACE
   Func GUIDefine()
@@ -1707,7 +1627,7 @@ End()   ;;Exit app gracefully if code should ever find itself here.
   Func GUIBuild()
     ;;CREATE MAIN GUI
     ;; Requires GUIDefine() to have been previously ran.
-    Global $lDriveLetters = '|A:|B:|C:|D:|E:|F:|G:|H:|I:|J:|K:|L:|M:|N:|O:|P:|Q:|R:|S:|T:|U:|V:|W:|X:|Y:|Z:'
+    Global $lDriveLetters = 'D:|E:|F:|G:|H:|I:|J:|K:|L:|M:|N:|O:|P:|Q:|R:|S:|T:|U:|V:|W:|X:|Y:|Z:'
 
     ;;DECLARE MAIN WINDOW
     Global $hGUIMain = GUICreate('About This Computer Configurator', $iGUIMainWidthDefault, $iGUIMainHeightDefault + $iGUIMainMenuBarHeight, -1, -1)
@@ -3682,7 +3602,6 @@ End()   ;;Exit app gracefully if code should ever find itself here.
 
         Case $GUI_EVENT_PRIMARYUP
           ;;MOUSE CLICK UP
-          Sleep(50)
           If $bGUIDynamicUpdate Then GUIState('Ready')  ;;Update GUI elements enabled/disabled based on current selections.
 
       EndSwitch
@@ -3955,87 +3874,6 @@ End()   ;;Exit app gracefully if code should ever find itself here.
     WEnd
   EndFunc
 #EndRegion
-
-#Region -- TOOLS
-  Func ToggleGUIControl($idGUIControl, $Option)
-    ;;TOGGLE GUI CONTROL STATE
-    ;; Change a GUI control's state only if the desired state is different than the current state.
-    ;; This is an attempt to prevent a flickering GUI when states change.
-    ;;
-    ;; $GUI_ENABLE
-    ;; $GUI_DISABLE
-    ;; $GUI_CHECKED
-    ;; $GUI_UNCHECKED
-    ;; $GUI_CHECKENABLE
-    ;; $GUI_UNCHECKENABLE
-    ;; $GUI_CHECKDISABLE
-    ;; $GUI_UNCHECKDISABLE
-
-    ;;Define custom GUI element states.
-    Global $GUI_CHECKENABLE = $GUI_CHECKED + $GUI_ENABLE
-    Global $GUI_UNCHECKENABLE = $GUI_UNCHECKED + $GUI_ENABLE
-    Global $GUI_CHECKDISABLE = $GUI_CHECKED + $GUI_DISABLE
-    Global $GUI_UNCHECKDISABLE = $GUI_UNCHECKED + $GUI_DISABLE
-
-    ;;Process values provided by registry entries.
-    If $Option = 0 Then $Option = $GUI_UNCHECKED
-    If $Option = 1 Then $Option = $GUI_CHECKED
-
-    Switch $Option
-      Case $GUI_ENABLE, $GUI_DISABLE
-        If Not BitAND(GUICtrlGetState($idGUIControl), $Option) Then GUICtrlSetState($idGUIControl, $Option)
-      Case $GUI_CHECKED, $GUI_UNCHECKED
-        If Not BitAND(GUICtrlRead($idGUIControl), $Option) Then GUICtrlSetState($idGUIControl, $Option)
-      Case $GUI_CHECKENABLE
-        If Not BitAND(GUICtrlGetState($idGUIControl), $GUI_ENABLE) Then GUICtrlSetState($idGUIControl, $GUI_ENABLE)
-        If Not BitAND(GUICtrlRead($idGUIControl), $GUI_CHECKED) Then GUICtrlSetState($idGUIControl, $GUI_CHECKED)
-      Case $GUI_UNCHECKENABLE
-        If Not BitAND(GUICtrlGetState($idGUIControl), $GUI_ENABLE) Then GUICtrlSetState($idGUIControl, $GUI_ENABLE)
-        If Not BitAND(GUICtrlRead($idGUIControl), $GUI_UNCHECKED) Then GUICtrlSetState($idGUIControl, $GUI_UNCHECKED)
-      Case $GUI_CHECKDISABLE
-        If Not BitAND(GUICtrlGetState($idGUIControl), $GUI_DISABLE) Then GUICtrlSetState($idGUIControl, $GUI_DISABLE)
-        If Not BitAND(GUICtrlRead($idGUIControl), $GUI_CHECKED) Then GUICtrlSetState($idGUIControl, $GUI_CHECKED)
-      Case $GUI_UNCHECKDISABLE
-        If Not BitAND(GUICtrlGetState($idGUIControl), $GUI_DISABLE) Then GUICtrlSetState($idGUIControl, $GUI_DISABLE)
-        If Not BitAND(GUICtrlRead($idGUIControl), $GUI_UNCHECKED) Then GUICtrlSetState($idGUIControl, $GUI_UNCHECKED)
-    EndSwitch
-  EndFunc
-
-  Func StandardRunCmd($cmd)
-    ;;STANDARDIZED COMMAND CALL
-    ;; $cmd = 'net share C=C:\ /GRANT:EVERYONE,FULL'
-    ;; StandardRunCmd($cmd)
-
-    Run(@ComSpec & " /c " & $cmd, @SystemDir, @SW_HIDE)
-  EndFunc
-
-  Func StandardRunWaitCmd($cmd)
-    ;;STANDARDIZED COMMAND CALL AND WAIT
-    ;; $cmd = 'net share C=C:\ /GRANT:EVERYONE,FULL'
-    ;; StandardRunCmd($cmd)
-
-    RunWait(@ComSpec & " /c " & $cmd, @SystemDir, @SW_HIDE)
-  EndFunc
-
-  Func _IsValidEmail($email)
-    ;;VALIDATE PROVIDED EMAIL ADDRESS
-    ;;https://www.autoitscript.com/forum/topic/101396-check-if-an-email-address-is-valid/?do=findComment&comment=721006
-    If StringRegExp($email, "^([a-zA-Z0-9_\-])([a-zA-Z0-9_\-\.]*)@(\[((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}|((([a-zA-Z0-9\-]+)\.)+))([a-zA-Z]{2,}|(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\])$") Then
-      ;MsgBox(4096, '', 'Input is valid email address format.')
-      Return True
-    Else
-      ;MsgBox(4096, '', 'Error, input is not valid email address format.')
-      Return False
-    EndIf
-  EndFunc
-#EndRegion
-
-
-
-
-
-
-
 
 #Region -- END
   Func End()

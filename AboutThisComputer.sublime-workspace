@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"idButtonMain",
+				"idButtonMainLeftApply"
+			],
+			[
 				"iGUIMainTabAllChromeCh",
 				"iGUIMainTabAllChromeCheckboxHeight"
 			],
@@ -80,19 +84,28 @@
 	"buffers":
 	[
 		{
-			"file": "UDF-ATCCustomization/_ATC_Customization.au3",
+			"file": "AboutThisComputer_Configurator.au3",
 			"settings":
 			{
-				"buffer_size": 43264,
+				"buffer_size": 286307,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "AboutThisComputer_Configurator.au3",
+			"file": "UDF-ATCCustomization/_ATC_Customization.au3",
 			"settings":
 			{
-				"buffer_size": 239889,
+				"buffer_size": 43221,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "UDF-AboutWindow/_AboutWindow.au3",
+			"settings":
+			{
+				"buffer_size": 283165,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -110,12 +123,24 @@
 		"selected_items":
 		[
 			[
-				"insta",
-				"Package Control: Install Package"
-			],
-			[
 				"al",
 				"AlignTab"
+			],
+			[
+				"text pastry: com",
+				"Text Pastry: Command-Line"
+			],
+			[
+				"",
+				"Text Pastry: Range (numeric)"
+			],
+			[
+				"textpas",
+				"Text Pastry: Paste"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
 			],
 			[
 				"align",
@@ -179,19 +204,24 @@
 	"expanded_folders":
 	[
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/Screenshots",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/UDF-AboutWindow",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/UDF-ATCCustomization",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/UDF-SMTPMailer"
 	],
 	"file_history":
 	[
+		"/Users/briankyncl/Downloads/winClassicSounds.reg",
+		"/Volumes/ESXI-7.0.0-15843807-STANDARD/VMWARE-ESX-BASE-README",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/UDF-AboutWindow/AboutWindow.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_Configurator.au3",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_Configurator_Scratch.txt",
+		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer.au3",
+		"/Users/briankyncl/Downloads/WKS_Prep.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_InstallHelper.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_Installer.iss",
-		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/UDF-ATCCustomization/_ATC_Customization.au3",
-		"/Users/briankyncl/Downloads/WKS_Prep.au3",
 		"/Users/briankyncl/Downloads/WKS_Prep-Tools.au3",
-		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_Configurator_Scratch.txt",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/WKS_Prep.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/WKS_PrepSync.au3",
 		"/Users/briankyncl/OneDrive/Workspaces/GitRepos/Brians-MacBook-Pro/briankyncl/aboutthiscomputer/AboutThisComputer_Configurator_Text.txt",
@@ -308,14 +338,11 @@
 		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWANT06.cfg",
 		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWANT02.cfg",
 		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SECWPS02.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SECWPS01.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWANT05.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-sewbiorad01.cfg",
-		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SEWANT04.cfg"
+		"/Users/Brian/Downloads/SELNMS01/pnw_dev/conf.d/objects/hosts/servers/host-server-SECWPS01.cfg"
 	],
 	"find":
 	{
-		"height": 40.0
+		"height": 26.0
 	},
 	"find_in_files":
 	{
@@ -330,6 +357,51 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"$lDriveLetters",
+			"idCheckboxContactSMTP_EnableSSL",
+			"uncheckdisable",
+			"uncheckdis",
+			"ToggleGUIControl($idCheckboxContactSMTP_EnableSSL",
+			"statusbar",
+			"status bar",
+			"hStatusBarMain",
+			" ; create a separator line",
+			"statusbar",
+			"Func Launch",
+			"TrayIconClicked",
+			"$idMsg",
+			"GUICtrlCreateIcon",
+			"$idGraphicMainLogo",
+			"GUICtrlCreateIcon",
+			"idGroupContact_SendTestEmail",
+			"button",
+			"Func",
+			"$idTabMain",
+			"GUICtrlCreateTabItem",
+			"$idTabMainGeneral",
+			"GuiCtrlCreateTabItem",
+			"$idTabMain",
+			"GUICtrlCreateTabItem",
+			"GUICtrlCreateGroup",
+			"GUICtrlCreateLabel",
+			"GUICtrlCreateMenuItem",
+			"SetComboboxes($GUI_DISABLE)",
+			"set all",
+			"_Command",
+			"Help Link",
+			"Help_Link",
+			"HelpLink",
+			"Help Link",
+			"CustomToolsCommand",
+			"Custom Tool",
+			"CustomToolsCommand",
+			"Custom Tool",
+			"Command1",
+			"Command2",
+			"Command1",
+			"Custom Tool 1",
+			"GUICtrlCreateLabel(",
+			"GUICtrlCreateTabItem",
 			"GUICtrlCreateLabel(",
 			"sMainHelpdesk_EmailAddress",
 			"com.brian",
@@ -412,52 +484,7 @@
 			"ContactGeneral",
 			"HelpLink1",
 			"TabServicesService1",
-			"_SMTP_SendEmail",
-			"smtp",
-			"Command",
-			"URL",
-			"service",
-			"LINK",
-			"Services menu",
-			"Help",
-			"Link",
-			"link",
-			"HelpLink",
-			"LINK",
-			"HELP",
-			"HelpLink",
-			"Left",
-			"Link4",
-			"Link3",
-			"Link1",
-			"Left",
-			"Link2",
-			"Link3",
-			"Link2",
-			"Link1",
-			"TOOLSCUSTOM4",
-			"Right",
-			"ToolsCustom4",
-			"Custom3",
-			"Custom2",
-			"Custom1",
-			"catalog",
-			"HomeDrive",
-			"MainTabToolsHomeDrive",
-			"LoginScript",
-			"MainHelpdesk",
-			"GUIMainTabToolsLoginScript",
-			"GUIMainTabMainAssetTag",
-			"Column02",
-			"GUIMainTabMainAssetTag",
-			"GUIMainTabMainGeneral",
-			"$GUIMainTabAllPaddingVertical",
-			"$iGUIMainTabAllRow01",
-			"$GUIMainTabAllPadding",
-			"Right",
-			"Left",
-			"rowMainRightHeight",
-			"AssetTag"
+			"_SMTP_SendEmail"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -465,6 +492,36 @@
 		"regex": false,
 		"replace_history":
 		[
+			"  ;;Create a separator line",
+			"TrayIconSample",
+			"$idGUIMsg",
+			"$idIconMainAppLogo",
+			"idButtonContact_SendTestEmail",
+			"$idTabRegion",
+			"$idTabGeneral",
+			"$idTabMainGeneral",
+			"_Name",
+			"Service",
+			"Services_Service",
+			"ServicesService",
+			"Service",
+			"HelpLink",
+			"Help Link",
+			"HelpLink",
+			"Help Link",
+			"Command5",
+			"Command4",
+			"Command3",
+			"Command2",
+			"Command5",
+			"Command4",
+			"Command3",
+			"Command2",
+			"Command5",
+			"Command4",
+			"Command3",
+			"Command2",
+			"Custom Tool 2",
 			"bMainLCM_ShowLCMInfo",
 			"sMainLCM_CustomXJCode",
 			"sMainLCM_CustomRCRCode",
@@ -562,20 +619,7 @@
 			"Right",
 			"CustomDetails",
 			"GUIMainTabMainCustomDetails",
-			"group",
-			"Helpdesk",
-			"iGUIMainTabMainAssetTagRow",
-			"iGUIMainTabAllChromeCheckboxSpacerExterior",
-			"GUIDefine(",
-			"sLoginScriptPath",
-			"HomeFolderName",
-			"sSCCMAppCatalogURL",
-			"sHelpdesk",
-			"sIntranetURL",
-			"sIntranetName",
-			"__sAppRegistryPath",
-			"GUIWait(",
-			"GUIBuild("
+			"group"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -591,60 +635,29 @@
 			[
 				{
 					"buffer": 0,
-					"file": "UDF-ATCCustomization/_ATC_Customization.au3",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 43264,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4748,
-								4774
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/AutoItScript/AutoIt.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1051.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
 					"file": "AboutThisComputer_Configurator.au3",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 239889,
+						"buffer_size": 286307,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								219082,
-								219082
+								222181,
+								222291
 							]
 						],
 						"settings":
 						{
-							"spell_check": false,
 							"syntax": "Packages/AutoItScript/AutoIt.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 47339.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -652,64 +665,63 @@
 				},
 				{
 					"buffer": 1,
-					"file": "AboutThisComputer_Configurator.au3",
+					"file": "UDF-ATCCustomization/_ATC_Customization.au3",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 239889,
+						"buffer_size": 43221,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								162897,
-								162916
+								1013,
+								1013
 							]
 						],
 						"settings":
 						{
-							"spell_check": false,
 							"syntax": "Packages/AutoItScript/AutoIt.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 33780.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 1,
-					"file": "AboutThisComputer_Configurator.au3",
+					"buffer": 2,
+					"file": "UDF-AboutWindow/_AboutWindow.au3",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 239889,
+						"buffer_size": 283165,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4347,
-								4333
+								278814,
+								278814
 							]
 						],
 						"settings":
 						{
-							"spell_check": false,
+							"spell_check": true,
 							"syntax": "Packages/AutoItScript/AutoIt.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1320.0,
+						"translation.y": 2538.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
@@ -796,7 +808,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 329.0,
+	"side_bar_width": 299.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
